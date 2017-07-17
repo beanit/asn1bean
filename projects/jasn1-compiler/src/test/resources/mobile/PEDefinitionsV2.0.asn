@@ -1,0 +1,853 @@
+PEDefinitions {joint-iso-itu-t(2) international-organizations(23) simalliance(143) euicc-profile(1) spec-version(1) version-two(2)}
+DEFINITIONS
+AUTOMATIC TAGS
+EXTENSIBILITY IMPLIED ::=
+BEGIN
+
+-- Basic integer types, for size constraints
+maxUInt8 INTEGER ::= 255
+UInt8 ::= INTEGER (0..maxUInt8)
+maxUInt15 INTEGER ::= 32767
+UInt15 ::= INTEGER (0..maxUInt15)
+maxUInt16 INTEGER ::= 65535
+UInt16 ::= INTEGER (0..maxUInt16)
+-- maxUInt31 INTEGER ::= 2147483647
+-- UInt31 ::= INTEGER (0..maxUInt31)
+
+ApplicationIdentifier ::= OCTET STRING (SIZE(5..16))
+
+PEHeader ::= SEQUENCE {
+mandated NULL OPTIONAL,
+ -- if set, indicate that the support of this PE is mandatory 
+	identification UInt15 -- Identification number of this PE
+}
+
+ProfileElement ::= CHOICE {
+	header ProfileHeader,
+
+/* PEs */
+	genericFileManagement PE-GenericFileManagement,
+	pinCodes PE-PINCodes,
+	pukCodes PE-PUKCodes,
+	akaParameter PE-AKAParameter,
+	cdmaParameter PE-CDMAParameter,
+	securityDomain PE-SecurityDomain,
+	rfm PE-RFM,
+	application PE-Application,
+	nonStandard PE-NonStandard,
+	end PE-End,
+      rfu1 PE-Dummy, -- this avoids renumbering of tag values
+      rfu2 PE-Dummy, -- in case other non-file-system PEs are
+      rfu3 PE-Dummy, -- added here in future versions
+      rfu4 PE-Dummy,
+      rfu5 PE-Dummy,
+
+/* PEs related to file system creation using templates defined in this specification */	
+	mf PE-MF,
+	cd PE-CD,
+	telecom PE-TELECOM,
+	usim PE-USIM,
+	opt-usim PE-OPT-USIM,
+	isim PE-ISIM,
+	opt-isim PE-OPT-ISIM,
+	phonebook PE-PHONEBOOK,
+	gsm-access PE-GSM-ACCESS,
+	csim PE-CSIM,
+	opt-csim PE-OPT-CSIM,
+...
+}
+
+PE-Dummy ::= SEQUENCE {
+}
+
+ServicesList ::= SEQUENCE {
+/* Contactless */
+contactless NULL OPTIONAL,
+
+/* NAAs */
+usim NULL OPTIONAL,
+isim NULL OPTIONAL,
+csim NULL OPTIONAL,
+
+/* NAA algorithms */
+milenage NULL OPTIONAL,
+tuak128 NULL OPTIONAL,
+cave NULL OPTIONAL,
+
+/* USIM/ISIM services */
+gba-usim NULL OPTIONAL,
+gba-isim NULL OPTIONAL,
+mbms NULL OPTIONAL,
+eap NULL OPTIONAL,
+/* Application Runtime environment */
+	javacard NULL OPTIONAL,
+	multos NULL OPTIONAL,
+
+/* NAAs */
+multiple-usim NULL OPTIONAL,
+multiple-isim NULL OPTIONAL,
+multiple-csim NULL OPTIONAL,
+
+/* Additional algorithms */
+tuak256 NULL OPTIONAL
+
+}
+
+ProfileHeader ::= SEQUENCE {
+major-version UInt8, -- set to 2 for this version of the specification
+minor-version UInt8, -- set to 0 for this version of the specification
+profileType UTF8String OPTIONAL, -- Profile type
+iccid OCTET STRING (SIZE (10)), -- ICCID of the Profile 
+pol OCTET STRING  OPTIONAL,
+eUICC-Mandatory-services ServicesList,
+eUICC-Mandatory-GFSTEList SEQUENCE OF OBJECT IDENTIFIER,
+connectivityParameters OCTET STRING OPTIONAL
+}
+
+ProprietaryInfo ::= SEQUENCE {
+	specialFileInformation [PRIVATE 0] OCTET STRING (SIZE (1)) DEFAULT '00'H,
+
+	/* fillPattern, repeatPattern
+	only one of the parameters may be present. Coding and rules defined within ETSI TS 102 222 [102 222] apply
+	*/
+
+	fillPattern [PRIVATE 1] OCTET STRING OPTIONAL,
+	repeatPattern [PRIVATE 2] OCTET STRING OPTIONAL
+}
+
+Fcp ::= SEQUENCE {
+	   fileDescriptor [2] OCTET STRING (SIZE(2..4)) OPTIONAL,
+
+		/* fileID	
+			For ADFs, the fileID is a temporary value (named temporary file ID in this document) used only during the profile creation. It has to be unique within a profile and is used for referencing files within this ADF using the file path.
+		*/
+	   fileID [3] OCTET STRING (SIZE(2)) OPTIONAL,
+
+		/* dfName	
+			Only applies for ADFs
+		*/
+	   dfName [4] ApplicationIdentifier OPTIONAL,
+
+		/* lcsi	
+			Coding according to ETSI TS 102 222 [102 222]
+		*/
+	   lcsi [10] OCTET STRING (SIZE (1)) DEFAULT '05'H,
+
+		/* securityAttributesReferenced
+      Either containing EF ARR ID[2] + record number[1] or
+            record number[1] only and EF ARR ID implicitly known from the
+            context, i.e. '2F06' within the MF and '6F06' otherwise
+		*/
+	   securityAttributesReferenced [11] OCTET STRING OPTIONAL,
+
+		/* efFileSize
+			Mandatory for EF file types
+			Not allowed for DF files
+		*/
+	   efFileSize [0] OCTET STRING OPTIONAL,
+
+		/* pinStatusTemplateDO
+			Not allowed for EF files
+			Mandatory for DF/ADF files
+			The pinStatusTemplateDO includes a list of all
+			PINKeyReferenceValue values used within the DF
+			and which shall be returned by the (A)DF
+			within the PS_DO according ETSI TS 102 221 [102 221];
+			(e.g. '01810A'H as a typical value for an ADF_USIM)
+		*/
+	   pinStatusTemplateDO [PRIVATE 6] OCTET STRING OPTIONAL,
+
+		/* shortEFID
+			Not allowed for DF files
+			Optional for EF file types / equivalent to ETSI TS 102 222
+			shortEFID not available: in case of a template file, SFI is set according to the respective file specification. For files created by using GenericFileManagement, SFI is calculated from FID
+			shortEFID available but not value: no SFI is supported
+			for this EF
+			shortEFID available with a length of 1 byte:
+			The Short File Identifier is coded from bits b8 to b4.
+			Bits b3,b2,b1 = 000.
+		*/
+	   shortEFID [8] OCTET STRING (SIZE (0..1)) OPTIONAL,
+
+		/* proprietaryEFInfo
+			Optional for EF file types
+			Not allowed for DF files
+		*/
+	   proprietaryEFInfo [5] ProprietaryInfo OPTIONAL,
+
+		/* linkPath
+			Specifies the path to the file to which shall be linked,
+			also valid for DFs/ADFs. Files within ADFs are addressed
+                  by the temporary file ID of the respective ADF. For the coding
+			see filePath.
+		*/
+	   linkPath [PRIVATE 7] OCTET STRING OPTIONAL
+}
+
+File ::= SEQUENCE OF CHOICE {
+	doNotCreate	NULL,	/* Indicates that this file shall not be created by the eUICC even if present in a PE referencing a "Created by Default" template.
+This flag has no effect for the creation of files in the MF and shall not be used for all the files listed in a "Not Created by Default" template*/
+	fileDescriptor Fcp,
+	fillFileOffset UInt16,
+	fillFileContent OCTET STRING
+}
+
+PE-MF ::= SEQUENCE {
+mf-header PEHeader,
+templateID OBJECT IDENTIFIER,
+mf File,
+ef-pl File OPTIONAL,
+ef-iccid File,
+ef-dir File,
+ef-arr File,
+ef-umpc File OPTIONAL
+}
+
+PE-CD ::= SEQUENCE {
+cd-header PEHeader,
+templateID OBJECT IDENTIFIER,
+df-cd File, 
+ef-launchpad File OPTIONAL, --
+ef-icon File OPTIONAL
+}
+
+PE-TELECOM ::= SEQUENCE {
+telecom-header PEHeader,
+templateID OBJECT IDENTIFIER,
+df-telecom File, 
+ef-arr File OPTIONAL,
+ef-rma File OPTIONAL,
+ef-sume File OPTIONAL,
+ef-ice-dn File OPTIONAL,
+ef-ice-ff File OPTIONAL,
+ef-psismsc File OPTIONAL,
+df-graphics File OPTIONAL,
+  ef-img File OPTIONAL,
+  ef-iidf File OPTIONAL,
+  ef-ice-graphics File OPTIONAL,
+  ef-launch-scws File OPTIONAL,
+  ef-icon File OPTIONAL,
+df-phonebook File OPTIONAL,
+  ef-pbr File OPTIONAL,
+  ef-ext1 File OPTIONAL,
+  ef-aas File OPTIONAL,
+  ef-gas File OPTIONAL,
+  ef-psc File OPTIONAL,
+  ef-cc File OPTIONAL,
+  ef-puid File OPTIONAL,
+  ef-iap File OPTIONAL,
+  ef-adn File OPTIONAL,
+  ef-pbc File OPTIONAL,
+  ef-anr File OPTIONAL,
+  ef-puri File OPTIONAL,
+  ef-email File OPTIONAL,
+  ef-sne File OPTIONAL,
+  ef-uid File OPTIONAL,
+  ef-grp File OPTIONAL,
+  ef-ccp1 File OPTIONAL,
+df-multimedia File OPTIONAL,
+  ef-mml File OPTIONAL,
+  ef-mmdf File OPTIONAL,
+df-mmss File OPTIONAL,
+  ef-mlpl File OPTIONAL,
+  ef-mspl File OPTIONAL,
+  ef-mmssmode File OPTIONAL
+}
+
+PE-USIM ::= SEQUENCE {
+usim-header PEHeader,
+templateID OBJECT IDENTIFIER,
+adf-usim File, 
+ef-imsi File,
+ef-arr File,
+ef-keys File OPTIONAL,
+ef-keysPS File OPTIONAL,
+ef-hpplmn File OPTIONAL,
+ef-ust File, /* The content of UST file shall be modified by the eUICC during profile installation according to the functionality supported by the eUICC platform  i.e. in the case where a service is not supported (and not indicated as required) the related bit(s) will be set to zero */
+ef-fdn File OPTIONAL,
+ef-sms File OPTIONAL,
+ef-smsp File OPTIONAL,
+ef-smss File OPTIONAL,
+ef-spn File,
+ef-est File,
+ef-start-hfn File OPTIONAL,
+ef-threshold File OPTIONAL,
+ef-psloci File OPTIONAL,
+ef-acc File,
+ef-fplmn File OPTIONAL,
+ef-loci File OPTIONAL,
+ef-ad File OPTIONAL,
+ef-ecc File,
+ef-netpar File OPTIONAL,
+ef-epsloci File OPTIONAL,
+ef-epsnsc File OPTIONAL
+}
+
+PE-OPT-USIM ::= SEQUENCE {
+optusim-header PEHeader,
+templateID OBJECT IDENTIFIER,
+ef-li File OPTIONAL,
+ef-acmax File OPTIONAL,
+ef-acm File OPTIONAL,
+ef-gid1 File OPTIONAL,
+ef-gid2 File OPTIONAL,
+ef-msisdn File OPTIONAL,
+ef-puct File OPTIONAL,
+ef-cbmi File OPTIONAL,
+ef-cbmid File OPTIONAL,
+ef-sdn File OPTIONAL,
+ef-ext2 File OPTIONAL,
+ef-ext3 File OPTIONAL,
+ef-cbmir File OPTIONAL,
+ef-plmnwact File OPTIONAL,
+ef-oplmnwact File OPTIONAL,
+ef-hplmnwact File OPTIONAL,
+ef-dck File OPTIONAL,
+ef-cnl File OPTIONAL,
+ef-smsr File OPTIONAL,
+ef-bdn File OPTIONAL,
+ef-ext5 File OPTIONAL,
+ef-ccp2 File OPTIONAL,
+ef-ext4 File OPTIONAL,
+ef-acl File OPTIONAL,
+ef-cmi File OPTIONAL,
+ef-ici File OPTIONAL,
+ef-oci File OPTIONAL,
+ef-ict File OPTIONAL,
+ef-oct File OPTIONAL,
+ef-vgcs File OPTIONAL,
+ef-vgcss File OPTIONAL,
+ef-vbs File OPTIONAL,
+ef-vbss File OPTIONAL,
+ef-emlpp File OPTIONAL,
+ef-aaem File OPTIONAL,
+ef-hiddenkey File OPTIONAL,
+ef-pnn File OPTIONAL,
+ef-opl File OPTIONAL,
+ef-mbdn File OPTIONAL,
+ef-ext6 File OPTIONAL,
+ef-mbi File OPTIONAL,
+ef-mwis File OPTIONAL,
+ef-cfis File OPTIONAL,
+ef-ext7 File OPTIONAL,
+ef-spdi File OPTIONAL,
+ef-mmsn File OPTIONAL,
+ef-ext8 File OPTIONAL,
+ef-mmsicp File OPTIONAL,
+ef-mmsup File OPTIONAL,
+ef-mmsucp File OPTIONAL,
+ef-nia File OPTIONAL,
+ef-vgcsca File OPTIONAL,
+ef-vbsca File OPTIONAL,
+ef-gbabp File OPTIONAL,
+ef-msk File OPTIONAL,
+ef-muk File OPTIONAL,
+ef-ehplmn File OPTIONAL,
+ef-gbanl File OPTIONAL,
+ef-ehplmnpi File OPTIONAL,
+ef-lrplmnsi File OPTIONAL,
+ef-nafkca File OPTIONAL,
+ef-spni File OPTIONAL,
+ef-pnni File OPTIONAL,
+ef-ncp-ip File OPTIONAL,
+ef-ufc File OPTIONAL,
+ef-nasconfig File OPTIONAL,
+ef-uicciari File OPTIONAL,
+ef-pws File OPTIONAL,
+ef-fdnuri File OPTIONAL,
+ef-bdnuri File OPTIONAL,
+ef-sdnuri File OPTIONAL,
+ef-iwl File OPTIONAL,
+ef-ips File OPTIONAL,
+ef-ipd File OPTIONAL
+}
+
+PE-PHONEBOOK ::= SEQUENCE {
+phonebook-header PEHeader,
+templateID OBJECT IDENTIFIER,
+df-phonebook File, 
+ef-pbr File OPTIONAL,
+ef-ext1 File OPTIONAL,
+ef-aas File OPTIONAL,
+ef-gas File OPTIONAL,
+ef-psc File OPTIONAL,
+ef-cc File OPTIONAL,
+ef-puid File OPTIONAL,
+ef-iap File OPTIONAL,
+ef-adn File OPTIONAL,
+ef-pbc File OPTIONAL,
+ef-anr File OPTIONAL,
+ef-puri File OPTIONAL,
+ef-email File OPTIONAL,
+ef-sne File OPTIONAL,
+ef-uid File OPTIONAL,
+ef-grp File OPTIONAL,
+ef-ccp1 File OPTIONAL
+}
+
+PE-GSM-ACCESS ::= SEQUENCE {
+gsm-access-header PEHeader,
+templateID OBJECT IDENTIFIER,
+df-gsm-access File,
+ef-kc File OPTIONAL,
+ef-kcgprs File OPTIONAL,
+ef-cpbcch File OPTIONAL,
+ef-invscan File OPTIONAL
+}
+
+PE-ISIM ::= SEQUENCE {
+isim-header PEHeader,
+templateID OBJECT IDENTIFIER,
+adf-isim File,
+ef-impi File,
+ef-impu File,
+ef-domain File,
+ef-ist File, /* The content of IST file shall be modified by the eUICC during profile installation according to the functionality supported by the eUICC platform i.e. in the case where a service is not supported (and not indicated as required) the related bit(s) will be set to zero */
+ef-ad File OPTIONAL,
+ef-arr File
+}
+
+PE-OPT-ISIM ::= SEQUENCE {
+optisim-header PEHeader,
+templateID OBJECT IDENTIFIER,
+ef-pcscf File OPTIONAL,
+ef-sms File OPTIONAL,
+ef-smsp File OPTIONAL,
+ef-smss File OPTIONAL,
+ef-smsr File OPTIONAL,
+ef-gbabp File OPTIONAL,
+ef-gbanl File OPTIONAL,
+ef-nafkca File OPTIONAL,
+ef-uicciari File OPTIONAL
+}
+
+PE-CSIM ::= SEQUENCE {
+csim-header PEHeader,
+templateID OBJECT IDENTIFIER,
+adf-csim File, 
+ef-arr File,
+ef-call-count File,
+ef-imsi-m File,
+ef-imsi-t File,
+ef-tmsi File,
+ef-ah File,
+ef-aop File,
+ef-aloc File,
+ef-cdmahome File,
+ef-znregi File,
+ef-snregi File,
+ef-distregi File,
+ef-accolc File,
+ef-term File,
+ef-acp File,
+ef-prl File,
+ef-ruimid File,
+ef-csim-st File,
+ef-spc File,
+ef-otapaspc File,
+ef-namlock File,
+ef-ota File,
+ef-sp File,
+ef-esn-meid-me File,
+ef-li File,
+ef-usgind File,
+ef-ad File,
+ef-max-prl File,
+ef-spcs File,
+ef-mecrp File,
+ef-home-tag File,
+ef-group-tag File,
+ef-specific-tag File,
+ef-call-prompt File
+}
+
+PE-OPT-CSIM ::= SEQUENCE {
+optcsim-header PEHeader,
+templateID OBJECT IDENTIFIER,
+ef-ssci File OPTIONAL,
+ef-fdn File OPTIONAL,
+ef-sms File OPTIONAL,
+ef-smsp File OPTIONAL,
+ef-smss File OPTIONAL,
+ef-ssfc File OPTIONAL,
+ef-spn File OPTIONAL,
+ef-mdn File OPTIONAL,
+ef-ecc File OPTIONAL,
+ef-me3gpdopc File OPTIONAL,
+ef-3gpdopm File OPTIONAL,
+ef-sipcap File OPTIONAL,
+ef-mipcap File OPTIONAL,
+ef-sipupp File OPTIONAL,
+ef-mipupp File OPTIONAL,
+ef-sipsp File OPTIONAL,
+ef-mipsp File OPTIONAL,
+ef-sippapss File OPTIONAL,
+ef-puzl File OPTIONAL,
+ef-maxpuzl File OPTIONAL,
+ef-hrpdcap File OPTIONAL,
+ef-hrpdupp File OPTIONAL,
+ef-csspr File OPTIONAL,
+ef-atc File OPTIONAL,
+ef-eprl File OPTIONAL,
+ef-bcsmscfg File OPTIONAL,
+ef-bcsmspref File OPTIONAL,
+ef-bcsmstable File OPTIONAL,
+ef-bcsmsp File OPTIONAL,
+ef-bakpara File OPTIONAL,
+ef-upbakpara File OPTIONAL,
+ef-mmsn File OPTIONAL,
+ef-ext8 File OPTIONAL,
+ef-mmsicp File OPTIONAL,
+ef-mmsup File OPTIONAL,
+ef-mmsucp File OPTIONAL,
+ef-auth-capability File OPTIONAL,
+ef-3gcik File OPTIONAL,
+ef-dck File OPTIONAL,
+ef-gid1 File OPTIONAL,
+ef-gid2 File OPTIONAL,
+ef-cdmacnl File OPTIONAL,
+ef-sf-euimid File OPTIONAL,
+ef-est File OPTIONAL,
+ef-hidden-key File OPTIONAL,
+ef-lcsver File OPTIONAL,
+ef-lcscp File OPTIONAL,
+ef-sdn File OPTIONAL,
+ef-ext2 File OPTIONAL,
+ef-ext3 File OPTIONAL,
+ef-ici File OPTIONAL,
+ef-oci File OPTIONAL,
+ef-ext5 File OPTIONAL,
+ef-ccp2 File OPTIONAL,
+ef-applabels File OPTIONAL,
+ef-model File OPTIONAL,
+ef-rc File OPTIONAL,
+ef-smscap File OPTIONAL,
+ef-mipflags File OPTIONAL,
+ef-3gpduppext File OPTIONAL,
+ef-ipv6cap File OPTIONAL,
+ef-tcpconfig File OPTIONAL,
+ef-dgc File OPTIONAL,
+ef-wapbrowsercp File OPTIONAL,
+ef-wapbrowserbm File OPTIONAL,
+ef-mmsconfig File OPTIONAL,
+ef-jdl File OPTIONAL
+}
+
+/* Create GenericFileManagement
+*/
+PE-GenericFileManagement ::= SEQUENCE {
+    gfm-header PEHeader,
+	fileManagementCMD SEQUENCE OF FileManagement
+}
+
+FileManagement ::= SEQUENCE OF CHOICE {
+    filePath [0] OCTET STRING, -- Use Temporary File ID for ADF
+    createFCP [APPLICATION 2] Fcp, 
+    fillFileOffset UInt16,
+    fillFileContent [1] OCTET STRING
+}
+
+MappingParameter ::= SEQUENCE {
+mappingOptions	OCTET STRING (SIZE(1)),
+	mappingSource	ApplicationIdentifier
+}
+
+AlgoParameter ::= SEQUENCE {
+	algorithmID INTEGER {
+		milenage(1),
+		tuak(2)
+	},
+
+	algorithmOptions	OCTET STRING (SIZE(1)),
+	key OCTET STRING,
+	opc OCTET STRING, -- OPc for Milenage; TOPc for TUAK
+
+-- rotationConstants only apply for Milenage; ignored in case of TUAK
+	rotationConstants	OCTET STRING (SIZE (5)) DEFAULT '4000204060'H,
+
+-- xoringConstants only apply for Milenage; ignored in case of TUAK
+	xoringConstants	OCTET STRING (SIZE (80)) DEFAULT '0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000020000000000000000000000000000000400000000000000000000000000000008'H,
+	authCounterMax	OCTET STRING (SIZE(3)) OPTIONAL
+}
+
+PE-AKAParameter ::= SEQUENCE {
+	aka-header PEHeader,
+	algoConfiguration CHOICE {
+		mappingParameter	MappingParameter,
+		algoParameter	AlgoParameter
+	},
+
+	sqnOptions		OCTET STRING (SIZE(1)) DEFAULT '02'H,
+	sqnDelta		OCTET STRING (SIZE(6)) DEFAULT '000010000000'H,
+	sqnAgeLimit 	OCTET STRING (SIZE(6)) DEFAULT '000010000000'H,
+
+-- Sequence numbers do not include the index (IND)
+	sqnInit SEQUENCE (SIZE (32)) OF OCTET STRING (SIZE (6)) DEFAULT {
+/* Index 0  */'000000000000'H, '000000000000'H, '000000000000'H, '000000000000'H,'000000000000'H, '000000000000'H, '000000000000'H, '000000000000'H, '000000000000'H, '000000000000'H, '000000000000'H, '000000000000'H,'000000000000'H, '000000000000'H, '000000000000'H, '000000000000'H, '000000000000'H, '000000000000'H, '000000000000'H, '000000000000'H,'000000000000'H, '000000000000'H, '000000000000'H, '000000000000'H, '000000000000'H, '000000000000'H, '000000000000'H, '000000000000'H,'000000000000'H, '000000000000'H, '000000000000'H,
+/* Index 31 */'000000000000'H }
+}
+
+
+PE-CDMAParameter ::= SEQUENCE {
+	cdma-header PEHeader,
+
+/* A-Key for CAVE Authentication */ 
+	authenticationKey OCTET STRING (SIZE(8)), 
+
+/* 
+Optional value for ssd
+Bytes 1..8: value if shared secret data A 
+Bytes 9..16: value if shared secret data B 
+*/ 
+	ssd OCTET STRING (SIZE (16)) OPTIONAL, 
+
+/* 
+   Shared Secrets for HRPD access authentication 
+   Includes the shared secret data. Length is variable 
+*/ 
+	hrpdAccessAuthenticationData OCTET STRING (SIZE (8..255)) OPTIONAL, 
+
+/* 
+   Parameters for simple IP authentication 
+   The shared secrets will be provided as a list of TLVs 
+   For each NAI-entry-index which will be provided within CHAP command the  
+   shared secret will be coded as follows: 
+   Tag: NAI-entry-index, length, Shared secret 
+   up to 16 shared secret values may be provided 
+*/ 
+	simpleIPAuthenticationData OCTET STRING (SIZE (10..4112)) OPTIONAL, 
+
+/* 
+   Parameters mobile IP authentication 
+   The shared secrets will be provided as a list of Tag Value pairs 
+   For each NAI-entry-index which will be provided within MN-HA command the 
+   necessary values will be coded as follows: 
+   Tag: NAI-entry-index, length of MN-AAA-SS, MN-AAA-SS value, length of
+   MN-HA-SS, MN-HA-SS value 
+   up to 16 entries may be provided 
+*/ 
+	mobileIPAuthenticationData OCTET STRING (SIZE (19..8208)) OPTIONAL
+}
+
+PINKeyReferenceValue ::= INTEGER {
+pinAppl1(1),		-- PIN global of App 1
+pinAppl2(2), 		-- PIN global of App 2
+pinAppl3(3), 		-- PIN global of App 3
+pinAppl4(4), 		-- PIN global of App 4
+pinAppl5(5), 		-- PIN global of App 5
+pinAppl6(6), 		-- PIN global of App 6
+pinAppl7(7), 		-- PIN global of App 7
+pinAppl8(8), 		-- PIN global of App 8
+adm1(10),		-- Administrative Key 1
+adm2(11), 		-- Administrative Key 2
+adm3(12), 		-- Administrative Key 3
+adm4(13), 		-- Administrative Key 4
+adm5(14), 		-- Administrative Key 5
+secondPINAppl1(129),	-- PIN local of App 1
+secondPINAppl2(130), 	-- PIN local of App 2
+secondPINAppl3(131), 	-- PIN local of App 3
+secondPINAppl4(132), 	-- PIN local of App 4
+secondPINAppl5(133), 	-- PIN local of App 5
+secondPINAppl6(134), 	-- PIN local of App 6
+secondPINAppl7(135), 	-- PIN local of App 7
+secondPINAppl8(136), 	-- PIN local of App 8
+adm6(138), 		-- Administrative Key 6
+adm7(139), 		-- Administrative Key 7
+adm8(140), 		-- Administrative Key 8
+adm9(141), 		-- Administrative Key 9
+adm10(142) 		-- Administrative Key 10
+}
+
+PINConfiguration ::= SEQUENCE {
+	keyReference PINKeyReferenceValue,
+	pinValue OCTET STRING (SIZE (8)),
+	unblockingPINReference PUKKeyReferenceValue OPTIONAL,
+	pinAttributes UInt8 DEFAULT 7,
+	maxNumOfAttemps-retryNumLeft UInt8 DEFAULT 51
+/* maxNumOfAttemps-retryNumLeft is encoded as follows: max Number of Attempts is encoded in the high nibble of this value (Bits b8 to b5) and the Number of retry left is encoded in the low nibble of this value (Bits b4 to b1)*/
+}
+
+PE-PINCodes ::= SEQUENCE {
+	pin-Header PEHeader,
+	pinCodes CHOICE {
+    pinconfig SEQUENCE (SIZE (1..26))OF PINConfiguration,
+    filePath OCTET STRING /* temporary File ID for ADF, coding according to section 8.3.5 */
+	} 
+/* PIN can be either defined in the current context or shared
+ with another DF/ADF
+ Up to 26 PIN could be defined according to TS 102 221 [102 221] 
+*/
+}
+
+PUKKeyReferenceValue ::= INTEGER {
+pukAppl1(1),		-- PUK global of App 1
+pukAppl2(2), 		-- PUK global of App 2
+pukAppl3(3), 		-- PUK global of App 3
+pukAppl4(4), 		-- PUK global of App 4
+pukAppl5(5), 		-- PUK global of App 5
+pukAppl6(6), 		-- PUK global of App 6
+pukAppl7(7), 		-- PUK global of App 7
+pukAppl8(8), 		-- PUK global of App 8
+secondPUKAppl1(129),	-- PUK local of App 1
+secondPUKAppl2(130), 	-- PUK local of App 2
+secondPUKAppl3(131), 	-- PUK local of App 3
+secondPUKAppl4(132), 	-- PUK local of App 4
+secondPUKAppl5(133), 	-- PUK local of App 5
+secondPUKAppl6(134), 	-- PUK local of App 6
+secondPUKAppl7(135), 	-- PUK local of App 7
+secondPUKAppl8(136) 	-- PUK local of App 8
+}
+
+PUKConfiguration ::= SEQUENCE {
+	keyReference PUKKeyReferenceValue,
+	pukValue OCTET STRING (SIZE (8)),
+	maxNumOfAttemps-retryNumLeft UInt8 DEFAULT 170
+/* maxNumOfAttemps-retryNumLeft is encoded as follows: max Number of Attempts is encoded in the high nibble of this value (Bits b8 to b5) and the Number of retry left is encoded in the low nibble of this value (Bits b4 to b1)*/
+}
+
+PE-PUKCodes ::= SEQUENCE {
+	puk-Header PEHeader,
+pukCodes SEQUENCE (SIZE (1..16))OF PUKConfiguration
+}
+
+PE-SecurityDomain ::= SEQUENCE {
+	sd-Header PEHeader,
+instance ApplicationInstance, -- see section 8.7.3
+keyList SEQUENCE OF KeyObject OPTIONAL, -- see section 8.6.3
+sdPersoData SEQUENCE OF OCTET STRING OPTIONAL -- see section 8.6.4
+}
+
+KeyObject::= SEQUENCE {
+keyUsageQualifier [21] OCTET STRING (SIZE (1)),
+keyAccess [22] OCTET STRING (SIZE (1)) DEFAULT '00'H,
+keyIdentifier [2] OCTET STRING (SIZE (1)),
+keyVersionNumber [3] OCTET STRING (SIZE (1)),
+keyCounterValue [5] OCTET STRING OPTIONAL,
+keyCompontents SEQUENCE OF SEQUENCE {
+		keyType [0] OCTET STRING, 
+		keyData [6] OCTET STRING,
+		macLength[7] UInt8 DEFAULT 8
+	}
+}
+
+PE-Application ::= SEQUENCE {
+	app-Header PEHeader,
+	loadBlock ApplicationLoadPackage OPTIONAL,
+	instanceList SEQUENCE OF ApplicationInstance OPTIONAL
+}
+
+ApplicationLoadPackage ::= SEQUENCE {
+loadPackageAID [APPLICATION 15] ApplicationIdentifier,
+securityDomainAID [APPLICATION 15] ApplicationIdentifier OPTIONAL,
+nonVolatileCodeLimitC6 [PRIVATE 6] OCTET STRING OPTIONAL,
+volatileDataLimitC7 [PRIVATE 7] OCTET STRING OPTIONAL,
+nonVolatileDataLimitC8 [PRIVATE 8] OCTET STRING OPTIONAL,
+hashValue [PRIVATE 1] OCTET STRING OPTIONAL,
+loadBlockObject [PRIVATE 4] OCTET STRING
+}
+
+ApplicationInstance ::= SEQUENCE {
+applicationLoadPackageAID [APPLICATION 15] ApplicationIdentifier,
+classAID [APPLICATION 15] ApplicationIdentifier,
+instanceAID [APPLICATION 15] ApplicationIdentifier,
+extraditeSecurityDomainAID [APPLICATION 15] ApplicationIdentifier OPTIONAL,
+applicationPrivileges [2] OCTET STRING,
+lifeCycleState [3] OCTET STRING (SIZE(1)) DEFAULT '07'H,
+/* Coding according to GP Life Cycle State.  */
+
+applicationSpecificParametersC9 [PRIVATE 9] OCTET STRING,
+systemSpecificParameters [PRIVATE 15] ApplicationSystemParameters OPTIONAL,
+applicationParameters [PRIVATE 10] UICCApplicationParameters OPTIONAL,
+processData SEQUENCE OF OCTET STRING OPTIONAL
+}
+
+ApplicationSystemParameters ::= SEQUENCE{
+volatileMemoryQuotaC7 [PRIVATE 7] OCTET STRING OPTIONAL,
+nonVolatileMemoryQuotaC8 [PRIVATE 8] OCTET STRING OPTIONAL,
+globalServiceParameters [PRIVATE 11] OCTET STRING OPTIONAL,
+implicitSelectionParameter [PRIVATE 15] OCTET STRING OPTIONAL,
+volatileReservedMemory [PRIVATE 23] OCTET STRING OPTIONAL,
+nonVolatileReservedMemory [PRIVATE 24] OCTET STRING OPTIONAL,
+ts102226SIMFileAccessToolkitParameter [PRIVATE 10] OCTET STRING OPTIONAL,
+ts102226AdditionalContactlessParameters [0] TS102226AdditionalContactlessParameters OPTIONAL,
+contactlessProtocolParameters [PRIVATE 25] OCTET STRING OPTIONAL, /* Coded according to Contactless Protocol Parameters Structure as defined in GP Amd. C */
+userInteractionContactlessParameters [PRIVATE 26] OCTET STRING OPTIONAL  /* Coded according to User Interaction Parameters Structure as defined in GP Amd. C */
+}
+
+UICCApplicationParameters ::= SEQUENCE {
+uiccToolkitApplicationSpecificParametersField [0] OCTET STRING OPTIONAL,
+uiccAccessApplicationSpecificParametersField [1] OCTET STRING OPTIONAL,
+uiccAdministrativeAccessApplicationSpecificParametersField [2] OCTET STRING OPTIONAL
+}
+
+TS102226AdditionalContactlessParameters ::= SEQUENCE{
+protocolParameterData OCTET STRING /* Parameters for contactless applications encoded according to TS 102 226 */
+}
+
+PE-RFM ::= SEQUENCE {
+	rfm-header [0] PEHeader,
+
+	/* instanceAID 
+	AID of the RFM instance
+	*/
+	instanceAID [APPLICATION 15] ApplicationIdentifier,
+
+	/* securityDomainAID to which the RFM instance is associated
+	*/
+	securityDomainAID [APPLICATION 15] ApplicationIdentifier OPTIONAL,
+
+	tarList [0] SEQUENCE OF OCTET STRING (SIZE(3)) OPTIONAL,
+
+	minimumSecurityLevel [1] OCTET STRING (SIZE (1)),
+
+	uiccAccessDomain OCTET STRING,
+    uiccAdminAccessDomain OCTET STRING,
+
+	/*
+       If the following parameter is available the respective ADF will be the     directory selected by default within an RFM script. In case it is not available the MF will be the default selection.
+        */
+    adfRFMAccess ADFRFMAccess OPTIONAL
+}
+
+ADFRFMAccess ::= SEQUENCE {
+    adfAID ApplicationIdentifier,
+    adfAccessDomain OCTET STRING,
+    adfAdminAccessDomain OCTET STRING
+}
+
+PE-NonStandard ::= SEQUENCE {
+	nonStandard-header PEHeader,
+	issuerID OBJECT IDENTIFIER,
+	content OCTET STRING
+}
+
+PE-End ::= SEQUENCE {
+	end-header PEHeader
+}
+
+PEStatus ::= SEQUENCE {
+status INTEGER {
+ok(0), pe-not-supported(1), memory-failure(2),bad-values(3),
+not-enough-memory(4),invalid-request-format(5), invalid-parameter(6),
+runtime-not-supported (7), lib-not-supported (8),
+ template-not-supported (9), feature-not-supported (10),
+ unsupported-profile-version(31)
+/* ISO 7816 standard status values apply in the range of [24576...28671]
+ and [36864�40959] for reporting status values '6xxx'H and '9xxx'H
+proprietary values apply in the range [40960...65535]
+*/
+},
+identification UInt15 OPTIONAL,
+-- Identification number of the PE triggering the error
+additional-information UInt8 OPTIONAL
+-- Additional information related to the status code
+}
+
+EUICCResponse ::= SEQUENCE {
+	peStatus SEQUENCE OF PEStatus,
+	profileInstallationAborted NULL OPTIONAL,
+	statusMessage UTF8String OPTIONAL
+}
+
+
+END

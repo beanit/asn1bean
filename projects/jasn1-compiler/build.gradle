@@ -1,0 +1,42 @@
+
+dependencies {
+  compile group: 'antlr', name: 'antlr', version: '2.7.7'
+  compile project(':jasn1')
+}
+
+sourceSets {
+  main {
+    java.srcDirs = ['src/main/java', 'src/main/java-gen']
+  }
+  test {
+    java.srcDirs = ['src/test/java', 'src/test/java-gen']
+  }
+}
+
+jar {
+  manifest {
+    name = 'jASN1 Compiler'
+    instruction 'Export-Package', '!*.internal.*,*'
+  }
+}
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+ 
+	pom.project {
+	  name 'jASN1 Compiler'
+	  description 'jASN1 Compiler generates Java classes out of ASN.1 code that can be used to encode/decode BER data.'
+ 
+	  licenses {
+	    license {
+          name 'Mozilla Public License v2.0'
+          url 'http://mozilla.org/MPL/2.0/'
+          distribution 'repo'
+	    }
+	  }
+	
+	}
+      }
+    }
+  }

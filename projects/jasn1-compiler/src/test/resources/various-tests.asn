@@ -1,0 +1,38 @@
+VARIOUS_TESTS DEFINITIONS::=
+BEGIN
+
+
+SequenceNameClashTest ::= [43] SEQUENCE {
+	myseqof [1] SEQUENCE OF UntaggedInteger,
+	untaggedInteger CHOICE {
+		myInteger [2] UntaggedInteger,
+		myBoolean [3] BOOLEAN
+	} OPTIONAL,
+	myChoice CHOICE {
+		myInteger [4] UntaggedInteger,
+		myChoice2 [5] CHOICE {
+			myInteger [6] UntaggedInteger,
+			myBoolean [7] BOOLEAN
+		},
+		mySequence [8] SEQUENCE {
+			myInteger [9] UntaggedInteger,
+			myBoolean [10] BOOLEAN
+		},
+		myseqof [1] SEQUENCE OF UntaggedInteger
+	}
+}
+
+UntaggedInteger ::= INTEGER
+
+IntegerListAndConstraint ::= INTEGER { oneMilliSec(1) } (0..65535)
+
+IntegerList ::= INTEGER { oneMilliSec(1) }
+
+IntegerConstraint ::= INTEGER (0..65535)
+
+EnumerationWithoutValue ::= ENUMERATED {
+	value1,
+	value2
+}
+
+END

@@ -1,0 +1,179 @@
+TAGGING_TEST DEFINITIONS IMPLICIT TAGS ::=
+BEGIN
+
+
+--===================CHOICE=================================
+
+UntaggedChoice ::= CHOICE {
+	myInteger [3] INTEGER,
+	myBoolean [4] BOOLEAN
+}
+
+TaggedChoice ::= [34] CHOICE {
+	myInteger INTEGER,
+	myBoolean BOOLEAN
+}
+
+RetaggedUntaggedChoice ::= [33] UntaggedChoice
+
+ImplicitlyRetaggedTaggedChoice ::= [3] TaggedChoice
+
+ExplicitlyRetaggedTaggedChoice ::= [33] EXPLICIT TaggedChoice
+
+RenamedUntaggedChoice ::= UntaggedChoice
+
+RenamedTaggedChoice ::= TaggedChoice
+
+ChoiceOfDirectTypes ::= CHOICE {
+	untaggedInt INTEGER,
+	explicitlyTaggedInt [1] EXPLICIT INTEGER,
+	implicitlyTaggedInt [2] IMPLICIT INTEGER,
+	untaggedChoice CHOICE {
+		myInteger [3] INTEGER,
+		myBoolean [4] BOOLEAN
+	},
+	taggedChoice [5] CHOICE {
+		myInteger [3] INTEGER,
+		myBoolean [4] BOOLEAN
+	},
+	taggedAny [6] ANY,
+	untaggedChoice2 CHOICE {
+		myInteger [8] INTEGER,
+		myBoolean [9] BOOLEAN
+	}
+}
+
+ChoiceOfIndirectTypes ::= CHOICE {
+	untaggedInt UntaggedInteger,
+	untaggedInt2 ExplicitlyTaggedInteger,
+	untaggedInt3 ImplicitlyTaggedInteger,
+	explicitlyTaggedInt [1] EXPLICIT UntaggedInteger,
+	explicitlyTaggedInt2 [11] EXPLICIT ExplicitlyTaggedInteger,
+	explicitlyTaggedInt3 [21] EXPLICIT ImplicitlyTaggedInteger,
+	implicitlyTaggedInt [2] IMPLICIT UntaggedInteger,
+	implicitlyTaggedInt2 [12] IMPLICIT ExplicitlyTaggedInteger,
+	implicitlyTaggedInt3 [23] IMPLICIT ImplicitlyTaggedInteger,
+	untaggedChoice UntaggedChoice,
+	untaggedChoice2 TaggedChoice,
+	taggedChoice [5] UntaggedChoice,
+	taggedChoice2 [15] TaggedChoice,
+	untaggedAny TaggedAny,
+	taggedAny [8] UntaggedAny,
+	taggedAny2 [18] TaggedAny
+}
+
+--===================SEQUENCE===============================
+
+UntaggedSequence ::= SEQUENCE {
+	myInteger INTEGER,
+	myBoolean BOOLEAN
+}
+
+RenamedUntaggedSequence ::= UntaggedSequence
+
+ImplicitlyTaggedSequence ::= [33] SEQUENCE {
+	myInteger INTEGER,
+	myBoolean BOOLEAN
+}
+
+ExplicitlyTaggedSequence ::= [33] EXPLICIT SEQUENCE {
+	myInteger INTEGER,
+	myBoolean BOOLEAN
+}
+
+ChoiceOfRenamedUntaggedSequence ::= CHOICE {
+	myInteger INTEGER,
+	renamedUntaggedSequence RenamedUntaggedSequence,
+	myBoolean BOOLEAN
+}
+
+ExplicitlyTaggedSet ::= [33] EXPLICIT SET {
+	myInteger INTEGER,
+	myBoolean BOOLEAN
+}
+
+SequenceOfDirectTypes ::= [43] SEQUENCE {
+	untaggedInt INTEGER,
+	explicitlyTaggedInt [1] EXPLICIT INTEGER,
+	implicitlyTaggedInt [2] IMPLICIT INTEGER,
+	untaggedChoice CHOICE {
+		myInteger [3] INTEGER,
+		myBoolean [4] BOOLEAN
+	},
+	taggedChoice [5] CHOICE {
+		myInteger [3] INTEGER,
+		myBoolean [4] BOOLEAN
+	},
+	taggedAny [6] ANY,
+	untaggedChoice2 CHOICE {
+		myInteger [8] INTEGER,
+		myBoolean [9] BOOLEAN
+	} OPTIONAL
+}
+
+
+
+SequenceOfIndirectTypes ::= SEQUENCE {
+	untaggedInt UntaggedInteger,
+	untaggedInt2 ExplicitlyTaggedInteger,
+	untaggedInt3 ImplicitlyTaggedInteger,
+	explicitlyTaggedInt [1] EXPLICIT UntaggedInteger,
+	explicitlyTaggedInt2 [11] EXPLICIT ExplicitlyTaggedInteger,
+	explicitlyTaggedInt3 [21] EXPLICIT ImplicitlyTaggedInteger,
+	implicitlyTaggedInt [2] IMPLICIT UntaggedInteger,
+	implicitlyTaggedInt2 [12] IMPLICIT ExplicitlyTaggedInteger,
+	implicitlyTaggedInt3 [23] IMPLICIT ImplicitlyTaggedInteger,
+	untaggedChoice UntaggedChoice,
+	untaggedChoice2 TaggedChoice,
+	taggedChoice [5] UntaggedChoice,
+	taggedChoice2 [15] TaggedChoice,
+	untaggedAny TaggedAny,
+	taggedAny [8] UntaggedAny,
+	taggedAny2 [18] TaggedAny
+}
+
+SequenceOfIndirectOptionalTypes ::= SEQUENCE {
+	untaggedInt UntaggedInteger OPTIONAL,
+	untaggedInt2 ExplicitlyTaggedInteger OPTIONAL,
+	untaggedInt3 ImplicitlyTaggedInteger OPTIONAL,
+	explicitlyTaggedInt [1] EXPLICIT UntaggedInteger OPTIONAL,
+	explicitlyTaggedInt2 [11] EXPLICIT ExplicitlyTaggedInteger OPTIONAL,
+	explicitlyTaggedInt3 [21] EXPLICIT ImplicitlyTaggedInteger OPTIONAL,
+	implicitlyTaggedInt [2] IMPLICIT UntaggedInteger OPTIONAL,
+	implicitlyTaggedInt2 [12] IMPLICIT ExplicitlyTaggedInteger OPTIONAL,
+	implicitlyTaggedInt3 [23] IMPLICIT ImplicitlyTaggedInteger OPTIONAL,
+	untaggedChoice UntaggedChoice OPTIONAL,
+	untaggedChoice2 TaggedChoice OPTIONAL,
+	taggedChoice [5] UntaggedChoice OPTIONAL,
+	taggedChoice2 [15] TaggedChoice OPTIONAL,
+	untaggedAny TaggedAny OPTIONAL,
+	taggedAny [8] UntaggedAny OPTIONAL,
+	taggedAny2 [18] TaggedAny OPTIONAL
+}
+
+--===================SEQUENCE OF============================
+
+ExplicitlyTaggedSeqOf ::= [33] EXPLICIT SEQUENCE OF INTEGER
+
+SeqOfExplicitlyTaggedType ::= SEQUENCE OF [3] EXPLICIT INTEGER
+
+--===================SET OF============================
+
+ExplicitlyTaggedSetOf ::= [33] EXPLICIT SET OF INTEGER
+
+
+--========================ANY===============================
+
+UntaggedAny ::= ANY
+
+TaggedAny ::= [7] ANY
+
+--=====================INTEGER============================
+
+ExplicitlyTaggedInteger ::= [33] EXPLICIT INTEGER
+
+ImplicitlyTaggedInteger ::= [33] INTEGER
+
+UntaggedInteger ::= INTEGER
+
+END

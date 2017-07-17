@@ -1,0 +1,140 @@
+MODULES-MODULE1 DEFINITIONS  IMPLICIT TAGS ::=
+BEGIN
+
+IMPORTS     EmployeeNumber-z
+FROM MODULES-MODULE2
+			EmployeeNumberzz
+, 			Datezz
+FROM MODULES-MODULE3;
+
+
+PersonnelRecord ::= [APPLICATION 0] IMPLICIT SEQUENCE {
+	name Name,
+	title [0] VisibleString,
+	number EmployeeNumber-z,
+	dateOfHire [1] Date,
+	nameOfSpouse [2] Name,
+	children [3] IMPLICIT SEQUENCE OF ChildInformation DEFAULT {},
+	testBitString [4] MyBitString,
+	test [6] MyInt,
+	test2 TestChoice OPTIONAL,
+	test3 TestChoice,
+	test4 [8] TestChoice OPTIONAL,
+	test5 [9] TestChoice,
+	test6 [10] TestChoice,
+	employeeNumber-z CHOICE {
+		employeeNumber-z EmployeeNumber-z
+    } OPTIONAL,
+    code VisibleString,
+    testSequenceOf TestSequenceOf,
+    testSequenceOf2 SEQUENCE OF SEQUENCE { test1 INTEGER, test2 INTEGER },
+    embeddedPdv EMBEDDED PDV
+}
+
+TestSequenceOf ::= SEQUENCE OF INTEGER
+
+TestChoice3 ::= [11] TestChoice2
+
+TestChoice4 ::= [12] EXPLICIT TestChoice3
+
+TestChoice2 ::= TestChoice
+
+TestChoice ::= CHOICE {
+	choiceElement1 ChildInformation,
+	choiceElement2 ChildInformation3
+}
+
+
+ChildInformation3 ::= [10] ChildInformation2
+
+
+ChildInformation2 ::= ChildInformation
+
+ChildInformation ::= SET {
+	name Name,
+	dateOfBirth [0] Date
+}
+
+Name2 ::= Name
+
+Name ::= [APPLICATION 1] IMPLICIT SEQUENCE {
+	givenName VisibleString,
+	initial VisibleString,
+	familyName VisibleString
+}
+
+EmployeeNumber ::= [APPLICATION 2] IMPLICIT INTEGER
+Date ::= [APPLICATION 3] IMPLICIT VisibleString -- YYYYMMDD
+
+Date ::= Datezz
+
+
+MyDate1 ::= Date
+
+MyDate2 ::= [9] Date
+
+MyDate3 ::= [9] IMPLICIT Date
+
+MyInt3 ::= [4] MyInt2
+
+MyInt2 ::= [3] EXPLICIT MyInt
+
+MyInt ::= INTEGER
+{  accessDenied                  (0)
+,  unexpectedResponderId         (1)
+,  operationalRequirement        (2)
+,  protocolError                 (3)
+,  communicationsFailure         (4)
+,  encodingError                 (5)
+,  returnTimeout                 (6)
+,  endOfServiceProvisionPeriod   (7)
+,  unsolicitedInvokeId           (8)
+,  otherReason                 (127)
+-- The range of this INTEGER shall be (0 .. 255).
+-- (128 .. 255) is reserved for diagnostic codes
+-- that are specific to the communications technology used. 
+}
+
+MyBitString ::= BIT STRING { context_management (0), restoration (1) }
+
+
+END
+
+MODULES-MODULE2 DEFINITIONS::=
+BEGIN
+
+EXPORTS EmployeeNumber-z
+,		Datez;
+
+PersonnelRecordz ::= [APPLICATION 0] IMPLICIT SET {
+	name Namez,
+	title [0] VisibleString,
+	number EmployeeNumber-z,
+	dateOfHire [1] Datez,
+	nameOfSpouse [2] Namez,
+	children [3] IMPLICIT SEQUENCE OF ChildInformationz DEFAULT {}
+}
+
+TestChoice ::= CHOICE {
+	element1 INTEGER,
+	element2 INTEGER
+}
+
+ChildInformationz ::= SET {
+	name Namez,
+	dateOfBirth [0] Datez
+}
+
+Namez ::= [APPLICATION 1] IMPLICIT SEQUENCE {
+	givenName VisibleString,
+	initial VisibleString,
+	familyName VisibleString
+}
+
+EmployeeNumber-z ::= [APPLICATION 2] IMPLICIT INTEGER
+Datez ::= [APPLICATION 3] IMPLICIT T61String -- YYYYMMDD
+Datez2 ::= [APPLICATION 3] IMPLICIT ISO646String -- YYYYMMDD
+
+END
+
+

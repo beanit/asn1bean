@@ -1,0 +1,24 @@
+TYPES DEFINITIONS AUTOMATIC TAGS ::=
+BEGIN
+
+BerEmbeddedPdv ::= [UNIVERSAL 11] IMPLICIT SEQUENCE {
+	identification CHOICE {
+		syntaxes SEQUENCE {
+			abstract OBJECT IDENTIFIER,
+			transfer OBJECT IDENTIFIER
+		},
+		syntax OBJECT IDENTIFIER,
+		presentation-context-id INTEGER,
+		context-negotiation SEQUENCE {
+			presentation-context-id INTEGER,
+			transfer-syntax OBJECT IDENTIFIER
+		},
+		transfer-syntax OBJECT IDENTIFIER,
+		fixed NULL
+	},
+	data-value-descriptor ObjectDescriptor OPTIONAL,
+	data-value OCTET STRING
+} --( WITH COMPONENTS { ... , data-value-descriptor ABSENT})
+
+
+END

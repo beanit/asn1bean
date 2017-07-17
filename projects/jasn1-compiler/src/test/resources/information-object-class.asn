@@ -1,0 +1,101 @@
+INFORMATION_OBJECTS
+
+DEFINITIONS IMPLICIT TAGS ::=
+BEGIN
+
+Attributes{Container} ::= SEQUENCE {
+	attributeId INTEGER (0..127,...),
+	attributeValue Container
+}
+
+ManagedExtension ::= SEQUENCE {
+	identifier TYPE-IDENTIFIER.&id,
+	significance[1] BOOLEAN DEFAULT FALSE,
+	information [2] TYPE-IDENTIFIER.&Type
+}
+
+
+ManagedExtension2 ::= SEQUENCE {
+	identifier ABSTRACT-SYNTAX.&id,
+	property[1] ABSTRACT-SYNTAX.&property,
+	information [2] ABSTRACT-SYNTAX.&Type
+}
+
+
+--============================================================
+
+RegionalExtension {REG-EXT-ID-AND-TYPE : Set} ::= SEQUENCE {
+   regionId     REG-EXT-ID-AND-TYPE.&id( {Set} ),
+   regExtValue  REG-EXT-ID-AND-TYPE.&Type( {Set}{@regionId} )
+   }
+   
+   RegionId ::= INTEGER (0..255)
+   noRegion     RegionId ::= 0  -- Use default supplied stubs
+   addGrpA      RegionId ::= 1  -- USA
+   addGrpB      RegionId ::= 2  -- Japan
+   addGrpC      RegionId ::= 3  -- EU
+   
+   MessageTypes MESSAGE-ID-AND-TYPE ::= {
+   { MapData               IDENTIFIED BY mapData               } |          
+   { SPAT                  IDENTIFIED BY signalPhaseAndTimingMessage } | 
+   { SignalRequestMessage  IDENTIFIED BY signalRequestMessage  } |    
+   { SignalStatusMessage   IDENTIFIED BY signalStatusMessage   },  
+   ... -- Expansion to be used only by the SAE J2735 DSRC TC
+   }
+
+REG-EXT-ID-AND-TYPE ::= CLASS {
+   &id     RegionId UNIQUE,
+   &Type
+} WITH SYNTAX {&Type IDENTIFIED BY &id}
+
+MESSAGE-ID-AND-TYPE ::= CLASS {
+   &id    DSRCmsgID UNIQUE,
+   &Type
+} WITH SYNTAX {&Type IDENTIFIED BY &id}
+
+--=====================================================================
+
+MY-IDENTIFIER ::= CLASS {
+	&id OBJECT IDENTIFIER UNIQUE, 
+	&Value
+} WITH SYNTAX {TYPE &Value ID &id }
+
+MY-EXTENSION ::= MY-IDENTIFIER 
+
+MyManagedExtension ::= SEQUENCE {
+	identifier MY-EXTENSION.&id({MyManagedExtensionSet}),
+	significance[1] BOOLEAN DEFAULT FALSE,
+	information [2] MY-EXTENSION.&Value({MyManagedExtensionSet}{@.identifier})
+}
+
+--==================== OSS Example ==========================================
+
+PRODUCT ::= CLASS {
+&code	       INTEGER (1..99999) UNIQUE,
+&description	VisibleString (SIZE (1..100)),
+&price	      REAL,
+--OpenType-- &Feature	   
+} WITH SYNTAX { CODE &code , DESCRIPTION &description , PRICE &price , FEATURE &Feature }
+
+Item ::= SEQUENCE {
+itemCode        PRODUCT.&code ({ProductCatalog }),
+itemDescription	PRODUCT.&description({ProductCatalog}{@itemCode}),
+feature         PRODUCT.&Feature ({ProductCatalog}{@itemCode}),
+quantity        INTEGER (1..1000),
+unitPrice       PRODUCT.&price ({ProductCatalog}{@itemCode}),
+itemTotal       REAL,
+isTaxable	      BOOLEAN
+}
+
+ProductCatalog PRODUCT ::= {
+{CODE 101, DESCRIPTION "iPhone", PRICE 250.00, FEATURE Generation } |
+{CODE 102, DESCRIPTION "Android Galaxy", PRICE 250.00, FEATURE Generation } |
+{CODE 103, DESCRIPTION "Win7 Nokia", PRICE 150.00, FEATURE Generation } |
+{CODE 104, DESCRIPTION "Bookshelf", PRICE 100.00, FEATURE Weight} |
+{CODE 105, DESCRIPTION "Glass Egg", PRICE 2000.00, FEATURE NULL}
+}
+
+
+
+END
+

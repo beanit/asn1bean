@@ -1,0 +1,84 @@
+
+project.ext {
+
+  cfgVersion = "1.8.1-SNAPSHOT"
+  
+  cfgGroup = "org.openmuc"
+
+  cfgCopyDependencies = true
+
+  cfgCopyToRoot = true
+
+  cfgSignPom = true
+
+  cfgRepository = project.properties.sonatypeRepository
+
+  cfgSnapshotRepository = project.properties.sonatypeSnapshotRepository
+
+  cfgRepositoryUser = project.properties.sonatypeUser
+
+  cfgRepositoryPass = project.properties.sonatypePass
+
+  javaProjects = subprojects
+
+  distributionProjects = javaProjects
+
+  docProjects = distributionProjects.findAll {
+    it.getPath() == ":jasn1"
+  }
+
+  repositoryProjects = javaProjects
+
+}
+
+tasks.withType(Tar) {
+
+  into(project.name) {
+    from("./") {
+      include "build.gradle"
+      include "configuration.gradle"
+      include "license/**"
+      include "doc/CHANGELOG.txt"
+      include "run-scripts/**"
+      include "gradle/wrapper/**"
+      include "gradlew"
+      include "gradlew.bat"
+      include "build/libs-all/**"
+      include "src/**"
+
+      include "projects/jasn1/src/**"
+      include "projects/jasn1/build.gradle"
+      include "projects/jasn1/build/docs/**"
+
+      include "projects/jasn1-compiler/src/**"
+      include "projects/jasn1-compiler/build.gradle"
+      include "projects/jasn1-compiler/antlr/**"
+      include "projects/jasn1-compiler/dependencies/**"
+    }
+
+    if (name.equals("tar") ){
+      exclude "**/dependencies/**/src"
+    }
+
+    from("./build/") {
+      include "settings.gradle"
+    }
+  }
+  
+  into(project.name + "/doc/user-guide/") {
+    from("./build/asciidoc/html5/") {
+      include "**"
+    }
+    from("./build/asciidoc/pdf/") {
+      include "*.pdf"
+    }
+  }
+
+  into(project.name + "/doc/") {
+    from("./build/docs/") {
+      include "javadoc/**"
+    }
+  }
+
+
+}

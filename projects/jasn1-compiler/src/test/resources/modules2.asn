@@ -1,0 +1,34 @@
+
+MODULES-MODULE3 DEFINITIONS::=
+BEGIN
+
+IMPORTS     Datez
+FROM MODULES-MODULE2;
+
+EmployeeNumber-z ::= [APPLICATION 2] IMPLICIT INTEGER
+
+PersonnelRecordzz ::= [APPLICATION 0] IMPLICIT SET {
+	name Namezz,
+	title [0] VisibleString,
+	number EmployeeNumberzz,
+	dateOfHire [1] Datezz,
+	nameOfSpouse [2] Namezz,
+	children [3] IMPLICIT SEQUENCE OF ChildInformationzz DEFAULT {}
+}
+
+ChildInformationzz ::= SET {
+	name Namezz,
+	dateOfBirth [0] Datezz
+}
+
+Namezz ::= [APPLICATION 1] IMPLICIT SEQUENCE {
+	givenName VisibleString,
+	initial VisibleString,
+	familyName VisibleString
+}
+
+EmployeeNumberzz ::= [APPLICATION 2] IMPLICIT INTEGER
+Datezz ::= Datez -- YYYYMMDD
+
+END
+
