@@ -137,7 +137,7 @@ public class BerObjectIdentifier implements Serializable {
 
         int subidentifier = 0;
         for (int i = 0; i <= subIDEndIndex; i++) {
-            subidentifier |= (byteCode[i] << ((subIDEndIndex - i) * 7));
+            subidentifier |= ((byteCode[i] & 0x7f) << ((subIDEndIndex - i) * 7));
         }
 
         if (subidentifier < 40) {
