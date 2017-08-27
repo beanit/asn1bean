@@ -23,7 +23,7 @@ import org.openmuc.jasn1.compiler.parser.ASNParser;
 
 public class Compiler {
 
-    public final static String VERSION = "1.8.2";
+    public final static String VERSION = "1.8.3-SNAPSHOT";
 
     public static void main(String args[]) throws Exception {
 
