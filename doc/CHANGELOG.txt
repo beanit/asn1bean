@@ -1,3 +1,10 @@
+v1.8.2 28-Aug-2017
+------------------
+
+- fixed decoding certain subIDs of object identifiers, thanks to Calum
+  MacLean
+
+
 v1.8.1 19-Jul-2017
 ------------------
 
