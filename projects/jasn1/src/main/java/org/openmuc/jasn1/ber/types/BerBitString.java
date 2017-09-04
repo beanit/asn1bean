@@ -6,9 +6,9 @@ package org.openmuc.jasn1.ber.types;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
 import org.openmuc.jasn1.ber.BerLength;
 import org.openmuc.jasn1.ber.BerTag;
 import org.openmuc.jasn1.ber.internal.Util;
@@ -48,11 +48,11 @@ public class BerBitString implements Serializable {
         this.code = code;
     }
 
-    public int encode(BerByteArrayOutputStream os) throws IOException {
+    public int encode(OutputStream os) throws IOException {
         return encode(os, true);
     }
 
-    public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
+    public int encode(OutputStream os, boolean withTag) throws IOException {
 
         if (code != null) {
             for (int i = code.length - 1; i >= 0; i--) {

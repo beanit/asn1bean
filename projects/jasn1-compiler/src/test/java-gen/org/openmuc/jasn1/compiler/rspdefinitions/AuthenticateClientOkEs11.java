@@ -7,6 +7,7 @@ package org.openmuc.jasn1.compiler.rspdefinitions;
 import java.io.IOException;
 import java.io.EOFException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -46,11 +47,11 @@ public class AuthenticateClientOkEs11 implements Serializable {
 			this.seqOf = seqOf;
 		}
 
-		public int encode(BerByteArrayOutputStream os) throws IOException {
+		public int encode(OutputStream os) throws IOException {
 			return encode(os, true);
 		}
 
-		public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
+		public int encode(OutputStream os, boolean withTag) throws IOException {
 
 			if (code != null) {
 				for (int i = code.length - 1; i >= 0; i--) {
@@ -128,9 +129,9 @@ public class AuthenticateClientOkEs11 implements Serializable {
 		}
 
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
+			OutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
 			encode(os, false);
-			code = os.getArray();
+			code = ((BerByteArrayOutputStream) os).getArray();
 		}
 
 		public String toString() {
@@ -189,11 +190,11 @@ public class AuthenticateClientOkEs11 implements Serializable {
 		this.eventEntries = eventEntries;
 	}
 
-	public int encode(BerByteArrayOutputStream os) throws IOException {
+	public int encode(OutputStream os) throws IOException {
 		return encode(os, true);
 	}
 
-	public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream os, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
@@ -315,9 +316,9 @@ public class AuthenticateClientOkEs11 implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
+		OutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
 		encode(os, false);
-		code = os.getArray();
+		code = ((BerByteArrayOutputStream) os).getArray();
 	}
 
 	public String toString() {

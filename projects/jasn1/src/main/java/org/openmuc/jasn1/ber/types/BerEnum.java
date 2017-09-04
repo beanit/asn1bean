@@ -5,9 +5,9 @@ package org.openmuc.jasn1.ber.types;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigInteger;
 
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
 import org.openmuc.jasn1.ber.BerTag;
 
 public class BerEnum extends BerInteger {
@@ -32,7 +32,7 @@ public class BerEnum extends BerInteger {
     }
 
     @Override
-    public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
+    public int encode(OutputStream os, boolean withTag) throws IOException {
 
         int codeLength = super.encode(os, false);
 

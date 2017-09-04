@@ -5,6 +5,7 @@ package org.openmuc.jasn1.ber.types;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigInteger;
 
 import org.junit.Assert;
@@ -25,10 +26,10 @@ public class BerIntegerTest {
         }
 
         @Override
-        public int encode(BerByteArrayOutputStream berBAOStream, boolean withTag) throws IOException {
+        public int encode(OutputStream berBAOStream, boolean withTag) throws IOException {
             int codeLength = super.encode(berBAOStream, false);
             if (withTag) {
-                codeLength += BerLength.encodeLength(berBAOStream, codeLength);
+                codeLength += BerLength.encodeLength((BerByteArrayOutputStream)berBAOStream, codeLength);
                 codeLength += identifier.encode(berBAOStream);
             }
 
