@@ -36,4 +36,8 @@ public class MyBitString extends BerBitString {
 		super(value, numBits);
 	}
 
+	public MyBitString(boolean[] value) {
+		super(value);
+	}
+
 }

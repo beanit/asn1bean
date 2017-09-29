@@ -899,6 +899,11 @@ public class BerClassWriter {
                 write("super(value);");
                 write("}\n");
             }
+            else if (constructorParameters.length == 4 && constructorParameters[3].equals("numBits")) {
+                write("public " + typeName + "(boolean[] value) {");
+                write("super(value);");
+                write("}\n");
+            }
 
         }
 

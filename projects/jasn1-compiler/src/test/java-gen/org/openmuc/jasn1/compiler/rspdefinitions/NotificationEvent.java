@@ -37,4 +37,8 @@ public class NotificationEvent extends BerBitString {
 		super(value, numBits);
 	}
 
+	public NotificationEvent(boolean[] value) {
+		super(value);
+	}
+
 }

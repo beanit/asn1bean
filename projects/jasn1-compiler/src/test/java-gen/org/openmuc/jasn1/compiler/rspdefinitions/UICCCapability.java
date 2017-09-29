@@ -37,4 +37,8 @@ public class UICCCapability extends BerBitString {
 		super(value, numBits);
 	}
 
+	public UICCCapability(boolean[] value) {
+		super(value);
+	}
+
 }

@@ -33,4 +33,8 @@ public class PresentationRequirements extends BerBitString {
 		super(value, numBits);
 	}
 
+	public PresentationRequirements(boolean[] value) {
+		super(value);
+	}
+
 }

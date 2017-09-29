@@ -39,4 +39,8 @@ public class KeyUsage extends BerBitString {
 		super(value, numBits);
 	}
 
+	public KeyUsage(boolean[] value) {
+		super(value);
+	}
+
 }

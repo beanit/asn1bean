@@ -33,4 +33,8 @@ public class ProtocolVersion extends BerBitString {
 		super(value, numBits);
 	}
 
+	public ProtocolVersion(boolean[] value) {
+		super(value);
+	}
+
 }

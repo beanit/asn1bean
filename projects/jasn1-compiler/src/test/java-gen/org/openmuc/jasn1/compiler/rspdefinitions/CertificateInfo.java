@@ -37,4 +37,8 @@ public class CertificateInfo extends BerBitString {
 		super(value, numBits);
 	}
 
+	public CertificateInfo(boolean[] value) {
+		super(value);
+	}
+
 }

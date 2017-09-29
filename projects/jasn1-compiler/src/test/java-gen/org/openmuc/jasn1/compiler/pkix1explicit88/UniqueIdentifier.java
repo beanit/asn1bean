@@ -33,4 +33,8 @@ public class UniqueIdentifier extends BerBitString {
 		super(value, numBits);
 	}
 
+	public UniqueIdentifier(boolean[] value) {
+		super(value);
+	}
+
 }

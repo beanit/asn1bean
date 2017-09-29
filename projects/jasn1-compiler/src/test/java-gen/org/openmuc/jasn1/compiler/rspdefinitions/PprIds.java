@@ -37,4 +37,8 @@ public class PprIds extends BerBitString {
 		super(value, numBits);
 	}
 
+	public PprIds(boolean[] value) {
+		super(value);
+	}
+
 }

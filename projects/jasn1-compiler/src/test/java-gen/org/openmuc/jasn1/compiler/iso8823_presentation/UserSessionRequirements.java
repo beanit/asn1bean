@@ -33,4 +33,8 @@ public class UserSessionRequirements extends BerBitString {
 		super(value, numBits);
 	}
 
+	public UserSessionRequirements(boolean[] value) {
+		super(value);
+	}
+
 }

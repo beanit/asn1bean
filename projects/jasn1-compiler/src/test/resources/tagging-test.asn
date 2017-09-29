@@ -176,4 +176,13 @@ ImplicitlyTaggedInteger ::= [33] INTEGER
 
 UntaggedInteger ::= INTEGER
 
+--=====================BIT STRING============================
+
+ExplicitlyTaggedBitString ::= [33] EXPLICIT BIT STRING
+
+ImplicitlyTaggedBitString ::= [33] BIT STRING
+
+UntaggedBitString ::= BIT STRING
+
+
 END

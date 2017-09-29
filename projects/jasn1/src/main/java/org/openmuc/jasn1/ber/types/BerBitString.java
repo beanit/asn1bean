@@ -21,7 +21,7 @@ public class BerBitString implements Serializable {
 
     public byte[] code = null;
 
-    public byte[] value;
+    public byte[] value = null;
     public int numBits;
 
     public BerBitString() {
@@ -41,11 +41,37 @@ public class BerBitString implements Serializable {
 
         this.value = value;
         this.numBits = numBits;
+    }
 
+    public BerBitString(boolean[] value) {
+
+        if (value == null) {
+            throw new NullPointerException("value cannot be null");
+        }
+
+        numBits = value.length;
+        this.value = new byte[(numBits + 7) / 8];
+        for (int i = 0; i < numBits; i++) {
+            if (value[i]) {
+                this.value[i / 8] |= (1 << (7 - (i % 8)));
+            }
+        }
     }
 
     public BerBitString(byte[] code) {
         this.code = code;
+    }
+
+    public boolean[] getValueAsBooleans() {
+        if (value == null) {
+            return null;
+        }
+
+        boolean[] booleans = new boolean[numBits];
+        for (int i = 0; i < numBits; i++) {
+            booleans[i] = ((value[i / 8] & (1 << (7 - (i % 8)))) > 0);
+        }
+        return booleans;
     }
 
     public int encode(BerByteArrayOutputStream os) throws IOException {
@@ -123,8 +149,8 @@ public class BerBitString implements Serializable {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < numBits; i++) {
-            if (((value[i / 8] & 0xff) & (0x80 >> (i % 8))) == (0x80 >> (i % 8))) {
+        for (boolean bit : getValueAsBooleans()) {
+            if (bit) {
                 sb.append('1');
             }
             else {

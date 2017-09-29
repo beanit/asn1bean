@@ -39,4 +39,8 @@ public class ReasonFlags extends BerBitString {
 		super(value, numBits);
 	}
 
+	public ReasonFlags(boolean[] value) {
+		super(value);
+	}
+
 }

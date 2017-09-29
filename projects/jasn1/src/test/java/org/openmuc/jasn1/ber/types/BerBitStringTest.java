@@ -14,4 +14,11 @@ public class BerBitStringTest {
         Assert.assertEquals("00000001000000100000011", bitString.toString());
     }
 
+    @Test
+    public void toString2Test() {
+        BerBitString bitString = new BerBitString(new boolean[] { false, false, false, false, false, false, false, true,
+                false, false, false, false, false, false, true, false, false, false, false, false, false, true, true });
+        Assert.assertEquals("00000001000000100000011", bitString.toString());
+    }
+
 }
