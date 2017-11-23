@@ -5,6 +5,7 @@ package org.openmuc.jasn1.ber.types;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 
 import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
@@ -26,7 +27,7 @@ public class BerAny implements Serializable {
         this.value = value;
     }
 
-    public int encode(BerByteArrayOutputStream os) throws IOException {
+    public int encode(OutputStream os) throws IOException {
         os.write(value);
         return value.length;
     }

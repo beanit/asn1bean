@@ -5,9 +5,9 @@ package org.openmuc.jasn1.ber.types.string;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
 import org.openmuc.jasn1.ber.BerTag;
 import org.openmuc.jasn1.ber.types.BerOctetString;
 
@@ -38,7 +38,7 @@ public class BerUTF8String extends BerOctetString {
     }
 
     @Override
-    public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
+    public int encode(OutputStream os, boolean withTag) throws IOException {
 
         int codeLength = super.encode(os, false);
 

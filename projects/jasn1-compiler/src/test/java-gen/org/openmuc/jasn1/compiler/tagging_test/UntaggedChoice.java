@@ -7,6 +7,7 @@ package org.openmuc.jasn1.compiler.tagging_test;
 import java.io.IOException;
 import java.io.EOFException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -49,7 +50,7 @@ public class UntaggedChoice implements Serializable {
 		return myBoolean;
 	}
 
-	public int encode(BerByteArrayOutputStream os) throws IOException {
+	public int encode(OutputStream os) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
@@ -112,9 +113,9 @@ public class UntaggedChoice implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
+		OutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
 		encode(os);
-		code = os.getArray();
+		code = ((BerByteArrayOutputStream) os).getArray();
 	}
 
 	public String toString() {

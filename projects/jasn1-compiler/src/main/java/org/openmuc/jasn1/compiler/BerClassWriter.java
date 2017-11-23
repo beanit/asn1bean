@@ -770,7 +770,7 @@ public class BerClassWriter {
     }
 
     private void writeSimpleEncodeFunction() throws IOException {
-        write("public int encode(BerByteArrayOutputStream os) throws IOException {");
+        write("public int encode(OutputStream os) throws IOException {");
         write("return encode(os, true);");
         write("}\n");
     }
@@ -908,7 +908,7 @@ public class BerClassWriter {
                 writeSimpleEncodeFunction();
             }
 
-            write("public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {\n");
+            write("public int encode(OutputStream os, boolean withTag) throws IOException {\n");
 
             if (constructorParameters.length != 2 || constructorParameters[0] != "byte[]") {
                 write("if (code != null) {");
@@ -984,10 +984,10 @@ public class BerClassWriter {
             throws IOException {
         if (hasExplicitTag) {
             writeSimpleEncodeFunction();
-            write("public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {\n");
+            write("public int encode(OutputStream os, boolean withTag) throws IOException {\n");
         }
         else {
-            write("public int encode(BerByteArrayOutputStream os) throws IOException {\n");
+            write("public int encode(OutputStream os) throws IOException {\n");
         }
 
         write("if (code != null) {");
@@ -1056,7 +1056,7 @@ public class BerClassWriter {
 
     private void writeSequenceOrSetEncodeFunction(List<AsnElementType> componentTypes, boolean hasExplicitTag,
             boolean isSequence) throws IOException {
-        write("public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {\n");
+        write("public int encode(OutputStream os, boolean withTag) throws IOException {\n");
 
         write("if (code != null) {");
         write("for (int i = code.length - 1; i >= 0; i--) {");
@@ -1133,7 +1133,7 @@ public class BerClassWriter {
 
     private void writeSequenceOfEncodeFunction(AsnElementType componentType, boolean hasExplicitTag, boolean isSequence)
             throws IOException {
-        write("public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {\n");
+        write("public int encode(OutputStream os, boolean withTag) throws IOException {\n");
 
         write("if (code != null) {");
         write("for (int i = code.length - 1; i >= 0; i--) {");
@@ -1852,14 +1852,14 @@ public class BerClassWriter {
 
     private void writeEncodeAndSaveFunction(boolean isTagless) throws IOException {
         write("public void encodeAndSave(int encodingSizeGuess) throws IOException {");
-        write("BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);");
+        write("OutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);");
         if (isTagless) {
             write("encode(os);");
         }
         else {
             write("encode(os, false);");
         }
-        write("code = os.getArray();");
+        write("code = ((BerByteArrayOutputStream) os).getArray();");
         write("}\n");
     }
 
@@ -2572,6 +2572,7 @@ public class BerClassWriter {
         write("import java.io.IOException;");
         write("import java.io.EOFException;");
         write("import java.io.InputStream;");
+        write("import java.io.OutputStream;");
         write("import java.util.List;");
         write("import java.util.ArrayList;");
         write("import java.util.Iterator;");
