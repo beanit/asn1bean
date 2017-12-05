@@ -5,9 +5,9 @@ package org.openmuc.jasn1.ber.types.string;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
 import org.openmuc.jasn1.ber.BerLength;
 import org.openmuc.jasn1.ber.BerTag;
 import org.openmuc.jasn1.ber.internal.Util;
@@ -31,11 +31,11 @@ public class BerVisibleString implements Serializable {
         value = valueAsString.getBytes();
     }
 
-    public int encode(BerByteArrayOutputStream os) throws IOException {
+    public int encode(OutputStream os) throws IOException {
         return encode(os, true);
     }
 
-    public int encode(BerByteArrayOutputStream os, boolean withTag) throws IOException {
+    public int encode(OutputStream os, boolean withTag) throws IOException {
 
         os.write(value);
         int codeLength = value.length;
