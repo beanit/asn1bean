@@ -6,6 +6,7 @@ package org.openmuc.jasn1.ber;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 
 public class BerTag implements Serializable {
@@ -87,7 +88,7 @@ public class BerTag implements Serializable {
         }
     }
 
-    public int encode(BerByteArrayOutputStream os) throws IOException {
+    public int encode(OutputStream os) throws IOException {
         if (tagBytes == null) {
             code();
         }

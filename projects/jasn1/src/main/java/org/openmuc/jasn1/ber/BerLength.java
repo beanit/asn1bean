@@ -6,6 +6,7 @@ package org.openmuc.jasn1.ber;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 
 public class BerLength implements Serializable {
@@ -86,7 +87,7 @@ public class BerLength implements Serializable {
         return lengthLength + 1;
     }
 
-    public static int encodeLength(BerByteArrayOutputStream os, int length) throws IOException {
+    public static int encodeLength(OutputStream os, int length) throws IOException {
         // the indefinite form is ignored for now
 
         if (length <= 127) {
