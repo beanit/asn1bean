@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
+import org.openmuc.jasn1.ber.ReverseByteArrayOutputStream;
 import org.openmuc.jasn1.ber.BerLength;
 import org.openmuc.jasn1.ber.BerTag;
 import org.openmuc.jasn1.ber.internal.Util;
@@ -49,7 +49,7 @@ public class BerAny implements Serializable {
             decodedLength += tagLength;
         }
         else {
-            tagLength = tag.encode(new BerByteArrayOutputStream(10));
+            tagLength = tag.encode(new ReverseByteArrayOutputStream(10));
         }
 
         BerLength lengthField = new BerLength();
@@ -59,7 +59,7 @@ public class BerAny implements Serializable {
         value = new byte[tagLength + lengthLength + lengthField.val];
 
         Util.readFully(is, value, tagLength + lengthLength, lengthField.val);
-        BerByteArrayOutputStream os = new BerByteArrayOutputStream(value, tagLength + lengthLength - 1);
+        ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(value, tagLength + lengthLength - 1);
         BerLength.encodeLength(os, lengthField.val);
         tag.encode(os);
 

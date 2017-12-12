@@ -10,7 +10,7 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
+import org.openmuc.jasn1.ber.ReverseByteArrayOutputStream;
 import org.openmuc.jasn1.ber.types.BerEmbeddedPdv;
 import org.openmuc.jasn1.ber.types.BerInteger;
 import org.openmuc.jasn1.ber.types.string.BerVisibleString;
@@ -33,7 +33,7 @@ public class ModulesTest {
     @Test
     public void encodingDecoding() throws IOException {
 
-        BerByteArrayOutputStream berOS = new BerByteArrayOutputStream(1000);
+        ReverseByteArrayOutputStream berOS = new ReverseByteArrayOutputStream(1000);
 
         MyDate1 dateOfHire = new MyDate1();
         // MyDate1 dateOfHire = new MyDate1("19710917");

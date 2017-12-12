@@ -10,7 +10,7 @@ import javax.xml.bind.DatatypeConverter;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
+import org.openmuc.jasn1.ber.ReverseByteArrayOutputStream;
 import org.openmuc.jasn1.ber.types.BerAny;
 import org.openmuc.jasn1.ber.types.BerBoolean;
 import org.openmuc.jasn1.ber.types.BerInteger;
@@ -37,7 +37,7 @@ public class TaggingTest {
         integerList.add(new BerInteger(3));
         integerList.add(new BerInteger(4));
 
-        BerByteArrayOutputStream os = new BerByteArrayOutputStream(1000);
+        ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
         seqOf.encode(os);
 
         Assert.assertArrayEquals(DatatypeConverter.parseHexBinary("300AA303020103A303020104"), os.getArray());
@@ -53,7 +53,7 @@ public class TaggingTest {
         RetaggedUntaggedChoice choice = new RetaggedUntaggedChoice();
         choice.setMyInteger(new BerInteger(1));
 
-        BerByteArrayOutputStream os = new BerByteArrayOutputStream(1000);
+        ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
         choice.encode(os);
 
         Assert.assertArrayEquals(DatatypeConverter.parseHexBinary("BF2103830101"), os.getArray());
@@ -73,7 +73,7 @@ public class TaggingTest {
         sequence.setMyInteger(new BerInteger(1));
         sequence.setMyBoolean(new BerBoolean(true));
 
-        BerByteArrayOutputStream os = new BerByteArrayOutputStream(1000);
+        ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
         sequence.encode(os);
 
         Assert.assertArrayEquals(DatatypeConverter.parseHexBinary("BF210830060201010101FF"), os.getArray());
@@ -93,7 +93,7 @@ public class TaggingTest {
         set.setMyInteger(new BerInteger(1));
         set.setMyBoolean(new BerBoolean(true));
 
-        BerByteArrayOutputStream os = new BerByteArrayOutputStream(1000);
+        ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
         set.encode(os);
 
         Assert.assertArrayEquals(DatatypeConverter.parseHexBinary("BF210831060201010101FF"), os.getArray());
@@ -114,7 +114,7 @@ public class TaggingTest {
         integerList.add(new BerInteger(3));
         integerList.add(new BerInteger(4));
 
-        BerByteArrayOutputStream os = new BerByteArrayOutputStream(1000);
+        ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
         seqOf.encode(os);
 
         System.out.println("seqOf : " + DatatypeConverter.printHexBinary(os.getArray()));
@@ -134,7 +134,7 @@ public class TaggingTest {
         integerList.add(new BerInteger(3));
         integerList.add(new BerInteger(4));
 
-        BerByteArrayOutputStream os = new BerByteArrayOutputStream(1000);
+        ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
         setOf.encode(os);
 
         System.out.println("setOf : " + DatatypeConverter.printHexBinary(os.getArray()));
@@ -151,7 +151,7 @@ public class TaggingTest {
         TaggedChoice choice = new TaggedChoice();
         choice.setMyInteger(new BerInteger(1));
 
-        BerByteArrayOutputStream os = new BerByteArrayOutputStream(1000);
+        ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
         choice.encode(os);
 
         Assert.assertArrayEquals(DatatypeConverter.parseHexBinary("BF2203020101"), os.getArray());
@@ -169,7 +169,7 @@ public class TaggingTest {
 
         ImplicitlyTaggedInteger implicitlyTaggedInteger = new ImplicitlyTaggedInteger(1);
 
-        BerByteArrayOutputStream os = new BerByteArrayOutputStream(1000);
+        ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
         implicitlyTaggedInteger.encode(os);
 
         Assert.assertArrayEquals(DatatypeConverter.parseHexBinary("9F210101"), os.getArray());
@@ -182,7 +182,7 @@ public class TaggingTest {
         ImplicitlyRetaggedTaggedChoice choice = new ImplicitlyRetaggedTaggedChoice();
         choice.setMyInteger(new BerInteger(1));
 
-        BerByteArrayOutputStream os = new BerByteArrayOutputStream(1000);
+        ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
         choice.encode(os);
 
         Assert.assertArrayEquals(DatatypeConverter.parseHexBinary("A303020101"), os.getArray());
@@ -207,7 +207,7 @@ public class TaggingTest {
 
         sequence.setTaggedAny(new BerAny(new byte[] { 2, 1, 1 }));
 
-        BerByteArrayOutputStream os = new BerByteArrayOutputStream(1000);
+        ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
         sequence.encode(os);
 
         Assert.assertArrayEquals(

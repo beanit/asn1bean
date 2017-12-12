@@ -7,7 +7,7 @@ import java.util.List;
 
 import javax.xml.bind.DatatypeConverter;
 
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
+import org.openmuc.jasn1.ber.ReverseByteArrayOutputStream;
 import org.openmuc.jasn1.ber.types.string.BerVisibleString;
 import org.openmuc.jasn1.compiler.x690_ber_example.ChildInformation;
 import org.openmuc.jasn1.compiler.x690_ber_example.Date;
@@ -19,7 +19,7 @@ public class Jasn1Sample {
 
     public static void main(String[] args) throws IOException {
 
-        BerByteArrayOutputStream os = new BerByteArrayOutputStream(1000);
+        ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
 
         // Name name = new Name(new BerVisibleString("John"), new
         // BerVisibleString("P"), new BerVisibleString("Smith"));

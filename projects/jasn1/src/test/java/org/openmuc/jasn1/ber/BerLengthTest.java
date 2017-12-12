@@ -13,7 +13,7 @@ public class BerLengthTest {
 
     @Test
     public void encodeLength() throws IOException {
-        BerByteArrayOutputStream os = new BerByteArrayOutputStream(50);
+        ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(50);
 
         int codedLength = BerLength.encodeLength(os, 128);
 
@@ -26,7 +26,7 @@ public class BerLengthTest {
 
     @Test
     public void encodeLength2() throws IOException {
-        BerByteArrayOutputStream os = new BerByteArrayOutputStream(50);
+        ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(50);
 
         int codedLength = BerLength.encodeLength(os, 128);
 

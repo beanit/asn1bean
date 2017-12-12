@@ -7,37 +7,37 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
-public class BerByteArrayOutputStream extends OutputStream {
+public class ReverseByteArrayOutputStream extends OutputStream {
 
     public byte[] buffer;
     public int index;
     private final boolean automaticResize;
 
     /**
-     * Creates a <code>BerByteArrayOutputStream</code> with a byte array of size <code>bufferSize</code>. The buffer
-     * will not be resized automatically. Use {@link #BerByteArrayOutputStream(int, boolean)} instead if you want the
-     * buffer to be dynamically resized.
+     * Creates a <code>ReverseByteArrayOutputStream</code> with a byte array of size <code>bufferSize</code>. The buffer
+     * will not be resized automatically. Use {@link #ReverseByteArrayOutputStream(int, boolean)} instead if you want
+     * the buffer to be dynamically resized.
      * 
      * @param bufferSize
      *            the size of the underlying buffer
      */
-    public BerByteArrayOutputStream(int bufferSize) {
+    public ReverseByteArrayOutputStream(int bufferSize) {
         this(new byte[bufferSize], bufferSize - 1, false);
     }
 
-    public BerByteArrayOutputStream(int bufferSize, boolean automaticResize) {
+    public ReverseByteArrayOutputStream(int bufferSize, boolean automaticResize) {
         this(new byte[bufferSize], bufferSize - 1, automaticResize);
     }
 
-    public BerByteArrayOutputStream(byte[] buffer) {
+    public ReverseByteArrayOutputStream(byte[] buffer) {
         this(buffer, buffer.length - 1, false);
     }
 
-    public BerByteArrayOutputStream(byte[] buffer, int startingIndex) {
+    public ReverseByteArrayOutputStream(byte[] buffer, int startingIndex) {
         this(buffer, startingIndex, false);
     }
 
-    public BerByteArrayOutputStream(byte[] buffer, int startingIndex, boolean automaticResize) {
+    public ReverseByteArrayOutputStream(byte[] buffer, int startingIndex, boolean automaticResize) {
         if (buffer.length <= 0) {
             throw new IllegalArgumentException("buffer size may not be <= 0");
         }

@@ -9,7 +9,7 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.math.BigInteger;
 
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
+import org.openmuc.jasn1.ber.ReverseByteArrayOutputStream;
 import org.openmuc.jasn1.ber.BerLength;
 import org.openmuc.jasn1.ber.BerTag;
 import org.openmuc.jasn1.ber.internal.Util;
@@ -98,7 +98,7 @@ public class BerInteger implements Serializable {
     }
 
     public void encodeAndSave(int encodingSizeGuess) throws IOException {
-        BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
+        ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
         encode(os, false);
         code = os.getArray();
     }

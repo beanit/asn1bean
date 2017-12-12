@@ -168,9 +168,9 @@ public class SetNicknameRequest implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		OutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
+		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
 		encode(os, false);
-		code = ((BerByteArrayOutputStream) os).getArray();
+		code = os.getArray();
 	}
 
 	public String toString() {

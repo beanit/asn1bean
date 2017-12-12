@@ -8,7 +8,7 @@ import java.io.IOException;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
+import org.openmuc.jasn1.ber.ReverseByteArrayOutputStream;
 
 public class BerObjectIdentifierTest {
 
@@ -18,7 +18,7 @@ public class BerObjectIdentifierTest {
 
     @Test
     public void explicitEncoding() throws IOException {
-        BerByteArrayOutputStream berBAOStream = new BerByteArrayOutputStream(50);
+        ReverseByteArrayOutputStream berBAOStream = new ReverseByteArrayOutputStream(50);
 
         BerObjectIdentifier oi = new BerObjectIdentifier(objectIdentifierComponents);
 

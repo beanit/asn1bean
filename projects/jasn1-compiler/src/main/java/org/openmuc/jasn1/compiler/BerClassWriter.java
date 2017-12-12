@@ -1857,14 +1857,14 @@ public class BerClassWriter {
 
     private void writeEncodeAndSaveFunction(boolean isTagless) throws IOException {
         write("public void encodeAndSave(int encodingSizeGuess) throws IOException {");
-        write("OutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);");
+        write("ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);");
         if (isTagless) {
             write("encode(os);");
         }
         else {
             write("encode(os, false);");
         }
-        write("code = ((BerByteArrayOutputStream) os).getArray();");
+        write("code = os.getArray();");
         write("}\n");
     }
 

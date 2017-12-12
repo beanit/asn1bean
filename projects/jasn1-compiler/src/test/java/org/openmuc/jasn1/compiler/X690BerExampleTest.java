@@ -10,7 +10,7 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
+import org.openmuc.jasn1.ber.ReverseByteArrayOutputStream;
 import org.openmuc.jasn1.ber.types.string.BerVisibleString;
 import org.openmuc.jasn1.compiler.x690_ber_example.ChildInformation;
 import org.openmuc.jasn1.compiler.x690_ber_example.Date;
@@ -23,7 +23,7 @@ public class X690BerExampleTest {
     @Test
     public void encodingDecoding() throws IOException {
 
-        BerByteArrayOutputStream berOS = new BerByteArrayOutputStream(1000);
+        ReverseByteArrayOutputStream berOS = new ReverseByteArrayOutputStream(1000);
 
         // Name name = new Name(new BerVisibleString("John"), new
         // BerVisibleString("P"), new BerVisibleString("Smith"));

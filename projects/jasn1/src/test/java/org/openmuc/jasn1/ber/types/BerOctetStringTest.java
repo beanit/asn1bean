@@ -8,13 +8,13 @@ import java.io.IOException;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
+import org.openmuc.jasn1.ber.ReverseByteArrayOutputStream;
 
 public class BerOctetStringTest {
 
     @Test
     public void explicitEncoding() throws IOException {
-        BerByteArrayOutputStream berStream = new BerByteArrayOutputStream(50);
+        ReverseByteArrayOutputStream berStream = new ReverseByteArrayOutputStream(50);
 
         byte[] byteArray = new byte[] { 0x01, 0x02, 0x03 };
         BerOctetString asn1OctetString = new BerOctetString(byteArray);

@@ -10,13 +10,13 @@ import javax.xml.bind.DatatypeConverter;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
+import org.openmuc.jasn1.ber.ReverseByteArrayOutputStream;
 
 public class BerRealTest {
 
     @Test
     public void codingZero() throws IOException {
-        BerByteArrayOutputStream berStream = new BerByteArrayOutputStream(50);
+        ReverseByteArrayOutputStream berStream = new ReverseByteArrayOutputStream(50);
 
         BerReal berReal = new BerReal(0);
         berReal.encode(berStream, true);
@@ -32,7 +32,7 @@ public class BerRealTest {
 
     @Test
     public void codingNegInf() throws IOException {
-        BerByteArrayOutputStream berStream = new BerByteArrayOutputStream(50);
+        ReverseByteArrayOutputStream berStream = new ReverseByteArrayOutputStream(50);
 
         BerReal berReal = new BerReal(Double.NEGATIVE_INFINITY);
         berReal.encode(berStream, true);
@@ -48,7 +48,7 @@ public class BerRealTest {
 
     @Test
     public void coding1dot5() throws IOException {
-        BerByteArrayOutputStream berStream = new BerByteArrayOutputStream(50);
+        ReverseByteArrayOutputStream berStream = new ReverseByteArrayOutputStream(50);
 
         BerReal berReal = new BerReal(1.5);
         berReal.encode(berStream, true);
@@ -66,7 +66,7 @@ public class BerRealTest {
     @Test
     public void coding0dot7() throws IOException {
         final BerReal orig = new BerReal(0.7);
-        final BerByteArrayOutputStream baos = new BerByteArrayOutputStream(100, true);
+        final ReverseByteArrayOutputStream baos = new ReverseByteArrayOutputStream(100, true);
         orig.encode(baos, true);
 
         // System.out.println(DatatypeConverter.printHexBinary(baos.getArray()));
@@ -81,7 +81,7 @@ public class BerRealTest {
     @Test
     public void coding0dot2() throws IOException {
         final BerReal orig = new BerReal(0.2);
-        final BerByteArrayOutputStream baos = new BerByteArrayOutputStream(100, true);
+        final ReverseByteArrayOutputStream baos = new ReverseByteArrayOutputStream(100, true);
         orig.encode(baos, true);
 
         final BerReal decoded = new BerReal();
@@ -93,7 +93,7 @@ public class BerRealTest {
     @Test
     public void coding1dot0() throws IOException {
         final BerReal orig = new BerReal(1.0);
-        final BerByteArrayOutputStream baos = new BerByteArrayOutputStream(100, true);
+        final ReverseByteArrayOutputStream baos = new ReverseByteArrayOutputStream(100, true);
         orig.encode(baos, true);
 
         final BerReal decoded = new BerReal();
@@ -105,7 +105,7 @@ public class BerRealTest {
     @Test
     public void coding2dot0() throws IOException {
         final BerReal orig = new BerReal(2.0);
-        final BerByteArrayOutputStream baos = new BerByteArrayOutputStream(100, true);
+        final ReverseByteArrayOutputStream baos = new ReverseByteArrayOutputStream(100, true);
         orig.encode(baos, true);
 
         final BerReal decoded = new BerReal();

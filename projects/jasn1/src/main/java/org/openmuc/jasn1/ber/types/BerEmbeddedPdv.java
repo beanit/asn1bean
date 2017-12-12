@@ -9,7 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
+import org.openmuc.jasn1.ber.ReverseByteArrayOutputStream;
 import org.openmuc.jasn1.ber.BerLength;
 import org.openmuc.jasn1.ber.BerTag;
 import org.openmuc.jasn1.ber.types.string.BerObjectDescriptor;
@@ -136,7 +136,7 @@ public class BerEmbeddedPdv implements Serializable {
             }
 
             public void encodeAndSave(int encodingSizeGuess) throws IOException {
-                BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
+                ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
                 encode(os, false);
                 code = os.getArray();
             }
@@ -294,7 +294,7 @@ public class BerEmbeddedPdv implements Serializable {
             }
 
             public void encodeAndSave(int encodingSizeGuess) throws IOException {
-                BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
+                ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
                 encode(os, false);
                 code = os.getArray();
             }
@@ -521,7 +521,7 @@ public class BerEmbeddedPdv implements Serializable {
         }
 
         public void encodeAndSave(int encodingSizeGuess) throws IOException {
-            BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
+            ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
             encode(os);
             code = os.getArray();
         }
@@ -707,7 +707,7 @@ public class BerEmbeddedPdv implements Serializable {
     }
 
     public void encodeAndSave(int encodingSizeGuess) throws IOException {
-        BerByteArrayOutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
+        ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
         encode(os, false);
         code = os.getArray();
     }

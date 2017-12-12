@@ -10,7 +10,7 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.openmuc.jasn1.ber.BerByteArrayOutputStream;
+import org.openmuc.jasn1.ber.ReverseByteArrayOutputStream;
 import org.openmuc.jasn1.ber.types.BerAny;
 import org.openmuc.jasn1.ber.types.BerInteger;
 import org.openmuc.jasn1.compiler.iso8823_presentation.AbstractSyntaxName;
@@ -31,7 +31,7 @@ public class PresentationLayerTest {
     @Test
     public void encodingDecoding() throws IOException {
 
-        BerByteArrayOutputStream berOS = new BerByteArrayOutputStream(1000);
+        ReverseByteArrayOutputStream berOS = new ReverseByteArrayOutputStream(1000);
 
         List<TransferSyntaxName> berObjectIdentifierList = new ArrayList<>(1);
         berObjectIdentifierList.add(new TransferSyntaxName(new int[] { 2, 1, 1 }));

@@ -108,9 +108,9 @@ public class DistributionPointName implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		OutputStream os = new BerByteArrayOutputStream(encodingSizeGuess);
+		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
 		encode(os);
-		code = ((BerByteArrayOutputStream) os).getArray();
+		code = os.getArray();
 	}
 
 	public String toString() {

@@ -12,7 +12,7 @@ public class BerIdentifierTest {
 
     @Test
     public void twoByteEncoding() throws IOException {
-        BerByteArrayOutputStream berBAOStream = new BerByteArrayOutputStream(50);
+        ReverseByteArrayOutputStream berBAOStream = new ReverseByteArrayOutputStream(50);
 
         BerTag berIdentifier = new BerTag(BerTag.APPLICATION_CLASS, BerTag.PRIMITIVE, 31);
 
