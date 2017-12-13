@@ -16,6 +16,8 @@ jasn1 library to efficiently encode and decode messages using the
 Basic Encoding Rules (BER). The encoded bytes also confirm to the
 Distinguished Encoding Rules (DER) which is a subset of BER.
 
+The generated Java classes may be put under a license of your choice.
+
 The software has been tested under Linux, Android and Windows.
 
 For the latest release of this software visit http://www.openmuc.org .
@@ -54,19 +56,10 @@ Linux and Windows found in the _run-scripts_ folder. Executing the
 scripts without any parameters will print help information to the
 screen.
 
-The generated classes can then be used to easily encode and decode BER
-encoded data. The encoded data will confirm to the DER syntax. For an
-example on how to use the generated classes see the folder
+The generated classes can then be used to easily encode and decode
+BER/DER encoded data. For an example on how to use the generated
+classes see the folder
 _projects/jasn1-compiler/src/sample/java/org/openmuc/jasn1/sample/_.
-
-
-=== ASN1 syntax:
-
-In some cases it could be favorable not to decode elements of type ANY
-because it would involve big array copying. Therefor the compiler
-supports the alternative element type called ANY_NODECODE which can be
-used inside the ASN.1 file in order to generate Java code that will
-not decode nor encode elements of these types.
 
 
 == Modifying and Compiling jASN1
