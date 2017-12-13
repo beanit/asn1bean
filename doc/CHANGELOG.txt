@@ -1,14 +1,15 @@
-v1.9.0 12-Dec-2017
+v1.9.0 13-Dec-2017
 ------------------
-
-- the BerBitString value can now be set and retrieved as array of
-  booleans
 
 - encode functions now take general OutputStream interface as
   parameter instead of BerByteArrayOutputStream so that alternative
-  reverse output streams could be developed and used. thanks to önder sezgin
+  reverse output streams could be developed and used. thanks to önder
+  sezgin
 
 - renamed BerByteArrayOutputStream to ReverseByteArrayOutputStream
+
+- the BerBitString value can now be set and retrieved as array of
+  booleans
 
 v1.8.2 28-Aug-2017
 ------------------
