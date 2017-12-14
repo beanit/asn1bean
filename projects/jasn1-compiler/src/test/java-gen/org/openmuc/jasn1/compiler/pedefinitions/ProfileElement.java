@@ -89,228 +89,228 @@ public class ProfileElement implements Serializable {
 		this.optCsim = optCsim;
 	}
 
-	public int encode(OutputStream os) throws IOException {
+	public int encode(OutputStream reverseOS) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
 		if (optCsim != null) {
-			codeLength += optCsim.encode(os, false);
+			codeLength += optCsim.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 26
-			os.write(0xBA);
+			reverseOS.write(0xBA);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (csim != null) {
-			codeLength += csim.encode(os, false);
+			codeLength += csim.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 25
-			os.write(0xB9);
+			reverseOS.write(0xB9);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (gsmAccess != null) {
-			codeLength += gsmAccess.encode(os, false);
+			codeLength += gsmAccess.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 24
-			os.write(0xB8);
+			reverseOS.write(0xB8);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (phonebook != null) {
-			codeLength += phonebook.encode(os, false);
+			codeLength += phonebook.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 23
-			os.write(0xB7);
+			reverseOS.write(0xB7);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (optIsim != null) {
-			codeLength += optIsim.encode(os, false);
+			codeLength += optIsim.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 22
-			os.write(0xB6);
+			reverseOS.write(0xB6);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (isim != null) {
-			codeLength += isim.encode(os, false);
+			codeLength += isim.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 21
-			os.write(0xB5);
+			reverseOS.write(0xB5);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (optUsim != null) {
-			codeLength += optUsim.encode(os, false);
+			codeLength += optUsim.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 20
-			os.write(0xB4);
+			reverseOS.write(0xB4);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (usim != null) {
-			codeLength += usim.encode(os, false);
+			codeLength += usim.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 19
-			os.write(0xB3);
+			reverseOS.write(0xB3);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (telecom != null) {
-			codeLength += telecom.encode(os, false);
+			codeLength += telecom.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 18
-			os.write(0xB2);
+			reverseOS.write(0xB2);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (cd != null) {
-			codeLength += cd.encode(os, false);
+			codeLength += cd.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 17
-			os.write(0xB1);
+			reverseOS.write(0xB1);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (mf != null) {
-			codeLength += mf.encode(os, false);
+			codeLength += mf.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 16
-			os.write(0xB0);
+			reverseOS.write(0xB0);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (rfu5 != null) {
-			codeLength += rfu5.encode(os, false);
+			codeLength += rfu5.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 15
-			os.write(0xAF);
+			reverseOS.write(0xAF);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (rfu4 != null) {
-			codeLength += rfu4.encode(os, false);
+			codeLength += rfu4.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 14
-			os.write(0xAE);
+			reverseOS.write(0xAE);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (rfu3 != null) {
-			codeLength += rfu3.encode(os, false);
+			codeLength += rfu3.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 13
-			os.write(0xAD);
+			reverseOS.write(0xAD);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (rfu2 != null) {
-			codeLength += rfu2.encode(os, false);
+			codeLength += rfu2.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 12
-			os.write(0xAC);
+			reverseOS.write(0xAC);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (rfu1 != null) {
-			codeLength += rfu1.encode(os, false);
+			codeLength += rfu1.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 11
-			os.write(0xAB);
+			reverseOS.write(0xAB);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (end != null) {
-			codeLength += end.encode(os, false);
+			codeLength += end.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 10
-			os.write(0xAA);
+			reverseOS.write(0xAA);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (nonStandard != null) {
-			codeLength += nonStandard.encode(os, false);
+			codeLength += nonStandard.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 9
-			os.write(0xA9);
+			reverseOS.write(0xA9);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (application != null) {
-			codeLength += application.encode(os, false);
+			codeLength += application.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 8
-			os.write(0xA8);
+			reverseOS.write(0xA8);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (rfm != null) {
-			codeLength += rfm.encode(os, false);
+			codeLength += rfm.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 7
-			os.write(0xA7);
+			reverseOS.write(0xA7);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (securityDomain != null) {
-			codeLength += securityDomain.encode(os, false);
+			codeLength += securityDomain.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 6
-			os.write(0xA6);
+			reverseOS.write(0xA6);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (cdmaParameter != null) {
-			codeLength += cdmaParameter.encode(os, false);
+			codeLength += cdmaParameter.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 5
-			os.write(0xA5);
+			reverseOS.write(0xA5);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (akaParameter != null) {
-			codeLength += akaParameter.encode(os, false);
+			codeLength += akaParameter.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 4
-			os.write(0xA4);
+			reverseOS.write(0xA4);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (pukCodes != null) {
-			codeLength += pukCodes.encode(os, false);
+			codeLength += pukCodes.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 3
-			os.write(0xA3);
+			reverseOS.write(0xA3);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (pinCodes != null) {
-			codeLength += pinCodes.encode(os, false);
+			codeLength += pinCodes.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 2
-			os.write(0xA2);
+			reverseOS.write(0xA2);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (genericFileManagement != null) {
-			codeLength += genericFileManagement.encode(os, false);
+			codeLength += genericFileManagement.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 1
-			os.write(0xA1);
+			reverseOS.write(0xA1);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (header != null) {
-			codeLength += header.encode(os, false);
+			codeLength += header.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 0
-			os.write(0xA0);
+			reverseOS.write(0xA0);
 			codeLength += 1;
 			return codeLength;
 		}
@@ -502,9 +502,9 @@ public class ProfileElement implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

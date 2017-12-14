@@ -43,31 +43,31 @@ public class SequenceNameClashTest implements Serializable {
 			this.seqOf = seqOf;
 		}
 
-		public int encode(OutputStream os) throws IOException {
-			return encode(os, true);
+		public int encode(OutputStream reverseOS) throws IOException {
+			return encode(reverseOS, true);
 		}
 
-		public int encode(OutputStream os, boolean withTag) throws IOException {
+		public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 			if (code != null) {
 				for (int i = code.length - 1; i >= 0; i--) {
-					os.write(code[i]);
+					reverseOS.write(code[i]);
 				}
 				if (withTag) {
-					return tag.encode(os) + code.length;
+					return tag.encode(reverseOS) + code.length;
 				}
 				return code.length;
 			}
 
 			int codeLength = 0;
 			for (int i = (seqOf.size() - 1); i >= 0; i--) {
-				codeLength += seqOf.get(i).encode(os, true);
+				codeLength += seqOf.get(i).encode(reverseOS, true);
 			}
 
-			codeLength += BerLength.encodeLength(os, codeLength);
+			codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 			if (withTag) {
-				codeLength += tag.encode(os);
+				codeLength += tag.encode(reverseOS);
 			}
 
 			return codeLength;
@@ -125,9 +125,9 @@ public class SequenceNameClashTest implements Serializable {
 		}
 
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-			encode(os, false);
-			code = os.getArray();
+			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+			encode(reverseOS, false);
+			code = reverseOS.getArray();
 		}
 
 		public String toString() {
@@ -188,11 +188,11 @@ public class SequenceNameClashTest implements Serializable {
 			this.myBoolean = myBoolean;
 		}
 
-		public int encode(OutputStream os) throws IOException {
+		public int encode(OutputStream reverseOS) throws IOException {
 
 			if (code != null) {
 				for (int i = code.length - 1; i >= 0; i--) {
-					os.write(code[i]);
+					reverseOS.write(code[i]);
 				}
 				return code.length;
 			}
@@ -201,21 +201,21 @@ public class SequenceNameClashTest implements Serializable {
 			int sublength;
 
 			if (myBoolean != null) {
-				sublength = myBoolean.encode(os, true);
+				sublength = myBoolean.encode(reverseOS, true);
 				codeLength += sublength;
-				codeLength += BerLength.encodeLength(os, sublength);
+				codeLength += BerLength.encodeLength(reverseOS, sublength);
 				// write tag: CONTEXT_CLASS, CONSTRUCTED, 3
-				os.write(0xA3);
+				reverseOS.write(0xA3);
 				codeLength += 1;
 				return codeLength;
 			}
 			
 			if (myInteger != null) {
-				sublength = myInteger.encode(os, true);
+				sublength = myInteger.encode(reverseOS, true);
 				codeLength += sublength;
-				codeLength += BerLength.encodeLength(os, sublength);
+				codeLength += BerLength.encodeLength(reverseOS, sublength);
 				// write tag: CONTEXT_CLASS, CONSTRUCTED, 2
-				os.write(0xA2);
+				reverseOS.write(0xA2);
 				codeLength += 1;
 				return codeLength;
 			}
@@ -259,9 +259,9 @@ public class SequenceNameClashTest implements Serializable {
 		}
 
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-			encode(os);
-			code = os.getArray();
+			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+			encode(reverseOS);
+			code = reverseOS.getArray();
 		}
 
 		public String toString() {
@@ -312,11 +312,11 @@ public class SequenceNameClashTest implements Serializable {
 				this.myBoolean = myBoolean;
 			}
 
-			public int encode(OutputStream os) throws IOException {
+			public int encode(OutputStream reverseOS) throws IOException {
 
 				if (code != null) {
 					for (int i = code.length - 1; i >= 0; i--) {
-						os.write(code[i]);
+						reverseOS.write(code[i]);
 					}
 					return code.length;
 				}
@@ -325,21 +325,21 @@ public class SequenceNameClashTest implements Serializable {
 				int sublength;
 
 				if (myBoolean != null) {
-					sublength = myBoolean.encode(os, true);
+					sublength = myBoolean.encode(reverseOS, true);
 					codeLength += sublength;
-					codeLength += BerLength.encodeLength(os, sublength);
+					codeLength += BerLength.encodeLength(reverseOS, sublength);
 					// write tag: CONTEXT_CLASS, CONSTRUCTED, 7
-					os.write(0xA7);
+					reverseOS.write(0xA7);
 					codeLength += 1;
 					return codeLength;
 				}
 				
 				if (myInteger != null) {
-					sublength = myInteger.encode(os, true);
+					sublength = myInteger.encode(reverseOS, true);
 					codeLength += sublength;
-					codeLength += BerLength.encodeLength(os, sublength);
+					codeLength += BerLength.encodeLength(reverseOS, sublength);
 					// write tag: CONTEXT_CLASS, CONSTRUCTED, 6
-					os.write(0xA6);
+					reverseOS.write(0xA6);
 					codeLength += 1;
 					return codeLength;
 				}
@@ -383,9 +383,9 @@ public class SequenceNameClashTest implements Serializable {
 			}
 
 			public void encodeAndSave(int encodingSizeGuess) throws IOException {
-				ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-				encode(os);
-				code = os.getArray();
+				ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+				encode(reverseOS);
+				code = reverseOS.getArray();
 			}
 
 			public String toString() {
@@ -433,18 +433,18 @@ public class SequenceNameClashTest implements Serializable {
 				this.myBoolean = myBoolean;
 			}
 
-			public int encode(OutputStream os) throws IOException {
-				return encode(os, true);
+			public int encode(OutputStream reverseOS) throws IOException {
+				return encode(reverseOS, true);
 			}
 
-			public int encode(OutputStream os, boolean withTag) throws IOException {
+			public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 				if (code != null) {
 					for (int i = code.length - 1; i >= 0; i--) {
-						os.write(code[i]);
+						reverseOS.write(code[i]);
 					}
 					if (withTag) {
-						return tag.encode(os) + code.length;
+						return tag.encode(reverseOS) + code.length;
 					}
 					return code.length;
 				}
@@ -452,24 +452,24 @@ public class SequenceNameClashTest implements Serializable {
 				int codeLength = 0;
 				int sublength;
 
-				sublength = myBoolean.encode(os, true);
+				sublength = myBoolean.encode(reverseOS, true);
 				codeLength += sublength;
-				codeLength += BerLength.encodeLength(os, sublength);
+				codeLength += BerLength.encodeLength(reverseOS, sublength);
 				// write tag: CONTEXT_CLASS, CONSTRUCTED, 10
-				os.write(0xAA);
+				reverseOS.write(0xAA);
 				codeLength += 1;
 				
-				sublength = myInteger.encode(os, true);
+				sublength = myInteger.encode(reverseOS, true);
 				codeLength += sublength;
-				codeLength += BerLength.encodeLength(os, sublength);
+				codeLength += BerLength.encodeLength(reverseOS, sublength);
 				// write tag: CONTEXT_CLASS, CONSTRUCTED, 9
-				os.write(0xA9);
+				reverseOS.write(0xA9);
 				codeLength += 1;
 				
-				codeLength += BerLength.encodeLength(os, codeLength);
+				codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 				if (withTag) {
-					codeLength += tag.encode(os);
+					codeLength += tag.encode(reverseOS);
 				}
 
 				return codeLength;
@@ -569,9 +569,9 @@ public class SequenceNameClashTest implements Serializable {
 			}
 
 			public void encodeAndSave(int encodingSizeGuess) throws IOException {
-				ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-				encode(os, false);
-				code = os.getArray();
+				ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+				encode(reverseOS, false);
+				code = reverseOS.getArray();
 			}
 
 			public String toString() {
@@ -634,31 +634,31 @@ public class SequenceNameClashTest implements Serializable {
 				this.seqOf = seqOf;
 			}
 
-			public int encode(OutputStream os) throws IOException {
-				return encode(os, true);
+			public int encode(OutputStream reverseOS) throws IOException {
+				return encode(reverseOS, true);
 			}
 
-			public int encode(OutputStream os, boolean withTag) throws IOException {
+			public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 				if (code != null) {
 					for (int i = code.length - 1; i >= 0; i--) {
-						os.write(code[i]);
+						reverseOS.write(code[i]);
 					}
 					if (withTag) {
-						return tag.encode(os) + code.length;
+						return tag.encode(reverseOS) + code.length;
 					}
 					return code.length;
 				}
 
 				int codeLength = 0;
 				for (int i = (seqOf.size() - 1); i >= 0; i--) {
-					codeLength += seqOf.get(i).encode(os, true);
+					codeLength += seqOf.get(i).encode(reverseOS, true);
 				}
 
-				codeLength += BerLength.encodeLength(os, codeLength);
+				codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 				if (withTag) {
-					codeLength += tag.encode(os);
+					codeLength += tag.encode(reverseOS);
 				}
 
 				return codeLength;
@@ -716,9 +716,9 @@ public class SequenceNameClashTest implements Serializable {
 			}
 
 			public void encodeAndSave(int encodingSizeGuess) throws IOException {
-				ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-				encode(os, false);
-				code = os.getArray();
+				ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+				encode(reverseOS, false);
+				code = reverseOS.getArray();
 			}
 
 			public String toString() {
@@ -778,11 +778,11 @@ public class SequenceNameClashTest implements Serializable {
 			this.myseqof = myseqof;
 		}
 
-		public int encode(OutputStream os) throws IOException {
+		public int encode(OutputStream reverseOS) throws IOException {
 
 			if (code != null) {
 				for (int i = code.length - 1; i >= 0; i--) {
-					os.write(code[i]);
+					reverseOS.write(code[i]);
 				}
 				return code.length;
 			}
@@ -791,41 +791,41 @@ public class SequenceNameClashTest implements Serializable {
 			int sublength;
 
 			if (myseqof != null) {
-				sublength = myseqof.encode(os, true);
+				sublength = myseqof.encode(reverseOS, true);
 				codeLength += sublength;
-				codeLength += BerLength.encodeLength(os, sublength);
+				codeLength += BerLength.encodeLength(reverseOS, sublength);
 				// write tag: CONTEXT_CLASS, CONSTRUCTED, 1
-				os.write(0xA1);
+				reverseOS.write(0xA1);
 				codeLength += 1;
 				return codeLength;
 			}
 			
 			if (mySequence != null) {
-				sublength = mySequence.encode(os, true);
+				sublength = mySequence.encode(reverseOS, true);
 				codeLength += sublength;
-				codeLength += BerLength.encodeLength(os, sublength);
+				codeLength += BerLength.encodeLength(reverseOS, sublength);
 				// write tag: CONTEXT_CLASS, CONSTRUCTED, 8
-				os.write(0xA8);
+				reverseOS.write(0xA8);
 				codeLength += 1;
 				return codeLength;
 			}
 			
 			if (myChoice2 != null) {
-				sublength = myChoice2.encode(os);
+				sublength = myChoice2.encode(reverseOS);
 				codeLength += sublength;
-				codeLength += BerLength.encodeLength(os, sublength);
+				codeLength += BerLength.encodeLength(reverseOS, sublength);
 				// write tag: CONTEXT_CLASS, CONSTRUCTED, 5
-				os.write(0xA5);
+				reverseOS.write(0xA5);
 				codeLength += 1;
 				return codeLength;
 			}
 			
 			if (myInteger != null) {
-				sublength = myInteger.encode(os, true);
+				sublength = myInteger.encode(reverseOS, true);
 				codeLength += sublength;
-				codeLength += BerLength.encodeLength(os, sublength);
+				codeLength += BerLength.encodeLength(reverseOS, sublength);
 				// write tag: CONTEXT_CLASS, CONSTRUCTED, 4
-				os.write(0xA4);
+				reverseOS.write(0xA4);
 				codeLength += 1;
 				return codeLength;
 			}
@@ -883,9 +883,9 @@ public class SequenceNameClashTest implements Serializable {
 		}
 
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-			encode(os);
-			code = os.getArray();
+			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+			encode(reverseOS);
+			code = reverseOS.getArray();
 		}
 
 		public String toString() {
@@ -944,18 +944,18 @@ public class SequenceNameClashTest implements Serializable {
 		this.myChoice = myChoice;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
@@ -963,27 +963,27 @@ public class SequenceNameClashTest implements Serializable {
 		int codeLength = 0;
 		int sublength;
 
-		codeLength += myChoice.encode(os);
+		codeLength += myChoice.encode(reverseOS);
 		
 		if (untaggedInteger != null) {
-			codeLength += untaggedInteger.encode(os);
+			codeLength += untaggedInteger.encode(reverseOS);
 		}
 		
-		sublength = myseqof.encode(os, true);
+		sublength = myseqof.encode(reverseOS, true);
 		codeLength += sublength;
-		codeLength += BerLength.encodeLength(os, sublength);
+		codeLength += BerLength.encodeLength(reverseOS, sublength);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 1
-		os.write(0xA1);
+		reverseOS.write(0xA1);
 		codeLength += 1;
 		
-		codeLength += BerLength.encodeLength(os, codeLength);
-		os.write(0x30);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
+		reverseOS.write(0x30);
 		codeLength++;
 
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;
@@ -1125,9 +1125,9 @@ public class SequenceNameClashTest implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

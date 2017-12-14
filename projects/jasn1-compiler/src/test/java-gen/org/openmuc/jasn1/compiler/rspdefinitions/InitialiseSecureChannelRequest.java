@@ -51,51 +51,51 @@ public class InitialiseSecureChannelRequest implements Serializable {
 		this.smdpSign = smdpSign;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
-		codeLength += smdpSign.encode(os, false);
+		codeLength += smdpSign.encode(reverseOS, false);
 		// write tag: APPLICATION_CLASS, PRIMITIVE, 55
-		os.write(0x37);
-		os.write(0x5F);
+		reverseOS.write(0x37);
+		reverseOS.write(0x5F);
 		codeLength += 2;
 		
-		codeLength += smdpOtpk.encode(os, false);
+		codeLength += smdpOtpk.encode(reverseOS, false);
 		// write tag: APPLICATION_CLASS, PRIMITIVE, 73
-		os.write(0x49);
-		os.write(0x5F);
+		reverseOS.write(0x49);
+		reverseOS.write(0x5F);
 		codeLength += 2;
 		
-		codeLength += controlRefTemplate.encode(os, false);
+		codeLength += controlRefTemplate.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 6
-		os.write(0xA6);
+		reverseOS.write(0xA6);
 		codeLength += 1;
 		
-		codeLength += transactionId.encode(os, false);
+		codeLength += transactionId.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 0
-		os.write(0x80);
+		reverseOS.write(0x80);
 		codeLength += 1;
 		
-		codeLength += remoteOpId.encode(os, true);
+		codeLength += remoteOpId.encode(reverseOS, true);
 		
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;
@@ -266,9 +266,9 @@ public class InitialiseSecureChannelRequest implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

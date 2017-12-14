@@ -43,33 +43,33 @@ public class Certificate implements Serializable {
 		this.signature = signature;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
-		codeLength += signature.encode(os, true);
+		codeLength += signature.encode(reverseOS, true);
 		
-		codeLength += signatureAlgorithm.encode(os, true);
+		codeLength += signatureAlgorithm.encode(reverseOS, true);
 		
-		codeLength += tbsCertificate.encode(os, true);
+		codeLength += tbsCertificate.encode(reverseOS, true);
 		
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;
@@ -190,9 +190,9 @@ public class Certificate implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

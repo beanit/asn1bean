@@ -59,11 +59,11 @@ public class GeneralName implements Serializable {
 		this.registeredID = registeredID;
 	}
 
-	public int encode(OutputStream os) throws IOException {
+	public int encode(OutputStream reverseOS) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			return code.length;
 		}
@@ -72,75 +72,75 @@ public class GeneralName implements Serializable {
 		int sublength;
 
 		if (registeredID != null) {
-			codeLength += registeredID.encode(os, false);
+			codeLength += registeredID.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 8
-			os.write(0x88);
+			reverseOS.write(0x88);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (iPAddress != null) {
-			codeLength += iPAddress.encode(os, false);
+			codeLength += iPAddress.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 7
-			os.write(0x87);
+			reverseOS.write(0x87);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (uniformResourceIdentifier != null) {
-			codeLength += uniformResourceIdentifier.encode(os, false);
+			codeLength += uniformResourceIdentifier.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 6
-			os.write(0x86);
+			reverseOS.write(0x86);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (ediPartyName != null) {
-			codeLength += ediPartyName.encode(os, false);
+			codeLength += ediPartyName.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 5
-			os.write(0xA5);
+			reverseOS.write(0xA5);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (directoryName != null) {
-			sublength = directoryName.encode(os);
+			sublength = directoryName.encode(reverseOS);
 			codeLength += sublength;
-			codeLength += BerLength.encodeLength(os, sublength);
+			codeLength += BerLength.encodeLength(reverseOS, sublength);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 4
-			os.write(0xA4);
+			reverseOS.write(0xA4);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (x400Address != null) {
-			codeLength += x400Address.encode(os, false);
+			codeLength += x400Address.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 3
-			os.write(0xA3);
+			reverseOS.write(0xA3);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (dNSName != null) {
-			codeLength += dNSName.encode(os, false);
+			codeLength += dNSName.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 2
-			os.write(0x82);
+			reverseOS.write(0x82);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (rfc822Name != null) {
-			codeLength += rfc822Name.encode(os, false);
+			codeLength += rfc822Name.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 1
-			os.write(0x81);
+			reverseOS.write(0x81);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (otherName != null) {
-			codeLength += otherName.encode(os, false);
+			codeLength += otherName.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 0
-			os.write(0xA0);
+			reverseOS.write(0xA0);
 			codeLength += 1;
 			return codeLength;
 		}
@@ -225,9 +225,9 @@ public class GeneralName implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

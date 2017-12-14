@@ -32,23 +32,23 @@ public class ImplNull extends BerNull {
 		super(code);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
 
 		int codeLength;
 
-		codeLength = super.encode(os, false);
+		codeLength = super.encode(reverseOS, false);
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;

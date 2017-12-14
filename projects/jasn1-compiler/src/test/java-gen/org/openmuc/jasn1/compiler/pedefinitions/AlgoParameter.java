@@ -51,68 +51,68 @@ public class AlgoParameter implements Serializable {
 		this.authCounterMax = authCounterMax;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
 		if (authCounterMax != null) {
-			codeLength += authCounterMax.encode(os, false);
+			codeLength += authCounterMax.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 6
-			os.write(0x86);
+			reverseOS.write(0x86);
 			codeLength += 1;
 		}
 		
 		if (xoringConstants != null) {
-			codeLength += xoringConstants.encode(os, false);
+			codeLength += xoringConstants.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 5
-			os.write(0x85);
+			reverseOS.write(0x85);
 			codeLength += 1;
 		}
 		
 		if (rotationConstants != null) {
-			codeLength += rotationConstants.encode(os, false);
+			codeLength += rotationConstants.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 4
-			os.write(0x84);
+			reverseOS.write(0x84);
 			codeLength += 1;
 		}
 		
-		codeLength += opc.encode(os, false);
+		codeLength += opc.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 3
-		os.write(0x83);
+		reverseOS.write(0x83);
 		codeLength += 1;
 		
-		codeLength += key.encode(os, false);
+		codeLength += key.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 2
-		os.write(0x82);
+		reverseOS.write(0x82);
 		codeLength += 1;
 		
-		codeLength += algorithmOptions.encode(os, false);
+		codeLength += algorithmOptions.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 1
-		os.write(0x81);
+		reverseOS.write(0x81);
 		codeLength += 1;
 		
-		codeLength += algorithmID.encode(os, false);
+		codeLength += algorithmID.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 0
-		os.write(0x80);
+		reverseOS.write(0x80);
 		codeLength += 1;
 		
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;
@@ -336,9 +336,9 @@ public class AlgoParameter implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

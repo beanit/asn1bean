@@ -47,39 +47,39 @@ public class InitiateAuthenticationRequest implements Serializable {
 		this.euiccInfo1 = euiccInfo1;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
-		codeLength += euiccInfo1.encode(os, true);
+		codeLength += euiccInfo1.encode(reverseOS, true);
 		
-		codeLength += smdpAddress.encode(os, false);
+		codeLength += smdpAddress.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 3
-		os.write(0x83);
+		reverseOS.write(0x83);
 		codeLength += 1;
 		
-		codeLength += euiccChallenge.encode(os, false);
+		codeLength += euiccChallenge.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 1
-		os.write(0x81);
+		reverseOS.write(0x81);
 		codeLength += 1;
 		
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;
@@ -200,9 +200,9 @@ public class InitiateAuthenticationRequest implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

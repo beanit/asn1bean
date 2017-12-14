@@ -48,31 +48,31 @@ public class PEPINCodes implements Serializable {
 				this.seqOf = seqOf;
 			}
 
-			public int encode(OutputStream os) throws IOException {
-				return encode(os, true);
+			public int encode(OutputStream reverseOS) throws IOException {
+				return encode(reverseOS, true);
 			}
 
-			public int encode(OutputStream os, boolean withTag) throws IOException {
+			public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 				if (code != null) {
 					for (int i = code.length - 1; i >= 0; i--) {
-						os.write(code[i]);
+						reverseOS.write(code[i]);
 					}
 					if (withTag) {
-						return tag.encode(os) + code.length;
+						return tag.encode(reverseOS) + code.length;
 					}
 					return code.length;
 				}
 
 				int codeLength = 0;
 				for (int i = (seqOf.size() - 1); i >= 0; i--) {
-					codeLength += seqOf.get(i).encode(os, true);
+					codeLength += seqOf.get(i).encode(reverseOS, true);
 				}
 
-				codeLength += BerLength.encodeLength(os, codeLength);
+				codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 				if (withTag) {
-					codeLength += tag.encode(os);
+					codeLength += tag.encode(reverseOS);
 				}
 
 				return codeLength;
@@ -130,9 +130,9 @@ public class PEPINCodes implements Serializable {
 			}
 
 			public void encodeAndSave(int encodingSizeGuess) throws IOException {
-				ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-				encode(os, false);
-				code = os.getArray();
+				ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+				encode(reverseOS, false);
+				code = reverseOS.getArray();
 			}
 
 			public String toString() {
@@ -188,28 +188,28 @@ public class PEPINCodes implements Serializable {
 			this.filePath = filePath;
 		}
 
-		public int encode(OutputStream os) throws IOException {
+		public int encode(OutputStream reverseOS) throws IOException {
 
 			if (code != null) {
 				for (int i = code.length - 1; i >= 0; i--) {
-					os.write(code[i]);
+					reverseOS.write(code[i]);
 				}
 				return code.length;
 			}
 
 			int codeLength = 0;
 			if (filePath != null) {
-				codeLength += filePath.encode(os, false);
+				codeLength += filePath.encode(reverseOS, false);
 				// write tag: CONTEXT_CLASS, PRIMITIVE, 1
-				os.write(0x81);
+				reverseOS.write(0x81);
 				codeLength += 1;
 				return codeLength;
 			}
 			
 			if (pinconfig != null) {
-				codeLength += pinconfig.encode(os, false);
+				codeLength += pinconfig.encode(reverseOS, false);
 				// write tag: CONTEXT_CLASS, CONSTRUCTED, 0
-				os.write(0xA0);
+				reverseOS.write(0xA0);
 				codeLength += 1;
 				return codeLength;
 			}
@@ -251,9 +251,9 @@ public class PEPINCodes implements Serializable {
 		}
 
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-			encode(os);
-			code = os.getArray();
+			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+			encode(reverseOS);
+			code = reverseOS.getArray();
 		}
 
 		public String toString() {
@@ -298,18 +298,18 @@ public class PEPINCodes implements Serializable {
 		this.pinCodes = pinCodes;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
@@ -317,22 +317,22 @@ public class PEPINCodes implements Serializable {
 		int codeLength = 0;
 		int sublength;
 
-		sublength = pinCodes.encode(os);
+		sublength = pinCodes.encode(reverseOS);
 		codeLength += sublength;
-		codeLength += BerLength.encodeLength(os, sublength);
+		codeLength += BerLength.encodeLength(reverseOS, sublength);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 1
-		os.write(0xA1);
+		reverseOS.write(0xA1);
 		codeLength += 1;
 		
-		codeLength += pinHeader.encode(os, false);
+		codeLength += pinHeader.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 0
-		os.write(0xA0);
+		reverseOS.write(0xA0);
 		codeLength += 1;
 		
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;
@@ -437,9 +437,9 @@ public class PEPINCodes implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

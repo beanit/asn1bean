@@ -47,31 +47,31 @@ public class ProfileInfo implements Serializable {
 			this.seqOf = seqOf;
 		}
 
-		public int encode(OutputStream os) throws IOException {
-			return encode(os, true);
+		public int encode(OutputStream reverseOS) throws IOException {
+			return encode(reverseOS, true);
 		}
 
-		public int encode(OutputStream os, boolean withTag) throws IOException {
+		public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 			if (code != null) {
 				for (int i = code.length - 1; i >= 0; i--) {
-					os.write(code[i]);
+					reverseOS.write(code[i]);
 				}
 				if (withTag) {
-					return tag.encode(os) + code.length;
+					return tag.encode(reverseOS) + code.length;
 				}
 				return code.length;
 			}
 
 			int codeLength = 0;
 			for (int i = (seqOf.size() - 1); i >= 0; i--) {
-				codeLength += seqOf.get(i).encode(os, true);
+				codeLength += seqOf.get(i).encode(reverseOS, true);
 			}
 
-			codeLength += BerLength.encodeLength(os, codeLength);
+			codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 			if (withTag) {
-				codeLength += tag.encode(os);
+				codeLength += tag.encode(reverseOS);
 			}
 
 			return codeLength;
@@ -129,9 +129,9 @@ public class ProfileInfo implements Serializable {
 		}
 
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-			encode(os, false);
-			code = os.getArray();
+			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+			encode(reverseOS, false);
+			code = reverseOS.getArray();
 		}
 
 		public String toString() {
@@ -212,116 +212,116 @@ public class ProfileInfo implements Serializable {
 		this.profilePolicyRules = profilePolicyRules;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
 		if (profilePolicyRules != null) {
-			codeLength += profilePolicyRules.encode(os, false);
+			codeLength += profilePolicyRules.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 25
-			os.write(0x99);
+			reverseOS.write(0x99);
 			codeLength += 1;
 		}
 		
 		if (dpProprietaryData != null) {
-			codeLength += dpProprietaryData.encode(os, false);
+			codeLength += dpProprietaryData.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 24
-			os.write(0xB8);
+			reverseOS.write(0xB8);
 			codeLength += 1;
 		}
 		
 		if (profileOwner != null) {
-			codeLength += profileOwner.encode(os, false);
+			codeLength += profileOwner.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 23
-			os.write(0xB7);
+			reverseOS.write(0xB7);
 			codeLength += 1;
 		}
 		
 		if (notificationConfigurationInfo != null) {
-			codeLength += notificationConfigurationInfo.encode(os, false);
+			codeLength += notificationConfigurationInfo.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 22
-			os.write(0xB6);
+			reverseOS.write(0xB6);
 			codeLength += 1;
 		}
 		
 		if (profileClass != null) {
-			codeLength += profileClass.encode(os, false);
+			codeLength += profileClass.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 21
-			os.write(0x95);
+			reverseOS.write(0x95);
 			codeLength += 1;
 		}
 		
 		if (icon != null) {
-			codeLength += icon.encode(os, false);
+			codeLength += icon.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 20
-			os.write(0x94);
+			reverseOS.write(0x94);
 			codeLength += 1;
 		}
 		
 		if (iconType != null) {
-			codeLength += iconType.encode(os, false);
+			codeLength += iconType.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 19
-			os.write(0x93);
+			reverseOS.write(0x93);
 			codeLength += 1;
 		}
 		
 		if (profileName != null) {
-			codeLength += profileName.encode(os, false);
+			codeLength += profileName.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 18
-			os.write(0x92);
+			reverseOS.write(0x92);
 			codeLength += 1;
 		}
 		
 		if (serviceProviderName != null) {
-			codeLength += serviceProviderName.encode(os, false);
+			codeLength += serviceProviderName.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 17
-			os.write(0x91);
+			reverseOS.write(0x91);
 			codeLength += 1;
 		}
 		
 		if (profileNickname != null) {
-			codeLength += profileNickname.encode(os, false);
+			codeLength += profileNickname.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 16
-			os.write(0x90);
+			reverseOS.write(0x90);
 			codeLength += 1;
 		}
 		
 		if (profileState != null) {
-			codeLength += profileState.encode(os, false);
+			codeLength += profileState.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 112
-			os.write(0x70);
-			os.write(0x9F);
+			reverseOS.write(0x70);
+			reverseOS.write(0x9F);
 			codeLength += 2;
 		}
 		
 		if (isdpAid != null) {
-			codeLength += isdpAid.encode(os, false);
+			codeLength += isdpAid.encode(reverseOS, false);
 			// write tag: APPLICATION_CLASS, PRIMITIVE, 15
-			os.write(0x4F);
+			reverseOS.write(0x4F);
 			codeLength += 1;
 		}
 		
 		if (iccid != null) {
-			codeLength += iccid.encode(os, true);
+			codeLength += iccid.encode(reverseOS, true);
 		}
 		
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;
@@ -695,9 +695,9 @@ public class ProfileInfo implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

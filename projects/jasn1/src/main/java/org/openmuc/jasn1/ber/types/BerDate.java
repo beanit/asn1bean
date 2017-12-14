@@ -28,12 +28,12 @@ public class BerDate extends BerTime {
     }
 
     @Override
-    public int encode(OutputStream os, boolean withTag) throws IOException {
+    public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
-        int codeLength = super.encode(os, false);
+        int codeLength = super.encode(reverseOS, false);
 
         if (withTag) {
-            codeLength += tag.encode(os);
+            codeLength += tag.encode(reverseOS);
         }
 
         return codeLength;

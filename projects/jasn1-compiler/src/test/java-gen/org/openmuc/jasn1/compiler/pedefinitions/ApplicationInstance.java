@@ -43,31 +43,31 @@ public class ApplicationInstance implements Serializable {
 			this.seqOf = seqOf;
 		}
 
-		public int encode(OutputStream os) throws IOException {
-			return encode(os, true);
+		public int encode(OutputStream reverseOS) throws IOException {
+			return encode(reverseOS, true);
 		}
 
-		public int encode(OutputStream os, boolean withTag) throws IOException {
+		public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 			if (code != null) {
 				for (int i = code.length - 1; i >= 0; i--) {
-					os.write(code[i]);
+					reverseOS.write(code[i]);
 				}
 				if (withTag) {
-					return tag.encode(os) + code.length;
+					return tag.encode(reverseOS) + code.length;
 				}
 				return code.length;
 			}
 
 			int codeLength = 0;
 			for (int i = (seqOf.size() - 1); i >= 0; i--) {
-				codeLength += seqOf.get(i).encode(os, true);
+				codeLength += seqOf.get(i).encode(reverseOS, true);
 			}
 
-			codeLength += BerLength.encodeLength(os, codeLength);
+			codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 			if (withTag) {
-				codeLength += tag.encode(os);
+				codeLength += tag.encode(reverseOS);
 			}
 
 			return codeLength;
@@ -125,9 +125,9 @@ public class ApplicationInstance implements Serializable {
 		}
 
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-			encode(os, false);
-			code = os.getArray();
+			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+			encode(reverseOS, false);
+			code = reverseOS.getArray();
 		}
 
 		public String toString() {
@@ -202,84 +202,84 @@ public class ApplicationInstance implements Serializable {
 		this.processData = processData;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
 		if (processData != null) {
-			codeLength += processData.encode(os, true);
+			codeLength += processData.encode(reverseOS, true);
 		}
 		
 		if (applicationParameters != null) {
-			codeLength += applicationParameters.encode(os, false);
+			codeLength += applicationParameters.encode(reverseOS, false);
 			// write tag: PRIVATE_CLASS, CONSTRUCTED, 10
-			os.write(0xEA);
+			reverseOS.write(0xEA);
 			codeLength += 1;
 		}
 		
 		if (systemSpecificParameters != null) {
-			codeLength += systemSpecificParameters.encode(os, false);
+			codeLength += systemSpecificParameters.encode(reverseOS, false);
 			// write tag: PRIVATE_CLASS, CONSTRUCTED, 15
-			os.write(0xEF);
+			reverseOS.write(0xEF);
 			codeLength += 1;
 		}
 		
-		codeLength += applicationSpecificParametersC9.encode(os, false);
+		codeLength += applicationSpecificParametersC9.encode(reverseOS, false);
 		// write tag: PRIVATE_CLASS, PRIMITIVE, 9
-		os.write(0xC9);
+		reverseOS.write(0xC9);
 		codeLength += 1;
 		
 		if (lifeCycleState != null) {
-			codeLength += lifeCycleState.encode(os, false);
+			codeLength += lifeCycleState.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 3
-			os.write(0x83);
+			reverseOS.write(0x83);
 			codeLength += 1;
 		}
 		
-		codeLength += applicationPrivileges.encode(os, false);
+		codeLength += applicationPrivileges.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 2
-		os.write(0x82);
+		reverseOS.write(0x82);
 		codeLength += 1;
 		
 		if (extraditeSecurityDomainAID != null) {
-			codeLength += extraditeSecurityDomainAID.encode(os, false);
+			codeLength += extraditeSecurityDomainAID.encode(reverseOS, false);
 			// write tag: APPLICATION_CLASS, PRIMITIVE, 15
-			os.write(0x4F);
+			reverseOS.write(0x4F);
 			codeLength += 1;
 		}
 		
-		codeLength += instanceAID.encode(os, false);
+		codeLength += instanceAID.encode(reverseOS, false);
 		// write tag: APPLICATION_CLASS, PRIMITIVE, 15
-		os.write(0x4F);
+		reverseOS.write(0x4F);
 		codeLength += 1;
 		
-		codeLength += classAID.encode(os, false);
+		codeLength += classAID.encode(reverseOS, false);
 		// write tag: APPLICATION_CLASS, PRIMITIVE, 15
-		os.write(0x4F);
+		reverseOS.write(0x4F);
 		codeLength += 1;
 		
-		codeLength += applicationLoadPackageAID.encode(os, false);
+		codeLength += applicationLoadPackageAID.encode(reverseOS, false);
 		// write tag: APPLICATION_CLASS, PRIMITIVE, 15
-		os.write(0x4F);
+		reverseOS.write(0x4F);
 		codeLength += 1;
 		
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;
@@ -572,9 +572,9 @@ public class ApplicationInstance implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

@@ -89,189 +89,189 @@ public class PEUSIM implements Serializable {
 		this.efEpsnsc = efEpsnsc;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
 		if (efEpsnsc != null) {
-			codeLength += efEpsnsc.encode(os, false);
+			codeLength += efEpsnsc.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 25
-			os.write(0xB9);
+			reverseOS.write(0xB9);
 			codeLength += 1;
 		}
 		
 		if (efEpsloci != null) {
-			codeLength += efEpsloci.encode(os, false);
+			codeLength += efEpsloci.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 24
-			os.write(0xB8);
+			reverseOS.write(0xB8);
 			codeLength += 1;
 		}
 		
 		if (efNetpar != null) {
-			codeLength += efNetpar.encode(os, false);
+			codeLength += efNetpar.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 23
-			os.write(0xB7);
+			reverseOS.write(0xB7);
 			codeLength += 1;
 		}
 		
-		codeLength += efEcc.encode(os, false);
+		codeLength += efEcc.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 22
-		os.write(0xB6);
+		reverseOS.write(0xB6);
 		codeLength += 1;
 		
 		if (efAd != null) {
-			codeLength += efAd.encode(os, false);
+			codeLength += efAd.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 21
-			os.write(0xB5);
+			reverseOS.write(0xB5);
 			codeLength += 1;
 		}
 		
 		if (efLoci != null) {
-			codeLength += efLoci.encode(os, false);
+			codeLength += efLoci.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 20
-			os.write(0xB4);
+			reverseOS.write(0xB4);
 			codeLength += 1;
 		}
 		
 		if (efFplmn != null) {
-			codeLength += efFplmn.encode(os, false);
+			codeLength += efFplmn.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 19
-			os.write(0xB3);
+			reverseOS.write(0xB3);
 			codeLength += 1;
 		}
 		
-		codeLength += efAcc.encode(os, false);
+		codeLength += efAcc.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 18
-		os.write(0xB2);
+		reverseOS.write(0xB2);
 		codeLength += 1;
 		
 		if (efPsloci != null) {
-			codeLength += efPsloci.encode(os, false);
+			codeLength += efPsloci.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 17
-			os.write(0xB1);
+			reverseOS.write(0xB1);
 			codeLength += 1;
 		}
 		
 		if (efThreshold != null) {
-			codeLength += efThreshold.encode(os, false);
+			codeLength += efThreshold.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 16
-			os.write(0xB0);
+			reverseOS.write(0xB0);
 			codeLength += 1;
 		}
 		
 		if (efStartHfn != null) {
-			codeLength += efStartHfn.encode(os, false);
+			codeLength += efStartHfn.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 15
-			os.write(0xAF);
+			reverseOS.write(0xAF);
 			codeLength += 1;
 		}
 		
-		codeLength += efEst.encode(os, false);
+		codeLength += efEst.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 14
-		os.write(0xAE);
+		reverseOS.write(0xAE);
 		codeLength += 1;
 		
-		codeLength += efSpn.encode(os, false);
+		codeLength += efSpn.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 13
-		os.write(0xAD);
+		reverseOS.write(0xAD);
 		codeLength += 1;
 		
 		if (efSmss != null) {
-			codeLength += efSmss.encode(os, false);
+			codeLength += efSmss.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 12
-			os.write(0xAC);
+			reverseOS.write(0xAC);
 			codeLength += 1;
 		}
 		
 		if (efSmsp != null) {
-			codeLength += efSmsp.encode(os, false);
+			codeLength += efSmsp.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 11
-			os.write(0xAB);
+			reverseOS.write(0xAB);
 			codeLength += 1;
 		}
 		
 		if (efSms != null) {
-			codeLength += efSms.encode(os, false);
+			codeLength += efSms.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 10
-			os.write(0xAA);
+			reverseOS.write(0xAA);
 			codeLength += 1;
 		}
 		
 		if (efFdn != null) {
-			codeLength += efFdn.encode(os, false);
+			codeLength += efFdn.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 9
-			os.write(0xA9);
+			reverseOS.write(0xA9);
 			codeLength += 1;
 		}
 		
-		codeLength += efUst.encode(os, false);
+		codeLength += efUst.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 8
-		os.write(0xA8);
+		reverseOS.write(0xA8);
 		codeLength += 1;
 		
 		if (efHpplmn != null) {
-			codeLength += efHpplmn.encode(os, false);
+			codeLength += efHpplmn.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 7
-			os.write(0xA7);
+			reverseOS.write(0xA7);
 			codeLength += 1;
 		}
 		
 		if (efKeysPS != null) {
-			codeLength += efKeysPS.encode(os, false);
+			codeLength += efKeysPS.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 6
-			os.write(0xA6);
+			reverseOS.write(0xA6);
 			codeLength += 1;
 		}
 		
 		if (efKeys != null) {
-			codeLength += efKeys.encode(os, false);
+			codeLength += efKeys.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 5
-			os.write(0xA5);
+			reverseOS.write(0xA5);
 			codeLength += 1;
 		}
 		
-		codeLength += efArr.encode(os, false);
+		codeLength += efArr.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 4
-		os.write(0xA4);
+		reverseOS.write(0xA4);
 		codeLength += 1;
 		
-		codeLength += efImsi.encode(os, false);
+		codeLength += efImsi.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 3
-		os.write(0xA3);
+		reverseOS.write(0xA3);
 		codeLength += 1;
 		
-		codeLength += adfUsim.encode(os, false);
+		codeLength += adfUsim.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 2
-		os.write(0xA2);
+		reverseOS.write(0xA2);
 		codeLength += 1;
 		
-		codeLength += templateID.encode(os, false);
+		codeLength += templateID.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 1
-		os.write(0x81);
+		reverseOS.write(0x81);
 		codeLength += 1;
 		
-		codeLength += usimHeader.encode(os, false);
+		codeLength += usimHeader.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 0
-		os.write(0xA0);
+		reverseOS.write(0xA0);
 		codeLength += 1;
 		
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;
@@ -931,9 +931,9 @@ public class PEUSIM implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

@@ -43,31 +43,31 @@ public class PERFM implements Serializable {
 			this.seqOf = seqOf;
 		}
 
-		public int encode(OutputStream os) throws IOException {
-			return encode(os, true);
+		public int encode(OutputStream reverseOS) throws IOException {
+			return encode(reverseOS, true);
 		}
 
-		public int encode(OutputStream os, boolean withTag) throws IOException {
+		public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 			if (code != null) {
 				for (int i = code.length - 1; i >= 0; i--) {
-					os.write(code[i]);
+					reverseOS.write(code[i]);
 				}
 				if (withTag) {
-					return tag.encode(os) + code.length;
+					return tag.encode(reverseOS) + code.length;
 				}
 				return code.length;
 			}
 
 			int codeLength = 0;
 			for (int i = (seqOf.size() - 1); i >= 0; i--) {
-				codeLength += seqOf.get(i).encode(os, true);
+				codeLength += seqOf.get(i).encode(reverseOS, true);
 			}
 
-			codeLength += BerLength.encodeLength(os, codeLength);
+			codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 			if (withTag) {
-				codeLength += tag.encode(os);
+				codeLength += tag.encode(reverseOS);
 			}
 
 			return codeLength;
@@ -125,9 +125,9 @@ public class PERFM implements Serializable {
 		}
 
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-			encode(os, false);
-			code = os.getArray();
+			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+			encode(reverseOS, false);
+			code = reverseOS.getArray();
 		}
 
 		public String toString() {
@@ -198,64 +198,64 @@ public class PERFM implements Serializable {
 		this.adfRFMAccess = adfRFMAccess;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
 		if (adfRFMAccess != null) {
-			codeLength += adfRFMAccess.encode(os, true);
+			codeLength += adfRFMAccess.encode(reverseOS, true);
 		}
 		
-		codeLength += uiccAdminAccessDomain.encode(os, true);
+		codeLength += uiccAdminAccessDomain.encode(reverseOS, true);
 		
-		codeLength += uiccAccessDomain.encode(os, true);
+		codeLength += uiccAccessDomain.encode(reverseOS, true);
 		
-		codeLength += minimumSecurityLevel.encode(os, false);
+		codeLength += minimumSecurityLevel.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 1
-		os.write(0x81);
+		reverseOS.write(0x81);
 		codeLength += 1;
 		
 		if (tarList != null) {
-			codeLength += tarList.encode(os, false);
+			codeLength += tarList.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 0
-			os.write(0xA0);
+			reverseOS.write(0xA0);
 			codeLength += 1;
 		}
 		
 		if (securityDomainAID != null) {
-			codeLength += securityDomainAID.encode(os, false);
+			codeLength += securityDomainAID.encode(reverseOS, false);
 			// write tag: APPLICATION_CLASS, PRIMITIVE, 15
-			os.write(0x4F);
+			reverseOS.write(0x4F);
 			codeLength += 1;
 		}
 		
-		codeLength += instanceAID.encode(os, false);
+		codeLength += instanceAID.encode(reverseOS, false);
 		// write tag: APPLICATION_CLASS, PRIMITIVE, 15
-		os.write(0x4F);
+		reverseOS.write(0x4F);
 		codeLength += 1;
 		
-		codeLength += rfmHeader.encode(os, false);
+		codeLength += rfmHeader.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 0
-		os.write(0xA0);
+		reverseOS.write(0xA0);
 		codeLength += 1;
 		
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;
@@ -498,9 +498,9 @@ public class PERFM implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

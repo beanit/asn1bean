@@ -36,34 +36,34 @@ public class BerReal implements Serializable {
         this.value = value;
     }
 
-    public int encode(OutputStream os) throws IOException {
-        return encode(os, true);
+    public int encode(OutputStream reverseOS) throws IOException {
+        return encode(reverseOS, true);
     }
 
-    public int encode(OutputStream os, boolean withTag) throws IOException {
+    public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
         if (code != null) {
             for (int i = code.length - 1; i >= 0; i--) {
-                os.write(code[i]);
+                reverseOS.write(code[i]);
             }
             if (withTag) {
-                return tag.encode(os) + code.length;
+                return tag.encode(reverseOS) + code.length;
             }
             return code.length;
         }
 
-        int codeLength = encodeValue(os);
+        int codeLength = encodeValue(reverseOS);
 
-        codeLength += BerLength.encodeLength(os, codeLength);
+        codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
         if (withTag) {
-            codeLength += tag.encode(os);
+            codeLength += tag.encode(reverseOS);
         }
 
         return codeLength;
     }
 
-    private int encodeValue(OutputStream os) throws IOException {
+    private int encodeValue(OutputStream reverseOS) throws IOException {
 
         // explained in Annex C and Ch. 8.5 of X.690
 
@@ -82,11 +82,11 @@ public class BerReal implements Serializable {
             if (mantissa == 0x0010000000000000L) {
                 if (isNegative) {
                     // - infinity
-                    os.write(0x41);
+                    reverseOS.write(0x41);
                 }
                 else {
                     // + infinity
-                    os.write(0x40);
+                    reverseOS.write(0x40);
                 }
                 return 1;
             }
@@ -120,12 +120,12 @@ public class BerReal implements Serializable {
         int mantissaLength = (Long.SIZE - Long.numberOfLeadingZeros(mantissa) + 7) / 8;
 
         for (int i = 0; i < mantissaLength; i++) {
-            os.write((int) (mantissa >> (8 * i)));
+            reverseOS.write((int) (mantissa >> (8 * i)));
         }
         int codeLength = mantissaLength;
 
         byte[] exponentBytes = BigInteger.valueOf(exponent).toByteArray();
-        os.write(exponentBytes);
+        reverseOS.write(exponentBytes);
         codeLength += exponentBytes.length;
 
         byte exponentFormat = 0;
@@ -133,16 +133,16 @@ public class BerReal implements Serializable {
             exponentFormat = (byte) (exponentBytes.length - 1);
         }
         else {
-            os.write(exponentBytes.length);
+            reverseOS.write(exponentBytes.length);
             codeLength++;
             exponentFormat = 0x03;
         }
 
         if (isNegative) {
-            os.write(0x80 | 0x40 | exponentFormat);
+            reverseOS.write(0x80 | 0x40 | exponentFormat);
         }
         else {
-            os.write(0x80 | exponentFormat);
+            reverseOS.write(0x80 | exponentFormat);
         }
 
         codeLength++;

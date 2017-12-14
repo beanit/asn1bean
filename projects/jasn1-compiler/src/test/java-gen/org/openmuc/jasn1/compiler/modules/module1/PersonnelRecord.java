@@ -49,31 +49,31 @@ public class PersonnelRecord implements Serializable {
 			return seqOf;
 		}
 
-		public int encode(OutputStream os) throws IOException {
-			return encode(os, true);
+		public int encode(OutputStream reverseOS) throws IOException {
+			return encode(reverseOS, true);
 		}
 
-		public int encode(OutputStream os, boolean withTag) throws IOException {
+		public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 			if (code != null) {
 				for (int i = code.length - 1; i >= 0; i--) {
-					os.write(code[i]);
+					reverseOS.write(code[i]);
 				}
 				if (withTag) {
-					return tag.encode(os) + code.length;
+					return tag.encode(reverseOS) + code.length;
 				}
 				return code.length;
 			}
 
 			int codeLength = 0;
 			for (int i = (seqOf.size() - 1); i >= 0; i--) {
-				codeLength += seqOf.get(i).encode(os, true);
+				codeLength += seqOf.get(i).encode(reverseOS, true);
 			}
 
-			codeLength += BerLength.encodeLength(os, codeLength);
+			codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 			if (withTag) {
-				codeLength += tag.encode(os);
+				codeLength += tag.encode(reverseOS);
 			}
 
 			return codeLength;
@@ -131,9 +131,9 @@ public class PersonnelRecord implements Serializable {
 		}
 
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-			encode(os, false);
-			code = os.getArray();
+			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+			encode(reverseOS, false);
+			code = reverseOS.getArray();
 		}
 
 		public String toString() {
@@ -196,18 +196,18 @@ public class PersonnelRecord implements Serializable {
 			return employeeNumberZ;
 		}
 
-		public int encode(OutputStream os) throws IOException {
+		public int encode(OutputStream reverseOS) throws IOException {
 
 			if (code != null) {
 				for (int i = code.length - 1; i >= 0; i--) {
-					os.write(code[i]);
+					reverseOS.write(code[i]);
 				}
 				return code.length;
 			}
 
 			int codeLength = 0;
 			if (employeeNumberZ != null) {
-				codeLength += employeeNumberZ.encode(os, true);
+				codeLength += employeeNumberZ.encode(reverseOS, true);
 				return codeLength;
 			}
 			
@@ -242,9 +242,9 @@ public class PersonnelRecord implements Serializable {
 		}
 
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-			encode(os);
-			code = os.getArray();
+			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+			encode(reverseOS);
+			code = reverseOS.getArray();
 		}
 
 		public String toString() {
@@ -302,31 +302,31 @@ public class PersonnelRecord implements Serializable {
 				return test2;
 			}
 
-			public int encode(OutputStream os) throws IOException {
-				return encode(os, true);
+			public int encode(OutputStream reverseOS) throws IOException {
+				return encode(reverseOS, true);
 			}
 
-			public int encode(OutputStream os, boolean withTag) throws IOException {
+			public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 				if (code != null) {
 					for (int i = code.length - 1; i >= 0; i--) {
-						os.write(code[i]);
+						reverseOS.write(code[i]);
 					}
 					if (withTag) {
-						return tag.encode(os) + code.length;
+						return tag.encode(reverseOS) + code.length;
 					}
 					return code.length;
 				}
 
 				int codeLength = 0;
-				codeLength += test2.encode(os, true);
+				codeLength += test2.encode(reverseOS, true);
 				
-				codeLength += test1.encode(os, true);
+				codeLength += test1.encode(reverseOS, true);
 				
-				codeLength += BerLength.encodeLength(os, codeLength);
+				codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 				if (withTag) {
-					codeLength += tag.encode(os);
+					codeLength += tag.encode(reverseOS);
 				}
 
 				return codeLength;
@@ -422,9 +422,9 @@ public class PersonnelRecord implements Serializable {
 			}
 
 			public void encodeAndSave(int encodingSizeGuess) throws IOException {
-				ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-				encode(os, false);
-				code = os.getArray();
+				ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+				encode(reverseOS, false);
+				code = reverseOS.getArray();
 			}
 
 			public String toString() {
@@ -486,31 +486,31 @@ public class PersonnelRecord implements Serializable {
 			return seqOf;
 		}
 
-		public int encode(OutputStream os) throws IOException {
-			return encode(os, true);
+		public int encode(OutputStream reverseOS) throws IOException {
+			return encode(reverseOS, true);
 		}
 
-		public int encode(OutputStream os, boolean withTag) throws IOException {
+		public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 			if (code != null) {
 				for (int i = code.length - 1; i >= 0; i--) {
-					os.write(code[i]);
+					reverseOS.write(code[i]);
 				}
 				if (withTag) {
-					return tag.encode(os) + code.length;
+					return tag.encode(reverseOS) + code.length;
 				}
 				return code.length;
 			}
 
 			int codeLength = 0;
 			for (int i = (seqOf.size() - 1); i >= 0; i--) {
-				codeLength += seqOf.get(i).encode(os, true);
+				codeLength += seqOf.get(i).encode(reverseOS, true);
 			}
 
-			codeLength += BerLength.encodeLength(os, codeLength);
+			codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 			if (withTag) {
-				codeLength += tag.encode(os);
+				codeLength += tag.encode(reverseOS);
 			}
 
 			return codeLength;
@@ -568,9 +568,9 @@ public class PersonnelRecord implements Serializable {
 		}
 
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-			encode(os, false);
-			code = os.getArray();
+			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+			encode(reverseOS, false);
+			code = reverseOS.getArray();
 		}
 
 		public String toString() {
@@ -784,18 +784,18 @@ public class PersonnelRecord implements Serializable {
 		return embeddedPdv;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
@@ -803,87 +803,87 @@ public class PersonnelRecord implements Serializable {
 		int codeLength = 0;
 		int sublength;
 
-		codeLength += embeddedPdv.encode(os, true);
+		codeLength += embeddedPdv.encode(reverseOS, true);
 		
-		codeLength += testSequenceOf2.encode(os, true);
+		codeLength += testSequenceOf2.encode(reverseOS, true);
 		
-		codeLength += testSequenceOf.encode(os, true);
+		codeLength += testSequenceOf.encode(reverseOS, true);
 		
-		codeLength += code_.encode(os, true);
+		codeLength += code_.encode(reverseOS, true);
 		
 		if (employeeNumberZ != null) {
-			codeLength += employeeNumberZ.encode(os);
+			codeLength += employeeNumberZ.encode(reverseOS);
 		}
 		
-		sublength = test6.encode(os);
+		sublength = test6.encode(reverseOS);
 		codeLength += sublength;
-		codeLength += BerLength.encodeLength(os, sublength);
+		codeLength += BerLength.encodeLength(reverseOS, sublength);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 10
-		os.write(0xAA);
+		reverseOS.write(0xAA);
 		codeLength += 1;
 		
-		sublength = test5.encode(os);
+		sublength = test5.encode(reverseOS);
 		codeLength += sublength;
-		codeLength += BerLength.encodeLength(os, sublength);
+		codeLength += BerLength.encodeLength(reverseOS, sublength);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 9
-		os.write(0xA9);
+		reverseOS.write(0xA9);
 		codeLength += 1;
 		
 		if (test4 != null) {
-			sublength = test4.encode(os);
+			sublength = test4.encode(reverseOS);
 			codeLength += sublength;
-			codeLength += BerLength.encodeLength(os, sublength);
+			codeLength += BerLength.encodeLength(reverseOS, sublength);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 8
-			os.write(0xA8);
+			reverseOS.write(0xA8);
 			codeLength += 1;
 		}
 		
-		codeLength += test3.encode(os);
+		codeLength += test3.encode(reverseOS);
 		
 		if (test2 != null) {
-			codeLength += test2.encode(os);
+			codeLength += test2.encode(reverseOS);
 		}
 		
-		codeLength += test.encode(os, false);
+		codeLength += test.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 6
-		os.write(0x86);
+		reverseOS.write(0x86);
 		codeLength += 1;
 		
-		codeLength += testBitString.encode(os, false);
+		codeLength += testBitString.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 4
-		os.write(0x84);
+		reverseOS.write(0x84);
 		codeLength += 1;
 		
 		if (children != null) {
-			codeLength += children.encode(os, false);
+			codeLength += children.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 3
-			os.write(0xA3);
+			reverseOS.write(0xA3);
 			codeLength += 1;
 		}
 		
-		codeLength += nameOfSpouse.encode(os, false);
+		codeLength += nameOfSpouse.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 2
-		os.write(0xA2);
+		reverseOS.write(0xA2);
 		codeLength += 1;
 		
-		codeLength += dateOfHire.encode(os, false);
+		codeLength += dateOfHire.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 1
-		os.write(0x81);
+		reverseOS.write(0x81);
 		codeLength += 1;
 		
-		codeLength += number.encode(os, true);
+		codeLength += number.encode(reverseOS, true);
 		
-		codeLength += title.encode(os, false);
+		codeLength += title.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 0
-		os.write(0x80);
+		reverseOS.write(0x80);
 		codeLength += 1;
 		
-		codeLength += name.encode(os, true);
+		codeLength += name.encode(reverseOS, true);
 		
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;
@@ -1412,9 +1412,9 @@ public class PersonnelRecord implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

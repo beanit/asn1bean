@@ -45,11 +45,11 @@ public class PDVList implements Serializable {
 			this.arbitrary = arbitrary;
 		}
 
-		public int encode(OutputStream os) throws IOException {
+		public int encode(OutputStream reverseOS) throws IOException {
 
 			if (code != null) {
 				for (int i = code.length - 1; i >= 0; i--) {
-					os.write(code[i]);
+					reverseOS.write(code[i]);
 				}
 				return code.length;
 			}
@@ -58,27 +58,27 @@ public class PDVList implements Serializable {
 			int sublength;
 
 			if (arbitrary != null) {
-				codeLength += arbitrary.encode(os, false);
+				codeLength += arbitrary.encode(reverseOS, false);
 				// write tag: CONTEXT_CLASS, PRIMITIVE, 2
-				os.write(0x82);
+				reverseOS.write(0x82);
 				codeLength += 1;
 				return codeLength;
 			}
 			
 			if (octetAligned != null) {
-				codeLength += octetAligned.encode(os, false);
+				codeLength += octetAligned.encode(reverseOS, false);
 				// write tag: CONTEXT_CLASS, PRIMITIVE, 1
-				os.write(0x81);
+				reverseOS.write(0x81);
 				codeLength += 1;
 				return codeLength;
 			}
 			
 			if (singleASN1Type != null) {
-				sublength = singleASN1Type.encode(os);
+				sublength = singleASN1Type.encode(reverseOS);
 				codeLength += sublength;
-				codeLength += BerLength.encodeLength(os, sublength);
+				codeLength += BerLength.encodeLength(reverseOS, sublength);
 				// write tag: CONTEXT_CLASS, CONSTRUCTED, 0
-				os.write(0xA0);
+				reverseOS.write(0xA0);
 				codeLength += 1;
 				return codeLength;
 			}
@@ -127,9 +127,9 @@ public class PDVList implements Serializable {
 		}
 
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-			encode(os);
-			code = os.getArray();
+			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+			encode(reverseOS);
+			code = reverseOS.getArray();
 		}
 
 		public String toString() {
@@ -180,35 +180,35 @@ public class PDVList implements Serializable {
 		this.presentationDataValues = presentationDataValues;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
-		codeLength += presentationDataValues.encode(os);
+		codeLength += presentationDataValues.encode(reverseOS);
 		
-		codeLength += presentationContextIdentifier.encode(os, true);
+		codeLength += presentationContextIdentifier.encode(reverseOS, true);
 		
 		if (transferSyntaxName != null) {
-			codeLength += transferSyntaxName.encode(os, true);
+			codeLength += transferSyntaxName.encode(reverseOS, true);
 		}
 		
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;
@@ -329,9 +329,9 @@ public class PDVList implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

@@ -57,18 +57,18 @@ public class TBSCertificate implements Serializable {
 		this.extensions = extensions;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
@@ -77,53 +77,53 @@ public class TBSCertificate implements Serializable {
 		int sublength;
 
 		if (extensions != null) {
-			sublength = extensions.encode(os, true);
+			sublength = extensions.encode(reverseOS, true);
 			codeLength += sublength;
-			codeLength += BerLength.encodeLength(os, sublength);
+			codeLength += BerLength.encodeLength(reverseOS, sublength);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 3
-			os.write(0xA3);
+			reverseOS.write(0xA3);
 			codeLength += 1;
 		}
 		
 		if (subjectUniqueID != null) {
-			codeLength += subjectUniqueID.encode(os, false);
+			codeLength += subjectUniqueID.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 2
-			os.write(0x82);
+			reverseOS.write(0x82);
 			codeLength += 1;
 		}
 		
 		if (issuerUniqueID != null) {
-			codeLength += issuerUniqueID.encode(os, false);
+			codeLength += issuerUniqueID.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 1
-			os.write(0x81);
+			reverseOS.write(0x81);
 			codeLength += 1;
 		}
 		
-		codeLength += subjectPublicKeyInfo.encode(os, true);
+		codeLength += subjectPublicKeyInfo.encode(reverseOS, true);
 		
-		codeLength += subject.encode(os);
+		codeLength += subject.encode(reverseOS);
 		
-		codeLength += validity.encode(os, true);
+		codeLength += validity.encode(reverseOS, true);
 		
-		codeLength += issuer.encode(os);
+		codeLength += issuer.encode(reverseOS);
 		
-		codeLength += signature.encode(os, true);
+		codeLength += signature.encode(reverseOS, true);
 		
-		codeLength += serialNumber.encode(os, true);
+		codeLength += serialNumber.encode(reverseOS, true);
 		
 		if (version != null) {
-			sublength = version.encode(os, true);
+			sublength = version.encode(reverseOS, true);
 			codeLength += sublength;
-			codeLength += BerLength.encodeLength(os, sublength);
+			codeLength += BerLength.encodeLength(reverseOS, sublength);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 0
-			os.write(0xA0);
+			reverseOS.write(0xA0);
 			codeLength += 1;
 		}
 		
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;
@@ -423,9 +423,9 @@ public class TBSCertificate implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

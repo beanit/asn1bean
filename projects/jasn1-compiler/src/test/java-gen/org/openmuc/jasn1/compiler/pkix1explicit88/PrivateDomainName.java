@@ -39,23 +39,23 @@ public class PrivateDomainName implements Serializable {
 		this.printable = printable;
 	}
 
-	public int encode(OutputStream os) throws IOException {
+	public int encode(OutputStream reverseOS) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
 		if (printable != null) {
-			codeLength += printable.encode(os, true);
+			codeLength += printable.encode(reverseOS, true);
 			return codeLength;
 		}
 		
 		if (numeric != null) {
-			codeLength += numeric.encode(os, true);
+			codeLength += numeric.encode(reverseOS, true);
 			return codeLength;
 		}
 		
@@ -96,9 +96,9 @@ public class PrivateDomainName implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

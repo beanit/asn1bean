@@ -27,8 +27,8 @@ public class BerAny implements Serializable {
         this.value = value;
     }
 
-    public int encode(OutputStream os) throws IOException {
-        os.write(value);
+    public int encode(OutputStream reverseOS) throws IOException {
+        reverseOS.write(value);
         return value.length;
     }
 

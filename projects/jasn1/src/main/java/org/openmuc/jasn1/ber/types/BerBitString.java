@@ -74,33 +74,33 @@ public class BerBitString implements Serializable {
         return booleans;
     }
 
-    public int encode(OutputStream os) throws IOException {
-        return encode(os, true);
+    public int encode(OutputStream reverseOS) throws IOException {
+        return encode(reverseOS, true);
     }
 
-    public int encode(OutputStream os, boolean withTag) throws IOException {
+    public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
         if (code != null) {
             for (int i = code.length - 1; i >= 0; i--) {
-                os.write(code[i]);
+                reverseOS.write(code[i]);
             }
             if (withTag) {
-                return tag.encode(os) + code.length;
+                return tag.encode(reverseOS) + code.length;
             }
             return code.length;
         }
 
         for (int i = (value.length - 1); i >= 0; i--) {
-            os.write(value[i]);
+            reverseOS.write(value[i]);
         }
-        os.write(value.length * 8 - numBits);
+        reverseOS.write(value.length * 8 - numBits);
 
         int codeLength = value.length + 1;
 
-        codeLength += BerLength.encodeLength(os, codeLength);
+        codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
         if (withTag) {
-            codeLength += tag.encode(os);
+            codeLength += tag.encode(reverseOS);
         }
 
         return codeLength;

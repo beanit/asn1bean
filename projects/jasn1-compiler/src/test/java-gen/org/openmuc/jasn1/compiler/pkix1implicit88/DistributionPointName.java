@@ -45,28 +45,28 @@ public class DistributionPointName implements Serializable {
 		this.nameRelativeToCRLIssuer = nameRelativeToCRLIssuer;
 	}
 
-	public int encode(OutputStream os) throws IOException {
+	public int encode(OutputStream reverseOS) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
 		if (nameRelativeToCRLIssuer != null) {
-			codeLength += nameRelativeToCRLIssuer.encode(os, false);
+			codeLength += nameRelativeToCRLIssuer.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 1
-			os.write(0xA1);
+			reverseOS.write(0xA1);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (fullName != null) {
-			codeLength += fullName.encode(os, false);
+			codeLength += fullName.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 0
-			os.write(0xA0);
+			reverseOS.write(0xA0);
 			codeLength += 1;
 			return codeLength;
 		}
@@ -108,9 +108,9 @@ public class DistributionPointName implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

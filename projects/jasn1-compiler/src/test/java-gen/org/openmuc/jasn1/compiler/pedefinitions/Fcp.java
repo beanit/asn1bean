@@ -57,97 +57,97 @@ public class Fcp implements Serializable {
 		this.linkPath = linkPath;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
 		if (linkPath != null) {
-			codeLength += linkPath.encode(os, false);
+			codeLength += linkPath.encode(reverseOS, false);
 			// write tag: PRIVATE_CLASS, PRIMITIVE, 7
-			os.write(0xC7);
+			reverseOS.write(0xC7);
 			codeLength += 1;
 		}
 		
 		if (proprietaryEFInfo != null) {
-			codeLength += proprietaryEFInfo.encode(os, false);
+			codeLength += proprietaryEFInfo.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 5
-			os.write(0xA5);
+			reverseOS.write(0xA5);
 			codeLength += 1;
 		}
 		
 		if (shortEFID != null) {
-			codeLength += shortEFID.encode(os, false);
+			codeLength += shortEFID.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 8
-			os.write(0x88);
+			reverseOS.write(0x88);
 			codeLength += 1;
 		}
 		
 		if (pinStatusTemplateDO != null) {
-			codeLength += pinStatusTemplateDO.encode(os, false);
+			codeLength += pinStatusTemplateDO.encode(reverseOS, false);
 			// write tag: PRIVATE_CLASS, PRIMITIVE, 6
-			os.write(0xC6);
+			reverseOS.write(0xC6);
 			codeLength += 1;
 		}
 		
 		if (efFileSize != null) {
-			codeLength += efFileSize.encode(os, false);
+			codeLength += efFileSize.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 0
-			os.write(0x80);
+			reverseOS.write(0x80);
 			codeLength += 1;
 		}
 		
 		if (securityAttributesReferenced != null) {
-			codeLength += securityAttributesReferenced.encode(os, false);
+			codeLength += securityAttributesReferenced.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 11
-			os.write(0x8B);
+			reverseOS.write(0x8B);
 			codeLength += 1;
 		}
 		
 		if (lcsi != null) {
-			codeLength += lcsi.encode(os, false);
+			codeLength += lcsi.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 10
-			os.write(0x8A);
+			reverseOS.write(0x8A);
 			codeLength += 1;
 		}
 		
 		if (dfName != null) {
-			codeLength += dfName.encode(os, false);
+			codeLength += dfName.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 4
-			os.write(0x84);
+			reverseOS.write(0x84);
 			codeLength += 1;
 		}
 		
 		if (fileID != null) {
-			codeLength += fileID.encode(os, false);
+			codeLength += fileID.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 3
-			os.write(0x83);
+			reverseOS.write(0x83);
 			codeLength += 1;
 		}
 		
 		if (fileDescriptor != null) {
-			codeLength += fileDescriptor.encode(os, false);
+			codeLength += fileDescriptor.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 2
-			os.write(0x82);
+			reverseOS.write(0x82);
 			codeLength += 1;
 		}
 		
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;
@@ -446,9 +446,9 @@ public class Fcp implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

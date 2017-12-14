@@ -49,33 +49,33 @@ public class DisplayText implements Serializable {
 		this.utf8String = utf8String;
 	}
 
-	public int encode(OutputStream os) throws IOException {
+	public int encode(OutputStream reverseOS) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
 		if (utf8String != null) {
-			codeLength += utf8String.encode(os, true);
+			codeLength += utf8String.encode(reverseOS, true);
 			return codeLength;
 		}
 		
 		if (bmpString != null) {
-			codeLength += bmpString.encode(os, true);
+			codeLength += bmpString.encode(reverseOS, true);
 			return codeLength;
 		}
 		
 		if (visibleString != null) {
-			codeLength += visibleString.encode(os, true);
+			codeLength += visibleString.encode(reverseOS, true);
 			return codeLength;
 		}
 		
 		if (ia5String != null) {
-			codeLength += ia5String.encode(os, true);
+			codeLength += ia5String.encode(reverseOS, true);
 			return codeLength;
 		}
 		
@@ -128,9 +128,9 @@ public class DisplayText implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

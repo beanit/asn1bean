@@ -51,84 +51,84 @@ public class RemoteProfileProvisioningRequest implements Serializable {
 		this.handleNotification = handleNotification;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
 		if (handleNotification != null) {
-			codeLength += handleNotification.encode(os, false);
+			codeLength += handleNotification.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 61
-			os.write(0x3D);
-			os.write(0xBF);
+			reverseOS.write(0x3D);
+			reverseOS.write(0xBF);
 			codeLength += 2;
-			codeLength += BerLength.encodeLength(os, codeLength);
+			codeLength += BerLength.encodeLength(reverseOS, codeLength);
 			if (withTag) {
-				codeLength += tag.encode(os);
+				codeLength += tag.encode(reverseOS);
 			}
 			return codeLength;
 		}
 		
 		if (cancelSessionRequestEs9 != null) {
-			codeLength += cancelSessionRequestEs9.encode(os, false);
+			codeLength += cancelSessionRequestEs9.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 65
-			os.write(0x41);
-			os.write(0xBF);
+			reverseOS.write(0x41);
+			reverseOS.write(0xBF);
 			codeLength += 2;
-			codeLength += BerLength.encodeLength(os, codeLength);
+			codeLength += BerLength.encodeLength(reverseOS, codeLength);
 			if (withTag) {
-				codeLength += tag.encode(os);
+				codeLength += tag.encode(reverseOS);
 			}
 			return codeLength;
 		}
 		
 		if (getBoundProfilePackageRequest != null) {
-			codeLength += getBoundProfilePackageRequest.encode(os, false);
+			codeLength += getBoundProfilePackageRequest.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 58
-			os.write(0x3A);
-			os.write(0xBF);
+			reverseOS.write(0x3A);
+			reverseOS.write(0xBF);
 			codeLength += 2;
-			codeLength += BerLength.encodeLength(os, codeLength);
+			codeLength += BerLength.encodeLength(reverseOS, codeLength);
 			if (withTag) {
-				codeLength += tag.encode(os);
+				codeLength += tag.encode(reverseOS);
 			}
 			return codeLength;
 		}
 		
 		if (authenticateClientRequest != null) {
-			codeLength += authenticateClientRequest.encode(os, false);
+			codeLength += authenticateClientRequest.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 59
-			os.write(0x3B);
-			os.write(0xBF);
+			reverseOS.write(0x3B);
+			reverseOS.write(0xBF);
 			codeLength += 2;
-			codeLength += BerLength.encodeLength(os, codeLength);
+			codeLength += BerLength.encodeLength(reverseOS, codeLength);
 			if (withTag) {
-				codeLength += tag.encode(os);
+				codeLength += tag.encode(reverseOS);
 			}
 			return codeLength;
 		}
 		
 		if (initiateAuthenticationRequest != null) {
-			codeLength += initiateAuthenticationRequest.encode(os, false);
+			codeLength += initiateAuthenticationRequest.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 57
-			os.write(0x39);
-			os.write(0xBF);
+			reverseOS.write(0x39);
+			reverseOS.write(0xBF);
 			codeLength += 2;
-			codeLength += BerLength.encodeLength(os, codeLength);
+			codeLength += BerLength.encodeLength(reverseOS, codeLength);
 			if (withTag) {
-				codeLength += tag.encode(os);
+				codeLength += tag.encode(reverseOS);
 			}
 			return codeLength;
 		}
@@ -186,9 +186,9 @@ public class RemoteProfileProvisioningRequest implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

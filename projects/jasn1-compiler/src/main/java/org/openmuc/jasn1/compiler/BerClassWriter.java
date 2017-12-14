@@ -770,8 +770,8 @@ public class BerClassWriter {
     }
 
     private void writeSimpleEncodeFunction() throws IOException {
-        write("public int encode(OutputStream os) throws IOException {");
-        write("return encode(os, true);");
+        write("public int encode(OutputStream reverseOS) throws IOException {");
+        write("return encode(reverseOS, true);");
         write("}\n");
     }
 
@@ -913,15 +913,15 @@ public class BerClassWriter {
                 writeSimpleEncodeFunction();
             }
 
-            write("public int encode(OutputStream os, boolean withTag) throws IOException {\n");
+            write("public int encode(OutputStream reverseOS, boolean withTag) throws IOException {\n");
 
             if (constructorParameters.length != 2 || constructorParameters[0] != "byte[]") {
                 write("if (code != null) {");
                 write("for (int i = code.length - 1; i >= 0; i--) {");
-                write("os.write(code[i]);");
+                write("reverseOS.write(code[i]);");
                 write("}");
                 write("if (withTag) {");
-                write("return tag.encode(os) + code.length;");
+                write("return tag.encode(reverseOS) + code.length;");
                 write("}");
                 write("return code.length;");
                 write("}\n");
@@ -931,19 +931,19 @@ public class BerClassWriter {
 
             if (tag.type == TagType.EXPLICIT) {
                 if (isDirectAnyOrChoice((AsnTaggedType) typeDefinition)) {
-                    write("codeLength = super.encode(os);");
+                    write("codeLength = super.encode(reverseOS);");
                 }
                 else {
-                    write("codeLength = super.encode(os, true);");
+                    write("codeLength = super.encode(reverseOS, true);");
                 }
-                write("codeLength += BerLength.encodeLength(os, codeLength);");
+                write("codeLength += BerLength.encodeLength(reverseOS, codeLength);");
             }
             else {
-                write("codeLength = super.encode(os, false);");
+                write("codeLength = super.encode(reverseOS, false);");
             }
 
             write("if (withTag) {");
-            write("codeLength += tag.encode(os);");
+            write("codeLength += tag.encode(reverseOS);");
             write("}\n");
 
             write("return codeLength;");
@@ -989,19 +989,19 @@ public class BerClassWriter {
             throws IOException {
         if (hasExplicitTag) {
             writeSimpleEncodeFunction();
-            write("public int encode(OutputStream os, boolean withTag) throws IOException {\n");
+            write("public int encode(OutputStream reverseOS, boolean withTag) throws IOException {\n");
         }
         else {
-            write("public int encode(OutputStream os) throws IOException {\n");
+            write("public int encode(OutputStream reverseOS) throws IOException {\n");
         }
 
         write("if (code != null) {");
         write("for (int i = code.length - 1; i >= 0; i--) {");
-        write("os.write(code[i]);");
+        write("reverseOS.write(code[i]);");
         write("}");
         if (hasExplicitTag) {
             write("if (withTag) {");
-            write("return tag.encode(os) + code.length;");
+            write("return tag.encode(reverseOS) + code.length;");
             write("}");
         }
         write("return code.length;");
@@ -1027,12 +1027,12 @@ public class BerClassWriter {
             String explicitEncoding = getExplicitEncodingParameter(componentType);
 
             if (isExplicit(componentTag)) {
-                write("sublength = " + getName(componentType) + ".encode(os" + explicitEncoding + ");");
+                write("sublength = " + getName(componentType) + ".encode(reverseOS" + explicitEncoding + ");");
                 write("codeLength += sublength;");
-                write("codeLength += BerLength.encodeLength(os, sublength);");
+                write("codeLength += BerLength.encodeLength(reverseOS, sublength);");
             }
             else {
-                write("codeLength += " + getName(componentType) + ".encode(os" + explicitEncoding + ");");
+                write("codeLength += " + getName(componentType) + ".encode(reverseOS" + explicitEncoding + ");");
             }
 
             if (componentTag != null) {
@@ -1040,9 +1040,9 @@ public class BerClassWriter {
             }
 
             if (hasExplicitTag) {
-                write("codeLength += BerLength.encodeLength(os, codeLength);");
+                write("codeLength += BerLength.encodeLength(reverseOS, codeLength);");
                 write("if (withTag) {");
-                write("codeLength += tag.encode(os);");
+                write("codeLength += tag.encode(reverseOS);");
                 write("}");
             }
 
@@ -1061,14 +1061,14 @@ public class BerClassWriter {
 
     private void writeSequenceOrSetEncodeFunction(List<AsnElementType> componentTypes, boolean hasExplicitTag,
             boolean isSequence) throws IOException {
-        write("public int encode(OutputStream os, boolean withTag) throws IOException {\n");
+        write("public int encode(OutputStream reverseOS, boolean withTag) throws IOException {\n");
 
         write("if (code != null) {");
         write("for (int i = code.length - 1; i >= 0; i--) {");
-        write("os.write(code[i]);");
+        write("reverseOS.write(code[i]);");
         write("}");
         write("if (withTag) {");
-        write("return tag.encode(os) + code.length;");
+        write("return tag.encode(reverseOS) + code.length;");
         write("}");
         write("return code.length;");
         write("}\n");
@@ -1095,12 +1095,12 @@ public class BerClassWriter {
             String explicitEncoding = getExplicitEncodingParameter(componentType);
 
             if (isExplicit(componentTag)) {
-                write("sublength = " + getName(componentType) + ".encode(os" + explicitEncoding + ");");
+                write("sublength = " + getName(componentType) + ".encode(reverseOS" + explicitEncoding + ");");
                 write("codeLength += sublength;");
-                write("codeLength += BerLength.encodeLength(os, sublength);");
+                write("codeLength += BerLength.encodeLength(reverseOS, sublength);");
             }
             else {
-                write("codeLength += " + getName(componentType) + ".encode(os" + explicitEncoding + ");");
+                write("codeLength += " + getName(componentType) + ".encode(reverseOS" + explicitEncoding + ");");
             }
 
             if (componentTag != null) {
@@ -1115,20 +1115,20 @@ public class BerClassWriter {
         }
 
         if (hasExplicitTag) {
-            write("codeLength += BerLength.encodeLength(os, codeLength);");
+            write("codeLength += BerLength.encodeLength(reverseOS, codeLength);");
             if (isSequence) {
-                write("os.write(0x30);");
+                write("reverseOS.write(0x30);");
             }
             else {
-                write("os.write(0x31);");
+                write("reverseOS.write(0x31);");
             }
             write("codeLength++;\n");
         }
 
-        write("codeLength += BerLength.encodeLength(os, codeLength);\n");
+        write("codeLength += BerLength.encodeLength(reverseOS, codeLength);\n");
 
         write("if (withTag) {");
-        write("codeLength += tag.encode(os);");
+        write("codeLength += tag.encode(reverseOS);");
         write("}\n");
 
         write("return codeLength;\n");
@@ -1138,14 +1138,14 @@ public class BerClassWriter {
 
     private void writeSequenceOfEncodeFunction(AsnElementType componentType, boolean hasExplicitTag, boolean isSequence)
             throws IOException {
-        write("public int encode(OutputStream os, boolean withTag) throws IOException {\n");
+        write("public int encode(OutputStream reverseOS, boolean withTag) throws IOException {\n");
 
         write("if (code != null) {");
         write("for (int i = code.length - 1; i >= 0; i--) {");
-        write("os.write(code[i]);");
+        write("reverseOS.write(code[i]);");
         write("}");
         write("if (withTag) {");
-        write("return tag.encode(os) + code.length;");
+        write("return tag.encode(reverseOS) + code.length;");
         write("}");
         write("return code.length;");
         write("}\n");
@@ -1160,12 +1160,12 @@ public class BerClassWriter {
         if (componentTag != null) {
 
             if (componentTag.type == TagType.EXPLICIT) {
-                write("int sublength = seqOf.get(i).encode(os" + explicitEncoding + ");");
+                write("int sublength = seqOf.get(i).encode(reverseOS" + explicitEncoding + ");");
                 write("codeLength += sublength;");
-                write("codeLength += BerLength.encodeLength(os, sublength);");
+                write("codeLength += BerLength.encodeLength(reverseOS, sublength);");
             }
             else {
-                write("codeLength += seqOf.get(i).encode(os" + explicitEncoding + ");");
+                write("codeLength += seqOf.get(i).encode(reverseOS" + explicitEncoding + ");");
             }
 
             if (componentTag != null) {
@@ -1175,30 +1175,30 @@ public class BerClassWriter {
         else {
 
             if (isDirectAnyOrChoice(componentType)) {
-                write("codeLength += seqOf.get(i).encode(os);");
+                write("codeLength += seqOf.get(i).encode(reverseOS);");
             }
             else {
-                write("codeLength += seqOf.get(i).encode(os, true);");
+                write("codeLength += seqOf.get(i).encode(reverseOS, true);");
             }
         }
 
         write("}\n");
 
         if (hasExplicitTag) {
-            write("codeLength += BerLength.encodeLength(os, codeLength);");
+            write("codeLength += BerLength.encodeLength(reverseOS, codeLength);");
             if (isSequence) {
-                write("os.write(0x30);");
+                write("reverseOS.write(0x30);");
             }
             else {
-                write("os.write(0x31);");
+                write("reverseOS.write(0x31);");
             }
             write("codeLength++;\n");
         }
 
-        write("codeLength += BerLength.encodeLength(os, codeLength);\n");
+        write("codeLength += BerLength.encodeLength(reverseOS, codeLength);\n");
 
         write("if (withTag) {");
-        write("codeLength += tag.encode(os);");
+        write("codeLength += tag.encode(reverseOS);");
         write("}\n");
 
         write("return codeLength;");
@@ -1857,14 +1857,14 @@ public class BerClassWriter {
 
     private void writeEncodeAndSaveFunction(boolean isTagless) throws IOException {
         write("public void encodeAndSave(int encodingSizeGuess) throws IOException {");
-        write("ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);");
+        write("ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);");
         if (isTagless) {
-            write("encode(os);");
+            write("encode(reverseOS);");
         }
         else {
-            write("encode(os, false);");
+            write("encode(reverseOS, false);");
         }
-        write("code = os.getArray();");
+        write("code = reverseOS.getArray();");
         write("}\n");
     }
 
@@ -2166,7 +2166,7 @@ public class BerClassWriter {
 
         write("// write tag: " + tag.tagClass + "_CLASS, " + tag.typeStructure + ", " + tag.value);
         for (int i = (berTag.tagBytes.length - 1); i >= 0; i--) {
-            write("os.write(" + HexConverter.toHexString(berTag.tagBytes[i]) + ");");
+            write("reverseOS.write(" + HexConverter.toHexString(berTag.tagBytes[i]) + ");");
         }
 
         write("codeLength += " + berTag.tagBytes.length + ";");

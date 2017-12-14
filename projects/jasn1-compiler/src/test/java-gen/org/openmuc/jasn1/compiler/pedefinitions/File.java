@@ -47,44 +47,44 @@ public class File implements Serializable {
 			this.fillFileContent = fillFileContent;
 		}
 
-		public int encode(OutputStream os) throws IOException {
+		public int encode(OutputStream reverseOS) throws IOException {
 
 			if (code != null) {
 				for (int i = code.length - 1; i >= 0; i--) {
-					os.write(code[i]);
+					reverseOS.write(code[i]);
 				}
 				return code.length;
 			}
 
 			int codeLength = 0;
 			if (fillFileContent != null) {
-				codeLength += fillFileContent.encode(os, false);
+				codeLength += fillFileContent.encode(reverseOS, false);
 				// write tag: CONTEXT_CLASS, PRIMITIVE, 3
-				os.write(0x83);
+				reverseOS.write(0x83);
 				codeLength += 1;
 				return codeLength;
 			}
 			
 			if (fillFileOffset != null) {
-				codeLength += fillFileOffset.encode(os, false);
+				codeLength += fillFileOffset.encode(reverseOS, false);
 				// write tag: CONTEXT_CLASS, PRIMITIVE, 2
-				os.write(0x82);
+				reverseOS.write(0x82);
 				codeLength += 1;
 				return codeLength;
 			}
 			
 			if (fileDescriptor != null) {
-				codeLength += fileDescriptor.encode(os, false);
+				codeLength += fileDescriptor.encode(reverseOS, false);
 				// write tag: CONTEXT_CLASS, CONSTRUCTED, 1
-				os.write(0xA1);
+				reverseOS.write(0xA1);
 				codeLength += 1;
 				return codeLength;
 			}
 			
 			if (doNotCreate != null) {
-				codeLength += doNotCreate.encode(os, false);
+				codeLength += doNotCreate.encode(reverseOS, false);
 				// write tag: CONTEXT_CLASS, PRIMITIVE, 0
-				os.write(0x80);
+				reverseOS.write(0x80);
 				codeLength += 1;
 				return codeLength;
 			}
@@ -138,9 +138,9 @@ public class File implements Serializable {
 		}
 
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-			encode(os);
-			code = os.getArray();
+			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+			encode(reverseOS);
+			code = reverseOS.getArray();
 		}
 
 		public String toString() {
@@ -193,31 +193,31 @@ public class File implements Serializable {
 		this.seqOf = seqOf;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
 		for (int i = (seqOf.size() - 1); i >= 0; i--) {
-			codeLength += seqOf.get(i).encode(os);
+			codeLength += seqOf.get(i).encode(reverseOS);
 		}
 
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;
@@ -275,9 +275,9 @@ public class File implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

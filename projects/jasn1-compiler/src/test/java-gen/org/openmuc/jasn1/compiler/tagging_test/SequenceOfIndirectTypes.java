@@ -178,18 +178,18 @@ public class SequenceOfIndirectTypes implements Serializable {
 		return taggedAny2;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
@@ -197,82 +197,82 @@ public class SequenceOfIndirectTypes implements Serializable {
 		int codeLength = 0;
 		int sublength;
 
-		codeLength += taggedAny2.encode(os, false);
+		codeLength += taggedAny2.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 18
-		os.write(0xB2);
+		reverseOS.write(0xB2);
 		codeLength += 1;
 		
-		sublength = taggedAny.encode(os);
+		sublength = taggedAny.encode(reverseOS);
 		codeLength += sublength;
-		codeLength += BerLength.encodeLength(os, sublength);
+		codeLength += BerLength.encodeLength(reverseOS, sublength);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 8
-		os.write(0xA8);
+		reverseOS.write(0xA8);
 		codeLength += 1;
 		
-		codeLength += untaggedAny.encode(os, true);
+		codeLength += untaggedAny.encode(reverseOS, true);
 		
-		codeLength += taggedChoice2.encode(os, false);
+		codeLength += taggedChoice2.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 15
-		os.write(0xAF);
+		reverseOS.write(0xAF);
 		codeLength += 1;
 		
-		sublength = taggedChoice.encode(os);
+		sublength = taggedChoice.encode(reverseOS);
 		codeLength += sublength;
-		codeLength += BerLength.encodeLength(os, sublength);
+		codeLength += BerLength.encodeLength(reverseOS, sublength);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 5
-		os.write(0xA5);
+		reverseOS.write(0xA5);
 		codeLength += 1;
 		
-		codeLength += untaggedChoice2.encode(os, true);
+		codeLength += untaggedChoice2.encode(reverseOS, true);
 		
-		codeLength += untaggedChoice.encode(os);
+		codeLength += untaggedChoice.encode(reverseOS);
 		
-		codeLength += implicitlyTaggedInt3.encode(os, false);
+		codeLength += implicitlyTaggedInt3.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 23
-		os.write(0x97);
+		reverseOS.write(0x97);
 		codeLength += 1;
 		
-		codeLength += implicitlyTaggedInt2.encode(os, false);
+		codeLength += implicitlyTaggedInt2.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 12
-		os.write(0xAC);
+		reverseOS.write(0xAC);
 		codeLength += 1;
 		
-		codeLength += implicitlyTaggedInt.encode(os, false);
+		codeLength += implicitlyTaggedInt.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 2
-		os.write(0x82);
+		reverseOS.write(0x82);
 		codeLength += 1;
 		
-		sublength = explicitlyTaggedInt3.encode(os, true);
+		sublength = explicitlyTaggedInt3.encode(reverseOS, true);
 		codeLength += sublength;
-		codeLength += BerLength.encodeLength(os, sublength);
+		codeLength += BerLength.encodeLength(reverseOS, sublength);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 21
-		os.write(0xB5);
+		reverseOS.write(0xB5);
 		codeLength += 1;
 		
-		sublength = explicitlyTaggedInt2.encode(os, true);
+		sublength = explicitlyTaggedInt2.encode(reverseOS, true);
 		codeLength += sublength;
-		codeLength += BerLength.encodeLength(os, sublength);
+		codeLength += BerLength.encodeLength(reverseOS, sublength);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 11
-		os.write(0xAB);
+		reverseOS.write(0xAB);
 		codeLength += 1;
 		
-		sublength = explicitlyTaggedInt.encode(os, true);
+		sublength = explicitlyTaggedInt.encode(reverseOS, true);
 		codeLength += sublength;
-		codeLength += BerLength.encodeLength(os, sublength);
+		codeLength += BerLength.encodeLength(reverseOS, sublength);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 1
-		os.write(0xA1);
+		reverseOS.write(0xA1);
 		codeLength += 1;
 		
-		codeLength += untaggedInt3.encode(os, true);
+		codeLength += untaggedInt3.encode(reverseOS, true);
 		
-		codeLength += untaggedInt2.encode(os, true);
+		codeLength += untaggedInt2.encode(reverseOS, true);
 		
-		codeLength += untaggedInt.encode(os, true);
+		codeLength += untaggedInt.encode(reverseOS, true);
 		
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;
@@ -447,9 +447,9 @@ public class SequenceOfIndirectTypes implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

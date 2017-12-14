@@ -49,33 +49,33 @@ public class ProfileInfoListRequest implements Serializable {
 			this.profileClass = profileClass;
 		}
 
-		public int encode(OutputStream os) throws IOException {
+		public int encode(OutputStream reverseOS) throws IOException {
 
 			if (code != null) {
 				for (int i = code.length - 1; i >= 0; i--) {
-					os.write(code[i]);
+					reverseOS.write(code[i]);
 				}
 				return code.length;
 			}
 
 			int codeLength = 0;
 			if (profileClass != null) {
-				codeLength += profileClass.encode(os, false);
+				codeLength += profileClass.encode(reverseOS, false);
 				// write tag: CONTEXT_CLASS, PRIMITIVE, 21
-				os.write(0x95);
+				reverseOS.write(0x95);
 				codeLength += 1;
 				return codeLength;
 			}
 			
 			if (iccid != null) {
-				codeLength += iccid.encode(os, true);
+				codeLength += iccid.encode(reverseOS, true);
 				return codeLength;
 			}
 			
 			if (isdpAid != null) {
-				codeLength += isdpAid.encode(os, false);
+				codeLength += isdpAid.encode(reverseOS, false);
 				// write tag: APPLICATION_CLASS, PRIMITIVE, 15
-				os.write(0x4F);
+				reverseOS.write(0x4F);
 				codeLength += 1;
 				return codeLength;
 			}
@@ -123,9 +123,9 @@ public class ProfileInfoListRequest implements Serializable {
 		}
 
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-			encode(os);
-			code = os.getArray();
+			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+			encode(reverseOS);
+			code = reverseOS.getArray();
 		}
 
 		public String toString() {
@@ -174,18 +174,18 @@ public class ProfileInfoListRequest implements Serializable {
 		this.tagList = tagList;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
@@ -194,25 +194,25 @@ public class ProfileInfoListRequest implements Serializable {
 		int sublength;
 
 		if (tagList != null) {
-			codeLength += tagList.encode(os, false);
+			codeLength += tagList.encode(reverseOS, false);
 			// write tag: APPLICATION_CLASS, PRIMITIVE, 28
-			os.write(0x5C);
+			reverseOS.write(0x5C);
 			codeLength += 1;
 		}
 		
 		if (searchCriteria != null) {
-			sublength = searchCriteria.encode(os);
+			sublength = searchCriteria.encode(reverseOS);
 			codeLength += sublength;
-			codeLength += BerLength.encodeLength(os, sublength);
+			codeLength += BerLength.encodeLength(reverseOS, sublength);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 0
-			os.write(0xA0);
+			reverseOS.write(0xA0);
 			codeLength += 1;
 		}
 		
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;
@@ -320,9 +320,9 @@ public class ProfileInfoListRequest implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

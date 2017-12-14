@@ -57,97 +57,97 @@ public class ApplicationSystemParameters implements Serializable {
 		this.userInteractionContactlessParameters = userInteractionContactlessParameters;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
 		if (userInteractionContactlessParameters != null) {
-			codeLength += userInteractionContactlessParameters.encode(os, false);
+			codeLength += userInteractionContactlessParameters.encode(reverseOS, false);
 			// write tag: PRIVATE_CLASS, PRIMITIVE, 26
-			os.write(0xDA);
+			reverseOS.write(0xDA);
 			codeLength += 1;
 		}
 		
 		if (contactlessProtocolParameters != null) {
-			codeLength += contactlessProtocolParameters.encode(os, false);
+			codeLength += contactlessProtocolParameters.encode(reverseOS, false);
 			// write tag: PRIVATE_CLASS, PRIMITIVE, 25
-			os.write(0xD9);
+			reverseOS.write(0xD9);
 			codeLength += 1;
 		}
 		
 		if (ts102226AdditionalContactlessParameters != null) {
-			codeLength += ts102226AdditionalContactlessParameters.encode(os, false);
+			codeLength += ts102226AdditionalContactlessParameters.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 0
-			os.write(0xA0);
+			reverseOS.write(0xA0);
 			codeLength += 1;
 		}
 		
 		if (ts102226SIMFileAccessToolkitParameter != null) {
-			codeLength += ts102226SIMFileAccessToolkitParameter.encode(os, false);
+			codeLength += ts102226SIMFileAccessToolkitParameter.encode(reverseOS, false);
 			// write tag: PRIVATE_CLASS, PRIMITIVE, 10
-			os.write(0xCA);
+			reverseOS.write(0xCA);
 			codeLength += 1;
 		}
 		
 		if (nonVolatileReservedMemory != null) {
-			codeLength += nonVolatileReservedMemory.encode(os, false);
+			codeLength += nonVolatileReservedMemory.encode(reverseOS, false);
 			// write tag: PRIVATE_CLASS, PRIMITIVE, 24
-			os.write(0xD8);
+			reverseOS.write(0xD8);
 			codeLength += 1;
 		}
 		
 		if (volatileReservedMemory != null) {
-			codeLength += volatileReservedMemory.encode(os, false);
+			codeLength += volatileReservedMemory.encode(reverseOS, false);
 			// write tag: PRIVATE_CLASS, PRIMITIVE, 23
-			os.write(0xD7);
+			reverseOS.write(0xD7);
 			codeLength += 1;
 		}
 		
 		if (implicitSelectionParameter != null) {
-			codeLength += implicitSelectionParameter.encode(os, false);
+			codeLength += implicitSelectionParameter.encode(reverseOS, false);
 			// write tag: PRIVATE_CLASS, PRIMITIVE, 15
-			os.write(0xCF);
+			reverseOS.write(0xCF);
 			codeLength += 1;
 		}
 		
 		if (globalServiceParameters != null) {
-			codeLength += globalServiceParameters.encode(os, false);
+			codeLength += globalServiceParameters.encode(reverseOS, false);
 			// write tag: PRIVATE_CLASS, PRIMITIVE, 11
-			os.write(0xCB);
+			reverseOS.write(0xCB);
 			codeLength += 1;
 		}
 		
 		if (nonVolatileMemoryQuotaC8 != null) {
-			codeLength += nonVolatileMemoryQuotaC8.encode(os, false);
+			codeLength += nonVolatileMemoryQuotaC8.encode(reverseOS, false);
 			// write tag: PRIVATE_CLASS, PRIMITIVE, 8
-			os.write(0xC8);
+			reverseOS.write(0xC8);
 			codeLength += 1;
 		}
 		
 		if (volatileMemoryQuotaC7 != null) {
-			codeLength += volatileMemoryQuotaC7.encode(os, false);
+			codeLength += volatileMemoryQuotaC7.encode(reverseOS, false);
 			// write tag: PRIVATE_CLASS, PRIMITIVE, 7
-			os.write(0xC7);
+			reverseOS.write(0xC7);
 			codeLength += 1;
 		}
 		
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;
@@ -446,9 +446,9 @@ public class ApplicationSystemParameters implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

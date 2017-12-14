@@ -55,18 +55,18 @@ public class BuiltInStandardAttributes implements Serializable {
 		this.organizationalUnitNames = organizationalUnitNames;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
@@ -75,68 +75,68 @@ public class BuiltInStandardAttributes implements Serializable {
 		int sublength;
 
 		if (organizationalUnitNames != null) {
-			codeLength += organizationalUnitNames.encode(os, false);
+			codeLength += organizationalUnitNames.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 6
-			os.write(0xA6);
+			reverseOS.write(0xA6);
 			codeLength += 1;
 		}
 		
 		if (personalName != null) {
-			codeLength += personalName.encode(os, false);
+			codeLength += personalName.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 5
-			os.write(0xA5);
+			reverseOS.write(0xA5);
 			codeLength += 1;
 		}
 		
 		if (numericUserIdentifier != null) {
-			codeLength += numericUserIdentifier.encode(os, false);
+			codeLength += numericUserIdentifier.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 4
-			os.write(0x84);
+			reverseOS.write(0x84);
 			codeLength += 1;
 		}
 		
 		if (organizationName != null) {
-			codeLength += organizationName.encode(os, false);
+			codeLength += organizationName.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 3
-			os.write(0x83);
+			reverseOS.write(0x83);
 			codeLength += 1;
 		}
 		
 		if (privateDomainName != null) {
-			sublength = privateDomainName.encode(os);
+			sublength = privateDomainName.encode(reverseOS);
 			codeLength += sublength;
-			codeLength += BerLength.encodeLength(os, sublength);
+			codeLength += BerLength.encodeLength(reverseOS, sublength);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 2
-			os.write(0xA2);
+			reverseOS.write(0xA2);
 			codeLength += 1;
 		}
 		
 		if (terminalIdentifier != null) {
-			codeLength += terminalIdentifier.encode(os, false);
+			codeLength += terminalIdentifier.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 1
-			os.write(0x81);
+			reverseOS.write(0x81);
 			codeLength += 1;
 		}
 		
 		if (networkAddress != null) {
-			codeLength += networkAddress.encode(os, false);
+			codeLength += networkAddress.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 0
-			os.write(0x80);
+			reverseOS.write(0x80);
 			codeLength += 1;
 		}
 		
 		if (administrationDomainName != null) {
-			codeLength += administrationDomainName.encode(os, true);
+			codeLength += administrationDomainName.encode(reverseOS, true);
 		}
 		
 		if (countryName != null) {
-			codeLength += countryName.encode(os, true);
+			codeLength += countryName.encode(reverseOS, true);
 		}
 		
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;
@@ -419,9 +419,9 @@ public class BuiltInStandardAttributes implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

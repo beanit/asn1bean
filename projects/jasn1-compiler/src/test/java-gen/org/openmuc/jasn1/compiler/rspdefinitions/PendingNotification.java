@@ -43,26 +43,26 @@ public class PendingNotification implements Serializable {
 		this.otherSignedNotification = otherSignedNotification;
 	}
 
-	public int encode(OutputStream os) throws IOException {
+	public int encode(OutputStream reverseOS) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
 		if (otherSignedNotification != null) {
-			codeLength += otherSignedNotification.encode(os, true);
+			codeLength += otherSignedNotification.encode(reverseOS, true);
 			return codeLength;
 		}
 		
 		if (profileInstallationResult != null) {
-			codeLength += profileInstallationResult.encode(os, false);
+			codeLength += profileInstallationResult.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 55
-			os.write(0x37);
-			os.write(0xBF);
+			reverseOS.write(0x37);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 			return codeLength;
 		}
@@ -104,9 +104,9 @@ public class PendingNotification implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

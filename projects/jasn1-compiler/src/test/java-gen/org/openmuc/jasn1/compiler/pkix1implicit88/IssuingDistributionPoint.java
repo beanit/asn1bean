@@ -55,18 +55,18 @@ public class IssuingDistributionPoint implements Serializable {
 		this.onlyContainsAttributeCerts = onlyContainsAttributeCerts;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
@@ -75,53 +75,53 @@ public class IssuingDistributionPoint implements Serializable {
 		int sublength;
 
 		if (onlyContainsAttributeCerts != null) {
-			codeLength += onlyContainsAttributeCerts.encode(os, false);
+			codeLength += onlyContainsAttributeCerts.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 5
-			os.write(0x85);
+			reverseOS.write(0x85);
 			codeLength += 1;
 		}
 		
 		if (indirectCRL != null) {
-			codeLength += indirectCRL.encode(os, false);
+			codeLength += indirectCRL.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 4
-			os.write(0x84);
+			reverseOS.write(0x84);
 			codeLength += 1;
 		}
 		
 		if (onlySomeReasons != null) {
-			codeLength += onlySomeReasons.encode(os, false);
+			codeLength += onlySomeReasons.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 3
-			os.write(0x83);
+			reverseOS.write(0x83);
 			codeLength += 1;
 		}
 		
 		if (onlyContainsCACerts != null) {
-			codeLength += onlyContainsCACerts.encode(os, false);
+			codeLength += onlyContainsCACerts.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 2
-			os.write(0x82);
+			reverseOS.write(0x82);
 			codeLength += 1;
 		}
 		
 		if (onlyContainsUserCerts != null) {
-			codeLength += onlyContainsUserCerts.encode(os, false);
+			codeLength += onlyContainsUserCerts.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 1
-			os.write(0x81);
+			reverseOS.write(0x81);
 			codeLength += 1;
 		}
 		
 		if (distributionPoint != null) {
-			sublength = distributionPoint.encode(os);
+			sublength = distributionPoint.encode(reverseOS);
 			codeLength += sublength;
-			codeLength += BerLength.encodeLength(os, sublength);
+			codeLength += BerLength.encodeLength(reverseOS, sublength);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 0
-			os.write(0xA0);
+			reverseOS.write(0xA0);
 			codeLength += 1;
 		}
 		
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;
@@ -329,9 +329,9 @@ public class IssuingDistributionPoint implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

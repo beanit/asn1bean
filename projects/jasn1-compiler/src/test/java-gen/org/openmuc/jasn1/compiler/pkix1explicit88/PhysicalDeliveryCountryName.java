@@ -39,23 +39,23 @@ public class PhysicalDeliveryCountryName implements Serializable {
 		this.iso3166Alpha2Code = iso3166Alpha2Code;
 	}
 
-	public int encode(OutputStream os) throws IOException {
+	public int encode(OutputStream reverseOS) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
 		if (iso3166Alpha2Code != null) {
-			codeLength += iso3166Alpha2Code.encode(os, true);
+			codeLength += iso3166Alpha2Code.encode(reverseOS, true);
 			return codeLength;
 		}
 		
 		if (x121DccCode != null) {
-			codeLength += x121DccCode.encode(os, true);
+			codeLength += x121DccCode.encode(reverseOS, true);
 			return codeLength;
 		}
 		
@@ -96,9 +96,9 @@ public class PhysicalDeliveryCountryName implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

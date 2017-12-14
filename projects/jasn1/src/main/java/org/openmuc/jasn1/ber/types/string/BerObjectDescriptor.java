@@ -23,13 +23,13 @@ public class BerObjectDescriptor extends BerGraphicString {
     }
 
     @Override
-    public int encode(OutputStream os, boolean withTag) throws IOException {
+    public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
         int codeLength;
 
-        codeLength = super.encode(os, false);
+        codeLength = super.encode(reverseOS, false);
         if (withTag) {
-            codeLength += tag.encode(os);
+            codeLength += tag.encode(reverseOS);
         }
 
         return codeLength;

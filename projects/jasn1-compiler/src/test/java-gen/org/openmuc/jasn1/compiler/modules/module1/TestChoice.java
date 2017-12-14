@@ -53,23 +53,23 @@ public class TestChoice implements Serializable {
 		return choiceElement2;
 	}
 
-	public int encode(OutputStream os) throws IOException {
+	public int encode(OutputStream reverseOS) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
 		if (choiceElement2 != null) {
-			codeLength += choiceElement2.encode(os, true);
+			codeLength += choiceElement2.encode(reverseOS, true);
 			return codeLength;
 		}
 		
 		if (choiceElement1 != null) {
-			codeLength += choiceElement1.encode(os, true);
+			codeLength += choiceElement1.encode(reverseOS, true);
 			return codeLength;
 		}
 		
@@ -110,9 +110,9 @@ public class TestChoice implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

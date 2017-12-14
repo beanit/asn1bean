@@ -71,146 +71,146 @@ public class ServicesList implements Serializable {
 		this.tuak256 = tuak256;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
 		if (tuak256 != null) {
-			codeLength += tuak256.encode(os, false);
+			codeLength += tuak256.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 16
-			os.write(0x90);
+			reverseOS.write(0x90);
 			codeLength += 1;
 		}
 		
 		if (multipleCsim != null) {
-			codeLength += multipleCsim.encode(os, false);
+			codeLength += multipleCsim.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 15
-			os.write(0x8F);
+			reverseOS.write(0x8F);
 			codeLength += 1;
 		}
 		
 		if (multipleIsim != null) {
-			codeLength += multipleIsim.encode(os, false);
+			codeLength += multipleIsim.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 14
-			os.write(0x8E);
+			reverseOS.write(0x8E);
 			codeLength += 1;
 		}
 		
 		if (multipleUsim != null) {
-			codeLength += multipleUsim.encode(os, false);
+			codeLength += multipleUsim.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 13
-			os.write(0x8D);
+			reverseOS.write(0x8D);
 			codeLength += 1;
 		}
 		
 		if (multos != null) {
-			codeLength += multos.encode(os, false);
+			codeLength += multos.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 12
-			os.write(0x8C);
+			reverseOS.write(0x8C);
 			codeLength += 1;
 		}
 		
 		if (javacard != null) {
-			codeLength += javacard.encode(os, false);
+			codeLength += javacard.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 11
-			os.write(0x8B);
+			reverseOS.write(0x8B);
 			codeLength += 1;
 		}
 		
 		if (eap != null) {
-			codeLength += eap.encode(os, false);
+			codeLength += eap.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 10
-			os.write(0x8A);
+			reverseOS.write(0x8A);
 			codeLength += 1;
 		}
 		
 		if (mbms != null) {
-			codeLength += mbms.encode(os, false);
+			codeLength += mbms.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 9
-			os.write(0x89);
+			reverseOS.write(0x89);
 			codeLength += 1;
 		}
 		
 		if (gbaIsim != null) {
-			codeLength += gbaIsim.encode(os, false);
+			codeLength += gbaIsim.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 8
-			os.write(0x88);
+			reverseOS.write(0x88);
 			codeLength += 1;
 		}
 		
 		if (gbaUsim != null) {
-			codeLength += gbaUsim.encode(os, false);
+			codeLength += gbaUsim.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 7
-			os.write(0x87);
+			reverseOS.write(0x87);
 			codeLength += 1;
 		}
 		
 		if (cave != null) {
-			codeLength += cave.encode(os, false);
+			codeLength += cave.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 6
-			os.write(0x86);
+			reverseOS.write(0x86);
 			codeLength += 1;
 		}
 		
 		if (tuak128 != null) {
-			codeLength += tuak128.encode(os, false);
+			codeLength += tuak128.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 5
-			os.write(0x85);
+			reverseOS.write(0x85);
 			codeLength += 1;
 		}
 		
 		if (milenage != null) {
-			codeLength += milenage.encode(os, false);
+			codeLength += milenage.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 4
-			os.write(0x84);
+			reverseOS.write(0x84);
 			codeLength += 1;
 		}
 		
 		if (csim != null) {
-			codeLength += csim.encode(os, false);
+			codeLength += csim.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 3
-			os.write(0x83);
+			reverseOS.write(0x83);
 			codeLength += 1;
 		}
 		
 		if (isim != null) {
-			codeLength += isim.encode(os, false);
+			codeLength += isim.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 2
-			os.write(0x82);
+			reverseOS.write(0x82);
 			codeLength += 1;
 		}
 		
 		if (usim != null) {
-			codeLength += usim.encode(os, false);
+			codeLength += usim.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 1
-			os.write(0x81);
+			reverseOS.write(0x81);
 			codeLength += 1;
 		}
 		
 		if (contactless != null) {
-			codeLength += contactless.encode(os, false);
+			codeLength += contactless.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 0
-			os.write(0x80);
+			reverseOS.write(0x80);
 			codeLength += 1;
 		}
 		
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;
@@ -684,9 +684,9 @@ public class ServicesList implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

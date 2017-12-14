@@ -189,600 +189,600 @@ public class PEOPTUSIM implements Serializable {
 		this.efIpd = efIpd;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
 		if (efIpd != null) {
-			codeLength += efIpd.encode(os, false);
+			codeLength += efIpd.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 75
-			os.write(0x4B);
-			os.write(0xBF);
+			reverseOS.write(0x4B);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efIps != null) {
-			codeLength += efIps.encode(os, false);
+			codeLength += efIps.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 74
-			os.write(0x4A);
-			os.write(0xBF);
+			reverseOS.write(0x4A);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efIwl != null) {
-			codeLength += efIwl.encode(os, false);
+			codeLength += efIwl.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 73
-			os.write(0x49);
-			os.write(0xBF);
+			reverseOS.write(0x49);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efSdnuri != null) {
-			codeLength += efSdnuri.encode(os, false);
+			codeLength += efSdnuri.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 72
-			os.write(0x48);
-			os.write(0xBF);
+			reverseOS.write(0x48);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efBdnuri != null) {
-			codeLength += efBdnuri.encode(os, false);
+			codeLength += efBdnuri.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 71
-			os.write(0x47);
-			os.write(0xBF);
+			reverseOS.write(0x47);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efFdnuri != null) {
-			codeLength += efFdnuri.encode(os, false);
+			codeLength += efFdnuri.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 70
-			os.write(0x46);
-			os.write(0xBF);
+			reverseOS.write(0x46);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efPws != null) {
-			codeLength += efPws.encode(os, false);
+			codeLength += efPws.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 69
-			os.write(0x45);
-			os.write(0xBF);
+			reverseOS.write(0x45);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efUicciari != null) {
-			codeLength += efUicciari.encode(os, false);
+			codeLength += efUicciari.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 68
-			os.write(0x44);
-			os.write(0xBF);
+			reverseOS.write(0x44);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efNasconfig != null) {
-			codeLength += efNasconfig.encode(os, false);
+			codeLength += efNasconfig.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 67
-			os.write(0x43);
-			os.write(0xBF);
+			reverseOS.write(0x43);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efUfc != null) {
-			codeLength += efUfc.encode(os, false);
+			codeLength += efUfc.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 66
-			os.write(0x42);
-			os.write(0xBF);
+			reverseOS.write(0x42);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efNcpIp != null) {
-			codeLength += efNcpIp.encode(os, false);
+			codeLength += efNcpIp.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 65
-			os.write(0x41);
-			os.write(0xBF);
+			reverseOS.write(0x41);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efPnni != null) {
-			codeLength += efPnni.encode(os, false);
+			codeLength += efPnni.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 64
-			os.write(0x40);
-			os.write(0xBF);
+			reverseOS.write(0x40);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efSpni != null) {
-			codeLength += efSpni.encode(os, false);
+			codeLength += efSpni.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 63
-			os.write(0x3F);
-			os.write(0xBF);
+			reverseOS.write(0x3F);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efNafkca != null) {
-			codeLength += efNafkca.encode(os, false);
+			codeLength += efNafkca.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 62
-			os.write(0x3E);
-			os.write(0xBF);
+			reverseOS.write(0x3E);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efLrplmnsi != null) {
-			codeLength += efLrplmnsi.encode(os, false);
+			codeLength += efLrplmnsi.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 61
-			os.write(0x3D);
-			os.write(0xBF);
+			reverseOS.write(0x3D);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efEhplmnpi != null) {
-			codeLength += efEhplmnpi.encode(os, false);
+			codeLength += efEhplmnpi.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 60
-			os.write(0x3C);
-			os.write(0xBF);
+			reverseOS.write(0x3C);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efGbanl != null) {
-			codeLength += efGbanl.encode(os, false);
+			codeLength += efGbanl.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 59
-			os.write(0x3B);
-			os.write(0xBF);
+			reverseOS.write(0x3B);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efEhplmn != null) {
-			codeLength += efEhplmn.encode(os, false);
+			codeLength += efEhplmn.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 58
-			os.write(0x3A);
-			os.write(0xBF);
+			reverseOS.write(0x3A);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efMuk != null) {
-			codeLength += efMuk.encode(os, false);
+			codeLength += efMuk.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 57
-			os.write(0x39);
-			os.write(0xBF);
+			reverseOS.write(0x39);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efMsk != null) {
-			codeLength += efMsk.encode(os, false);
+			codeLength += efMsk.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 56
-			os.write(0x38);
-			os.write(0xBF);
+			reverseOS.write(0x38);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efGbabp != null) {
-			codeLength += efGbabp.encode(os, false);
+			codeLength += efGbabp.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 55
-			os.write(0x37);
-			os.write(0xBF);
+			reverseOS.write(0x37);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efVbsca != null) {
-			codeLength += efVbsca.encode(os, false);
+			codeLength += efVbsca.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 54
-			os.write(0x36);
-			os.write(0xBF);
+			reverseOS.write(0x36);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efVgcsca != null) {
-			codeLength += efVgcsca.encode(os, false);
+			codeLength += efVgcsca.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 53
-			os.write(0x35);
-			os.write(0xBF);
+			reverseOS.write(0x35);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efNia != null) {
-			codeLength += efNia.encode(os, false);
+			codeLength += efNia.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 52
-			os.write(0x34);
-			os.write(0xBF);
+			reverseOS.write(0x34);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efMmsucp != null) {
-			codeLength += efMmsucp.encode(os, false);
+			codeLength += efMmsucp.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 51
-			os.write(0x33);
-			os.write(0xBF);
+			reverseOS.write(0x33);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efMmsup != null) {
-			codeLength += efMmsup.encode(os, false);
+			codeLength += efMmsup.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 50
-			os.write(0x32);
-			os.write(0xBF);
+			reverseOS.write(0x32);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efMmsicp != null) {
-			codeLength += efMmsicp.encode(os, false);
+			codeLength += efMmsicp.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 49
-			os.write(0x31);
-			os.write(0xBF);
+			reverseOS.write(0x31);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efExt8 != null) {
-			codeLength += efExt8.encode(os, false);
+			codeLength += efExt8.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 48
-			os.write(0x30);
-			os.write(0xBF);
+			reverseOS.write(0x30);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efMmsn != null) {
-			codeLength += efMmsn.encode(os, false);
+			codeLength += efMmsn.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 47
-			os.write(0x2F);
-			os.write(0xBF);
+			reverseOS.write(0x2F);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efSpdi != null) {
-			codeLength += efSpdi.encode(os, false);
+			codeLength += efSpdi.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 46
-			os.write(0x2E);
-			os.write(0xBF);
+			reverseOS.write(0x2E);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efExt7 != null) {
-			codeLength += efExt7.encode(os, false);
+			codeLength += efExt7.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 45
-			os.write(0x2D);
-			os.write(0xBF);
+			reverseOS.write(0x2D);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efCfis != null) {
-			codeLength += efCfis.encode(os, false);
+			codeLength += efCfis.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 44
-			os.write(0x2C);
-			os.write(0xBF);
+			reverseOS.write(0x2C);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efMwis != null) {
-			codeLength += efMwis.encode(os, false);
+			codeLength += efMwis.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 43
-			os.write(0x2B);
-			os.write(0xBF);
+			reverseOS.write(0x2B);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efMbi != null) {
-			codeLength += efMbi.encode(os, false);
+			codeLength += efMbi.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 42
-			os.write(0x2A);
-			os.write(0xBF);
+			reverseOS.write(0x2A);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efExt6 != null) {
-			codeLength += efExt6.encode(os, false);
+			codeLength += efExt6.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 41
-			os.write(0x29);
-			os.write(0xBF);
+			reverseOS.write(0x29);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efMbdn != null) {
-			codeLength += efMbdn.encode(os, false);
+			codeLength += efMbdn.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 40
-			os.write(0x28);
-			os.write(0xBF);
+			reverseOS.write(0x28);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efOpl != null) {
-			codeLength += efOpl.encode(os, false);
+			codeLength += efOpl.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 39
-			os.write(0x27);
-			os.write(0xBF);
+			reverseOS.write(0x27);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efPnn != null) {
-			codeLength += efPnn.encode(os, false);
+			codeLength += efPnn.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 38
-			os.write(0x26);
-			os.write(0xBF);
+			reverseOS.write(0x26);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efHiddenkey != null) {
-			codeLength += efHiddenkey.encode(os, false);
+			codeLength += efHiddenkey.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 37
-			os.write(0x25);
-			os.write(0xBF);
+			reverseOS.write(0x25);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efAaem != null) {
-			codeLength += efAaem.encode(os, false);
+			codeLength += efAaem.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 36
-			os.write(0x24);
-			os.write(0xBF);
+			reverseOS.write(0x24);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efEmlpp != null) {
-			codeLength += efEmlpp.encode(os, false);
+			codeLength += efEmlpp.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 35
-			os.write(0x23);
-			os.write(0xBF);
+			reverseOS.write(0x23);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efVbss != null) {
-			codeLength += efVbss.encode(os, false);
+			codeLength += efVbss.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 34
-			os.write(0x22);
-			os.write(0xBF);
+			reverseOS.write(0x22);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efVbs != null) {
-			codeLength += efVbs.encode(os, false);
+			codeLength += efVbs.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 33
-			os.write(0x21);
-			os.write(0xBF);
+			reverseOS.write(0x21);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efVgcss != null) {
-			codeLength += efVgcss.encode(os, false);
+			codeLength += efVgcss.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 32
-			os.write(0x20);
-			os.write(0xBF);
+			reverseOS.write(0x20);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efVgcs != null) {
-			codeLength += efVgcs.encode(os, false);
+			codeLength += efVgcs.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 31
-			os.write(0x1F);
-			os.write(0xBF);
+			reverseOS.write(0x1F);
+			reverseOS.write(0xBF);
 			codeLength += 2;
 		}
 		
 		if (efOct != null) {
-			codeLength += efOct.encode(os, false);
+			codeLength += efOct.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 30
-			os.write(0xBE);
+			reverseOS.write(0xBE);
 			codeLength += 1;
 		}
 		
 		if (efIct != null) {
-			codeLength += efIct.encode(os, false);
+			codeLength += efIct.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 29
-			os.write(0xBD);
+			reverseOS.write(0xBD);
 			codeLength += 1;
 		}
 		
 		if (efOci != null) {
-			codeLength += efOci.encode(os, false);
+			codeLength += efOci.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 28
-			os.write(0xBC);
+			reverseOS.write(0xBC);
 			codeLength += 1;
 		}
 		
 		if (efIci != null) {
-			codeLength += efIci.encode(os, false);
+			codeLength += efIci.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 27
-			os.write(0xBB);
+			reverseOS.write(0xBB);
 			codeLength += 1;
 		}
 		
 		if (efCmi != null) {
-			codeLength += efCmi.encode(os, false);
+			codeLength += efCmi.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 26
-			os.write(0xBA);
+			reverseOS.write(0xBA);
 			codeLength += 1;
 		}
 		
 		if (efAcl != null) {
-			codeLength += efAcl.encode(os, false);
+			codeLength += efAcl.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 25
-			os.write(0xB9);
+			reverseOS.write(0xB9);
 			codeLength += 1;
 		}
 		
 		if (efExt4 != null) {
-			codeLength += efExt4.encode(os, false);
+			codeLength += efExt4.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 24
-			os.write(0xB8);
+			reverseOS.write(0xB8);
 			codeLength += 1;
 		}
 		
 		if (efCcp2 != null) {
-			codeLength += efCcp2.encode(os, false);
+			codeLength += efCcp2.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 23
-			os.write(0xB7);
+			reverseOS.write(0xB7);
 			codeLength += 1;
 		}
 		
 		if (efExt5 != null) {
-			codeLength += efExt5.encode(os, false);
+			codeLength += efExt5.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 22
-			os.write(0xB6);
+			reverseOS.write(0xB6);
 			codeLength += 1;
 		}
 		
 		if (efBdn != null) {
-			codeLength += efBdn.encode(os, false);
+			codeLength += efBdn.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 21
-			os.write(0xB5);
+			reverseOS.write(0xB5);
 			codeLength += 1;
 		}
 		
 		if (efSmsr != null) {
-			codeLength += efSmsr.encode(os, false);
+			codeLength += efSmsr.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 20
-			os.write(0xB4);
+			reverseOS.write(0xB4);
 			codeLength += 1;
 		}
 		
 		if (efCnl != null) {
-			codeLength += efCnl.encode(os, false);
+			codeLength += efCnl.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 19
-			os.write(0xB3);
+			reverseOS.write(0xB3);
 			codeLength += 1;
 		}
 		
 		if (efDck != null) {
-			codeLength += efDck.encode(os, false);
+			codeLength += efDck.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 18
-			os.write(0xB2);
+			reverseOS.write(0xB2);
 			codeLength += 1;
 		}
 		
 		if (efHplmnwact != null) {
-			codeLength += efHplmnwact.encode(os, false);
+			codeLength += efHplmnwact.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 17
-			os.write(0xB1);
+			reverseOS.write(0xB1);
 			codeLength += 1;
 		}
 		
 		if (efOplmnwact != null) {
-			codeLength += efOplmnwact.encode(os, false);
+			codeLength += efOplmnwact.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 16
-			os.write(0xB0);
+			reverseOS.write(0xB0);
 			codeLength += 1;
 		}
 		
 		if (efPlmnwact != null) {
-			codeLength += efPlmnwact.encode(os, false);
+			codeLength += efPlmnwact.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 15
-			os.write(0xAF);
+			reverseOS.write(0xAF);
 			codeLength += 1;
 		}
 		
 		if (efCbmir != null) {
-			codeLength += efCbmir.encode(os, false);
+			codeLength += efCbmir.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 14
-			os.write(0xAE);
+			reverseOS.write(0xAE);
 			codeLength += 1;
 		}
 		
 		if (efExt3 != null) {
-			codeLength += efExt3.encode(os, false);
+			codeLength += efExt3.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 13
-			os.write(0xAD);
+			reverseOS.write(0xAD);
 			codeLength += 1;
 		}
 		
 		if (efExt2 != null) {
-			codeLength += efExt2.encode(os, false);
+			codeLength += efExt2.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 12
-			os.write(0xAC);
+			reverseOS.write(0xAC);
 			codeLength += 1;
 		}
 		
 		if (efSdn != null) {
-			codeLength += efSdn.encode(os, false);
+			codeLength += efSdn.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 11
-			os.write(0xAB);
+			reverseOS.write(0xAB);
 			codeLength += 1;
 		}
 		
 		if (efCbmid != null) {
-			codeLength += efCbmid.encode(os, false);
+			codeLength += efCbmid.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 10
-			os.write(0xAA);
+			reverseOS.write(0xAA);
 			codeLength += 1;
 		}
 		
 		if (efCbmi != null) {
-			codeLength += efCbmi.encode(os, false);
+			codeLength += efCbmi.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 9
-			os.write(0xA9);
+			reverseOS.write(0xA9);
 			codeLength += 1;
 		}
 		
 		if (efPuct != null) {
-			codeLength += efPuct.encode(os, false);
+			codeLength += efPuct.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 8
-			os.write(0xA8);
+			reverseOS.write(0xA8);
 			codeLength += 1;
 		}
 		
 		if (efMsisdn != null) {
-			codeLength += efMsisdn.encode(os, false);
+			codeLength += efMsisdn.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 7
-			os.write(0xA7);
+			reverseOS.write(0xA7);
 			codeLength += 1;
 		}
 		
 		if (efGid2 != null) {
-			codeLength += efGid2.encode(os, false);
+			codeLength += efGid2.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 6
-			os.write(0xA6);
+			reverseOS.write(0xA6);
 			codeLength += 1;
 		}
 		
 		if (efGid1 != null) {
-			codeLength += efGid1.encode(os, false);
+			codeLength += efGid1.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 5
-			os.write(0xA5);
+			reverseOS.write(0xA5);
 			codeLength += 1;
 		}
 		
 		if (efAcm != null) {
-			codeLength += efAcm.encode(os, false);
+			codeLength += efAcm.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 4
-			os.write(0xA4);
+			reverseOS.write(0xA4);
 			codeLength += 1;
 		}
 		
 		if (efAcmax != null) {
-			codeLength += efAcmax.encode(os, false);
+			codeLength += efAcmax.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 3
-			os.write(0xA3);
+			reverseOS.write(0xA3);
 			codeLength += 1;
 		}
 		
 		if (efLi != null) {
-			codeLength += efLi.encode(os, false);
+			codeLength += efLi.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 2
-			os.write(0xA2);
+			reverseOS.write(0xA2);
 			codeLength += 1;
 		}
 		
-		codeLength += templateID.encode(os, false);
+		codeLength += templateID.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 1
-		os.write(0x81);
+		reverseOS.write(0x81);
 		codeLength += 1;
 		
-		codeLength += optusimHeader.encode(os, false);
+		codeLength += optusimHeader.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 0
-		os.write(0xA0);
+		reverseOS.write(0xA0);
 		codeLength += 1;
 		
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;
@@ -2731,9 +2731,9 @@ public class PEOPTUSIM implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

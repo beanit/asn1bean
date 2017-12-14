@@ -47,31 +47,31 @@ public class EUICCInfo2 implements Serializable {
 			this.seqOf = seqOf;
 		}
 
-		public int encode(OutputStream os) throws IOException {
-			return encode(os, true);
+		public int encode(OutputStream reverseOS) throws IOException {
+			return encode(reverseOS, true);
 		}
 
-		public int encode(OutputStream os, boolean withTag) throws IOException {
+		public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 			if (code != null) {
 				for (int i = code.length - 1; i >= 0; i--) {
-					os.write(code[i]);
+					reverseOS.write(code[i]);
 				}
 				if (withTag) {
-					return tag.encode(os) + code.length;
+					return tag.encode(reverseOS) + code.length;
 				}
 				return code.length;
 			}
 
 			int codeLength = 0;
 			for (int i = (seqOf.size() - 1); i >= 0; i--) {
-				codeLength += seqOf.get(i).encode(os, true);
+				codeLength += seqOf.get(i).encode(reverseOS, true);
 			}
 
-			codeLength += BerLength.encodeLength(os, codeLength);
+			codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 			if (withTag) {
-				codeLength += tag.encode(os);
+				codeLength += tag.encode(reverseOS);
 			}
 
 			return codeLength;
@@ -129,9 +129,9 @@ public class EUICCInfo2 implements Serializable {
 		}
 
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-			encode(os, false);
-			code = os.getArray();
+			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+			encode(reverseOS, false);
+			code = reverseOS.getArray();
 		}
 
 		public String toString() {
@@ -192,31 +192,31 @@ public class EUICCInfo2 implements Serializable {
 			this.seqOf = seqOf;
 		}
 
-		public int encode(OutputStream os) throws IOException {
-			return encode(os, true);
+		public int encode(OutputStream reverseOS) throws IOException {
+			return encode(reverseOS, true);
 		}
 
-		public int encode(OutputStream os, boolean withTag) throws IOException {
+		public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 			if (code != null) {
 				for (int i = code.length - 1; i >= 0; i--) {
-					os.write(code[i]);
+					reverseOS.write(code[i]);
 				}
 				if (withTag) {
-					return tag.encode(os) + code.length;
+					return tag.encode(reverseOS) + code.length;
 				}
 				return code.length;
 			}
 
 			int codeLength = 0;
 			for (int i = (seqOf.size() - 1); i >= 0; i--) {
-				codeLength += seqOf.get(i).encode(os, true);
+				codeLength += seqOf.get(i).encode(reverseOS, true);
 			}
 
-			codeLength += BerLength.encodeLength(os, codeLength);
+			codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 			if (withTag) {
-				codeLength += tag.encode(os);
+				codeLength += tag.encode(reverseOS);
 			}
 
 			return codeLength;
@@ -274,9 +274,9 @@ public class EUICCInfo2 implements Serializable {
 		}
 
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-			encode(os, false);
-			code = os.getArray();
+			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+			encode(reverseOS, false);
+			code = reverseOS.getArray();
 		}
 
 		public String toString() {
@@ -361,106 +361,106 @@ public class EUICCInfo2 implements Serializable {
 		this.certificationDataObject = certificationDataObject;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
 		if (certificationDataObject != null) {
-			codeLength += certificationDataObject.encode(os, false);
+			codeLength += certificationDataObject.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 12
-			os.write(0xAC);
+			reverseOS.write(0xAC);
 			codeLength += 1;
 		}
 		
-		codeLength += sasAcreditationNumber.encode(os, true);
+		codeLength += sasAcreditationNumber.encode(reverseOS, true);
 		
-		codeLength += ppVersion.encode(os, true);
+		codeLength += ppVersion.encode(reverseOS, true);
 		
 		if (forbiddenProfilePolicyRules != null) {
-			codeLength += forbiddenProfilePolicyRules.encode(os, false);
+			codeLength += forbiddenProfilePolicyRules.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 25
-			os.write(0x99);
+			reverseOS.write(0x99);
 			codeLength += 1;
 		}
 		
 		if (euiccCategory != null) {
-			codeLength += euiccCategory.encode(os, false);
+			codeLength += euiccCategory.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 11
-			os.write(0x8B);
+			reverseOS.write(0x8B);
 			codeLength += 1;
 		}
 		
-		codeLength += euiccCiPKIdListForSigning.encode(os, false);
+		codeLength += euiccCiPKIdListForSigning.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 10
-		os.write(0xAA);
+		reverseOS.write(0xAA);
 		codeLength += 1;
 		
-		codeLength += euiccCiPKIdListForVerification.encode(os, false);
+		codeLength += euiccCiPKIdListForVerification.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 9
-		os.write(0xA9);
+		reverseOS.write(0xA9);
 		codeLength += 1;
 		
-		codeLength += rspCapability.encode(os, false);
+		codeLength += rspCapability.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 8
-		os.write(0x88);
+		reverseOS.write(0x88);
 		codeLength += 1;
 		
 		if (globalplatformVersion != null) {
-			codeLength += globalplatformVersion.encode(os, false);
+			codeLength += globalplatformVersion.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 7
-			os.write(0x87);
+			reverseOS.write(0x87);
 			codeLength += 1;
 		}
 		
 		if (javacardVersion != null) {
-			codeLength += javacardVersion.encode(os, false);
+			codeLength += javacardVersion.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 6
-			os.write(0x86);
+			reverseOS.write(0x86);
 			codeLength += 1;
 		}
 		
-		codeLength += uiccCapability.encode(os, false);
+		codeLength += uiccCapability.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 5
-		os.write(0x85);
+		reverseOS.write(0x85);
 		codeLength += 1;
 		
-		codeLength += extCardResource.encode(os, false);
+		codeLength += extCardResource.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 4
-		os.write(0x84);
+		reverseOS.write(0x84);
 		codeLength += 1;
 		
-		codeLength += euiccFirmwareVer.encode(os, false);
+		codeLength += euiccFirmwareVer.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 3
-		os.write(0x83);
+		reverseOS.write(0x83);
 		codeLength += 1;
 		
-		codeLength += svn.encode(os, false);
+		codeLength += svn.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 2
-		os.write(0x82);
+		reverseOS.write(0x82);
 		codeLength += 1;
 		
-		codeLength += profileVersion.encode(os, false);
+		codeLength += profileVersion.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 1
-		os.write(0x81);
+		reverseOS.write(0x81);
 		codeLength += 1;
 		
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;
@@ -872,9 +872,9 @@ public class EUICCInfo2 implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

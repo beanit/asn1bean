@@ -59,90 +59,90 @@ public class DeviceCapabilities implements Serializable {
 		this.rspRpmSupportedVersion = rspRpmSupportedVersion;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
 		if (rspRpmSupportedVersion != null) {
-			codeLength += rspRpmSupportedVersion.encode(os, false);
+			codeLength += rspRpmSupportedVersion.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 8
-			os.write(0x88);
+			reverseOS.write(0x88);
 			codeLength += 1;
 		}
 		
 		if (rspCrlSupportedVersion != null) {
-			codeLength += rspCrlSupportedVersion.encode(os, false);
+			codeLength += rspCrlSupportedVersion.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 7
-			os.write(0x87);
+			reverseOS.write(0x87);
 			codeLength += 1;
 		}
 		
 		if (contactlessSupportedRelease != null) {
-			codeLength += contactlessSupportedRelease.encode(os, false);
+			codeLength += contactlessSupportedRelease.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 6
-			os.write(0x86);
+			reverseOS.write(0x86);
 			codeLength += 1;
 		}
 		
 		if (eutranSupportedRelease != null) {
-			codeLength += eutranSupportedRelease.encode(os, false);
+			codeLength += eutranSupportedRelease.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 5
-			os.write(0x85);
+			reverseOS.write(0x85);
 			codeLength += 1;
 		}
 		
 		if (cdma2000ehrpdSupportedRelease != null) {
-			codeLength += cdma2000ehrpdSupportedRelease.encode(os, false);
+			codeLength += cdma2000ehrpdSupportedRelease.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 4
-			os.write(0x84);
+			reverseOS.write(0x84);
 			codeLength += 1;
 		}
 		
 		if (cdma2000hrpdSupportedRelease != null) {
-			codeLength += cdma2000hrpdSupportedRelease.encode(os, false);
+			codeLength += cdma2000hrpdSupportedRelease.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 3
-			os.write(0x83);
+			reverseOS.write(0x83);
 			codeLength += 1;
 		}
 		
 		if (cdma2000onexSupportedRelease != null) {
-			codeLength += cdma2000onexSupportedRelease.encode(os, false);
+			codeLength += cdma2000onexSupportedRelease.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 2
-			os.write(0x82);
+			reverseOS.write(0x82);
 			codeLength += 1;
 		}
 		
 		if (utranSupportedRelease != null) {
-			codeLength += utranSupportedRelease.encode(os, false);
+			codeLength += utranSupportedRelease.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 1
-			os.write(0x81);
+			reverseOS.write(0x81);
 			codeLength += 1;
 		}
 		
 		if (gsmSupportedRelease != null) {
-			codeLength += gsmSupportedRelease.encode(os, false);
+			codeLength += gsmSupportedRelease.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 0
-			os.write(0x80);
+			reverseOS.write(0x80);
 			codeLength += 1;
 		}
 		
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;
@@ -416,9 +416,9 @@ public class DeviceCapabilities implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

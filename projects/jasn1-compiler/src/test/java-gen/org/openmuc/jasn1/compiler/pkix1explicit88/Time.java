@@ -39,23 +39,23 @@ public class Time implements Serializable {
 		this.generalTime = generalTime;
 	}
 
-	public int encode(OutputStream os) throws IOException {
+	public int encode(OutputStream reverseOS) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
 		if (generalTime != null) {
-			codeLength += generalTime.encode(os, true);
+			codeLength += generalTime.encode(reverseOS, true);
 			return codeLength;
 		}
 		
 		if (utcTime != null) {
-			codeLength += utcTime.encode(os, true);
+			codeLength += utcTime.encode(reverseOS, true);
 			return codeLength;
 		}
 		
@@ -96,9 +96,9 @@ public class Time implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

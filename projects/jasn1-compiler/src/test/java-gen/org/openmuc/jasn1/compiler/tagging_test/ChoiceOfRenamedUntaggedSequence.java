@@ -59,28 +59,28 @@ public class ChoiceOfRenamedUntaggedSequence implements Serializable {
 		return myBoolean;
 	}
 
-	public int encode(OutputStream os) throws IOException {
+	public int encode(OutputStream reverseOS) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
 		if (myBoolean != null) {
-			codeLength += myBoolean.encode(os, true);
+			codeLength += myBoolean.encode(reverseOS, true);
 			return codeLength;
 		}
 		
 		if (renamedUntaggedSequence != null) {
-			codeLength += renamedUntaggedSequence.encode(os, true);
+			codeLength += renamedUntaggedSequence.encode(reverseOS, true);
 			return codeLength;
 		}
 		
 		if (myInteger != null) {
-			codeLength += myInteger.encode(os, true);
+			codeLength += myInteger.encode(reverseOS, true);
 			return codeLength;
 		}
 		
@@ -127,9 +127,9 @@ public class ChoiceOfRenamedUntaggedSequence implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

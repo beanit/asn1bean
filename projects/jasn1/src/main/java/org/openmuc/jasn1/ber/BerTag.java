@@ -88,12 +88,12 @@ public class BerTag implements Serializable {
         }
     }
 
-    public int encode(OutputStream os) throws IOException {
+    public int encode(OutputStream reverseOS) throws IOException {
         if (tagBytes == null) {
             code();
         }
         for (int i = (tagBytes.length - 1); i >= 0; i--) {
-            os.write(tagBytes[i]);
+            reverseOS.write(tagBytes[i]);
         }
         return tagBytes.length;
     }

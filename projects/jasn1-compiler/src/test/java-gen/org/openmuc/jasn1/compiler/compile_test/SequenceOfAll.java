@@ -101,18 +101,18 @@ public class SequenceOfAll implements Serializable {
 		this.myChoice = myChoice;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
@@ -120,88 +120,88 @@ public class SequenceOfAll implements Serializable {
 		int codeLength = 0;
 		int sublength;
 
-		codeLength += myChoice.encode(os);
+		codeLength += myChoice.encode(reverseOS);
 		
-		codeLength += mySequence.encode(os, true);
+		codeLength += mySequence.encode(reverseOS, true);
 		
-		sublength = any.encode(os);
+		sublength = any.encode(reverseOS);
 		codeLength += sublength;
-		codeLength += BerLength.encodeLength(os, sublength);
+		codeLength += BerLength.encodeLength(reverseOS, sublength);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 9
-		os.write(0xA9);
+		reverseOS.write(0xA9);
 		codeLength += 1;
 		
-		codeLength += visibleString.encode(os, true);
+		codeLength += visibleString.encode(reverseOS, true);
 		
-		codeLength += videotexString.encode(os, true);
+		codeLength += videotexString.encode(reverseOS, true);
 		
-		codeLength += utf8String.encode(os, true);
+		codeLength += utf8String.encode(reverseOS, true);
 		
-		codeLength += universalString.encode(os, true);
+		codeLength += universalString.encode(reverseOS, true);
 		
-		codeLength += teletexString.encode(os, true);
+		codeLength += teletexString.encode(reverseOS, true);
 		
-		codeLength += printableString.encode(os, true);
+		codeLength += printableString.encode(reverseOS, true);
 		
-		codeLength += numericString.encode(os, true);
+		codeLength += numericString.encode(reverseOS, true);
 		
-		codeLength += iA5String.encode(os, true);
+		codeLength += iA5String.encode(reverseOS, true);
 		
-		codeLength += graphicString.encode(os, true);
+		codeLength += graphicString.encode(reverseOS, true);
 		
-		codeLength += generalString.encode(os, true);
+		codeLength += generalString.encode(reverseOS, true);
 		
-		codeLength += bmpString.encode(os, true);
+		codeLength += bmpString.encode(reverseOS, true);
 		
-		codeLength += duration.encode(os, true);
+		codeLength += duration.encode(reverseOS, true);
 		
-		codeLength += dateTime.encode(os, true);
+		codeLength += dateTime.encode(reverseOS, true);
 		
-		codeLength += timeOfDay.encode(os, true);
+		codeLength += timeOfDay.encode(reverseOS, true);
 		
-		codeLength += date2.encode(os, true);
+		codeLength += date2.encode(reverseOS, true);
 		
-		codeLength += time.encode(os, true);
+		codeLength += time.encode(reverseOS, true);
 		
-		codeLength += testSequenceWithSize.encode(os, true);
+		codeLength += testSequenceWithSize.encode(reverseOS, true);
 		
-		codeLength += testOctetStringWithSize.encode(os, true);
+		codeLength += testOctetStringWithSize.encode(reverseOS, true);
 		
-		codeLength += testIntegerWithValues.encode(os, true);
+		codeLength += testIntegerWithValues.encode(reverseOS, true);
 		
-		codeLength += real.encode(os, true);
+		codeLength += real.encode(reverseOS, true);
 		
-		codeLength += octetString.encode(os, true);
+		codeLength += octetString.encode(reverseOS, true);
 		
-		codeLength += objectIdentifier.encode(os, true);
+		codeLength += objectIdentifier.encode(reverseOS, true);
 		
-		codeLength += myNull.encode(os, true);
+		codeLength += myNull.encode(reverseOS, true);
 		
-		codeLength += generalizedTime.encode(os, true);
+		codeLength += generalizedTime.encode(reverseOS, true);
 		
-		codeLength += enumerated.encode(os, true);
+		codeLength += enumerated.encode(reverseOS, true);
 		
-		codeLength += bitString.encode(os, true);
+		codeLength += bitString.encode(reverseOS, true);
 		
-		codeLength += myBoolean.encode(os, true);
+		codeLength += myBoolean.encode(reverseOS, true);
 		
-		codeLength += myInteger2.encode(os, false);
+		codeLength += myInteger2.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 31
-		os.write(0x1F);
-		os.write(0x9F);
+		reverseOS.write(0x1F);
+		reverseOS.write(0x9F);
 		codeLength += 2;
 		
 		if (myInteger != null) {
-			codeLength += myInteger.encode(os, false);
+			codeLength += myInteger.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 30
-			os.write(0x9E);
+			reverseOS.write(0x9E);
 			codeLength += 1;
 		}
 		
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;
@@ -1056,9 +1056,9 @@ public class SequenceOfAll implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

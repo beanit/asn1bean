@@ -53,71 +53,71 @@ public class PEMF implements Serializable {
 		this.efUmpc = efUmpc;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
 		if (efUmpc != null) {
-			codeLength += efUmpc.encode(os, false);
+			codeLength += efUmpc.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 7
-			os.write(0xA7);
+			reverseOS.write(0xA7);
 			codeLength += 1;
 		}
 		
-		codeLength += efArr.encode(os, false);
+		codeLength += efArr.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 6
-		os.write(0xA6);
+		reverseOS.write(0xA6);
 		codeLength += 1;
 		
-		codeLength += efDir.encode(os, false);
+		codeLength += efDir.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 5
-		os.write(0xA5);
+		reverseOS.write(0xA5);
 		codeLength += 1;
 		
-		codeLength += efIccid.encode(os, false);
+		codeLength += efIccid.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 4
-		os.write(0xA4);
+		reverseOS.write(0xA4);
 		codeLength += 1;
 		
 		if (efPl != null) {
-			codeLength += efPl.encode(os, false);
+			codeLength += efPl.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 3
-			os.write(0xA3);
+			reverseOS.write(0xA3);
 			codeLength += 1;
 		}
 		
-		codeLength += mf.encode(os, false);
+		codeLength += mf.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 2
-		os.write(0xA2);
+		reverseOS.write(0xA2);
 		codeLength += 1;
 		
-		codeLength += templateID.encode(os, false);
+		codeLength += templateID.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 1
-		os.write(0x81);
+		reverseOS.write(0x81);
 		codeLength += 1;
 		
-		codeLength += mfHeader.encode(os, false);
+		codeLength += mfHeader.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 0
-		os.write(0xA0);
+		reverseOS.write(0xA0);
 		codeLength += 1;
 		
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;
@@ -363,9 +363,9 @@ public class PEMF implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

@@ -42,18 +42,18 @@ public class MyChoice2 implements Serializable {
 			this.test = test;
 		}
 
-		public int encode(OutputStream os) throws IOException {
+		public int encode(OutputStream reverseOS) throws IOException {
 
 			if (code != null) {
 				for (int i = code.length - 1; i >= 0; i--) {
-					os.write(code[i]);
+					reverseOS.write(code[i]);
 				}
 				return code.length;
 			}
 
 			int codeLength = 0;
 			if (test != null) {
-				codeLength += test.encode(os, true);
+				codeLength += test.encode(reverseOS, true);
 				return codeLength;
 			}
 			
@@ -88,9 +88,9 @@ public class MyChoice2 implements Serializable {
 		}
 
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-			encode(os);
-			code = os.getArray();
+			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+			encode(reverseOS);
+			code = reverseOS.getArray();
 		}
 
 		public String toString() {
@@ -131,23 +131,23 @@ public class MyChoice2 implements Serializable {
 			this.test2 = test2;
 		}
 
-		public int encode(OutputStream os) throws IOException {
+		public int encode(OutputStream reverseOS) throws IOException {
 
 			if (code != null) {
 				for (int i = code.length - 1; i >= 0; i--) {
-					os.write(code[i]);
+					reverseOS.write(code[i]);
 				}
 				return code.length;
 			}
 
 			int codeLength = 0;
 			if (test2 != null) {
-				codeLength += test2.encode(os, true);
+				codeLength += test2.encode(reverseOS, true);
 				return codeLength;
 			}
 			
 			if (test != null) {
-				codeLength += test.encode(os, true);
+				codeLength += test.encode(reverseOS, true);
 				return codeLength;
 			}
 			
@@ -188,9 +188,9 @@ public class MyChoice2 implements Serializable {
 		}
 
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-			encode(os);
-			code = os.getArray();
+			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+			encode(reverseOS);
+			code = reverseOS.getArray();
 		}
 
 		public String toString() {
@@ -235,33 +235,33 @@ public class MyChoice2 implements Serializable {
 		this.element4 = element4;
 	}
 
-	public int encode(OutputStream os) throws IOException {
+	public int encode(OutputStream reverseOS) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
 		if (element4 != null) {
-			codeLength += element4.encode(os);
+			codeLength += element4.encode(reverseOS);
 			return codeLength;
 		}
 		
 		if (myboolean != null) {
-			codeLength += myboolean.encode(os, true);
+			codeLength += myboolean.encode(reverseOS, true);
 			return codeLength;
 		}
 		
 		if (element2 != null) {
-			codeLength += element2.encode(os, true);
+			codeLength += element2.encode(reverseOS, true);
 			return codeLength;
 		}
 		
 		if (element1 != null) {
-			codeLength += element1.encode(os);
+			codeLength += element1.encode(reverseOS);
 			return codeLength;
 		}
 		
@@ -320,9 +320,9 @@ public class MyChoice2 implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

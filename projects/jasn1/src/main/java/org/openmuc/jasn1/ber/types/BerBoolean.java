@@ -34,18 +34,18 @@ public class BerBoolean implements Serializable {
         this.value = value;
     }
 
-    public int encode(OutputStream os) throws IOException {
-        return encode(os, true);
+    public int encode(OutputStream reverseOS) throws IOException {
+        return encode(reverseOS, true);
     }
 
-    public int encode(OutputStream os, boolean withTag) throws IOException {
+    public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
         if (code != null) {
             for (int i = code.length - 1; i >= 0; i--) {
-                os.write(code[i]);
+                reverseOS.write(code[i]);
             }
             if (withTag) {
-                return tag.encode(os) + code.length;
+                return tag.encode(reverseOS) + code.length;
             }
             return code.length;
         }
@@ -53,16 +53,16 @@ public class BerBoolean implements Serializable {
         int codeLength = 1;
 
         if (value) {
-            os.write(0xff);
+            reverseOS.write(0xff);
         }
         else {
-            os.write(0);
+            reverseOS.write(0);
         }
 
-        codeLength += BerLength.encodeLength(os, codeLength);
+        codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
         if (withTag) {
-            codeLength += tag.encode(os);
+            codeLength += tag.encode(reverseOS);
         }
 
         return codeLength;

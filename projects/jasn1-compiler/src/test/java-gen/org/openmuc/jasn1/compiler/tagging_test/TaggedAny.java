@@ -34,18 +34,18 @@ public class TaggedAny extends BerAny {
 		super(value);
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		int codeLength;
 
-		codeLength = super.encode(os);
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength = super.encode(reverseOS);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;

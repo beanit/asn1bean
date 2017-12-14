@@ -77,161 +77,161 @@ public class PEPHONEBOOK implements Serializable {
 		this.efCcp1 = efCcp1;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
 		if (efCcp1 != null) {
-			codeLength += efCcp1.encode(os, false);
+			codeLength += efCcp1.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 19
-			os.write(0xB3);
+			reverseOS.write(0xB3);
 			codeLength += 1;
 		}
 		
 		if (efGrp != null) {
-			codeLength += efGrp.encode(os, false);
+			codeLength += efGrp.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 18
-			os.write(0xB2);
+			reverseOS.write(0xB2);
 			codeLength += 1;
 		}
 		
 		if (efUid != null) {
-			codeLength += efUid.encode(os, false);
+			codeLength += efUid.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 17
-			os.write(0xB1);
+			reverseOS.write(0xB1);
 			codeLength += 1;
 		}
 		
 		if (efSne != null) {
-			codeLength += efSne.encode(os, false);
+			codeLength += efSne.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 16
-			os.write(0xB0);
+			reverseOS.write(0xB0);
 			codeLength += 1;
 		}
 		
 		if (efEmail != null) {
-			codeLength += efEmail.encode(os, false);
+			codeLength += efEmail.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 15
-			os.write(0xAF);
+			reverseOS.write(0xAF);
 			codeLength += 1;
 		}
 		
 		if (efPuri != null) {
-			codeLength += efPuri.encode(os, false);
+			codeLength += efPuri.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 14
-			os.write(0xAE);
+			reverseOS.write(0xAE);
 			codeLength += 1;
 		}
 		
 		if (efAnr != null) {
-			codeLength += efAnr.encode(os, false);
+			codeLength += efAnr.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 13
-			os.write(0xAD);
+			reverseOS.write(0xAD);
 			codeLength += 1;
 		}
 		
 		if (efPbc != null) {
-			codeLength += efPbc.encode(os, false);
+			codeLength += efPbc.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 12
-			os.write(0xAC);
+			reverseOS.write(0xAC);
 			codeLength += 1;
 		}
 		
 		if (efAdn != null) {
-			codeLength += efAdn.encode(os, false);
+			codeLength += efAdn.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 11
-			os.write(0xAB);
+			reverseOS.write(0xAB);
 			codeLength += 1;
 		}
 		
 		if (efIap != null) {
-			codeLength += efIap.encode(os, false);
+			codeLength += efIap.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 10
-			os.write(0xAA);
+			reverseOS.write(0xAA);
 			codeLength += 1;
 		}
 		
 		if (efPuid != null) {
-			codeLength += efPuid.encode(os, false);
+			codeLength += efPuid.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 9
-			os.write(0xA9);
+			reverseOS.write(0xA9);
 			codeLength += 1;
 		}
 		
 		if (efCc != null) {
-			codeLength += efCc.encode(os, false);
+			codeLength += efCc.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 8
-			os.write(0xA8);
+			reverseOS.write(0xA8);
 			codeLength += 1;
 		}
 		
 		if (efPsc != null) {
-			codeLength += efPsc.encode(os, false);
+			codeLength += efPsc.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 7
-			os.write(0xA7);
+			reverseOS.write(0xA7);
 			codeLength += 1;
 		}
 		
 		if (efGas != null) {
-			codeLength += efGas.encode(os, false);
+			codeLength += efGas.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 6
-			os.write(0xA6);
+			reverseOS.write(0xA6);
 			codeLength += 1;
 		}
 		
 		if (efAas != null) {
-			codeLength += efAas.encode(os, false);
+			codeLength += efAas.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 5
-			os.write(0xA5);
+			reverseOS.write(0xA5);
 			codeLength += 1;
 		}
 		
 		if (efExt1 != null) {
-			codeLength += efExt1.encode(os, false);
+			codeLength += efExt1.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 4
-			os.write(0xA4);
+			reverseOS.write(0xA4);
 			codeLength += 1;
 		}
 		
 		if (efPbr != null) {
-			codeLength += efPbr.encode(os, false);
+			codeLength += efPbr.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 3
-			os.write(0xA3);
+			reverseOS.write(0xA3);
 			codeLength += 1;
 		}
 		
-		codeLength += dfPhonebook.encode(os, false);
+		codeLength += dfPhonebook.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 2
-		os.write(0xA2);
+		reverseOS.write(0xA2);
 		codeLength += 1;
 		
-		codeLength += templateID.encode(os, false);
+		codeLength += templateID.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 1
-		os.write(0x81);
+		reverseOS.write(0x81);
 		codeLength += 1;
 		
-		codeLength += phonebookHeader.encode(os, false);
+		codeLength += phonebookHeader.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 0
-		os.write(0xA0);
+		reverseOS.write(0xA0);
 		codeLength += 1;
 		
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;
@@ -780,9 +780,9 @@ public class PEPHONEBOOK implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

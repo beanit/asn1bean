@@ -43,48 +43,48 @@ public class ProprietaryInfo implements Serializable {
 		this.repeatPattern = repeatPattern;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
 		if (repeatPattern != null) {
-			codeLength += repeatPattern.encode(os, false);
+			codeLength += repeatPattern.encode(reverseOS, false);
 			// write tag: PRIVATE_CLASS, PRIMITIVE, 2
-			os.write(0xC2);
+			reverseOS.write(0xC2);
 			codeLength += 1;
 		}
 		
 		if (fillPattern != null) {
-			codeLength += fillPattern.encode(os, false);
+			codeLength += fillPattern.encode(reverseOS, false);
 			// write tag: PRIVATE_CLASS, PRIMITIVE, 1
-			os.write(0xC1);
+			reverseOS.write(0xC1);
 			codeLength += 1;
 		}
 		
 		if (specialFileInformation != null) {
-			codeLength += specialFileInformation.encode(os, false);
+			codeLength += specialFileInformation.encode(reverseOS, false);
 			// write tag: PRIVATE_CLASS, PRIMITIVE, 0
-			os.write(0xC0);
+			reverseOS.write(0xC0);
 			codeLength += 1;
 		}
 		
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;
@@ -208,9 +208,9 @@ public class ProprietaryInfo implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

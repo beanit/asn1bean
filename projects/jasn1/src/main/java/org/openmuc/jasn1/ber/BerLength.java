@@ -87,13 +87,13 @@ public class BerLength implements Serializable {
         return lengthLength + 1;
     }
 
-    public static int encodeLength(OutputStream os, int length) throws IOException {
+    public static int encodeLength(OutputStream reverseOS, int length) throws IOException {
         // the indefinite form is ignored for now
 
         if (length <= 127) {
             // this is the short form, it is coded differently than the long
             // form for values > 127
-            os.write((byte) length);
+            reverseOS.write((byte) length);
             return 1;
         }
         else {
@@ -104,10 +104,10 @@ public class BerLength implements Serializable {
             }
 
             for (int i = 0; i < numLengthBytes; i++) {
-                os.write((length >> 8 * i) & 0xff);
+                reverseOS.write((length >> 8 * i) & 0xff);
             }
 
-            os.write(0x80 | numLengthBytes);
+            reverseOS.write(0x80 | numLengthBytes);
 
             return 1 + numLengthBytes;
         }

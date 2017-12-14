@@ -25,16 +25,16 @@ public class BerNull implements Serializable {
     public BerNull(byte[] code) {
     }
 
-    public int encode(OutputStream os) throws IOException {
-        return encode(os, true);
+    public int encode(OutputStream reverseOS) throws IOException {
+        return encode(reverseOS, true);
     }
 
-    public int encode(OutputStream os, boolean withTag) throws IOException {
+    public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
-        int codeLength = BerLength.encodeLength(os, 0);
+        int codeLength = BerLength.encodeLength(reverseOS, 0);
 
         if (withTag) {
-            codeLength += tag.encode(os);
+            codeLength += tag.encode(reverseOS);
         }
 
         return codeLength;

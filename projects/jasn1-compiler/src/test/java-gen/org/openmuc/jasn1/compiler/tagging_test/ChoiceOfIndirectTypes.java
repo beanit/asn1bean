@@ -176,11 +176,11 @@ public class ChoiceOfIndirectTypes implements Serializable {
 		return taggedAny2;
 	}
 
-	public int encode(OutputStream os) throws IOException {
+	public int encode(OutputStream reverseOS) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			return code.length;
 		}
@@ -189,122 +189,122 @@ public class ChoiceOfIndirectTypes implements Serializable {
 		int sublength;
 
 		if (taggedAny2 != null) {
-			codeLength += taggedAny2.encode(os, false);
+			codeLength += taggedAny2.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 18
-			os.write(0xB2);
+			reverseOS.write(0xB2);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (taggedAny != null) {
-			sublength = taggedAny.encode(os);
+			sublength = taggedAny.encode(reverseOS);
 			codeLength += sublength;
-			codeLength += BerLength.encodeLength(os, sublength);
+			codeLength += BerLength.encodeLength(reverseOS, sublength);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 8
-			os.write(0xA8);
+			reverseOS.write(0xA8);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (untaggedAny != null) {
-			codeLength += untaggedAny.encode(os, true);
+			codeLength += untaggedAny.encode(reverseOS, true);
 			return codeLength;
 		}
 		
 		if (taggedChoice2 != null) {
-			codeLength += taggedChoice2.encode(os, false);
+			codeLength += taggedChoice2.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 15
-			os.write(0xAF);
+			reverseOS.write(0xAF);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (taggedChoice != null) {
-			sublength = taggedChoice.encode(os);
+			sublength = taggedChoice.encode(reverseOS);
 			codeLength += sublength;
-			codeLength += BerLength.encodeLength(os, sublength);
+			codeLength += BerLength.encodeLength(reverseOS, sublength);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 5
-			os.write(0xA5);
+			reverseOS.write(0xA5);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (untaggedChoice2 != null) {
-			codeLength += untaggedChoice2.encode(os, true);
+			codeLength += untaggedChoice2.encode(reverseOS, true);
 			return codeLength;
 		}
 		
 		if (untaggedChoice != null) {
-			codeLength += untaggedChoice.encode(os);
+			codeLength += untaggedChoice.encode(reverseOS);
 			return codeLength;
 		}
 		
 		if (implicitlyTaggedInt3 != null) {
-			codeLength += implicitlyTaggedInt3.encode(os, false);
+			codeLength += implicitlyTaggedInt3.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 23
-			os.write(0x97);
+			reverseOS.write(0x97);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (implicitlyTaggedInt2 != null) {
-			codeLength += implicitlyTaggedInt2.encode(os, false);
+			codeLength += implicitlyTaggedInt2.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 12
-			os.write(0xAC);
+			reverseOS.write(0xAC);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (implicitlyTaggedInt != null) {
-			codeLength += implicitlyTaggedInt.encode(os, false);
+			codeLength += implicitlyTaggedInt.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 2
-			os.write(0x82);
+			reverseOS.write(0x82);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (explicitlyTaggedInt3 != null) {
-			sublength = explicitlyTaggedInt3.encode(os, true);
+			sublength = explicitlyTaggedInt3.encode(reverseOS, true);
 			codeLength += sublength;
-			codeLength += BerLength.encodeLength(os, sublength);
+			codeLength += BerLength.encodeLength(reverseOS, sublength);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 21
-			os.write(0xB5);
+			reverseOS.write(0xB5);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (explicitlyTaggedInt2 != null) {
-			sublength = explicitlyTaggedInt2.encode(os, true);
+			sublength = explicitlyTaggedInt2.encode(reverseOS, true);
 			codeLength += sublength;
-			codeLength += BerLength.encodeLength(os, sublength);
+			codeLength += BerLength.encodeLength(reverseOS, sublength);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 11
-			os.write(0xAB);
+			reverseOS.write(0xAB);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (explicitlyTaggedInt != null) {
-			sublength = explicitlyTaggedInt.encode(os, true);
+			sublength = explicitlyTaggedInt.encode(reverseOS, true);
 			codeLength += sublength;
-			codeLength += BerLength.encodeLength(os, sublength);
+			codeLength += BerLength.encodeLength(reverseOS, sublength);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 1
-			os.write(0xA1);
+			reverseOS.write(0xA1);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (untaggedInt3 != null) {
-			codeLength += untaggedInt3.encode(os, true);
+			codeLength += untaggedInt3.encode(reverseOS, true);
 			return codeLength;
 		}
 		
 		if (untaggedInt2 != null) {
-			codeLength += untaggedInt2.encode(os, true);
+			codeLength += untaggedInt2.encode(reverseOS, true);
 			return codeLength;
 		}
 		
 		if (untaggedInt != null) {
-			codeLength += untaggedInt.encode(os, true);
+			codeLength += untaggedInt.encode(reverseOS, true);
 			return codeLength;
 		}
 		
@@ -437,9 +437,9 @@ public class ChoiceOfIndirectTypes implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

@@ -39,23 +39,23 @@ public class PostalCode implements Serializable {
 		this.printableCode = printableCode;
 	}
 
-	public int encode(OutputStream os) throws IOException {
+	public int encode(OutputStream reverseOS) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
 		if (printableCode != null) {
-			codeLength += printableCode.encode(os, true);
+			codeLength += printableCode.encode(reverseOS, true);
 			return codeLength;
 		}
 		
 		if (numericCode != null) {
-			codeLength += numericCode.encode(os, true);
+			codeLength += numericCode.encode(reverseOS, true);
 			return codeLength;
 		}
 		
@@ -96,9 +96,9 @@ public class PostalCode implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

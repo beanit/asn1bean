@@ -51,35 +51,35 @@ public class TBSCertList implements Serializable {
 				this.crlEntryExtensions = crlEntryExtensions;
 			}
 
-			public int encode(OutputStream os) throws IOException {
-				return encode(os, true);
+			public int encode(OutputStream reverseOS) throws IOException {
+				return encode(reverseOS, true);
 			}
 
-			public int encode(OutputStream os, boolean withTag) throws IOException {
+			public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 				if (code != null) {
 					for (int i = code.length - 1; i >= 0; i--) {
-						os.write(code[i]);
+						reverseOS.write(code[i]);
 					}
 					if (withTag) {
-						return tag.encode(os) + code.length;
+						return tag.encode(reverseOS) + code.length;
 					}
 					return code.length;
 				}
 
 				int codeLength = 0;
 				if (crlEntryExtensions != null) {
-					codeLength += crlEntryExtensions.encode(os, true);
+					codeLength += crlEntryExtensions.encode(reverseOS, true);
 				}
 				
-				codeLength += revocationDate.encode(os);
+				codeLength += revocationDate.encode(reverseOS);
 				
-				codeLength += userCertificate.encode(os, true);
+				codeLength += userCertificate.encode(reverseOS, true);
 				
-				codeLength += BerLength.encodeLength(os, codeLength);
+				codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 				if (withTag) {
-					codeLength += tag.encode(os);
+					codeLength += tag.encode(reverseOS);
 				}
 
 				return codeLength;
@@ -203,9 +203,9 @@ public class TBSCertList implements Serializable {
 			}
 
 			public void encodeAndSave(int encodingSizeGuess) throws IOException {
-				ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-				encode(os, false);
-				code = os.getArray();
+				ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+				encode(reverseOS, false);
+				code = reverseOS.getArray();
 			}
 
 			public String toString() {
@@ -274,31 +274,31 @@ public class TBSCertList implements Serializable {
 			this.seqOf = seqOf;
 		}
 
-		public int encode(OutputStream os) throws IOException {
-			return encode(os, true);
+		public int encode(OutputStream reverseOS) throws IOException {
+			return encode(reverseOS, true);
 		}
 
-		public int encode(OutputStream os, boolean withTag) throws IOException {
+		public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 			if (code != null) {
 				for (int i = code.length - 1; i >= 0; i--) {
-					os.write(code[i]);
+					reverseOS.write(code[i]);
 				}
 				if (withTag) {
-					return tag.encode(os) + code.length;
+					return tag.encode(reverseOS) + code.length;
 				}
 				return code.length;
 			}
 
 			int codeLength = 0;
 			for (int i = (seqOf.size() - 1); i >= 0; i--) {
-				codeLength += seqOf.get(i).encode(os, true);
+				codeLength += seqOf.get(i).encode(reverseOS, true);
 			}
 
-			codeLength += BerLength.encodeLength(os, codeLength);
+			codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 			if (withTag) {
-				codeLength += tag.encode(os);
+				codeLength += tag.encode(reverseOS);
 			}
 
 			return codeLength;
@@ -356,9 +356,9 @@ public class TBSCertList implements Serializable {
 		}
 
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-			encode(os, false);
-			code = os.getArray();
+			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+			encode(reverseOS, false);
+			code = reverseOS.getArray();
 		}
 
 		public String toString() {
@@ -427,18 +427,18 @@ public class TBSCertList implements Serializable {
 		this.crlExtensions = crlExtensions;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
@@ -447,36 +447,36 @@ public class TBSCertList implements Serializable {
 		int sublength;
 
 		if (crlExtensions != null) {
-			sublength = crlExtensions.encode(os, true);
+			sublength = crlExtensions.encode(reverseOS, true);
 			codeLength += sublength;
-			codeLength += BerLength.encodeLength(os, sublength);
+			codeLength += BerLength.encodeLength(reverseOS, sublength);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 0
-			os.write(0xA0);
+			reverseOS.write(0xA0);
 			codeLength += 1;
 		}
 		
 		if (revokedCertificates != null) {
-			codeLength += revokedCertificates.encode(os, true);
+			codeLength += revokedCertificates.encode(reverseOS, true);
 		}
 		
 		if (nextUpdate != null) {
-			codeLength += nextUpdate.encode(os);
+			codeLength += nextUpdate.encode(reverseOS);
 		}
 		
-		codeLength += thisUpdate.encode(os);
+		codeLength += thisUpdate.encode(reverseOS);
 		
-		codeLength += issuer.encode(os);
+		codeLength += issuer.encode(reverseOS);
 		
-		codeLength += signature.encode(os, true);
+		codeLength += signature.encode(reverseOS, true);
 		
 		if (version != null) {
-			codeLength += version.encode(os, true);
+			codeLength += version.encode(reverseOS, true);
 		}
 		
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;
@@ -708,9 +708,9 @@ public class TBSCertList implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

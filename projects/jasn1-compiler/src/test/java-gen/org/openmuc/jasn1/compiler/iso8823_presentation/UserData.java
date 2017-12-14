@@ -39,28 +39,28 @@ public class UserData implements Serializable {
 		this.fullyEncodedData = fullyEncodedData;
 	}
 
-	public int encode(OutputStream os) throws IOException {
+	public int encode(OutputStream reverseOS) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
 		if (fullyEncodedData != null) {
-			codeLength += fullyEncodedData.encode(os, false);
+			codeLength += fullyEncodedData.encode(reverseOS, false);
 			// write tag: APPLICATION_CLASS, CONSTRUCTED, 1
-			os.write(0x61);
+			reverseOS.write(0x61);
 			codeLength += 1;
 			return codeLength;
 		}
 		
 		if (simplyEncodedData != null) {
-			codeLength += simplyEncodedData.encode(os, false);
+			codeLength += simplyEncodedData.encode(reverseOS, false);
 			// write tag: APPLICATION_CLASS, PRIMITIVE, 0
-			os.write(0x40);
+			reverseOS.write(0x40);
 			codeLength += 1;
 			return codeLength;
 		}
@@ -102,9 +102,9 @@ public class UserData implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

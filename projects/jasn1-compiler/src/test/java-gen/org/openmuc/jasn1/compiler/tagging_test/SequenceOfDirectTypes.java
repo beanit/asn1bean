@@ -54,28 +54,28 @@ public class SequenceOfDirectTypes implements Serializable {
 			return myBoolean;
 		}
 
-		public int encode(OutputStream os) throws IOException {
+		public int encode(OutputStream reverseOS) throws IOException {
 
 			if (code != null) {
 				for (int i = code.length - 1; i >= 0; i--) {
-					os.write(code[i]);
+					reverseOS.write(code[i]);
 				}
 				return code.length;
 			}
 
 			int codeLength = 0;
 			if (myBoolean != null) {
-				codeLength += myBoolean.encode(os, false);
+				codeLength += myBoolean.encode(reverseOS, false);
 				// write tag: CONTEXT_CLASS, PRIMITIVE, 4
-				os.write(0x84);
+				reverseOS.write(0x84);
 				codeLength += 1;
 				return codeLength;
 			}
 			
 			if (myInteger != null) {
-				codeLength += myInteger.encode(os, false);
+				codeLength += myInteger.encode(reverseOS, false);
 				// write tag: CONTEXT_CLASS, PRIMITIVE, 3
-				os.write(0x83);
+				reverseOS.write(0x83);
 				codeLength += 1;
 				return codeLength;
 			}
@@ -117,9 +117,9 @@ public class SequenceOfDirectTypes implements Serializable {
 		}
 
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-			encode(os);
-			code = os.getArray();
+			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+			encode(reverseOS);
+			code = reverseOS.getArray();
 		}
 
 		public String toString() {
@@ -176,28 +176,28 @@ public class SequenceOfDirectTypes implements Serializable {
 			return myBoolean;
 		}
 
-		public int encode(OutputStream os) throws IOException {
+		public int encode(OutputStream reverseOS) throws IOException {
 
 			if (code != null) {
 				for (int i = code.length - 1; i >= 0; i--) {
-					os.write(code[i]);
+					reverseOS.write(code[i]);
 				}
 				return code.length;
 			}
 
 			int codeLength = 0;
 			if (myBoolean != null) {
-				codeLength += myBoolean.encode(os, false);
+				codeLength += myBoolean.encode(reverseOS, false);
 				// write tag: CONTEXT_CLASS, PRIMITIVE, 4
-				os.write(0x84);
+				reverseOS.write(0x84);
 				codeLength += 1;
 				return codeLength;
 			}
 			
 			if (myInteger != null) {
-				codeLength += myInteger.encode(os, false);
+				codeLength += myInteger.encode(reverseOS, false);
 				// write tag: CONTEXT_CLASS, PRIMITIVE, 3
-				os.write(0x83);
+				reverseOS.write(0x83);
 				codeLength += 1;
 				return codeLength;
 			}
@@ -239,9 +239,9 @@ public class SequenceOfDirectTypes implements Serializable {
 		}
 
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-			encode(os);
-			code = os.getArray();
+			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+			encode(reverseOS);
+			code = reverseOS.getArray();
 		}
 
 		public String toString() {
@@ -298,28 +298,28 @@ public class SequenceOfDirectTypes implements Serializable {
 			return myBoolean;
 		}
 
-		public int encode(OutputStream os) throws IOException {
+		public int encode(OutputStream reverseOS) throws IOException {
 
 			if (code != null) {
 				for (int i = code.length - 1; i >= 0; i--) {
-					os.write(code[i]);
+					reverseOS.write(code[i]);
 				}
 				return code.length;
 			}
 
 			int codeLength = 0;
 			if (myBoolean != null) {
-				codeLength += myBoolean.encode(os, false);
+				codeLength += myBoolean.encode(reverseOS, false);
 				// write tag: CONTEXT_CLASS, PRIMITIVE, 9
-				os.write(0x89);
+				reverseOS.write(0x89);
 				codeLength += 1;
 				return codeLength;
 			}
 			
 			if (myInteger != null) {
-				codeLength += myInteger.encode(os, false);
+				codeLength += myInteger.encode(reverseOS, false);
 				// write tag: CONTEXT_CLASS, PRIMITIVE, 8
-				os.write(0x88);
+				reverseOS.write(0x88);
 				codeLength += 1;
 				return codeLength;
 			}
@@ -361,9 +361,9 @@ public class SequenceOfDirectTypes implements Serializable {
 		}
 
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-			encode(os);
-			code = os.getArray();
+			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+			encode(reverseOS);
+			code = reverseOS.getArray();
 		}
 
 		public String toString() {
@@ -463,18 +463,18 @@ public class SequenceOfDirectTypes implements Serializable {
 		return untaggedChoice2;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
@@ -483,43 +483,43 @@ public class SequenceOfDirectTypes implements Serializable {
 		int sublength;
 
 		if (untaggedChoice2 != null) {
-			codeLength += untaggedChoice2.encode(os);
+			codeLength += untaggedChoice2.encode(reverseOS);
 		}
 		
-		sublength = taggedAny.encode(os);
+		sublength = taggedAny.encode(reverseOS);
 		codeLength += sublength;
-		codeLength += BerLength.encodeLength(os, sublength);
+		codeLength += BerLength.encodeLength(reverseOS, sublength);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 6
-		os.write(0xA6);
+		reverseOS.write(0xA6);
 		codeLength += 1;
 		
-		sublength = taggedChoice.encode(os);
+		sublength = taggedChoice.encode(reverseOS);
 		codeLength += sublength;
-		codeLength += BerLength.encodeLength(os, sublength);
+		codeLength += BerLength.encodeLength(reverseOS, sublength);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 5
-		os.write(0xA5);
+		reverseOS.write(0xA5);
 		codeLength += 1;
 		
-		codeLength += untaggedChoice.encode(os);
+		codeLength += untaggedChoice.encode(reverseOS);
 		
-		codeLength += implicitlyTaggedInt.encode(os, false);
+		codeLength += implicitlyTaggedInt.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 2
-		os.write(0x82);
+		reverseOS.write(0x82);
 		codeLength += 1;
 		
-		sublength = explicitlyTaggedInt.encode(os, true);
+		sublength = explicitlyTaggedInt.encode(reverseOS, true);
 		codeLength += sublength;
-		codeLength += BerLength.encodeLength(os, sublength);
+		codeLength += BerLength.encodeLength(reverseOS, sublength);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 1
-		os.write(0xA1);
+		reverseOS.write(0xA1);
 		codeLength += 1;
 		
-		codeLength += untaggedInt.encode(os, true);
+		codeLength += untaggedInt.encode(reverseOS, true);
 		
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;
@@ -613,9 +613,9 @@ public class SequenceOfDirectTypes implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

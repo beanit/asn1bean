@@ -45,38 +45,38 @@ public class X520StateOrProvinceName implements Serializable {
 		this.bmpString = bmpString;
 	}
 
-	public int encode(OutputStream os) throws IOException {
+	public int encode(OutputStream reverseOS) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
 		if (bmpString != null) {
-			codeLength += bmpString.encode(os, true);
+			codeLength += bmpString.encode(reverseOS, true);
 			return codeLength;
 		}
 		
 		if (utf8String != null) {
-			codeLength += utf8String.encode(os, true);
+			codeLength += utf8String.encode(reverseOS, true);
 			return codeLength;
 		}
 		
 		if (universalString != null) {
-			codeLength += universalString.encode(os, true);
+			codeLength += universalString.encode(reverseOS, true);
 			return codeLength;
 		}
 		
 		if (printableString != null) {
-			codeLength += printableString.encode(os, true);
+			codeLength += printableString.encode(reverseOS, true);
 			return codeLength;
 		}
 		
 		if (teletexString != null) {
-			codeLength += teletexString.encode(os, true);
+			codeLength += teletexString.encode(reverseOS, true);
 			return codeLength;
 		}
 		
@@ -135,9 +135,9 @@ public class X520StateOrProvinceName implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

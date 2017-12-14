@@ -51,72 +51,72 @@ public class ApplicationLoadPackage implements Serializable {
 		this.loadBlockObject = loadBlockObject;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
-		codeLength += loadBlockObject.encode(os, false);
+		codeLength += loadBlockObject.encode(reverseOS, false);
 		// write tag: PRIVATE_CLASS, PRIMITIVE, 4
-		os.write(0xC4);
+		reverseOS.write(0xC4);
 		codeLength += 1;
 		
 		if (hashValue != null) {
-			codeLength += hashValue.encode(os, false);
+			codeLength += hashValue.encode(reverseOS, false);
 			// write tag: PRIVATE_CLASS, PRIMITIVE, 1
-			os.write(0xC1);
+			reverseOS.write(0xC1);
 			codeLength += 1;
 		}
 		
 		if (nonVolatileDataLimitC8 != null) {
-			codeLength += nonVolatileDataLimitC8.encode(os, false);
+			codeLength += nonVolatileDataLimitC8.encode(reverseOS, false);
 			// write tag: PRIVATE_CLASS, PRIMITIVE, 8
-			os.write(0xC8);
+			reverseOS.write(0xC8);
 			codeLength += 1;
 		}
 		
 		if (volatileDataLimitC7 != null) {
-			codeLength += volatileDataLimitC7.encode(os, false);
+			codeLength += volatileDataLimitC7.encode(reverseOS, false);
 			// write tag: PRIVATE_CLASS, PRIMITIVE, 7
-			os.write(0xC7);
+			reverseOS.write(0xC7);
 			codeLength += 1;
 		}
 		
 		if (nonVolatileCodeLimitC6 != null) {
-			codeLength += nonVolatileCodeLimitC6.encode(os, false);
+			codeLength += nonVolatileCodeLimitC6.encode(reverseOS, false);
 			// write tag: PRIVATE_CLASS, PRIMITIVE, 6
-			os.write(0xC6);
+			reverseOS.write(0xC6);
 			codeLength += 1;
 		}
 		
 		if (securityDomainAID != null) {
-			codeLength += securityDomainAID.encode(os, false);
+			codeLength += securityDomainAID.encode(reverseOS, false);
 			// write tag: APPLICATION_CLASS, PRIMITIVE, 15
-			os.write(0x4F);
+			reverseOS.write(0x4F);
 			codeLength += 1;
 		}
 		
-		codeLength += loadPackageAID.encode(os, false);
+		codeLength += loadPackageAID.encode(reverseOS, false);
 		// write tag: APPLICATION_CLASS, PRIMITIVE, 15
-		os.write(0x4F);
+		reverseOS.write(0x4F);
 		codeLength += 1;
 		
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;
@@ -322,9 +322,9 @@ public class ApplicationLoadPackage implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {

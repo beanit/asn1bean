@@ -31,19 +31,19 @@ public class BerVisibleString implements Serializable {
         value = valueAsString.getBytes();
     }
 
-    public int encode(OutputStream os) throws IOException {
-        return encode(os, true);
+    public int encode(OutputStream reverseOS) throws IOException {
+        return encode(reverseOS, true);
     }
 
-    public int encode(OutputStream os, boolean withTag) throws IOException {
+    public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
-        os.write(value);
+        reverseOS.write(value);
         int codeLength = value.length;
 
-        codeLength += BerLength.encodeLength(os, codeLength);
+        codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
         if (withTag) {
-            codeLength += tag.encode(os);
+            codeLength += tag.encode(reverseOS);
         }
 
         return codeLength;

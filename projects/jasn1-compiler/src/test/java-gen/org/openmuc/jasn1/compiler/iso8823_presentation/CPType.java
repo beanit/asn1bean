@@ -57,80 +57,80 @@ public class CPType implements Serializable {
 			this.userData = userData;
 		}
 
-		public int encode(OutputStream os) throws IOException {
-			return encode(os, true);
+		public int encode(OutputStream reverseOS) throws IOException {
+			return encode(reverseOS, true);
 		}
 
-		public int encode(OutputStream os, boolean withTag) throws IOException {
+		public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 			if (code != null) {
 				for (int i = code.length - 1; i >= 0; i--) {
-					os.write(code[i]);
+					reverseOS.write(code[i]);
 				}
 				if (withTag) {
-					return tag.encode(os) + code.length;
+					return tag.encode(reverseOS) + code.length;
 				}
 				return code.length;
 			}
 
 			int codeLength = 0;
 			if (userData != null) {
-				codeLength += userData.encode(os);
+				codeLength += userData.encode(reverseOS);
 			}
 			
 			if (userSessionRequirements != null) {
-				codeLength += userSessionRequirements.encode(os, false);
+				codeLength += userSessionRequirements.encode(reverseOS, false);
 				// write tag: CONTEXT_CLASS, PRIMITIVE, 9
-				os.write(0x89);
+				reverseOS.write(0x89);
 				codeLength += 1;
 			}
 			
 			if (presentationRequirements != null) {
-				codeLength += presentationRequirements.encode(os, false);
+				codeLength += presentationRequirements.encode(reverseOS, false);
 				// write tag: CONTEXT_CLASS, PRIMITIVE, 8
-				os.write(0x88);
+				reverseOS.write(0x88);
 				codeLength += 1;
 			}
 			
 			if (defaultContextName != null) {
-				codeLength += defaultContextName.encode(os, false);
+				codeLength += defaultContextName.encode(reverseOS, false);
 				// write tag: CONTEXT_CLASS, CONSTRUCTED, 6
-				os.write(0xA6);
+				reverseOS.write(0xA6);
 				codeLength += 1;
 			}
 			
 			if (presentationContextDefinitionList != null) {
-				codeLength += presentationContextDefinitionList.encode(os, false);
+				codeLength += presentationContextDefinitionList.encode(reverseOS, false);
 				// write tag: CONTEXT_CLASS, CONSTRUCTED, 4
-				os.write(0xA4);
+				reverseOS.write(0xA4);
 				codeLength += 1;
 			}
 			
 			if (calledPresentationSelector != null) {
-				codeLength += calledPresentationSelector.encode(os, false);
+				codeLength += calledPresentationSelector.encode(reverseOS, false);
 				// write tag: CONTEXT_CLASS, PRIMITIVE, 2
-				os.write(0x82);
+				reverseOS.write(0x82);
 				codeLength += 1;
 			}
 			
 			if (callingPresentationSelector != null) {
-				codeLength += callingPresentationSelector.encode(os, false);
+				codeLength += callingPresentationSelector.encode(reverseOS, false);
 				// write tag: CONTEXT_CLASS, PRIMITIVE, 1
-				os.write(0x81);
+				reverseOS.write(0x81);
 				codeLength += 1;
 			}
 			
 			if (protocolVersion != null) {
-				codeLength += protocolVersion.encode(os, false);
+				codeLength += protocolVersion.encode(reverseOS, false);
 				// write tag: CONTEXT_CLASS, PRIMITIVE, 0
-				os.write(0x80);
+				reverseOS.write(0x80);
 				codeLength += 1;
 			}
 			
-			codeLength += BerLength.encodeLength(os, codeLength);
+			codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 			if (withTag) {
-				codeLength += tag.encode(os);
+				codeLength += tag.encode(reverseOS);
 			}
 
 			return codeLength;
@@ -383,9 +383,9 @@ public class CPType implements Serializable {
 		}
 
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {
-			ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-			encode(os, false);
-			code = os.getArray();
+			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+			encode(reverseOS, false);
+			code = reverseOS.getArray();
 		}
 
 		public String toString() {
@@ -514,39 +514,39 @@ public class CPType implements Serializable {
 		this.normalModeParameters = normalModeParameters;
 	}
 
-	public int encode(OutputStream os) throws IOException {
-		return encode(os, true);
+	public int encode(OutputStream reverseOS) throws IOException {
+		return encode(reverseOS, true);
 	}
 
-	public int encode(OutputStream os, boolean withTag) throws IOException {
+	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
-				os.write(code[i]);
+				reverseOS.write(code[i]);
 			}
 			if (withTag) {
-				return tag.encode(os) + code.length;
+				return tag.encode(reverseOS) + code.length;
 			}
 			return code.length;
 		}
 
 		int codeLength = 0;
 		if (normalModeParameters != null) {
-			codeLength += normalModeParameters.encode(os, false);
+			codeLength += normalModeParameters.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 2
-			os.write(0xA2);
+			reverseOS.write(0xA2);
 			codeLength += 1;
 		}
 		
-		codeLength += modeSelector.encode(os, false);
+		codeLength += modeSelector.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 0
-		os.write(0xA0);
+		reverseOS.write(0xA0);
 		codeLength += 1;
 		
-		codeLength += BerLength.encodeLength(os, codeLength);
+		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 
 		if (withTag) {
-			codeLength += tag.encode(os);
+			codeLength += tag.encode(reverseOS);
 		}
 
 		return codeLength;
@@ -638,9 +638,9 @@ public class CPType implements Serializable {
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
-		ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-		encode(os, false);
-		code = os.getArray();
+		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+		encode(reverseOS, false);
+		code = reverseOS.getArray();
 	}
 
 	public String toString() {
