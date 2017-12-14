@@ -23,11 +23,11 @@ import org.openmuc.jasn1.compiler.pkix1explicit88.CertificateList;
 import org.openmuc.jasn1.compiler.pkix1explicit88.Time;
 import org.openmuc.jasn1.compiler.pkix1implicit88.SubjectKeyIdentifier;
 
-public class ProfileInfoListRequest implements Serializable {
+public class ProfileInfoListRequest implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static class SearchCriteria implements Serializable {
+	public static class SearchCriteria implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 

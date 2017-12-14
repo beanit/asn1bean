@@ -23,7 +23,7 @@ import org.openmuc.jasn1.compiler.pkix1explicit88.CertificateList;
 import org.openmuc.jasn1.compiler.pkix1explicit88.Time;
 import org.openmuc.jasn1.compiler.pkix1implicit88.SubjectKeyIdentifier;
 
-public class SmdpSigned2 implements Serializable {
+public class SmdpSigned2 implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 

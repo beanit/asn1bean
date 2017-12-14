@@ -19,7 +19,7 @@ import org.openmuc.jasn1.ber.types.*;
 import org.openmuc.jasn1.ber.types.string.*;
 
 
-public class ChoiceOfRenamedUntaggedSequence implements Serializable {
+public class ChoiceOfRenamedUntaggedSequence implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 

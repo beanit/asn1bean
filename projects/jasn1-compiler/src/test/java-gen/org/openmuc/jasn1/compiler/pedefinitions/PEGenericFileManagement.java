@@ -19,11 +19,11 @@ import org.openmuc.jasn1.ber.types.*;
 import org.openmuc.jasn1.ber.types.string.*;
 
 
-public class PEGenericFileManagement implements Serializable {
+public class PEGenericFileManagement implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static class FileManagementCMD implements Serializable {
+	public static class FileManagementCMD implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 

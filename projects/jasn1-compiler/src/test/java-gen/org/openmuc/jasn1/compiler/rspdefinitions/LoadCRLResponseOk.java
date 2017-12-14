@@ -23,15 +23,15 @@ import org.openmuc.jasn1.compiler.pkix1explicit88.CertificateList;
 import org.openmuc.jasn1.compiler.pkix1explicit88.Time;
 import org.openmuc.jasn1.compiler.pkix1implicit88.SubjectKeyIdentifier;
 
-public class LoadCRLResponseOk implements Serializable {
+public class LoadCRLResponseOk implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static class MissingParts implements Serializable {
+	public static class MissingParts implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
-		public static class SEQUENCE implements Serializable {
+		public static class SEQUENCE implements BerType, Serializable {
 
 			private static final long serialVersionUID = 1L;
 

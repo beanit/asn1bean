@@ -19,12 +19,12 @@ import org.openmuc.jasn1.ber.types.*;
 import org.openmuc.jasn1.ber.types.string.*;
 
 
-public class ExtendedNetworkAddress implements Serializable {
+public class ExtendedNetworkAddress implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	public byte[] code = null;
-	public static class E1634Address implements Serializable {
+	public static class E1634Address implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 

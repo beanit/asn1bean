@@ -19,11 +19,11 @@ import org.openmuc.jasn1.ber.types.*;
 import org.openmuc.jasn1.ber.types.string.*;
 
 
-public class SequenceOfDirectTypes implements Serializable {
+public class SequenceOfDirectTypes implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static class UntaggedChoice implements Serializable {
+	public static class UntaggedChoice implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
@@ -145,7 +145,7 @@ public class SequenceOfDirectTypes implements Serializable {
 
 	}
 
-	public static class TaggedChoice implements Serializable {
+	public static class TaggedChoice implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
@@ -267,7 +267,7 @@ public class SequenceOfDirectTypes implements Serializable {
 
 	}
 
-	public static class UntaggedChoice2 implements Serializable {
+	public static class UntaggedChoice2 implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 

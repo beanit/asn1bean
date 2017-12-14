@@ -19,11 +19,11 @@ import org.openmuc.jasn1.ber.types.*;
 import org.openmuc.jasn1.ber.types.string.*;
 
 
-public class UnformattedPostalAddress implements Serializable {
+public class UnformattedPostalAddress implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static class PrintableAddress implements Serializable {
+	public static class PrintableAddress implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 

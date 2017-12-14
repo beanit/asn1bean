@@ -79,7 +79,7 @@ public class CompileTest {
     @Test
     public void testCompilingInformationObjectClasses() throws Exception {
         args = new String[] { "-il", "-o", generatedSrcDir, "-p", rootPackageName, "-f",
-                "src/test/resources/information-object-class.asn" };
+                "src/test/resources/information-object-class.asn", "-di" };
         Compiler.main(args);
     }
 }

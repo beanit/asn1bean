@@ -23,7 +23,7 @@ import org.openmuc.jasn1.compiler.pkix1explicit88.CertificateList;
 import org.openmuc.jasn1.compiler.pkix1explicit88.Time;
 import org.openmuc.jasn1.compiler.pkix1implicit88.SubjectKeyIdentifier;
 
-public class SetNicknameResponse implements Serializable {
+public class SetNicknameResponse implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 

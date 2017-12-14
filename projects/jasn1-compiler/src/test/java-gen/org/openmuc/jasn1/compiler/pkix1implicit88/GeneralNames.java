@@ -25,7 +25,7 @@ import org.openmuc.jasn1.compiler.pkix1explicit88.Name;
 import org.openmuc.jasn1.compiler.pkix1explicit88.ORAddress;
 import org.openmuc.jasn1.compiler.pkix1explicit88.RelativeDistinguishedName;
 
-public class GeneralNames implements Serializable {
+public class GeneralNames implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 

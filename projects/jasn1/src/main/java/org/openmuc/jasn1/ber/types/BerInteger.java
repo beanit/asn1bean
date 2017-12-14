@@ -9,12 +9,12 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.math.BigInteger;
 
-import org.openmuc.jasn1.ber.ReverseByteArrayOutputStream;
 import org.openmuc.jasn1.ber.BerLength;
 import org.openmuc.jasn1.ber.BerTag;
+import org.openmuc.jasn1.ber.ReverseByteArrayOutputStream;
 import org.openmuc.jasn1.ber.internal.Util;
 
-public class BerInteger implements Serializable {
+public class BerInteger implements Serializable, BerType {
 
     private static final long serialVersionUID = 1L;
 
@@ -39,6 +39,7 @@ public class BerInteger implements Serializable {
         this.value = BigInteger.valueOf(val);
     }
 
+    @Override
     public int encode(OutputStream reverseOS) throws IOException {
         return encode(reverseOS, true);
     }
@@ -68,6 +69,7 @@ public class BerInteger implements Serializable {
         return codeLength;
     }
 
+    @Override
     public int decode(InputStream is) throws IOException {
         return decode(is, true);
     }

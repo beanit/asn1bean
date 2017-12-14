@@ -25,11 +25,11 @@ import org.openmuc.jasn1.compiler.pkix1explicit88.Name;
 import org.openmuc.jasn1.compiler.pkix1explicit88.ORAddress;
 import org.openmuc.jasn1.compiler.pkix1explicit88.RelativeDistinguishedName;
 
-public class NoticeReference implements Serializable {
+public class NoticeReference implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static class NoticeNumbers implements Serializable {
+	public static class NoticeNumbers implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 

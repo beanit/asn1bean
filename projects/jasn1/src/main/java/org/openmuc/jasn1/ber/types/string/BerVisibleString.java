@@ -11,8 +11,9 @@ import java.io.Serializable;
 import org.openmuc.jasn1.ber.BerLength;
 import org.openmuc.jasn1.ber.BerTag;
 import org.openmuc.jasn1.ber.internal.Util;
+import org.openmuc.jasn1.ber.types.BerType;
 
-public class BerVisibleString implements Serializable {
+public class BerVisibleString implements Serializable, BerType {
 
     private static final long serialVersionUID = 1L;
 
@@ -31,6 +32,7 @@ public class BerVisibleString implements Serializable {
         value = valueAsString.getBytes();
     }
 
+    @Override
     public int encode(OutputStream reverseOS) throws IOException {
         return encode(reverseOS, true);
     }
@@ -49,6 +51,7 @@ public class BerVisibleString implements Serializable {
         return codeLength;
     }
 
+    @Override
     public int decode(InputStream is) throws IOException {
         return decode(is, true);
     }

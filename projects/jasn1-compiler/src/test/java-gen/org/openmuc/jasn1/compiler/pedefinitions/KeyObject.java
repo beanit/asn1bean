@@ -19,15 +19,15 @@ import org.openmuc.jasn1.ber.types.*;
 import org.openmuc.jasn1.ber.types.string.*;
 
 
-public class KeyObject implements Serializable {
+public class KeyObject implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static class KeyCompontents implements Serializable {
+	public static class KeyCompontents implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
-		public static class SEQUENCE implements Serializable {
+		public static class SEQUENCE implements BerType, Serializable {
 
 			private static final long serialVersionUID = 1L;
 

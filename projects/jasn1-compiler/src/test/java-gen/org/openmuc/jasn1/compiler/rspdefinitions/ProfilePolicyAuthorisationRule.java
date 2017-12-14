@@ -23,11 +23,11 @@ import org.openmuc.jasn1.compiler.pkix1explicit88.CertificateList;
 import org.openmuc.jasn1.compiler.pkix1explicit88.Time;
 import org.openmuc.jasn1.compiler.pkix1implicit88.SubjectKeyIdentifier;
 
-public class ProfilePolicyAuthorisationRule implements Serializable {
+public class ProfilePolicyAuthorisationRule implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static class AllowedOperators implements Serializable {
+	public static class AllowedOperators implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 

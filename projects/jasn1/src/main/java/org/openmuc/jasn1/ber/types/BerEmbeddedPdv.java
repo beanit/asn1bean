@@ -9,12 +9,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 
-import org.openmuc.jasn1.ber.ReverseByteArrayOutputStream;
 import org.openmuc.jasn1.ber.BerLength;
 import org.openmuc.jasn1.ber.BerTag;
+import org.openmuc.jasn1.ber.ReverseByteArrayOutputStream;
 import org.openmuc.jasn1.ber.types.string.BerObjectDescriptor;
 
-public class BerEmbeddedPdv implements Serializable {
+public class BerEmbeddedPdv implements Serializable, BerType {
 
     private static final long serialVersionUID = 1L;
 
@@ -610,6 +610,7 @@ public class BerEmbeddedPdv implements Serializable {
         return dataValue;
     }
 
+    @Override
     public int encode(OutputStream os) throws IOException {
         return encode(os, true);
     }
@@ -658,6 +659,7 @@ public class BerEmbeddedPdv implements Serializable {
 
     }
 
+    @Override
     public int decode(InputStream is) throws IOException {
         return decode(is, true);
     }

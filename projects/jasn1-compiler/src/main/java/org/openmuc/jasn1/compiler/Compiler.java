@@ -27,23 +27,24 @@ public class Compiler {
 
     public static void main(String args[]) throws Exception {
 
-        StringCliParameter outputBaseDir = new CliParameterBuilder("-o")
-                .setDescription(
-                        "The base directory for the generated Java classes. The class files will be saved in subfolders of the base directory corresponding to the name of the defined modules.")
+        StringCliParameter outputBaseDir = new CliParameterBuilder("-o").setDescription(
+                "The base directory for the generated Java classes. The class files will be saved in subfolders of the base directory corresponding to the name of the defined modules.")
                 .buildStringParameter("output_base_dir", "./");
 
         StringCliParameter basePackageName = new CliParameterBuilder("-p")
                 .setDescription("The base package name. Added to this will be a name generated from the module name.")
                 .buildStringParameter("package_base_name", "");
 
-        FlagCliParameter supportIndefiniteLength = new CliParameterBuilder("-il")
-                .setDescription(
-                        "Add support for decoding indefinite length in generated classes. This feature is not yet fully implemented and should be used with caution.")
+        FlagCliParameter supportIndefiniteLength = new CliParameterBuilder("-il").setDescription(
+                "Add support for decoding indefinite length in generated classes. This feature is not yet fully implemented and should be used with caution.")
                 .buildFlagParameter();
 
-        FlagCliParameter legacyMode = new CliParameterBuilder("-l")
-                .setDescription(
-                        "Enable legacy mode. Earlier versions of the jASN1 compiler generated classes that had public member variables instead of getters and setters. This flag enables the old kind of classes.")
+        FlagCliParameter disableBerTypeInterface = new CliParameterBuilder("-di").setDescription(
+                "By default generated classes implement the BerType interface. Using this flag this behavior can be disabled.")
+                .buildFlagParameter();
+
+        FlagCliParameter legacyMode = new CliParameterBuilder("-l").setDescription(
+                "Enable legacy mode. Earlier versions of the jASN1 compiler generated classes that had public member variables instead of getters and setters. This flag enables the old kind of classes.")
                 .buildFlagParameter();
 
         StringListCliParameter asn1Files = new CliParameterBuilder("-f").setMandatory()
@@ -55,6 +56,7 @@ public class Compiler {
         cliParameters.add(outputBaseDir);
         cliParameters.add(basePackageName);
         cliParameters.add(supportIndefiniteLength);
+        cliParameters.add(disableBerTypeInterface);
         cliParameters.add(legacyMode);
 
         CliParser cliParser = new CliParser("jasn1-compiler",
@@ -84,7 +86,8 @@ public class Compiler {
         }
 
         BerClassWriter classWriter = new BerClassWriter(modulesByName, outputBaseDir.getValue(),
-                basePackageName.getValue(), !legacyMode.isSelected(), supportIndefiniteLength.isSelected());
+                basePackageName.getValue(), !legacyMode.isSelected(), supportIndefiniteLength.isSelected(),
+                disableBerTypeInterface.isSelected());
 
         classWriter.translate();
         System.out.println("done");

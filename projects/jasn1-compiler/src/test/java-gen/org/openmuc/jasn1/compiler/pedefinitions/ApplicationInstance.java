@@ -19,11 +19,11 @@ import org.openmuc.jasn1.ber.types.*;
 import org.openmuc.jasn1.ber.types.string.*;
 
 
-public class ApplicationInstance implements Serializable {
+public class ApplicationInstance implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static class ProcessData implements Serializable {
+	public static class ProcessData implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 

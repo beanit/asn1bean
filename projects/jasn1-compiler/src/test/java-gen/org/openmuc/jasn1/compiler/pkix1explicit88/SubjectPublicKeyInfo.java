@@ -19,7 +19,7 @@ import org.openmuc.jasn1.ber.types.*;
 import org.openmuc.jasn1.ber.types.string.*;
 
 
-public class SubjectPublicKeyInfo implements Serializable {
+public class SubjectPublicKeyInfo implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 

@@ -19,11 +19,11 @@ import org.openmuc.jasn1.ber.types.*;
 import org.openmuc.jasn1.ber.types.string.*;
 
 
-public class SequenceNameClashTest implements Serializable {
+public class SequenceNameClashTest implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static class Myseqof implements Serializable {
+	public static class Myseqof implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
@@ -168,7 +168,7 @@ public class SequenceNameClashTest implements Serializable {
 
 	}
 
-	public static class UntaggedInteger implements Serializable {
+	public static class UntaggedInteger implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
@@ -287,12 +287,12 @@ public class SequenceNameClashTest implements Serializable {
 
 	}
 
-	public static class MyChoice implements Serializable {
+	public static class MyChoice implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
 		public byte[] code = null;
-		public static class MyChoice2 implements Serializable {
+		public static class MyChoice2 implements BerType, Serializable {
 
 			private static final long serialVersionUID = 1L;
 
@@ -411,7 +411,7 @@ public class SequenceNameClashTest implements Serializable {
 
 		}
 
-		public static class MySequence implements Serializable {
+		public static class MySequence implements BerType, Serializable {
 
 			private static final long serialVersionUID = 1L;
 
@@ -614,7 +614,7 @@ public class SequenceNameClashTest implements Serializable {
 
 		}
 
-		public static class Myseqof implements Serializable {
+		public static class Myseqof implements BerType, Serializable {
 
 			private static final long serialVersionUID = 1L;
 

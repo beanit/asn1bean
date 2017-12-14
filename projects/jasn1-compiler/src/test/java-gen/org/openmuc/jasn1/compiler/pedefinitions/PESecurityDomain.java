@@ -19,11 +19,11 @@ import org.openmuc.jasn1.ber.types.*;
 import org.openmuc.jasn1.ber.types.string.*;
 
 
-public class PESecurityDomain implements Serializable {
+public class PESecurityDomain implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static class KeyList implements Serializable {
+	public static class KeyList implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
@@ -168,7 +168,7 @@ public class PESecurityDomain implements Serializable {
 
 	}
 
-	public static class SdPersoData implements Serializable {
+	public static class SdPersoData implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 

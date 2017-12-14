@@ -23,14 +23,14 @@ import org.openmuc.jasn1.compiler.pkix1explicit88.CertificateList;
 import org.openmuc.jasn1.compiler.pkix1explicit88.Time;
 import org.openmuc.jasn1.compiler.pkix1implicit88.SubjectKeyIdentifier;
 
-public class RetrieveNotificationsListResponse implements Serializable {
+public class RetrieveNotificationsListResponse implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	public byte[] code = null;
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 43);
 
-	public static class NotificationList implements Serializable {
+	public static class NotificationList implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 

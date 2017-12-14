@@ -19,7 +19,7 @@ import org.openmuc.jasn1.ber.types.*;
 import org.openmuc.jasn1.ber.types.string.*;
 
 
-public class X520StateOrProvinceName implements Serializable {
+public class X520StateOrProvinceName implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 

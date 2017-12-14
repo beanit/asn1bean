@@ -102,12 +102,17 @@ public class BerClassWriter {
     private final HashMap<String, AsnModule> modulesByName;
     private AsnModule module;
     private File outputDirectory;
+    private String berTypeInterfaceString = "BerType, ";
 
     BerClassWriter(HashMap<String, AsnModule> modulesByName, String outputBaseDir, String basePackageName,
-            boolean jaxbMode, boolean supportIndefiniteLength) throws IOException {
+            boolean jaxbMode, boolean supportIndefiniteLength, boolean disableBerTypeInterface) throws IOException {
         this.supportIndefiniteLength = supportIndefiniteLength;
         this.jaxbMode = jaxbMode;
         this.outputBaseDir = new File(outputBaseDir);
+
+        if (disableBerTypeInterface) {
+            berTypeInterfaceString = "";
+        }
 
         if (basePackageName.isEmpty()) {
             this.basePackageName = "";
@@ -503,7 +508,8 @@ public class BerClassWriter {
     private void writeChoiceClass(String className, AsnChoice asn1TypeElement, Tag tag, String isStaticStr,
             List<String> listOfSubClassNames) throws IOException {
 
-        write("public" + isStaticStr + " class " + className + " implements Serializable {\n");
+        write("public" + isStaticStr + " class " + className + " implements " + berTypeInterfaceString
+                + "Serializable {\n");
 
         write("private static final long serialVersionUID = 1L;\n");
 
@@ -662,7 +668,8 @@ public class BerClassWriter {
     private void writeSequenceOrSetClass(String className, AsnSequenceSet asnSequenceSet, Tag tag, String isStaticStr,
             List<String> listOfSubClassNames) throws IOException {
 
-        write("public" + isStaticStr + " class " + className + " implements Serializable {\n");
+        write("public" + isStaticStr + " class " + className + " implements " + berTypeInterfaceString
+                + "Serializable {\n");
 
         write("private static final long serialVersionUID = 1L;\n");
 
@@ -778,7 +785,8 @@ public class BerClassWriter {
     private void writeSequenceOfClass(String className, AsnSequenceOf asnSequenceOf, Tag tag, String isStaticStr,
             List<String> listOfSubClassNames) throws IOException {
 
-        write("public" + isStaticStr + " class " + className + " implements Serializable {\n");
+        write("public" + isStaticStr + " class " + className + " implements " + berTypeInterfaceString
+                + "Serializable {\n");
 
         write("private static final long serialVersionUID = 1L;\n");
 

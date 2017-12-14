@@ -19,12 +19,12 @@ import org.openmuc.jasn1.ber.types.*;
 import org.openmuc.jasn1.ber.types.string.*;
 
 
-public class MyChoice2 implements Serializable {
+public class MyChoice2 implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	public byte[] code = null;
-	public static class Element1 implements Serializable {
+	public static class Element1 implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
@@ -111,7 +111,7 @@ public class MyChoice2 implements Serializable {
 
 	}
 
-	public static class Element4 implements Serializable {
+	public static class Element4 implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
