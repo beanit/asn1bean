@@ -71,7 +71,7 @@ public class BerGeneralizedTime extends BerVisibleString {
 
     private final static Pattern generalizedTimePattern = Pattern.compile(GENERALIZED_TIME_PATTERN);
 
-    Calendar asCalendar() throws ParseException {
+    public Calendar asCalendar() throws ParseException {
 
         Matcher matcher = generalizedTimePattern.matcher(toString());
 
@@ -131,7 +131,7 @@ public class BerGeneralizedTime extends BerVisibleString {
         return calendar;
     }
 
-    Date asDate() throws ParseException {
+    public Date asDate() throws ParseException {
         return asCalendar().getTime();
     }
 
