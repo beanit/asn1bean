@@ -475,7 +475,8 @@ AsnType obj; AsnTag tg; String s;}
 			}
 		}
         ) |
-        (AMPERSAND(up:UPPER {eletyp.name = up.getText(); eletyp.typeReference = new AsnAny(); }))
+        (AMPERSAND(up:UPPER {eletyp.name = up.getText(); eletyp.typeReference = new AsnAny(); })
+        (OPTIONAL_KW {eletyp.isOptional=true;})?)
     )
             
 	;
