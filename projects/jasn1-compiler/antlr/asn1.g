@@ -29,7 +29,6 @@ tokens {
 ABSENT_KW				=	"ABSENT"			;
 ALL_KW					=	"ALL"				;
 ANY_KW					=	"ANY"				;
-ARGUMENT_KW				=	"ARGUMENT"			;
 APPLICATION_KW			=	"APPLICATION"		;
 AUTOMATIC_KW			=	"AUTOMATIC"			;
 BASED_NUM_KW			=	"BASEDNUM"			;
@@ -81,7 +80,6 @@ NUMERIC_STR_KW			=	"NumericString"		;
 OBJECT_DESCRIPTOR_KW 	=	"ObjectDescriptor"	;
 OBJECT_KW				=	"OBJECT"			;
 OCTET_KW				=	"OCTET"				;
-OPERATION_KW			=	"OPERATION"			;
 OF_KW					=	"OF"				;
 OID_KW					=	"OID"				;
 OPTIONAL_KW				=	"OPTIONAL"			;
@@ -342,37 +340,8 @@ symbol returns [String s]
 {s="";}			
 	:	up:UPPER  { s = up.getText();}
 	|	lid:LOWER { s = lid.getText();}
-	|	s=macroName   	//To solve the matching of Macro Name with Keyword
 	;
 
-macroName returns [String s]
-{s="";}
-	:	OPERATION_KW 						{ s = "OPERATION";}
-	|	ERROR_KW							{ s = "ERROR";}
- 	|	"BIND"								{ s = "BIND";}
- 	|	"UNBIND"							{ s = "UNBIND";}
- 	|	"APPLICATION-SERVICE-ELEMENT"		{ s = "APPLICATION-SERVICE-ELEMENT";}
- 	|	"APPLICATION-CONTEXT"				{ s = "APPLICATION-CONTEXT";}
- 	|	"EXTENSION"							{ s = "EXTENSION";}
- 	|	"EXTENSIONS"						{ s = "EXTENSIONS";}
- 	|	"EXTENSION-ATTRIBUTE"				{ s = "EXTENSION-ATTRIBUTE";}
- 	|	"TOKEN"								{ s = "TOKEN";}
- 	|	"TOKEN-DATA"						{ s = "TOKEN-DATA";}
- 	|	"SECURITY-CATEGORY"					{ s = "SECURITY-CATEGORY";}
- 	|	"OBJECT"							{ s = "OBJECT";}
- 	|	"PORT"								{ s = "PORT";}
- 	|	"REFINE"							{ s = "REFINE";}
- 	|	"ABSTRACT-BIND"						{ s = "ABSTRACT-BIND";}
- 	|	"ABSTRACT-UNBIND"					{ s = "ABSTRACT-UNBIND";}
- 	|	"ABSTRACT-OPERATION"				{ s = "ABSTRACT-OPERATION";}
- 	|	"ABSTRACT-ERROR"					{ s = "ABSTRACT-ERROR";}
- 	|	"ALGORITHM"							{ s = "ALGORITHM";}
- 	|	"ENCRYPTED"							{ s = "ENCRYPTED";}
- 	|	"SIGNED"							{ s = "SIGNED";}
- 	|	"SIGNATURE"							{ s = "SIGNATURE";}
- 	|	"PROTECTED"							{ s = "PROTECTED";}
- 	|	"OBJECT-TYPE"						{ s = "OBJECT-TYPE";}
- 	;
 
 assignment[AsnModule module]	
 {Object obj ; Object objv; AsnValueAssignment valueAssignment; AsnInformationObjectClass asnInformationObjectClass; List<AsnParameter> parameterListVal;} :
