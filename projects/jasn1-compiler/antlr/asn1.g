@@ -737,7 +737,7 @@ typeorvalue returns [Object obj]
 
 elementType_list returns [List<AsnElementType> elelist]
 {elelist = new ArrayList<>(); AsnElementType eletyp; int i=1; }
-	:	(ELLIPSIS | eletyp = elementType {if (eletyp.name.isEmpty()) {eletyp.name = "element" + i;};elelist.add(eletyp);i++; }
+	:	((ELLIPSIS | eletyp = elementType {if (eletyp.name.isEmpty()) {eletyp.name = "element" + i;};elelist.add(eletyp);i++; })
 	    (COMMA (ELLIPSIS | (eletyp = elementType {if (eletyp.name.isEmpty()) {eletyp.name = "element" + i;};elelist.add(eletyp);i++; })))*)
 	;
 
