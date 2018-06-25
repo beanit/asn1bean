@@ -31,169 +31,19 @@ public class LoadCRLResponseOk implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
-		public static class SEQUENCE implements BerType, Serializable {
-
-			private static final long serialVersionUID = 1L;
-
-			public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-
-			public byte[] code = null;
-			public BerInteger number = null;
-			
-			public SEQUENCE() {
-			}
-
-			public SEQUENCE(byte[] code) {
-				this.code = code;
-			}
-
-			public SEQUENCE(BerInteger number) {
-				this.number = number;
-			}
-
-			public int encode(OutputStream reverseOS) throws IOException {
-				return encode(reverseOS, true);
-			}
-
-			public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
-
-				if (code != null) {
-					for (int i = code.length - 1; i >= 0; i--) {
-						reverseOS.write(code[i]);
-					}
-					if (withTag) {
-						return tag.encode(reverseOS) + code.length;
-					}
-					return code.length;
-				}
-
-				int codeLength = 0;
-				codeLength += number.encode(reverseOS, false);
-				// write tag: CONTEXT_CLASS, PRIMITIVE, 0
-				reverseOS.write(0x80);
-				codeLength += 1;
-				
-				codeLength += BerLength.encodeLength(reverseOS, codeLength);
-
-				if (withTag) {
-					codeLength += tag.encode(reverseOS);
-				}
-
-				return codeLength;
-
-			}
-
-			public int decode(InputStream is) throws IOException {
-				return decode(is, true);
-			}
-
-			public int decode(InputStream is, boolean withTag) throws IOException {
-				int codeLength = 0;
-				int subCodeLength = 0;
-				BerTag berTag = new BerTag();
-
-				if (withTag) {
-					codeLength += tag.decodeAndCheck(is);
-				}
-
-				BerLength length = new BerLength();
-				codeLength += length.decode(is);
-
-				int totalLength = length.val;
-				if (totalLength == -1) {
-					subCodeLength += berTag.decode(is);
-
-					if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-						int nextByte = is.read();
-						if (nextByte != 0) {
-							if (nextByte == -1) {
-								throw new EOFException("Unexpected end of input stream.");
-							}
-							throw new IOException("Decoded sequence has wrong end of contents octets");
-						}
-						codeLength += subCodeLength + 1;
-						return codeLength;
-					}
-					if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 0)) {
-						number = new BerInteger();
-						subCodeLength += number.decode(is, false);
-						subCodeLength += berTag.decode(is);
-					}
-					int nextByte = is.read();
-					if (berTag.tagNumber != 0 || berTag.tagClass != 0 || berTag.primitive != 0
-					|| nextByte != 0) {
-						if (nextByte == -1) {
-							throw new EOFException("Unexpected end of input stream.");
-						}
-						throw new IOException("Decoded sequence has wrong end of contents octets");
-					}
-					codeLength += subCodeLength + 1;
-					return codeLength;
-				}
-
-				codeLength += totalLength;
-
-				subCodeLength += berTag.decode(is);
-				if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 0)) {
-					number = new BerInteger();
-					subCodeLength += number.decode(is, false);
-					if (subCodeLength == totalLength) {
-						return codeLength;
-					}
-				}
-				throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
-
-				
-			}
-
-			public void encodeAndSave(int encodingSizeGuess) throws IOException {
-				ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
-				encode(reverseOS, false);
-				code = reverseOS.getArray();
-			}
-
-			public String toString() {
-				StringBuilder sb = new StringBuilder();
-				appendAsString(sb, 0);
-				return sb.toString();
-			}
-
-			public void appendAsString(StringBuilder sb, int indentLevel) {
-
-				sb.append("{");
-				sb.append("\n");
-				for (int i = 0; i < indentLevel + 1; i++) {
-					sb.append("\t");
-				}
-				if (number != null) {
-					sb.append("number: ").append(number);
-				}
-				else {
-					sb.append("number: <empty-required-field>");
-				}
-				
-				sb.append("\n");
-				for (int i = 0; i < indentLevel; i++) {
-					sb.append("\t");
-				}
-				sb.append("}");
-			}
-
-		}
-
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 		public byte[] code = null;
-		public List<SEQUENCE> seqOf = null;
+		public List<BerInteger> seqOf = null;
 
 		public MissingParts() {
-			seqOf = new ArrayList<SEQUENCE>();
+			seqOf = new ArrayList<BerInteger>();
 		}
 
 		public MissingParts(byte[] code) {
 			this.code = code;
 		}
 
-		public MissingParts(List<SEQUENCE> seqOf) {
+		public MissingParts(List<BerInteger> seqOf) {
 			this.seqOf = seqOf;
 		}
 
@@ -259,13 +109,13 @@ public class LoadCRLResponseOk implements BerType, Serializable {
 						return codeLength;
 					}
 
-					SEQUENCE element = new SEQUENCE();
+					BerInteger element = new BerInteger();
 					subCodeLength += element.decode(is, false);
 					seqOf.add(element);
 				}
 			}
 			while (subCodeLength < totalLength) {
-				SEQUENCE element = new SEQUENCE();
+				BerInteger element = new BerInteger();
 				subCodeLength += element.decode(is, true);
 				seqOf.add(element);
 			}
@@ -300,15 +150,15 @@ public class LoadCRLResponseOk implements BerType, Serializable {
 				sb.append("null");
 			}
 			else {
-				Iterator<SEQUENCE> it = seqOf.iterator();
+				Iterator<BerInteger> it = seqOf.iterator();
 				if (it.hasNext()) {
-					it.next().appendAsString(sb, indentLevel + 1);
+					sb.append(it.next());
 					while (it.hasNext()) {
 						sb.append(",\n");
 						for (int i = 0; i < indentLevel + 1; i++) {
 							sb.append("\t");
 						}
-						it.next().appendAsString(sb, indentLevel + 1);
+						sb.append(it.next());
 					}
 				}
 			}

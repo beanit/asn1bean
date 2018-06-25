@@ -33,6 +33,7 @@ public class AlgoParameter implements BerType, Serializable {
 	public BerOctetString rotationConstants = null;
 	public BerOctetString xoringConstants = null;
 	public BerOctetString authCounterMax = null;
+	public UInt8 numberOfKeccak = null;
 	
 	public AlgoParameter() {
 	}
@@ -41,7 +42,7 @@ public class AlgoParameter implements BerType, Serializable {
 		this.code = code;
 	}
 
-	public AlgoParameter(BerInteger algorithmID, BerOctetString algorithmOptions, BerOctetString key, BerOctetString opc, BerOctetString rotationConstants, BerOctetString xoringConstants, BerOctetString authCounterMax) {
+	public AlgoParameter(BerInteger algorithmID, BerOctetString algorithmOptions, BerOctetString key, BerOctetString opc, BerOctetString rotationConstants, BerOctetString xoringConstants, BerOctetString authCounterMax, UInt8 numberOfKeccak) {
 		this.algorithmID = algorithmID;
 		this.algorithmOptions = algorithmOptions;
 		this.key = key;
@@ -49,6 +50,7 @@ public class AlgoParameter implements BerType, Serializable {
 		this.rotationConstants = rotationConstants;
 		this.xoringConstants = xoringConstants;
 		this.authCounterMax = authCounterMax;
+		this.numberOfKeccak = numberOfKeccak;
 	}
 
 	public int encode(OutputStream reverseOS) throws IOException {
@@ -68,6 +70,13 @@ public class AlgoParameter implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
+		if (numberOfKeccak != null) {
+			codeLength += numberOfKeccak.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 7
+			reverseOS.write(0x87);
+			codeLength += 1;
+		}
+		
 		if (authCounterMax != null) {
 			codeLength += authCounterMax.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 6
@@ -251,6 +260,22 @@ public class AlgoParameter implements BerType, Serializable {
 				subCodeLength += authCounterMax.decode(is, false);
 				subCodeLength += berTag.decode(is);
 			}
+			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
+				int nextByte = is.read();
+				if (nextByte != 0) {
+					if (nextByte == -1) {
+						throw new EOFException("Unexpected end of input stream.");
+					}
+					throw new IOException("Decoded sequence has wrong end of contents octets");
+				}
+				codeLength += subCodeLength + 1;
+				return codeLength;
+			}
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 7)) {
+				numberOfKeccak = new UInt8();
+				subCodeLength += numberOfKeccak.decode(is, false);
+				subCodeLength += berTag.decode(is);
+			}
 			int nextByte = is.read();
 			if (berTag.tagNumber != 0 || berTag.tagClass != 0 || berTag.primitive != 0
 			|| nextByte != 0) {
@@ -326,6 +351,15 @@ public class AlgoParameter implements BerType, Serializable {
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 6)) {
 			authCounterMax = new BerOctetString();
 			subCodeLength += authCounterMax.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 7)) {
+			numberOfKeccak = new UInt8();
+			subCodeLength += numberOfKeccak.decode(is, false);
 			if (subCodeLength == totalLength) {
 				return codeLength;
 			}
@@ -416,6 +450,14 @@ public class AlgoParameter implements BerType, Serializable {
 				sb.append("\t");
 			}
 			sb.append("authCounterMax: ").append(authCounterMax);
+		}
+		
+		if (numberOfKeccak != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("numberOfKeccak: ").append(numberOfKeccak);
 		}
 		
 		sb.append("\n");

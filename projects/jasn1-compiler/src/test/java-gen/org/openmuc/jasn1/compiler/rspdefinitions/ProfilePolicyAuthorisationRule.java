@@ -33,17 +33,17 @@ public class ProfilePolicyAuthorisationRule implements BerType, Serializable {
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 		public byte[] code = null;
-		public List<OperatorID> seqOf = null;
+		public List<OperatorId> seqOf = null;
 
 		public AllowedOperators() {
-			seqOf = new ArrayList<OperatorID>();
+			seqOf = new ArrayList<OperatorId>();
 		}
 
 		public AllowedOperators(byte[] code) {
 			this.code = code;
 		}
 
-		public AllowedOperators(List<OperatorID> seqOf) {
+		public AllowedOperators(List<OperatorId> seqOf) {
 			this.seqOf = seqOf;
 		}
 
@@ -109,13 +109,13 @@ public class ProfilePolicyAuthorisationRule implements BerType, Serializable {
 						return codeLength;
 					}
 
-					OperatorID element = new OperatorID();
+					OperatorId element = new OperatorId();
 					subCodeLength += element.decode(is, false);
 					seqOf.add(element);
 				}
 			}
 			while (subCodeLength < totalLength) {
-				OperatorID element = new OperatorID();
+				OperatorId element = new OperatorId();
 				subCodeLength += element.decode(is, true);
 				seqOf.add(element);
 			}
@@ -150,7 +150,7 @@ public class ProfilePolicyAuthorisationRule implements BerType, Serializable {
 				sb.append("null");
 			}
 			else {
-				Iterator<OperatorID> it = seqOf.iterator();
+				Iterator<OperatorId> it = seqOf.iterator();
 				if (it.hasNext()) {
 					it.next().appendAsString(sb, indentLevel + 1);
 					while (it.hasNext()) {

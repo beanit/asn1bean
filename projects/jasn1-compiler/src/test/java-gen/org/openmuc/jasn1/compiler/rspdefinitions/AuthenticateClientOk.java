@@ -32,7 +32,9 @@ public class AuthenticateClientOk implements BerType, Serializable {
 	public byte[] code = null;
 	public TransactionId transactionId = null;
 	public StoreMetadataRequest profileMetaData = null;
-	public PrepareDownloadRequest prepareDownloadRequest = null;
+	public SmdpSigned2 smdpSigned2 = null;
+	public BerOctetString smdpSignature2 = null;
+	public Certificate smdpCertificate = null;
 	
 	public AuthenticateClientOk() {
 	}
@@ -41,10 +43,12 @@ public class AuthenticateClientOk implements BerType, Serializable {
 		this.code = code;
 	}
 
-	public AuthenticateClientOk(TransactionId transactionId, StoreMetadataRequest profileMetaData, PrepareDownloadRequest prepareDownloadRequest) {
+	public AuthenticateClientOk(TransactionId transactionId, StoreMetadataRequest profileMetaData, SmdpSigned2 smdpSigned2, BerOctetString smdpSignature2, Certificate smdpCertificate) {
 		this.transactionId = transactionId;
 		this.profileMetaData = profileMetaData;
-		this.prepareDownloadRequest = prepareDownloadRequest;
+		this.smdpSigned2 = smdpSigned2;
+		this.smdpSignature2 = smdpSignature2;
+		this.smdpCertificate = smdpCertificate;
 	}
 
 	public int encode(OutputStream reverseOS) throws IOException {
@@ -64,11 +68,15 @@ public class AuthenticateClientOk implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
-		codeLength += prepareDownloadRequest.encode(reverseOS, false);
-		// write tag: CONTEXT_CLASS, CONSTRUCTED, 33
-		reverseOS.write(0x21);
-		reverseOS.write(0xBF);
+		codeLength += smdpCertificate.encode(reverseOS, true);
+		
+		codeLength += smdpSignature2.encode(reverseOS, false);
+		// write tag: APPLICATION_CLASS, PRIMITIVE, 55
+		reverseOS.write(0x37);
+		reverseOS.write(0x5F);
 		codeLength += 2;
+		
+		codeLength += smdpSigned2.encode(reverseOS, true);
 		
 		codeLength += profileMetaData.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 37
@@ -154,9 +162,41 @@ public class AuthenticateClientOk implements BerType, Serializable {
 				codeLength += subCodeLength + 1;
 				return codeLength;
 			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 33)) {
-				prepareDownloadRequest = new PrepareDownloadRequest();
-				subCodeLength += prepareDownloadRequest.decode(is, false);
+			if (berTag.equals(SmdpSigned2.tag)) {
+				smdpSigned2 = new SmdpSigned2();
+				subCodeLength += smdpSigned2.decode(is, false);
+				subCodeLength += berTag.decode(is);
+			}
+			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
+				int nextByte = is.read();
+				if (nextByte != 0) {
+					if (nextByte == -1) {
+						throw new EOFException("Unexpected end of input stream.");
+					}
+					throw new IOException("Decoded sequence has wrong end of contents octets");
+				}
+				codeLength += subCodeLength + 1;
+				return codeLength;
+			}
+			if (berTag.equals(BerTag.APPLICATION_CLASS, BerTag.PRIMITIVE, 55)) {
+				smdpSignature2 = new BerOctetString();
+				subCodeLength += smdpSignature2.decode(is, false);
+				subCodeLength += berTag.decode(is);
+			}
+			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
+				int nextByte = is.read();
+				if (nextByte != 0) {
+					if (nextByte == -1) {
+						throw new EOFException("Unexpected end of input stream.");
+					}
+					throw new IOException("Decoded sequence has wrong end of contents octets");
+				}
+				codeLength += subCodeLength + 1;
+				return codeLength;
+			}
+			if (berTag.equals(Certificate.tag)) {
+				smdpCertificate = new Certificate();
+				subCodeLength += smdpCertificate.decode(is, false);
 				subCodeLength += berTag.decode(is);
 			}
 			int nextByte = is.read();
@@ -192,9 +232,27 @@ public class AuthenticateClientOk implements BerType, Serializable {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
 		}
 		
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 33)) {
-			prepareDownloadRequest = new PrepareDownloadRequest();
-			subCodeLength += prepareDownloadRequest.decode(is, false);
+		if (berTag.equals(SmdpSigned2.tag)) {
+			smdpSigned2 = new SmdpSigned2();
+			subCodeLength += smdpSigned2.decode(is, false);
+			subCodeLength += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match the mandatory sequence element tag.");
+		}
+		
+		if (berTag.equals(BerTag.APPLICATION_CLASS, BerTag.PRIMITIVE, 55)) {
+			smdpSignature2 = new BerOctetString();
+			subCodeLength += smdpSignature2.decode(is, false);
+			subCodeLength += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match the mandatory sequence element tag.");
+		}
+		
+		if (berTag.equals(Certificate.tag)) {
+			smdpCertificate = new Certificate();
+			subCodeLength += smdpCertificate.decode(is, false);
 			if (subCodeLength == totalLength) {
 				return codeLength;
 			}
@@ -246,12 +304,35 @@ public class AuthenticateClientOk implements BerType, Serializable {
 		for (int i = 0; i < indentLevel + 1; i++) {
 			sb.append("\t");
 		}
-		if (prepareDownloadRequest != null) {
-			sb.append("prepareDownloadRequest: ");
-			prepareDownloadRequest.appendAsString(sb, indentLevel + 1);
+		if (smdpSigned2 != null) {
+			sb.append("smdpSigned2: ");
+			smdpSigned2.appendAsString(sb, indentLevel + 1);
 		}
 		else {
-			sb.append("prepareDownloadRequest: <empty-required-field>");
+			sb.append("smdpSigned2: <empty-required-field>");
+		}
+		
+		sb.append(",\n");
+		for (int i = 0; i < indentLevel + 1; i++) {
+			sb.append("\t");
+		}
+		if (smdpSignature2 != null) {
+			sb.append("smdpSignature2: ").append(smdpSignature2);
+		}
+		else {
+			sb.append("smdpSignature2: <empty-required-field>");
+		}
+		
+		sb.append(",\n");
+		for (int i = 0; i < indentLevel + 1; i++) {
+			sb.append("\t");
+		}
+		if (smdpCertificate != null) {
+			sb.append("smdpCertificate: ");
+			smdpCertificate.appendAsString(sb, indentLevel + 1);
+		}
+		else {
+			sb.append("smdpCertificate: <empty-required-field>");
 		}
 		
 		sb.append("\n");

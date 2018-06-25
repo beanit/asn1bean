@@ -23,28 +23,28 @@ import org.openmuc.jasn1.compiler.pkix1explicit88.CertificateList;
 import org.openmuc.jasn1.compiler.pkix1explicit88.Time;
 import org.openmuc.jasn1.compiler.pkix1implicit88.SubjectKeyIdentifier;
 
-public class DeviceInfo implements BerType, Serializable {
+public class OperatorId implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
 	public byte[] code = null;
-	public Octet4 tac = null;
-	public DeviceCapabilities deviceCapabilities = null;
-	public Octet8 imei = null;
+	public BerOctetString mccMnc = null;
+	public BerOctetString gid1 = null;
+	public BerOctetString gid2 = null;
 	
-	public DeviceInfo() {
+	public OperatorId() {
 	}
 
-	public DeviceInfo(byte[] code) {
+	public OperatorId(byte[] code) {
 		this.code = code;
 	}
 
-	public DeviceInfo(Octet4 tac, DeviceCapabilities deviceCapabilities, Octet8 imei) {
-		this.tac = tac;
-		this.deviceCapabilities = deviceCapabilities;
-		this.imei = imei;
+	public OperatorId(BerOctetString mccMnc, BerOctetString gid1, BerOctetString gid2) {
+		this.mccMnc = mccMnc;
+		this.gid1 = gid1;
+		this.gid2 = gid2;
 	}
 
 	public int encode(OutputStream reverseOS) throws IOException {
@@ -64,19 +64,21 @@ public class DeviceInfo implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
-		if (imei != null) {
-			codeLength += imei.encode(reverseOS, false);
+		if (gid2 != null) {
+			codeLength += gid2.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 2
 			reverseOS.write(0x82);
 			codeLength += 1;
 		}
 		
-		codeLength += deviceCapabilities.encode(reverseOS, false);
-		// write tag: CONTEXT_CLASS, CONSTRUCTED, 1
-		reverseOS.write(0xA1);
-		codeLength += 1;
+		if (gid1 != null) {
+			codeLength += gid1.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 1
+			reverseOS.write(0x81);
+			codeLength += 1;
+		}
 		
-		codeLength += tac.encode(reverseOS, false);
+		codeLength += mccMnc.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, PRIMITIVE, 0
 		reverseOS.write(0x80);
 		codeLength += 1;
@@ -123,8 +125,8 @@ public class DeviceInfo implements BerType, Serializable {
 				return codeLength;
 			}
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 0)) {
-				tac = new Octet4();
-				subCodeLength += tac.decode(is, false);
+				mccMnc = new BerOctetString();
+				subCodeLength += mccMnc.decode(is, false);
 				subCodeLength += berTag.decode(is);
 			}
 			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
@@ -138,9 +140,9 @@ public class DeviceInfo implements BerType, Serializable {
 				codeLength += subCodeLength + 1;
 				return codeLength;
 			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
-				deviceCapabilities = new DeviceCapabilities();
-				subCodeLength += deviceCapabilities.decode(is, false);
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 1)) {
+				gid1 = new BerOctetString();
+				subCodeLength += gid1.decode(is, false);
 				subCodeLength += berTag.decode(is);
 			}
 			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
@@ -155,8 +157,8 @@ public class DeviceInfo implements BerType, Serializable {
 				return codeLength;
 			}
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 2)) {
-				imei = new Octet8();
-				subCodeLength += imei.decode(is, false);
+				gid2 = new BerOctetString();
+				subCodeLength += gid2.decode(is, false);
 				subCodeLength += berTag.decode(is);
 			}
 			int nextByte = is.read();
@@ -175,17 +177,8 @@ public class DeviceInfo implements BerType, Serializable {
 
 		subCodeLength += berTag.decode(is);
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 0)) {
-			tac = new Octet4();
-			subCodeLength += tac.decode(is, false);
-			subCodeLength += berTag.decode(is);
-		}
-		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
-		}
-		
-		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
-			deviceCapabilities = new DeviceCapabilities();
-			subCodeLength += deviceCapabilities.decode(is, false);
+			mccMnc = new BerOctetString();
+			subCodeLength += mccMnc.decode(is, false);
 			if (subCodeLength == totalLength) {
 				return codeLength;
 			}
@@ -195,9 +188,18 @@ public class DeviceInfo implements BerType, Serializable {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
 		}
 		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 1)) {
+			gid1 = new BerOctetString();
+			subCodeLength += gid1.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 2)) {
-			imei = new Octet8();
-			subCodeLength += imei.decode(is, false);
+			gid2 = new BerOctetString();
+			subCodeLength += gid2.decode(is, false);
 			if (subCodeLength == totalLength) {
 				return codeLength;
 			}
@@ -226,31 +228,27 @@ public class DeviceInfo implements BerType, Serializable {
 		for (int i = 0; i < indentLevel + 1; i++) {
 			sb.append("\t");
 		}
-		if (tac != null) {
-			sb.append("tac: ").append(tac);
+		if (mccMnc != null) {
+			sb.append("mccMnc: ").append(mccMnc);
 		}
 		else {
-			sb.append("tac: <empty-required-field>");
+			sb.append("mccMnc: <empty-required-field>");
 		}
 		
-		sb.append(",\n");
-		for (int i = 0; i < indentLevel + 1; i++) {
-			sb.append("\t");
-		}
-		if (deviceCapabilities != null) {
-			sb.append("deviceCapabilities: ");
-			deviceCapabilities.appendAsString(sb, indentLevel + 1);
-		}
-		else {
-			sb.append("deviceCapabilities: <empty-required-field>");
-		}
-		
-		if (imei != null) {
+		if (gid1 != null) {
 			sb.append(",\n");
 			for (int i = 0; i < indentLevel + 1; i++) {
 				sb.append("\t");
 			}
-			sb.append("imei: ").append(imei);
+			sb.append("gid1: ").append(gid1);
+		}
+		
+		if (gid2 != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("gid2: ").append(gid2);
 		}
 		
 		sb.append("\n");

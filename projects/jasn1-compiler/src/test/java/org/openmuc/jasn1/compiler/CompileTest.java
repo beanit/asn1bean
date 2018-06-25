@@ -58,14 +58,14 @@ public class CompileTest {
     public void testCompilingMobile() throws Exception {
         args = new String[] { "-il", "-o", generatedSrcDir, "-p", rootPackageName, "-f",
                 "src/test/resources/mobile/PKIXExplicit88.asn", "src/test/resources/mobile/PKIXImplicit88.asn",
-                "src/test/resources/mobile/RSPDefinitionsV2.0.asn", "-l" };
+                "src/test/resources/mobile/RSPDefinitions.asn", "-l" };
         Compiler.main(args);
     }
 
     @Test
     public void testCompilingMobile2() throws Exception {
         args = new String[] { "-il", "-o", generatedSrcDir, "-p", rootPackageName, "-f",
-                "src/test/resources/mobile/PEDefinitionsV2.0.asn", "-l" };
+                "src/test/resources/mobile/PEDefinitions.asn", "-l" };
         Compiler.main(args);
     }
 

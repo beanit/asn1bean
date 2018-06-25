@@ -185,7 +185,7 @@ public class ProfileInfo implements BerType, Serializable {
 	public BerOctetString icon = null;
 	public ProfileClass profileClass = null;
 	public NotificationConfigurationInfo notificationConfigurationInfo = null;
-	public OperatorID profileOwner = null;
+	public OperatorId profileOwner = null;
 	public DpProprietaryData dpProprietaryData = null;
 	public PprIds profilePolicyRules = null;
 	
@@ -196,7 +196,7 @@ public class ProfileInfo implements BerType, Serializable {
 		this.code = code;
 	}
 
-	public ProfileInfo(Iccid iccid, OctetTo16 isdpAid, ProfileState profileState, BerUTF8String profileNickname, BerUTF8String serviceProviderName, BerUTF8String profileName, IconType iconType, BerOctetString icon, ProfileClass profileClass, NotificationConfigurationInfo notificationConfigurationInfo, OperatorID profileOwner, DpProprietaryData dpProprietaryData, PprIds profilePolicyRules) {
+	public ProfileInfo(Iccid iccid, OctetTo16 isdpAid, ProfileState profileState, BerUTF8String profileNickname, BerUTF8String serviceProviderName, BerUTF8String profileName, IconType iconType, BerOctetString icon, ProfileClass profileClass, NotificationConfigurationInfo notificationConfigurationInfo, OperatorId profileOwner, DpProprietaryData dpProprietaryData, PprIds profilePolicyRules) {
 		this.iccid = iccid;
 		this.isdpAid = isdpAid;
 		this.profileState = profileState;
@@ -520,7 +520,7 @@ public class ProfileInfo implements BerType, Serializable {
 				return codeLength;
 			}
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 23)) {
-				profileOwner = new OperatorID();
+				profileOwner = new OperatorId();
 				subCodeLength += profileOwner.decode(is, false);
 				subCodeLength += berTag.decode(is);
 			}
@@ -665,7 +665,7 @@ public class ProfileInfo implements BerType, Serializable {
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 23)) {
-			profileOwner = new OperatorID();
+			profileOwner = new OperatorId();
 			subCodeLength += profileOwner.decode(is, false);
 			if (subCodeLength == totalLength) {
 				return codeLength;

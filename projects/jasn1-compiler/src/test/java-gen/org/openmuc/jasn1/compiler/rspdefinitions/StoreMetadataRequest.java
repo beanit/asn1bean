@@ -182,7 +182,7 @@ public class StoreMetadataRequest implements BerType, Serializable {
 	public BerOctetString icon = null;
 	public ProfileClass profileClass = null;
 	public NotificationConfigurationInfo notificationConfigurationInfo = null;
-	public OperatorID profileOwner = null;
+	public OperatorId profileOwner = null;
 	public PprIds profilePolicyRules = null;
 	
 	public StoreMetadataRequest() {
@@ -192,7 +192,7 @@ public class StoreMetadataRequest implements BerType, Serializable {
 		this.code = code;
 	}
 
-	public StoreMetadataRequest(Iccid iccid, BerUTF8String serviceProviderName, BerUTF8String profileName, IconType iconType, BerOctetString icon, ProfileClass profileClass, NotificationConfigurationInfo notificationConfigurationInfo, OperatorID profileOwner, PprIds profilePolicyRules) {
+	public StoreMetadataRequest(Iccid iccid, BerUTF8String serviceProviderName, BerUTF8String profileName, IconType iconType, BerOctetString icon, ProfileClass profileClass, NotificationConfigurationInfo notificationConfigurationInfo, OperatorId profileOwner, PprIds profilePolicyRules) {
 		this.iccid = iccid;
 		this.serviceProviderName = serviceProviderName;
 		this.profileName = profileName;
@@ -429,7 +429,7 @@ public class StoreMetadataRequest implements BerType, Serializable {
 				return codeLength;
 			}
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 23)) {
-				profileOwner = new OperatorID();
+				profileOwner = new OperatorId();
 				subCodeLength += profileOwner.decode(is, false);
 				subCodeLength += berTag.decode(is);
 			}
@@ -531,7 +531,7 @@ public class StoreMetadataRequest implements BerType, Serializable {
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 23)) {
-			profileOwner = new OperatorID();
+			profileOwner = new OperatorId();
 			subCodeLength += profileOwner.decode(is, false);
 			if (subCodeLength == totalLength) {
 				return codeLength;

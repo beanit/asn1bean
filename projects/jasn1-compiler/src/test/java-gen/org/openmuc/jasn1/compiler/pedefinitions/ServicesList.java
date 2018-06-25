@@ -43,6 +43,9 @@ public class ServicesList implements BerType, Serializable {
 	public BerNull multipleIsim = null;
 	public BerNull multipleCsim = null;
 	public BerNull tuak256 = null;
+	public BerNull usimTestAlgorithm = null;
+	public BerNull berTlv = null;
+	public BerNull dfLink = null;
 	
 	public ServicesList() {
 	}
@@ -51,7 +54,7 @@ public class ServicesList implements BerType, Serializable {
 		this.code = code;
 	}
 
-	public ServicesList(BerNull contactless, BerNull usim, BerNull isim, BerNull csim, BerNull milenage, BerNull tuak128, BerNull cave, BerNull gbaUsim, BerNull gbaIsim, BerNull mbms, BerNull eap, BerNull javacard, BerNull multos, BerNull multipleUsim, BerNull multipleIsim, BerNull multipleCsim, BerNull tuak256) {
+	public ServicesList(BerNull contactless, BerNull usim, BerNull isim, BerNull csim, BerNull milenage, BerNull tuak128, BerNull cave, BerNull gbaUsim, BerNull gbaIsim, BerNull mbms, BerNull eap, BerNull javacard, BerNull multos, BerNull multipleUsim, BerNull multipleIsim, BerNull multipleCsim, BerNull tuak256, BerNull usimTestAlgorithm, BerNull berTlv, BerNull dfLink) {
 		this.contactless = contactless;
 		this.usim = usim;
 		this.isim = isim;
@@ -69,6 +72,9 @@ public class ServicesList implements BerType, Serializable {
 		this.multipleIsim = multipleIsim;
 		this.multipleCsim = multipleCsim;
 		this.tuak256 = tuak256;
+		this.usimTestAlgorithm = usimTestAlgorithm;
+		this.berTlv = berTlv;
+		this.dfLink = dfLink;
 	}
 
 	public int encode(OutputStream reverseOS) throws IOException {
@@ -88,6 +94,27 @@ public class ServicesList implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
+		if (dfLink != null) {
+			codeLength += dfLink.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 19
+			reverseOS.write(0x93);
+			codeLength += 1;
+		}
+		
+		if (berTlv != null) {
+			codeLength += berTlv.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 18
+			reverseOS.write(0x92);
+			codeLength += 1;
+		}
+		
+		if (usimTestAlgorithm != null) {
+			codeLength += usimTestAlgorithm.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 17
+			reverseOS.write(0x91);
+			codeLength += 1;
+		}
+		
 		if (tuak256 != null) {
 			codeLength += tuak256.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 16
@@ -509,6 +536,54 @@ public class ServicesList implements BerType, Serializable {
 				subCodeLength += tuak256.decode(is, false);
 				subCodeLength += berTag.decode(is);
 			}
+			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
+				int nextByte = is.read();
+				if (nextByte != 0) {
+					if (nextByte == -1) {
+						throw new EOFException("Unexpected end of input stream.");
+					}
+					throw new IOException("Decoded sequence has wrong end of contents octets");
+				}
+				codeLength += subCodeLength + 1;
+				return codeLength;
+			}
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 17)) {
+				usimTestAlgorithm = new BerNull();
+				subCodeLength += usimTestAlgorithm.decode(is, false);
+				subCodeLength += berTag.decode(is);
+			}
+			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
+				int nextByte = is.read();
+				if (nextByte != 0) {
+					if (nextByte == -1) {
+						throw new EOFException("Unexpected end of input stream.");
+					}
+					throw new IOException("Decoded sequence has wrong end of contents octets");
+				}
+				codeLength += subCodeLength + 1;
+				return codeLength;
+			}
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 18)) {
+				berTlv = new BerNull();
+				subCodeLength += berTlv.decode(is, false);
+				subCodeLength += berTag.decode(is);
+			}
+			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
+				int nextByte = is.read();
+				if (nextByte != 0) {
+					if (nextByte == -1) {
+						throw new EOFException("Unexpected end of input stream.");
+					}
+					throw new IOException("Decoded sequence has wrong end of contents octets");
+				}
+				codeLength += subCodeLength + 1;
+				return codeLength;
+			}
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 19)) {
+				dfLink = new BerNull();
+				subCodeLength += dfLink.decode(is, false);
+				subCodeLength += berTag.decode(is);
+			}
 			int nextByte = is.read();
 			if (berTag.tagNumber != 0 || berTag.tagClass != 0 || berTag.primitive != 0
 			|| nextByte != 0) {
@@ -674,6 +749,33 @@ public class ServicesList implements BerType, Serializable {
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 16)) {
 			tuak256 = new BerNull();
 			subCodeLength += tuak256.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 17)) {
+			usimTestAlgorithm = new BerNull();
+			subCodeLength += usimTestAlgorithm.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 18)) {
+			berTlv = new BerNull();
+			subCodeLength += berTlv.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 19)) {
+			dfLink = new BerNull();
+			subCodeLength += dfLink.decode(is, false);
 			if (subCodeLength == totalLength) {
 				return codeLength;
 			}
@@ -881,6 +983,39 @@ public class ServicesList implements BerType, Serializable {
 				sb.append("\t");
 			}
 			sb.append("tuak256: ").append(tuak256);
+			firstSelectedElement = false;
+		}
+		
+		if (usimTestAlgorithm != null) {
+			if (!firstSelectedElement) {
+				sb.append(",\n");
+			}
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("usimTestAlgorithm: ").append(usimTestAlgorithm);
+			firstSelectedElement = false;
+		}
+		
+		if (berTlv != null) {
+			if (!firstSelectedElement) {
+				sb.append(",\n");
+			}
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("berTlv: ").append(berTlv);
+			firstSelectedElement = false;
+		}
+		
+		if (dfLink != null) {
+			if (!firstSelectedElement) {
+				sb.append(",\n");
+			}
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("dfLink: ").append(dfLink);
 			firstSelectedElement = false;
 		}
 		

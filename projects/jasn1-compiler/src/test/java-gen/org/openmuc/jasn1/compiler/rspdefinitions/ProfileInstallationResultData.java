@@ -188,9 +188,7 @@ public class ProfileInstallationResultData implements BerType, Serializable {
 		reverseOS.write(0xA2);
 		codeLength += 1;
 		
-		if (smdpOid != null) {
-			codeLength += smdpOid.encode(reverseOS, true);
-		}
+		codeLength += smdpOid.encode(reverseOS, true);
 		
 		codeLength += notificationMetadata.encode(reverseOS, false);
 		// write tag: CONTEXT_CLASS, CONSTRUCTED, 47
@@ -343,6 +341,9 @@ public class ProfileInstallationResultData implements BerType, Serializable {
 			subCodeLength += smdpOid.decode(is, false);
 			subCodeLength += berTag.decode(is);
 		}
+		else {
+			throw new IOException("Tag does not match the mandatory sequence element tag.");
+		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 2)) {
 			subCodeLength += length.decode(is);
@@ -395,12 +396,15 @@ public class ProfileInstallationResultData implements BerType, Serializable {
 			sb.append("notificationMetadata: <empty-required-field>");
 		}
 		
+		sb.append(",\n");
+		for (int i = 0; i < indentLevel + 1; i++) {
+			sb.append("\t");
+		}
 		if (smdpOid != null) {
-			sb.append(",\n");
-			for (int i = 0; i < indentLevel + 1; i++) {
-				sb.append("\t");
-			}
 			sb.append("smdpOid: ").append(smdpOid);
+		}
+		else {
+			sb.append("smdpOid: <empty-required-field>");
 		}
 		
 		sb.append(",\n");

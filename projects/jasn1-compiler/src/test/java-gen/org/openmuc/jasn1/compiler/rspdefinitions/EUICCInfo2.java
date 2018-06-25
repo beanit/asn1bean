@@ -325,7 +325,7 @@ public class EUICCInfo2 implements BerType, Serializable {
 	public VersionType euiccFirmwareVer = null;
 	public BerOctetString extCardResource = null;
 	public UICCCapability uiccCapability = null;
-	public VersionType javacardVersion = null;
+	public VersionType ts102241Version = null;
 	public VersionType globalplatformVersion = null;
 	public RspCapability rspCapability = null;
 	public EuiccCiPKIdListForVerification euiccCiPKIdListForVerification = null;
@@ -343,13 +343,13 @@ public class EUICCInfo2 implements BerType, Serializable {
 		this.code = code;
 	}
 
-	public EUICCInfo2(VersionType profileVersion, VersionType svn, VersionType euiccFirmwareVer, BerOctetString extCardResource, UICCCapability uiccCapability, VersionType javacardVersion, VersionType globalplatformVersion, RspCapability rspCapability, EuiccCiPKIdListForVerification euiccCiPKIdListForVerification, EuiccCiPKIdListForSigning euiccCiPKIdListForSigning, BerInteger euiccCategory, PprIds forbiddenProfilePolicyRules, VersionType ppVersion, BerUTF8String sasAcreditationNumber, CertificationDataObject certificationDataObject) {
+	public EUICCInfo2(VersionType profileVersion, VersionType svn, VersionType euiccFirmwareVer, BerOctetString extCardResource, UICCCapability uiccCapability, VersionType ts102241Version, VersionType globalplatformVersion, RspCapability rspCapability, EuiccCiPKIdListForVerification euiccCiPKIdListForVerification, EuiccCiPKIdListForSigning euiccCiPKIdListForSigning, BerInteger euiccCategory, PprIds forbiddenProfilePolicyRules, VersionType ppVersion, BerUTF8String sasAcreditationNumber, CertificationDataObject certificationDataObject) {
 		this.profileVersion = profileVersion;
 		this.svn = svn;
 		this.euiccFirmwareVer = euiccFirmwareVer;
 		this.extCardResource = extCardResource;
 		this.uiccCapability = uiccCapability;
-		this.javacardVersion = javacardVersion;
+		this.ts102241Version = ts102241Version;
 		this.globalplatformVersion = globalplatformVersion;
 		this.rspCapability = rspCapability;
 		this.euiccCiPKIdListForVerification = euiccCiPKIdListForVerification;
@@ -425,8 +425,8 @@ public class EUICCInfo2 implements BerType, Serializable {
 			codeLength += 1;
 		}
 		
-		if (javacardVersion != null) {
-			codeLength += javacardVersion.encode(reverseOS, false);
+		if (ts102241Version != null) {
+			codeLength += ts102241Version.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 6
 			reverseOS.write(0x86);
 			codeLength += 1;
@@ -579,8 +579,8 @@ public class EUICCInfo2 implements BerType, Serializable {
 				return codeLength;
 			}
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 6)) {
-				javacardVersion = new VersionType();
-				subCodeLength += javacardVersion.decode(is, false);
+				ts102241Version = new VersionType();
+				subCodeLength += ts102241Version.decode(is, false);
 				subCodeLength += berTag.decode(is);
 			}
 			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
@@ -788,8 +788,8 @@ public class EUICCInfo2 implements BerType, Serializable {
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 6)) {
-			javacardVersion = new VersionType();
-			subCodeLength += javacardVersion.decode(is, false);
+			ts102241Version = new VersionType();
+			subCodeLength += ts102241Version.decode(is, false);
 			subCodeLength += berTag.decode(is);
 		}
 		
@@ -941,12 +941,12 @@ public class EUICCInfo2 implements BerType, Serializable {
 			sb.append("uiccCapability: <empty-required-field>");
 		}
 		
-		if (javacardVersion != null) {
+		if (ts102241Version != null) {
 			sb.append(",\n");
 			for (int i = 0; i < indentLevel + 1; i++) {
 				sb.append("\t");
 			}
-			sb.append("javacardVersion: ").append(javacardVersion);
+			sb.append("ts102241Version: ").append(ts102241Version);
 		}
 		
 		if (globalplatformVersion != null) {
