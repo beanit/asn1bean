@@ -1,3 +1,18 @@
+v1.10.0 26-Jun-2018
+-------------------
+
+- by default compiler now creates classes that implement the general
+  BerType interface which contains the encode and decode functions,
+  behavior can be disabled with compilers -di flag
+
+- made asCalendar() and asDate() methods of BerGeneralizedTime class
+  public
+
+- open types in information object classes may now be OPTIONAL
+
+- fixed support of ellipsis ('...') in the beginning of sequences
+
+
 v1.9.0 13-Dec-2017
 ------------------
 
