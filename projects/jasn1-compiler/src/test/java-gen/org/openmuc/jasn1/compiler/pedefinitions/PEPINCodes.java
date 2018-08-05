@@ -19,7 +19,7 @@ import org.openmuc.jasn1.ber.types.*;
 import org.openmuc.jasn1.ber.types.string.*;
 
 
-public class PEPINCodes implements BerType, Serializable {
+public class PEPINCodes implements BerSerializable, BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -28,7 +28,7 @@ public class PEPINCodes implements BerType, Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public byte[] code = null;
-		public static class Pinconfig implements BerType, Serializable {
+		public static class Pinconfig implements BerSerializable, BerType, Serializable {
 
 			private static final long serialVersionUID = 1L;
 

@@ -20,11 +20,11 @@ import org.openmuc.jasn1.ber.types.string.*;
 
 import org.openmuc.jasn1.compiler.modules.module2.Datez;
 
-public class PersonnelRecordzz implements BerType, Serializable {
+public class PersonnelRecordzz implements BerSerializable, BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static class Children implements BerType, Serializable {
+	public static class Children implements BerSerializable, BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 

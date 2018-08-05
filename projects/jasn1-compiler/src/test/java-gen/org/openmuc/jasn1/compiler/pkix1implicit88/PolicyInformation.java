@@ -25,11 +25,11 @@ import org.openmuc.jasn1.compiler.pkix1explicit88.Name;
 import org.openmuc.jasn1.compiler.pkix1explicit88.ORAddress;
 import org.openmuc.jasn1.compiler.pkix1explicit88.RelativeDistinguishedName;
 
-public class PolicyInformation implements BerType, Serializable {
+public class PolicyInformation implements BerSerializable, BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static class PolicyQualifiers implements BerType, Serializable {
+	public static class PolicyQualifiers implements BerSerializable, BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 

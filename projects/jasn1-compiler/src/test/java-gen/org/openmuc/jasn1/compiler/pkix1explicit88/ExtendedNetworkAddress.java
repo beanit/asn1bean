@@ -24,7 +24,7 @@ public class ExtendedNetworkAddress implements BerType, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public byte[] code = null;
-	public static class E1634Address implements BerType, Serializable {
+	public static class E1634Address implements BerSerializable, BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 

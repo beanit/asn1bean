@@ -19,11 +19,11 @@ import org.openmuc.jasn1.ber.types.*;
 import org.openmuc.jasn1.ber.types.string.*;
 
 
-public class ProfileHeader implements BerType, Serializable {
+public class ProfileHeader implements BerSerializable, BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static class EUICCMandatoryGFSTEList implements BerType, Serializable {
+	public static class EUICCMandatoryGFSTEList implements BerSerializable, BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 

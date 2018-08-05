@@ -22,7 +22,7 @@ import org.openmuc.jasn1.compiler.modules.module2.EmployeeNumberZ;
 import org.openmuc.jasn1.compiler.modules.module3.Datezz;
 import org.openmuc.jasn1.compiler.modules.module3.EmployeeNumberzz;
 
-public class MyInt2 extends MyInt {
+public class MyInt2 extends MyInt implements BerSerializable {
 
 	private static final long serialVersionUID = 1L;
 

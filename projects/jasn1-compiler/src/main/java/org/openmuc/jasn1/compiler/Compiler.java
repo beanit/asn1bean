@@ -42,6 +42,10 @@ public class Compiler {
         FlagCliParameter disableBerTypeInterface = new CliParameterBuilder("-di").setDescription(
                 "By default generated classes implement the BerType interface. Using this flag this behavior can be disabled.")
                 .buildFlagParameter();
+        
+        FlagCliParameter disableBerSerializableInterface = new CliParameterBuilder("-si").setDescription(
+                "By default generated classes implement the BerSerializable interface where appropriate. Using this flag this behavior can be disabled.")
+                .buildFlagParameter();
 
         FlagCliParameter legacyMode = new CliParameterBuilder("-l").setDescription(
                 "Enable legacy mode. Earlier versions of the jASN1 compiler generated classes that had public member variables instead of getters and setters. This flag enables the old kind of classes.")
@@ -57,6 +61,7 @@ public class Compiler {
         cliParameters.add(basePackageName);
         cliParameters.add(supportIndefiniteLength);
         cliParameters.add(disableBerTypeInterface);
+        cliParameters.add(disableBerSerializableInterface);
         cliParameters.add(legacyMode);
 
         CliParser cliParser = new CliParser("jasn1-compiler",
@@ -87,7 +92,7 @@ public class Compiler {
 
         BerClassWriter classWriter = new BerClassWriter(modulesByName, outputBaseDir.getValue(),
                 basePackageName.getValue(), !legacyMode.isSelected(), supportIndefiniteLength.isSelected(),
-                disableBerTypeInterface.isSelected());
+                disableBerTypeInterface.isSelected(), disableBerSerializableInterface.isSelected());
 
         classWriter.translate();
         System.out.println("done");

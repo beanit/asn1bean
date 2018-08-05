@@ -19,7 +19,7 @@ import org.openmuc.jasn1.ber.types.*;
 import org.openmuc.jasn1.ber.types.string.*;
 
 
-public class AlgoParameter implements BerType, Serializable {
+public class AlgoParameter implements BerSerializable, BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 

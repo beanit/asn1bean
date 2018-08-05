@@ -19,7 +19,7 @@ import org.openmuc.jasn1.ber.types.*;
 import org.openmuc.jasn1.ber.types.string.*;
 
 
-public class ImplUTF8String extends BerUTF8String {
+public class ImplUTF8String extends BerUTF8String implements BerSerializable {
 
 	private static final long serialVersionUID = 1L;
 

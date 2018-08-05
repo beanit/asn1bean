@@ -23,7 +23,7 @@ import org.openmuc.jasn1.compiler.pkix1explicit88.CertificateList;
 import org.openmuc.jasn1.compiler.pkix1explicit88.Time;
 import org.openmuc.jasn1.compiler.pkix1implicit88.SubjectKeyIdentifier;
 
-public class RemoteOpId extends BerInteger {
+public class RemoteOpId extends BerInteger implements BerSerializable {
 
 	private static final long serialVersionUID = 1L;
 

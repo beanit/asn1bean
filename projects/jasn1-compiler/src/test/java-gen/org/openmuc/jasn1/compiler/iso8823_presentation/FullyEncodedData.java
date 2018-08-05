@@ -19,7 +19,7 @@ import org.openmuc.jasn1.ber.types.*;
 import org.openmuc.jasn1.ber.types.string.*;
 
 
-public class FullyEncodedData implements BerType, Serializable {
+public class FullyEncodedData implements BerSerializable, BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 

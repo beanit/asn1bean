@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.openmuc.jasn1.ber.BerSerializable;
 import org.openmuc.jasn1.ber.BerTag;
 import org.openmuc.jasn1.ber.types.BerObjectIdentifier;
 import org.openmuc.jasn1.compiler.model.AsnAny;
@@ -103,15 +104,20 @@ public class BerClassWriter {
     private AsnModule module;
     private File outputDirectory;
     private String berTypeInterfaceString = "BerType, ";
-
+    private String berSerializableInterfaceString = "BerSerializable, ";
+    
     BerClassWriter(HashMap<String, AsnModule> modulesByName, String outputBaseDir, String basePackageName,
-            boolean jaxbMode, boolean supportIndefiniteLength, boolean disableBerTypeInterface) throws IOException {
+            boolean jaxbMode, boolean supportIndefiniteLength, boolean disableBerTypeInterface, boolean disableBerSerializableInterface) throws IOException {
         this.supportIndefiniteLength = supportIndefiniteLength;
         this.jaxbMode = jaxbMode;
         this.outputBaseDir = new File(outputBaseDir);
 
         if (disableBerTypeInterface) {
             berTypeInterfaceString = "";
+        }
+        
+        if(disableBerSerializableInterface) {
+            berSerializableInterfaceString = "";
         }
 
         if (basePackageName.isEmpty()) {
@@ -508,7 +514,9 @@ public class BerClassWriter {
     private void writeChoiceClass(String className, AsnChoice asn1TypeElement, Tag tag, String isStaticStr,
             List<String> listOfSubClassNames) throws IOException {
 
-        write("public" + isStaticStr + " class " + className + " implements " + berTypeInterfaceString
+        write("public" + isStaticStr + " class " + className + " implements " 
+                + (berSerializableInterfaceString.length() > 0 && tag != null ? BerSerializable.class.getSimpleName() + ", " : "")
+                + berTypeInterfaceString
                 + "Serializable {\n");
 
         write("private static final long serialVersionUID = 1L;\n");
@@ -668,7 +676,9 @@ public class BerClassWriter {
     private void writeSequenceOrSetClass(String className, AsnSequenceSet asnSequenceSet, Tag tag, String isStaticStr,
             List<String> listOfSubClassNames) throws IOException {
 
-        write("public" + isStaticStr + " class " + className + " implements " + berTypeInterfaceString
+        write("public" + isStaticStr + " class " + className + " implements " 
+                + berSerializableInterfaceString
+                + berTypeInterfaceString
                 + "Serializable {\n");
 
         write("private static final long serialVersionUID = 1L;\n");
@@ -785,7 +795,7 @@ public class BerClassWriter {
     private void writeSequenceOfClass(String className, AsnSequenceOf asnSequenceOf, Tag tag, String isStaticStr,
             List<String> listOfSubClassNames) throws IOException {
 
-        write("public" + isStaticStr + " class " + className + " implements " + berTypeInterfaceString
+        write("public" + isStaticStr + " class " + className + " implements " + berSerializableInterfaceString + berTypeInterfaceString
                 + "Serializable {\n");
 
         write("private static final long serialVersionUID = 1L;\n");
@@ -862,7 +872,9 @@ public class BerClassWriter {
     private void writeRetaggingTypeClass(String typeName, String assignedTypeName, AsnType typeDefinition, Tag tag)
             throws IOException {
 
-        write("public class " + typeName + " extends " + cleanUpName(assignedTypeName) + " {\n");
+        write("public class " + typeName + " extends " + cleanUpName(assignedTypeName) 
+            + (berSerializableInterfaceString.length() > 0 && tag != null ? " implements " + BerSerializable.class.getSimpleName() : "" ) 
+            + " {\n");
 
         write("private static final long serialVersionUID = 1L;\n");
 

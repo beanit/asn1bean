@@ -19,7 +19,7 @@ import org.openmuc.jasn1.ber.types.*;
 import org.openmuc.jasn1.ber.types.string.*;
 
 
-public class TeletexDomainDefinedAttributes implements BerType, Serializable {
+public class TeletexDomainDefinedAttributes implements BerSerializable, BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 

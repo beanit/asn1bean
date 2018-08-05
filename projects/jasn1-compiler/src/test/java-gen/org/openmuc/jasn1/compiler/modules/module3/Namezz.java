@@ -20,7 +20,7 @@ import org.openmuc.jasn1.ber.types.string.*;
 
 import org.openmuc.jasn1.compiler.modules.module2.Datez;
 
-public class Namezz implements BerType, Serializable {
+public class Namezz implements BerSerializable, BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 

@@ -23,11 +23,11 @@ import org.openmuc.jasn1.compiler.pkix1explicit88.CertificateList;
 import org.openmuc.jasn1.compiler.pkix1explicit88.Time;
 import org.openmuc.jasn1.compiler.pkix1implicit88.SubjectKeyIdentifier;
 
-public class BoundProfilePackage implements BerType, Serializable {
+public class BoundProfilePackage implements BerSerializable, BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static class FirstSequenceOf87 implements BerType, Serializable {
+	public static class FirstSequenceOf87 implements BerSerializable, BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
@@ -176,7 +176,7 @@ public class BoundProfilePackage implements BerType, Serializable {
 
 	}
 
-	public static class SequenceOf88 implements BerType, Serializable {
+	public static class SequenceOf88 implements BerSerializable, BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
@@ -325,7 +325,7 @@ public class BoundProfilePackage implements BerType, Serializable {
 
 	}
 
-	public static class SecondSequenceOf87 implements BerType, Serializable {
+	public static class SecondSequenceOf87 implements BerSerializable, BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
@@ -474,7 +474,7 @@ public class BoundProfilePackage implements BerType, Serializable {
 
 	}
 
-	public static class SequenceOf86 implements BerType, Serializable {
+	public static class SequenceOf86 implements BerSerializable, BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 

@@ -19,7 +19,7 @@ import org.openmuc.jasn1.ber.types.*;
 import org.openmuc.jasn1.ber.types.string.*;
 
 
-public class ImplicitlyTaggedBitString extends BerBitString {
+public class ImplicitlyTaggedBitString extends BerBitString implements BerSerializable {
 
 	private static final long serialVersionUID = 1L;
 

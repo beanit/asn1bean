@@ -19,7 +19,7 @@ import org.openmuc.jasn1.ber.types.*;
 import org.openmuc.jasn1.ber.types.string.*;
 
 
-public class PEAKAParameter implements BerType, Serializable {
+public class PEAKAParameter implements BerSerializable, BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -136,7 +136,7 @@ public class PEAKAParameter implements BerType, Serializable {
 
 	}
 
-	public static class SqnInit implements BerType, Serializable {
+	public static class SqnInit implements BerSerializable, BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 

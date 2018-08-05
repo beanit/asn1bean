@@ -19,7 +19,7 @@ import org.openmuc.jasn1.ber.types.*;
 import org.openmuc.jasn1.ber.types.string.*;
 
 
-public class ImplIA5String extends BerIA5String {
+public class ImplIA5String extends BerIA5String implements BerSerializable {
 
 	private static final long serialVersionUID = 1L;
 

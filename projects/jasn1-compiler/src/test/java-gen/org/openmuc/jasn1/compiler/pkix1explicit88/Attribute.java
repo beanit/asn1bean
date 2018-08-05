@@ -19,11 +19,11 @@ import org.openmuc.jasn1.ber.types.*;
 import org.openmuc.jasn1.ber.types.string.*;
 
 
-public class Attribute implements BerType, Serializable {
+public class Attribute implements BerSerializable, BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static class Values implements BerType, Serializable {
+	public static class Values implements BerSerializable, BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 

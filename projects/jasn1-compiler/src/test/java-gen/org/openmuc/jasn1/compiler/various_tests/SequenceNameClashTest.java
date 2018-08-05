@@ -19,11 +19,11 @@ import org.openmuc.jasn1.ber.types.*;
 import org.openmuc.jasn1.ber.types.string.*;
 
 
-public class SequenceNameClashTest implements BerType, Serializable {
+public class SequenceNameClashTest implements BerSerializable, BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static class Myseqof implements BerType, Serializable {
+	public static class Myseqof implements BerSerializable, BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
@@ -411,7 +411,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 
 		}
 
-		public static class MySequence implements BerType, Serializable {
+		public static class MySequence implements BerSerializable, BerType, Serializable {
 
 			private static final long serialVersionUID = 1L;
 
@@ -614,7 +614,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 
 		}
 
-		public static class Myseqof implements BerType, Serializable {
+		public static class Myseqof implements BerSerializable, BerType, Serializable {
 
 			private static final long serialVersionUID = 1L;
 

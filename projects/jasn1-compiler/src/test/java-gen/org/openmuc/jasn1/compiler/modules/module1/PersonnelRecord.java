@@ -22,11 +22,11 @@ import org.openmuc.jasn1.compiler.modules.module2.EmployeeNumberZ;
 import org.openmuc.jasn1.compiler.modules.module3.Datezz;
 import org.openmuc.jasn1.compiler.modules.module3.EmployeeNumberzz;
 
-public class PersonnelRecord implements BerType, Serializable {
+public class PersonnelRecord implements BerSerializable, BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static class Children implements BerType, Serializable {
+	public static class Children implements BerSerializable, BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
@@ -265,11 +265,11 @@ public class PersonnelRecord implements BerType, Serializable {
 
 	}
 
-	public static class TestSequenceOf2 implements BerType, Serializable {
+	public static class TestSequenceOf2 implements BerSerializable, BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
-		public static class SEQUENCE implements BerType, Serializable {
+		public static class SEQUENCE implements BerSerializable, BerType, Serializable {
 
 			private static final long serialVersionUID = 1L;
 

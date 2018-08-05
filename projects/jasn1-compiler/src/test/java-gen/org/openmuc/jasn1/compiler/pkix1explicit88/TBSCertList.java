@@ -19,15 +19,15 @@ import org.openmuc.jasn1.ber.types.*;
 import org.openmuc.jasn1.ber.types.string.*;
 
 
-public class TBSCertList implements BerType, Serializable {
+public class TBSCertList implements BerSerializable, BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static class RevokedCertificates implements BerType, Serializable {
+	public static class RevokedCertificates implements BerSerializable, BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
-		public static class SEQUENCE implements BerType, Serializable {
+		public static class SEQUENCE implements BerSerializable, BerType, Serializable {
 
 			private static final long serialVersionUID = 1L;
 

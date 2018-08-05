@@ -19,15 +19,15 @@ import org.openmuc.jasn1.ber.types.*;
 import org.openmuc.jasn1.ber.types.string.*;
 
 
-public class ContextList implements BerType, Serializable {
+public class ContextList implements BerSerializable, BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static class SEQUENCE implements BerType, Serializable {
+	public static class SEQUENCE implements BerSerializable, BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
-		public static class TransferSyntaxNameList implements BerType, Serializable {
+		public static class TransferSyntaxNameList implements BerSerializable, BerType, Serializable {
 
 			private static final long serialVersionUID = 1L;
 

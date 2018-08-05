@@ -23,11 +23,11 @@ import org.openmuc.jasn1.compiler.pkix1explicit88.CertificateList;
 import org.openmuc.jasn1.compiler.pkix1explicit88.Time;
 import org.openmuc.jasn1.compiler.pkix1implicit88.SubjectKeyIdentifier;
 
-public class EUICCInfo1 implements BerType, Serializable {
+public class EUICCInfo1 implements BerSerializable, BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static class EuiccCiPKIdListForVerification implements BerType, Serializable {
+	public static class EuiccCiPKIdListForVerification implements BerSerializable, BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
@@ -172,7 +172,7 @@ public class EUICCInfo1 implements BerType, Serializable {
 
 	}
 
-	public static class EuiccCiPKIdListForSigning implements BerType, Serializable {
+	public static class EuiccCiPKIdListForSigning implements BerSerializable, BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
