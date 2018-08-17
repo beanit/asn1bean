@@ -19,7 +19,7 @@ import org.openmuc.jasn1.ber.types.*;
 import org.openmuc.jasn1.ber.types.string.*;
 
 
-public class ExplicitlyTaggedSeqOf implements BerSerializable, BerType, Serializable {
+public class ExplicitlyTaggedSeqOf implements BerSerializable, Serializable {
 
 	private static final long serialVersionUID = 1L;
 

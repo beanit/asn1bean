@@ -19,7 +19,7 @@ import org.openmuc.jasn1.ber.types.*;
 import org.openmuc.jasn1.ber.types.string.*;
 
 
-public class BuiltInDomainDefinedAttributes implements BerSerializable, BerType, Serializable {
+public class BuiltInDomainDefinedAttributes implements BerSerializable, Serializable {
 
 	private static final long serialVersionUID = 1L;
 

@@ -515,8 +515,7 @@ public class BerClassWriter {
             List<String> listOfSubClassNames) throws IOException {
 
         write("public" + isStaticStr + " class " + className + " implements " 
-                + (berSerializableInterfaceString.length() > 0 && tag != null ? BerSerializable.class.getSimpleName() + ", " : "")
-                + berTypeInterfaceString
+                + (berSerializableInterfaceString.length() > 0 && tag != null ? berSerializableInterfaceString : berTypeInterfaceString)
                 + "Serializable {\n");
 
         write("private static final long serialVersionUID = 1L;\n");
@@ -677,8 +676,7 @@ public class BerClassWriter {
             List<String> listOfSubClassNames) throws IOException {
 
         write("public" + isStaticStr + " class " + className + " implements " 
-                + berSerializableInterfaceString
-                + berTypeInterfaceString
+                + (berSerializableInterfaceString.length() > 0 ? berSerializableInterfaceString : berTypeInterfaceString)
                 + "Serializable {\n");
 
         write("private static final long serialVersionUID = 1L;\n");
@@ -795,7 +793,8 @@ public class BerClassWriter {
     private void writeSequenceOfClass(String className, AsnSequenceOf asnSequenceOf, Tag tag, String isStaticStr,
             List<String> listOfSubClassNames) throws IOException {
 
-        write("public" + isStaticStr + " class " + className + " implements " + berSerializableInterfaceString + berTypeInterfaceString
+        write("public" + isStaticStr + " class " + className + " implements "  
+                + (berSerializableInterfaceString.length() > 0 ? berSerializableInterfaceString : berTypeInterfaceString)
                 + "Serializable {\n");
 
         write("private static final long serialVersionUID = 1L;\n");

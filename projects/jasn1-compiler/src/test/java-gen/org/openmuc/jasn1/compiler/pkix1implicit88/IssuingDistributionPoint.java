@@ -25,7 +25,7 @@ import org.openmuc.jasn1.compiler.pkix1explicit88.Name;
 import org.openmuc.jasn1.compiler.pkix1explicit88.ORAddress;
 import org.openmuc.jasn1.compiler.pkix1explicit88.RelativeDistinguishedName;
 
-public class IssuingDistributionPoint implements BerSerializable, BerType, Serializable {
+public class IssuingDistributionPoint implements BerSerializable, Serializable {
 
 	private static final long serialVersionUID = 1L;
 

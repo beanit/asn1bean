@@ -19,7 +19,7 @@ import org.openmuc.jasn1.ber.types.*;
 import org.openmuc.jasn1.ber.types.string.*;
 
 
-public class PDVList implements BerSerializable, BerType, Serializable {
+public class PDVList implements BerSerializable, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
