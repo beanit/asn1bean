@@ -65,7 +65,7 @@ public class CompileTest {
     @Test
     public void testCompilingMobile2() throws Exception {
         args = new String[] { "-il", "-o", generatedSrcDir, "-p", rootPackageName, "-f",
-                "src/test/resources/mobile/PEDefinitionsV2.1.asn", "-l" };
+                "src/test/resources/mobile/PEDefinitionsV2.2.asn", "-l" };
         Compiler.main(args);
     }
 

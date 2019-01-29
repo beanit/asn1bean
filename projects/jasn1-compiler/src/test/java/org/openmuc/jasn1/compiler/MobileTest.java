@@ -69,7 +69,7 @@ public class MobileTest {
         headerProfileElement.header = new ProfileHeader(new UInt8(2), new UInt8(0),
                 new BerUTF8String("SIMalliance Sample Profile"),
                 new BerOctetString(DatatypeConverter.parseHexBinary("89019990001234567893")), null, servicesList,
-                GFSTEList, null);
+                GFSTEList, null,  null);
 
         ReverseByteArrayOutputStream reverseByteArrayOutputStream = new ReverseByteArrayOutputStream(2048, true);
         headerProfileElement.encode(reverseByteArrayOutputStream);
