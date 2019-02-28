@@ -168,6 +168,344 @@ public class ProfileHeader implements BerType, Serializable {
 
 	}
 
+	public static class EUICCMandatoryAIDs implements BerType, Serializable {
+
+		private static final long serialVersionUID = 1L;
+
+		public static class SEQUENCE implements BerType, Serializable {
+
+			private static final long serialVersionUID = 1L;
+
+			public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+
+			public byte[] code = null;
+			public ApplicationIdentifier aid = null;
+			public BerOctetString version = null;
+			
+			public SEQUENCE() {
+			}
+
+			public SEQUENCE(byte[] code) {
+				this.code = code;
+			}
+
+			public SEQUENCE(ApplicationIdentifier aid, BerOctetString version) {
+				this.aid = aid;
+				this.version = version;
+			}
+
+			public int encode(OutputStream reverseOS) throws IOException {
+				return encode(reverseOS, true);
+			}
+
+			public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
+
+				if (code != null) {
+					for (int i = code.length - 1; i >= 0; i--) {
+						reverseOS.write(code[i]);
+					}
+					if (withTag) {
+						return tag.encode(reverseOS) + code.length;
+					}
+					return code.length;
+				}
+
+				int codeLength = 0;
+				codeLength += version.encode(reverseOS, false);
+				// write tag: CONTEXT_CLASS, PRIMITIVE, 1
+				reverseOS.write(0x81);
+				codeLength += 1;
+				
+				codeLength += aid.encode(reverseOS, false);
+				// write tag: CONTEXT_CLASS, PRIMITIVE, 0
+				reverseOS.write(0x80);
+				codeLength += 1;
+				
+				codeLength += BerLength.encodeLength(reverseOS, codeLength);
+
+				if (withTag) {
+					codeLength += tag.encode(reverseOS);
+				}
+
+				return codeLength;
+
+			}
+
+			public int decode(InputStream is) throws IOException {
+				return decode(is, true);
+			}
+
+			public int decode(InputStream is, boolean withTag) throws IOException {
+				int codeLength = 0;
+				int subCodeLength = 0;
+				BerTag berTag = new BerTag();
+
+				if (withTag) {
+					codeLength += tag.decodeAndCheck(is);
+				}
+
+				BerLength length = new BerLength();
+				codeLength += length.decode(is);
+
+				int totalLength = length.val;
+				if (totalLength == -1) {
+					subCodeLength += berTag.decode(is);
+
+					if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
+						int nextByte = is.read();
+						if (nextByte != 0) {
+							if (nextByte == -1) {
+								throw new EOFException("Unexpected end of input stream.");
+							}
+							throw new IOException("Decoded sequence has wrong end of contents octets");
+						}
+						codeLength += subCodeLength + 1;
+						return codeLength;
+					}
+					if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 0)) {
+						aid = new ApplicationIdentifier();
+						subCodeLength += aid.decode(is, false);
+						subCodeLength += berTag.decode(is);
+					}
+					if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
+						int nextByte = is.read();
+						if (nextByte != 0) {
+							if (nextByte == -1) {
+								throw new EOFException("Unexpected end of input stream.");
+							}
+							throw new IOException("Decoded sequence has wrong end of contents octets");
+						}
+						codeLength += subCodeLength + 1;
+						return codeLength;
+					}
+					if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 1)) {
+						version = new BerOctetString();
+						subCodeLength += version.decode(is, false);
+						subCodeLength += berTag.decode(is);
+					}
+					int nextByte = is.read();
+					if (berTag.tagNumber != 0 || berTag.tagClass != 0 || berTag.primitive != 0
+					|| nextByte != 0) {
+						if (nextByte == -1) {
+							throw new EOFException("Unexpected end of input stream.");
+						}
+						throw new IOException("Decoded sequence has wrong end of contents octets");
+					}
+					codeLength += subCodeLength + 1;
+					return codeLength;
+				}
+
+				codeLength += totalLength;
+
+				subCodeLength += berTag.decode(is);
+				if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 0)) {
+					aid = new ApplicationIdentifier();
+					subCodeLength += aid.decode(is, false);
+					subCodeLength += berTag.decode(is);
+				}
+				else {
+					throw new IOException("Tag does not match the mandatory sequence element tag.");
+				}
+				
+				if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 1)) {
+					version = new BerOctetString();
+					subCodeLength += version.decode(is, false);
+					if (subCodeLength == totalLength) {
+						return codeLength;
+					}
+				}
+				throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
+
+				
+			}
+
+			public void encodeAndSave(int encodingSizeGuess) throws IOException {
+				ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+				encode(reverseOS, false);
+				code = reverseOS.getArray();
+			}
+
+			public String toString() {
+				StringBuilder sb = new StringBuilder();
+				appendAsString(sb, 0);
+				return sb.toString();
+			}
+
+			public void appendAsString(StringBuilder sb, int indentLevel) {
+
+				sb.append("{");
+				sb.append("\n");
+				for (int i = 0; i < indentLevel + 1; i++) {
+					sb.append("\t");
+				}
+				if (aid != null) {
+					sb.append("aid: ").append(aid);
+				}
+				else {
+					sb.append("aid: <empty-required-field>");
+				}
+				
+				sb.append(",\n");
+				for (int i = 0; i < indentLevel + 1; i++) {
+					sb.append("\t");
+				}
+				if (version != null) {
+					sb.append("version: ").append(version);
+				}
+				else {
+					sb.append("version: <empty-required-field>");
+				}
+				
+				sb.append("\n");
+				for (int i = 0; i < indentLevel; i++) {
+					sb.append("\t");
+				}
+				sb.append("}");
+			}
+
+		}
+
+		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+		public byte[] code = null;
+		public List<SEQUENCE> seqOf = null;
+
+		public EUICCMandatoryAIDs() {
+			seqOf = new ArrayList<SEQUENCE>();
+		}
+
+		public EUICCMandatoryAIDs(byte[] code) {
+			this.code = code;
+		}
+
+		public EUICCMandatoryAIDs(List<SEQUENCE> seqOf) {
+			this.seqOf = seqOf;
+		}
+
+		public int encode(OutputStream reverseOS) throws IOException {
+			return encode(reverseOS, true);
+		}
+
+		public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
+
+			if (code != null) {
+				for (int i = code.length - 1; i >= 0; i--) {
+					reverseOS.write(code[i]);
+				}
+				if (withTag) {
+					return tag.encode(reverseOS) + code.length;
+				}
+				return code.length;
+			}
+
+			int codeLength = 0;
+			for (int i = (seqOf.size() - 1); i >= 0; i--) {
+				codeLength += seqOf.get(i).encode(reverseOS, true);
+			}
+
+			codeLength += BerLength.encodeLength(reverseOS, codeLength);
+
+			if (withTag) {
+				codeLength += tag.encode(reverseOS);
+			}
+
+			return codeLength;
+		}
+
+		public int decode(InputStream is) throws IOException {
+			return decode(is, true);
+		}
+
+		public int decode(InputStream is, boolean withTag) throws IOException {
+			int codeLength = 0;
+			int subCodeLength = 0;
+			BerTag berTag = new BerTag();
+			if (withTag) {
+				codeLength += tag.decodeAndCheck(is);
+			}
+
+			BerLength length = new BerLength();
+			codeLength += length.decode(is);
+			int totalLength = length.val;
+
+			if (length.val == -1) {
+				while (true) {
+					subCodeLength += berTag.decode(is);
+
+					if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
+						int nextByte = is.read();
+						if (nextByte != 0) {
+							if (nextByte == -1) {
+								throw new EOFException("Unexpected end of input stream.");
+							}
+							throw new IOException("Decoded sequence has wrong end of contents octets");
+						}
+						codeLength += subCodeLength + 1;
+						return codeLength;
+					}
+
+					SEQUENCE element = new SEQUENCE();
+					subCodeLength += element.decode(is, false);
+					seqOf.add(element);
+				}
+			}
+			while (subCodeLength < totalLength) {
+				SEQUENCE element = new SEQUENCE();
+				subCodeLength += element.decode(is, true);
+				seqOf.add(element);
+			}
+			if (subCodeLength != totalLength) {
+				throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + totalLength + " but has " + subCodeLength);
+
+			}
+			codeLength += subCodeLength;
+
+			return codeLength;
+		}
+
+		public void encodeAndSave(int encodingSizeGuess) throws IOException {
+			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+			encode(reverseOS, false);
+			code = reverseOS.getArray();
+		}
+
+		public String toString() {
+			StringBuilder sb = new StringBuilder();
+			appendAsString(sb, 0);
+			return sb.toString();
+		}
+
+		public void appendAsString(StringBuilder sb, int indentLevel) {
+
+			sb.append("{\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			if (seqOf == null) {
+				sb.append("null");
+			}
+			else {
+				Iterator<SEQUENCE> it = seqOf.iterator();
+				if (it.hasNext()) {
+					it.next().appendAsString(sb, indentLevel + 1);
+					while (it.hasNext()) {
+						sb.append(",\n");
+						for (int i = 0; i < indentLevel + 1; i++) {
+							sb.append("\t");
+						}
+						it.next().appendAsString(sb, indentLevel + 1);
+					}
+				}
+			}
+
+			sb.append("\n");
+			for (int i = 0; i < indentLevel; i++) {
+				sb.append("\t");
+			}
+			sb.append("}");
+		}
+
+	}
+
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
 	public byte[] code = null;
@@ -179,6 +517,7 @@ public class ProfileHeader implements BerType, Serializable {
 	public ServicesList eUICCMandatoryServices = null;
 	public EUICCMandatoryGFSTEList eUICCMandatoryGFSTEList = null;
 	public BerOctetString connectivityParameters = null;
+	public EUICCMandatoryAIDs eUICCMandatoryAIDs = null;
 	
 	public ProfileHeader() {
 	}
@@ -187,7 +526,7 @@ public class ProfileHeader implements BerType, Serializable {
 		this.code = code;
 	}
 
-	public ProfileHeader(UInt8 majorVersion, UInt8 minorVersion, BerUTF8String profileType, BerOctetString iccid, BerOctetString pol, ServicesList eUICCMandatoryServices, EUICCMandatoryGFSTEList eUICCMandatoryGFSTEList, BerOctetString connectivityParameters) {
+	public ProfileHeader(UInt8 majorVersion, UInt8 minorVersion, BerUTF8String profileType, BerOctetString iccid, BerOctetString pol, ServicesList eUICCMandatoryServices, EUICCMandatoryGFSTEList eUICCMandatoryGFSTEList, BerOctetString connectivityParameters, EUICCMandatoryAIDs eUICCMandatoryAIDs) {
 		this.majorVersion = majorVersion;
 		this.minorVersion = minorVersion;
 		this.profileType = profileType;
@@ -196,6 +535,7 @@ public class ProfileHeader implements BerType, Serializable {
 		this.eUICCMandatoryServices = eUICCMandatoryServices;
 		this.eUICCMandatoryGFSTEList = eUICCMandatoryGFSTEList;
 		this.connectivityParameters = connectivityParameters;
+		this.eUICCMandatoryAIDs = eUICCMandatoryAIDs;
 	}
 
 	public int encode(OutputStream reverseOS) throws IOException {
@@ -215,6 +555,13 @@ public class ProfileHeader implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
+		if (eUICCMandatoryAIDs != null) {
+			codeLength += eUICCMandatoryAIDs.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 8
+			reverseOS.write(0xA8);
+			codeLength += 1;
+		}
+		
 		if (connectivityParameters != null) {
 			codeLength += connectivityParameters.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 7
@@ -419,6 +766,22 @@ public class ProfileHeader implements BerType, Serializable {
 				subCodeLength += connectivityParameters.decode(is, false);
 				subCodeLength += berTag.decode(is);
 			}
+			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
+				int nextByte = is.read();
+				if (nextByte != 0) {
+					if (nextByte == -1) {
+						throw new EOFException("Unexpected end of input stream.");
+					}
+					throw new IOException("Decoded sequence has wrong end of contents octets");
+				}
+				codeLength += subCodeLength + 1;
+				return codeLength;
+			}
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 8)) {
+				eUICCMandatoryAIDs = new EUICCMandatoryAIDs();
+				subCodeLength += eUICCMandatoryAIDs.decode(is, false);
+				subCodeLength += berTag.decode(is);
+			}
 			int nextByte = is.read();
 			if (berTag.tagNumber != 0 || berTag.tagClass != 0 || berTag.primitive != 0
 			|| nextByte != 0) {
@@ -497,6 +860,15 @@ public class ProfileHeader implements BerType, Serializable {
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 7)) {
 			connectivityParameters = new BerOctetString();
 			subCodeLength += connectivityParameters.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 8)) {
+			eUICCMandatoryAIDs = new EUICCMandatoryAIDs();
+			subCodeLength += eUICCMandatoryAIDs.decode(is, false);
 			if (subCodeLength == totalLength) {
 				return codeLength;
 			}
@@ -600,6 +972,15 @@ public class ProfileHeader implements BerType, Serializable {
 				sb.append("\t");
 			}
 			sb.append("connectivityParameters: ").append(connectivityParameters);
+		}
+		
+		if (eUICCMandatoryAIDs != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("eUICCMandatoryAIDs: ");
+			eUICCMandatoryAIDs.appendAsString(sb, indentLevel + 1);
 		}
 		
 		sb.append("\n");

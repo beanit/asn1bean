@@ -29,6 +29,7 @@ public class PEStatus implements BerType, Serializable {
 	public BerInteger status = null;
 	public UInt15 identification = null;
 	public UInt8 additionalInformation = null;
+	public UInt31 offset = null;
 	
 	public PEStatus() {
 	}
@@ -37,10 +38,11 @@ public class PEStatus implements BerType, Serializable {
 		this.code = code;
 	}
 
-	public PEStatus(BerInteger status, UInt15 identification, UInt8 additionalInformation) {
+	public PEStatus(BerInteger status, UInt15 identification, UInt8 additionalInformation, UInt31 offset) {
 		this.status = status;
 		this.identification = identification;
 		this.additionalInformation = additionalInformation;
+		this.offset = offset;
 	}
 
 	public int encode(OutputStream reverseOS) throws IOException {
@@ -60,6 +62,13 @@ public class PEStatus implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
+		if (offset != null) {
+			codeLength += offset.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 3
+			reverseOS.write(0x83);
+			codeLength += 1;
+		}
+		
 		if (additionalInformation != null) {
 			codeLength += additionalInformation.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 2
@@ -157,6 +166,22 @@ public class PEStatus implements BerType, Serializable {
 				subCodeLength += additionalInformation.decode(is, false);
 				subCodeLength += berTag.decode(is);
 			}
+			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
+				int nextByte = is.read();
+				if (nextByte != 0) {
+					if (nextByte == -1) {
+						throw new EOFException("Unexpected end of input stream.");
+					}
+					throw new IOException("Decoded sequence has wrong end of contents octets");
+				}
+				codeLength += subCodeLength + 1;
+				return codeLength;
+			}
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 3)) {
+				offset = new UInt31();
+				subCodeLength += offset.decode(is, false);
+				subCodeLength += berTag.decode(is);
+			}
 			int nextByte = is.read();
 			if (berTag.tagNumber != 0 || berTag.tagClass != 0 || berTag.primitive != 0
 			|| nextByte != 0) {
@@ -196,6 +221,15 @@ public class PEStatus implements BerType, Serializable {
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 2)) {
 			additionalInformation = new UInt8();
 			subCodeLength += additionalInformation.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 3)) {
+			offset = new UInt31();
+			subCodeLength += offset.decode(is, false);
 			if (subCodeLength == totalLength) {
 				return codeLength;
 			}
@@ -245,6 +279,14 @@ public class PEStatus implements BerType, Serializable {
 				sb.append("\t");
 			}
 			sb.append("additionalInformation: ").append(additionalInformation);
+		}
+		
+		if (offset != null) {
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("offset: ").append(offset);
 		}
 		
 		sb.append("\n");
