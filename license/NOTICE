@@ -1,16 +1,5 @@
-jASN1, Copyright 2011-17 Fraunhofer ISE
+jASN1, Copyright 2011-18 Fraunhofer ISE, 2019 Beanit GmbH
 
 jASN1 consists of two projects: jasn1-compiler and the jasn1
-library. Both projects are licensed under the Mozilla Public License,
-v. 2.0. Java classes generated using the jasn1-compiler may be
-licensed under any license of your choice.
-    
-Dependencies
-------------
+library. Both projects are licensed under the Apache 2.0 license.
 
-Information about the licenses of open source dependencies packaged
-with jASN1 can be found in the folder named "dependencies" inside the
-distribution.
-
-You may request the source code of the dependencies by sending a mail
-through our website at openmuc.org.

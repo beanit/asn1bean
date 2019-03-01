@@ -7,7 +7,6 @@ build/
 tmp/
 *.class
 .gradle/
-.svn/
 .settings/
 .project
 .classpath
@@ -20,6 +19,5 @@ doc/userguide/*.pdf
 gradle-app.setting
 .factorypath
 .apt_generated/
-#created by openiec61850 clientgui:
-lastconnection.properties
 .idea
+out/
