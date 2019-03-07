@@ -1,38 +1,8 @@
-buildscript {
-  repositories {
-    maven {
-      url "https://plugins.gradle.org/m2/"
-    }
-  }
-  dependencies {
-    classpath group: "org.asciidoctor", name: "asciidoctorj-pdf", version: "1.5.0-alpha.16"
-    classpath "biz.aQute.bnd:biz.aQute.bnd.gradle:4.0.0"
-  }
-}
-
 plugins {
-  id "org.asciidoctor.convert" version "1.5.6"
-  id "net.saliman.cobertura" version "2.5.1"
-}
+  id "biz.aQute.bnd.builder" version "4.1.0"
+}   
 
-apply plugin: "org.asciidoctor.convert"
 apply from: "configuration.gradle"
-
-asciidoctor {
-  backends = ["pdf", "html5"]
-  attributes    "stylesheet": "openmuc-asciidoc.css",
-  "toc2": "left",
-  "sampleSrc": file("src/sample/java"),
-  "source-highlighter" : "coderay",
-  "pdf-stylesdir": "./",
-  "pdf-style": "pdf"
-
-  resources {
-    from("$sourceDir") {
-      include "images/**"
-    }
-  }
-}
 
 configure(allprojects) {
   version = cfgVersion
@@ -42,11 +12,10 @@ configure(javaProjects) {
 
   apply plugin: "java"
   apply plugin: "eclipse"
-  apply plugin: "osgi"
   apply plugin: "maven"
   apply plugin: "signing"
+  apply plugin: "osgi"
   apply plugin: "biz.aQute.bnd.builder"
-  apply plugin: 'net.saliman.cobertura'
 
   uploadArchives.enabled = false
   
@@ -83,21 +52,6 @@ configure(javaProjects) {
       version = project.version.replace("-",".");
     }
   }
-  cobertura {
-  
-    dependencies {
-      testCompile 'org.slf4j:slf4j-simple:1.6.1'
-    }
- 	coverageFormats = ['html', 'xml']				
-  	coverageIgnoreTrivial = false					
-  	coverageIgnores = ['org.slf4j.Logger.*']
-  	coverageExcludes = ['.*\\.app\\..*', '.*\\.cli-app\\..*', '.*\\.sample\\..*']	
-   	coverageReportDir = new File("$buildDir/reports/cobertura")
-   	coverageTestTasks {
-      project.tasks.withType(Test).matching {it.name == 'test'}
-    }
- 	  
-  }
 
   task jarAll(type: Copy) {
     dependsOn(configurations.default.getAllArtifacts().getBuildDependencies())
@@ -124,7 +78,6 @@ configure(javaProjects) {
     }
   }
   
-  build.dependsOn {asciidoctor}
   build.dependsOn {jarAll}
 
   eclipse.pathVariables([GRADLE_USER_HOME:file(gradle.gradleUserHomeDir)])
@@ -270,7 +223,6 @@ tasks.withType(Tar) {
   dependsOn(writeSettings)
   dependsOn(distributionProjects.build)
   dependsOn(javadocAll)
-  dependsOn(asciidoctor)
 
   compression = Compression.GZIP
   
