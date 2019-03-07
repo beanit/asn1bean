@@ -145,7 +145,7 @@ configure(repositoryProjects) {
           //additional pom information can be found in subproject build.gradle files
 
           packaging "jar"
-          url "http://www.openmuc.org/"
+          url "http://www.beanit.com/"
 
           scm {
             url "none"
@@ -154,8 +154,8 @@ configure(repositoryProjects) {
 
           developers {
             developer {
-              id "openmuc"
-              name "OpenMUC Team"
+              id "jasn1"
+              name "The jASN1 Authors"
             }
           }
         }
