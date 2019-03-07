@@ -36,7 +36,9 @@ configure(javaProjects) {
   }
 
   sourceSets {
-    sample
+    sample {
+      compileClasspath += sourceSets.main.runtimeClasspath
+    }
     itest {
       compileClasspath += sourceSets.main.runtimeClasspath
     }
