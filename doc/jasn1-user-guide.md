@@ -7,7 +7,7 @@
 
 ## Intro
 
-jASN1 can be used for ASN.1 BER/DER encoding/decoding using Java. It consists of two projects: jasn1-compiler and the jasn1 library (both licensed under the Mozilla Public License (MPL) v2.0). The jasn1-compiler is an application that creates Java classes from ASN.1 syntax. These generated classes can then be used together with the jasn1 library to efficiently encode and decode messages using the Basic Encoding Rules (BER). The encoded bytes also conform to the Distinguished Encoding Rules (DER) which is a subset of BER.
+jASN1 can be used for ASN.1 BER/DER encoding/decoding using Java. It consists of two projects: jasn1-compiler and the jasn1 library (both licensed under the Apache 2.0 license). The jasn1-compiler is an application that creates Java classes from ASN.1 syntax. These generated classes can then be used together with the jasn1 library to efficiently encode and decode messages using the Basic Encoding Rules (BER). The encoded bytes also conform to the Distinguished Encoding Rules (DER) which is a subset of BER.
 
 The generated Java classes may be put under a license of your choice. The software has been tested under Linux, Android and Windows.
 
@@ -25,7 +25,7 @@ The jasn1-compiler uses ANTLR to parse the ASN.1 definitions. The excellent gram
 
 ## How to use jASN1
 
-In a first step you have to compile the ASN.1 code of your choice to Java classes. To run the compiler you can use the run scripts for Linux and Windows found in the _run-scripts_ folder. Executing the scripts without any parameters will print help information to the screen.
+In a first step you have to compile the ASN.1 code of your choice to Java classes. To run the compiler you can use the run scripts for Linux and Windows found in the _bin_ folder. Executing the scripts without any parameters will print help information to the screen.
 
 The generated classes can then be used to easily encode and decode BER/DER encoded data. For an example on how to use the generated classes see the folder _projects/jasn1-compiler/src/test/java/com/beanit/jasn1/sample/_.
 
