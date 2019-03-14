@@ -235,7 +235,3 @@ task (tar, type: Tar) {
   archiveName = project.name + "-" + project.version + ".tgz"
 }
 
-task (tarFull, type: Tar) {
-  dependsOn(tar)
-  archiveName = project.name + "-" + project.version + "_full.tgz"
-}
