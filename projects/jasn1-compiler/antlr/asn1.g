@@ -1,7 +1,7 @@
 header {
-package org.openmuc.jasn1.compiler.parser;
+package com.beanit.jasn1.compiler.parser;
 
-import org.openmuc.jasn1.compiler.model.*;
+import com.beanit.jasn1.compiler.model.*;
 import java.math.*;
 import java.util.*;
 }
