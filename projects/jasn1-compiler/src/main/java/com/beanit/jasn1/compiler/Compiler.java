@@ -33,7 +33,7 @@ import com.beanit.jasn1.compiler.cli.StringListCliParameter;
 
 public class Compiler {
 
-    public final static String VERSION = "1.10.1-SNAPSHOT";
+    public final static String VERSION = "1.11.0";
 
     public static void main(String args[]) throws Exception {
 
