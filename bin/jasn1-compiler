@@ -1,7 +1,7 @@
 #!/bin/bash
 
 JARS_LOCATION="../build/libs-all"
-MAIN_CLASS="Compiler"
+MAIN_CLASS="com.beanit.jasn1.compiler.Compiler"
 SYSPROPS=""
 PARAMS=""
 

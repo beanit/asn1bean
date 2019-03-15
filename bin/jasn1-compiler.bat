@@ -4,4 +4,4 @@ ECHO compiling
 set BATDIR=%~dp0
 set LIBDIR=%BATDIR%..\build\libs-all
 
-java -Djava.ext.dirs=%LIBDIR% Compiler %*
+java -Djava.ext.dirs=%LIBDIR% com.beanit.jasn1.compiler.Compiler %*
