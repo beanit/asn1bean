@@ -1,3 +1,10 @@
+- changed license to Apache 2.0 license
+
+- changed package names from org.openmuc.* to com.beanit.*
+
+- run scripts are now found in the bin/ folder
+
+
 v1.10.0 26-Jun-2018
 -------------------
 
