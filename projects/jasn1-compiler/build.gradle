@@ -24,9 +24,9 @@ sourceSets {
 }
 
 jar {
+    bnd("Export-Package": "!*.internal.*,*")
     manifest {
         name = "jASN1 Compiler"
-        instruction("Export-Package", "!*.internal.*,*")
     }
 }
 
@@ -46,7 +46,7 @@ uploadArchives {
                     }
                 }
             }
-            
+
         }
     }
 }

@@ -10,9 +10,9 @@ spotless {
 
 
 jar {
+    bnd("Export-Package": "!*.internal.*,*")
     manifest {
         name = "jASN1"
-        instruction("Export-Package", "!*.internal.*,*")
     }
 }
 
