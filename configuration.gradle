@@ -10,6 +10,8 @@ project.ext {
 
     cfgSignPom = true
 
+    cfgJavaVersion = '1.7'
+
     cfgRepository = project.properties.sonatypeRepository
 
     cfgSnapshotRepository = project.properties.sonatypeSnapshotRepository
@@ -27,7 +29,6 @@ project.ext {
     }
 
     repositoryProjects = javaProjects
-
 }
 
 tasks.withType(Tar) {

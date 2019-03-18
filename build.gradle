@@ -23,7 +23,7 @@ configure(javaProjects) {
 
     if (!project.properties.containsKey('cfgJavaVersion')) {
         project.ext {
-            cfgJavaVersion = '1.7'
+            cfgJavaVersion = '1.8'
         }
     }
 
@@ -36,9 +36,6 @@ configure(javaProjects) {
     }
 
     sourceSets {
-        sample {
-            compileClasspath += sourceSets.main.runtimeClasspath
-        }
         itest {
             compileClasspath += sourceSets.main.runtimeClasspath
         }
@@ -182,11 +179,6 @@ task javadocAll(type: Javadoc) {
     classpath += files(distributionProjects.collect { project ->
         project.sourceSets.main.output
     })
-}
-
-
-task buildDistProjects {
-    dependsOn(distributionProjects.build)
 }
 
 tasks.withType(Tar) {
