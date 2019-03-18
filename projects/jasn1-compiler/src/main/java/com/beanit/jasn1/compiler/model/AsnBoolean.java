@@ -14,6 +14,5 @@
 package com.beanit.jasn1.compiler.model;
 
 public class AsnBoolean extends AsnUniversalType {
-    public final String BUILTINTYPE = "BOOLEAN";
-
+  public final String BUILTINTYPE = "BOOLEAN";
 }

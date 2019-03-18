@@ -15,8 +15,7 @@ package com.beanit.jasn1.compiler.model;
 
 public class AsnBitString extends AsnUniversalType {
 
-    public final String BUILTINTYPE = "BIT STRING";
-    public AsnConstraint constraint;
-    public AsnNamedNumberList namedNumberList;
-
+  public final String BUILTINTYPE = "BIT STRING";
+  public AsnConstraint constraint;
+  public AsnNamedNumberList namedNumberList;
 }

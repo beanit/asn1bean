@@ -14,12 +14,11 @@
 package com.beanit.jasn1.compiler.model;
 
 public class AsnTaggedType extends AsnType {
-    public boolean isDefinedType;
-    public AsnTag tag = null;
-    public String tagType = "";
-    public AsnDefinedType definedType = null;
-    // public String typeName = "";
-    public String className = "";
-    public AsnType typeReference = null;
-
+  public boolean isDefinedType;
+  public AsnTag tag = null;
+  public String tagType = "";
+  public AsnDefinedType definedType = null;
+  // public String typeName = "";
+  public String className = "";
+  public AsnType typeReference = null;
 }

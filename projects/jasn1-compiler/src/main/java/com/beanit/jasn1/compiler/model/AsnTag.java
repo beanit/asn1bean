@@ -14,6 +14,6 @@
 package com.beanit.jasn1.compiler.model;
 
 public class AsnTag {
-    public AsnClassNumber classNumber;
-    public String clazz = "";
+  public AsnClassNumber classNumber;
+  public String clazz = "";
 }

@@ -13,70 +13,65 @@
  */
 package com.beanit.jasn1.ber.types;
 
+import com.beanit.jasn1.ber.BerLength;
+import com.beanit.jasn1.ber.BerTag;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 
-import com.beanit.jasn1.ber.BerLength;
-import com.beanit.jasn1.ber.BerTag;
-
 public class BerNull implements Serializable, BerType {
 
-    private static final long serialVersionUID = 1L;
+  public static final BerTag tag =
+      new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.PRIMITIVE, BerTag.NULL_TAG);
+  private static final long serialVersionUID = 1L;
+  public byte[] code = null;
 
-    public final static BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.PRIMITIVE, BerTag.NULL_TAG);
+  public BerNull() {}
 
-    public byte[] code = null;
+  public BerNull(byte[] code) {}
 
-    public BerNull() {
+  @Override
+  public int encode(OutputStream reverseOS) throws IOException {
+    return encode(reverseOS, true);
+  }
+
+  public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
+
+    int codeLength = BerLength.encodeLength(reverseOS, 0);
+
+    if (withTag) {
+      codeLength += tag.encode(reverseOS);
     }
 
-    public BerNull(byte[] code) {
+    return codeLength;
+  }
+
+  @Override
+  public int decode(InputStream is) throws IOException {
+    return decode(is, true);
+  }
+
+  public int decode(InputStream is, boolean withTag) throws IOException {
+
+    int codeLength = 0;
+
+    if (withTag) {
+      codeLength += tag.decodeAndCheck(is);
     }
 
-    @Override
-    public int encode(OutputStream reverseOS) throws IOException {
-        return encode(reverseOS, true);
+    BerLength length = new BerLength();
+    codeLength += length.decode(is);
+
+    if (length.val != 0) {
+      throw new IOException("Decoded length of BerNull is not correct");
     }
 
-    public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
+    return codeLength;
+  }
 
-        int codeLength = BerLength.encodeLength(reverseOS, 0);
-
-        if (withTag) {
-            codeLength += tag.encode(reverseOS);
-        }
-
-        return codeLength;
-    }
-
-    @Override
-    public int decode(InputStream is) throws IOException {
-        return decode(is, true);
-    }
-
-    public int decode(InputStream is, boolean withTag) throws IOException {
-
-        int codeLength = 0;
-
-        if (withTag) {
-            codeLength += tag.decodeAndCheck(is);
-        }
-
-        BerLength length = new BerLength();
-        codeLength += length.decode(is);
-
-        if (length.val != 0) {
-            throw new IOException("Decoded length of BerNull is not correct");
-        }
-
-        return codeLength;
-    }
-
-    @Override
-    public String toString() {
-        return "ASN1_NULL";
-    }
-
+  @Override
+  public String toString() {
+    return "ASN1_NULL";
+  }
 }

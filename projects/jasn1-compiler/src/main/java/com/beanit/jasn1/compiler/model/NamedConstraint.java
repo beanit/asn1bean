@@ -14,10 +14,10 @@
 package com.beanit.jasn1.compiler.model;
 
 public class NamedConstraint {
-    public AsnConstraint constraint;
-    public boolean isAbsentKw;
-    public boolean isConstraint;
-    public boolean isOptionalKw;
-    public boolean isPresentKw;
-    public String name;
+  public AsnConstraint constraint;
+  public boolean isAbsentKw;
+  public boolean isConstraint;
+  public boolean isOptionalKw;
+  public boolean isPresentKw;
+  public String name;
 }

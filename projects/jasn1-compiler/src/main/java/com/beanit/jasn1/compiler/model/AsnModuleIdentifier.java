@@ -14,8 +14,7 @@
 package com.beanit.jasn1.compiler.model;
 
 public class AsnModuleIdentifier {
-    public AsnOidComponentList componentList = new AsnOidComponentList();
+  public AsnOidComponentList componentList = new AsnOidComponentList();
 
-    public String name;
-
+  public String name;
 }

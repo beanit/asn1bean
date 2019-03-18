@@ -11,98 +11,95 @@ import java.util.Map;
 
 public class ActionProcessor {
 
-    private static final String SEPARATOR_LINE = "------------------------------------------------------";
+  private static final String SEPARATOR_LINE =
+      "------------------------------------------------------";
 
-    private final BufferedReader reader;
-    private final ActionListener actionListener;
+  private final BufferedReader reader;
+  private final ActionListener actionListener;
 
-    private final Map<String, Action> actionMap = new LinkedHashMap<>();
+  private final Map<String, Action> actionMap = new LinkedHashMap<>();
 
-    private final Action helpAction = new Action("h", "print help message");
-    private final Action quitAction = new Action("q", "quit the application");
+  private final Action helpAction = new Action("h", "print help message");
+  private final Action quitAction = new Action("q", "quit the application");
 
-    public ActionProcessor(ActionListener actionListener) {
-        reader = new BufferedReader(new InputStreamReader(System.in));
-        this.actionListener = actionListener;
-    }
+  public ActionProcessor(ActionListener actionListener) {
+    reader = new BufferedReader(new InputStreamReader(System.in));
+    this.actionListener = actionListener;
+  }
 
-    public void addAction(Action action) {
-        actionMap.put(action.getKey(), action);
-    }
+  public void addAction(Action action) {
+    actionMap.put(action.getKey(), action);
+  }
 
-    public BufferedReader getReader() {
-        return reader;
-    }
+  public BufferedReader getReader() {
+    return reader;
+  }
 
-    public void start() {
+  public void start() {
 
-        actionMap.put(helpAction.getKey(), helpAction);
-        actionMap.put(quitAction.getKey(), quitAction);
+    actionMap.put(helpAction.getKey(), helpAction);
+    actionMap.put(quitAction.getKey(), quitAction);
 
-        printHelp();
+    printHelp();
+
+    try {
+
+      String actionKey;
+      while (true) {
+        System.out.println("\n** Enter action key: ");
 
         try {
-
-            String actionKey;
-            while (true) {
-                System.out.println("\n** Enter action key: ");
-
-                try {
-                    actionKey = reader.readLine();
-                } catch (IOException e) {
-                    System.err.printf("%s. Application is being shut down.\n", e.getMessage());
-                    exit(2);
-                    return;
-                }
-
-                if (actionMap.get(actionKey) == null) {
-                    System.err.println("Illegal action key.\n");
-                    printHelp();
-                    continue;
-                }
-
-                if (actionKey.equals(helpAction.getKey())) {
-                    printHelp();
-                    continue;
-                }
-
-                if (actionKey.equals(quitAction.getKey())) {
-                    actionListener.quit();
-                    return;
-                }
-
-                actionListener.actionCalled(actionKey);
-
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            actionListener.quit();
-        } finally {
-            close();
-        }
-    }
-
-    private void printHelp() {
-        final String message = " %s - %s\n";
-        out.flush();
-        out.println();
-        out.println(SEPARATOR_LINE);
-
-        for (Action action : actionMap.values()) {
-            out.printf(message, action.getKey(), action.getDescription());
-        }
-
-        out.println(SEPARATOR_LINE);
-
-    }
-
-    public void close() {
-        try {
-            reader.close();
+          actionKey = reader.readLine();
         } catch (IOException e) {
+          System.err.printf("%s. Application is being shut down.\n", e.getMessage());
+          exit(2);
+          return;
         }
 
+        if (actionMap.get(actionKey) == null) {
+          System.err.println("Illegal action key.\n");
+          printHelp();
+          continue;
+        }
+
+        if (actionKey.equals(helpAction.getKey())) {
+          printHelp();
+          continue;
+        }
+
+        if (actionKey.equals(quitAction.getKey())) {
+          actionListener.quit();
+          return;
+        }
+
+        actionListener.actionCalled(actionKey);
+      }
+
+    } catch (Exception e) {
+      e.printStackTrace();
+      actionListener.quit();
+    } finally {
+      close();
+    }
+  }
+
+  private void printHelp() {
+    final String message = " %s - %s\n";
+    out.flush();
+    out.println();
+    out.println(SEPARATOR_LINE);
+
+    for (Action action : actionMap.values()) {
+      out.printf(message, action.getKey(), action.getDescription());
     }
 
+    out.println(SEPARATOR_LINE);
+  }
+
+  public void close() {
+    try {
+      reader.close();
+    } catch (IOException e) {
+    }
+  }
 }

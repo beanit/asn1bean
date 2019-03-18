@@ -13,55 +13,52 @@
  */
 package com.beanit.jasn1.ber.types;
 
+import com.beanit.jasn1.ber.BerTag;
+import com.beanit.jasn1.ber.types.string.BerVisibleString;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
-import com.beanit.jasn1.ber.types.string.BerVisibleString;
-import com.beanit.jasn1.ber.BerTag;
-
 public class BerTime extends BerVisibleString {
 
-    private static final long serialVersionUID = 1L;
+  public static final BerTag tag =
+      new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.PRIMITIVE, BerTag.TIME_TAG);
+  private static final long serialVersionUID = 1L;
 
-    public final static BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.PRIMITIVE, BerTag.TIME_TAG);
+  public BerTime() {}
 
-    public BerTime() {
+  public BerTime(byte[] value) {
+    super(value);
+  }
+
+  public BerTime(String valueAsString) throws UnsupportedEncodingException {
+    super(valueAsString);
+  }
+
+  @Override
+  public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
+
+    int codeLength = super.encode(reverseOS, false);
+
+    if (withTag) {
+      codeLength += tag.encode(reverseOS);
     }
 
-    public BerTime(byte[] value) {
-        super(value);
+    return codeLength;
+  }
+
+  @Override
+  public int decode(InputStream is, boolean withTag) throws IOException {
+
+    int codeLength = 0;
+
+    if (withTag) {
+      codeLength += tag.decodeAndCheck(is);
     }
 
-    public BerTime(String valueAsString) throws UnsupportedEncodingException {
-        super(valueAsString);
-    }
+    codeLength += super.decode(is, false);
 
-    @Override
-    public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
-
-        int codeLength = super.encode(reverseOS, false);
-
-        if (withTag) {
-            codeLength += tag.encode(reverseOS);
-        }
-
-        return codeLength;
-    }
-
-    @Override
-    public int decode(InputStream is, boolean withTag) throws IOException {
-
-        int codeLength = 0;
-
-        if (withTag) {
-            codeLength += tag.decodeAndCheck(is);
-        }
-
-        codeLength += super.decode(is, false);
-
-        return codeLength;
-    }
-
+    return codeLength;
+  }
 }

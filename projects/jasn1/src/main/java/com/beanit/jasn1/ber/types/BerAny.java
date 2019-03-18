@@ -13,74 +13,71 @@
  */
 package com.beanit.jasn1.ber.types;
 
+import com.beanit.jasn1.ber.BerLength;
+import com.beanit.jasn1.ber.BerTag;
+import com.beanit.jasn1.ber.ReverseByteArrayOutputStream;
+import com.beanit.jasn1.ber.internal.Util;
+import com.beanit.jasn1.util.HexConverter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 
-import com.beanit.jasn1.ber.BerLength;
-import com.beanit.jasn1.ber.internal.Util;
-import com.beanit.jasn1.util.HexConverter;
-import com.beanit.jasn1.ber.BerTag;
-import com.beanit.jasn1.ber.ReverseByteArrayOutputStream;
-
 public class BerAny implements Serializable, BerType {
 
-    private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-    public byte[] value;
+  public byte[] value;
 
-    public BerAny() {
+  public BerAny() {}
+
+  public BerAny(byte[] value) {
+    this.value = value;
+  }
+
+  @Override
+  public int encode(OutputStream reverseOS) throws IOException {
+    reverseOS.write(value);
+    return value.length;
+  }
+
+  @Override
+  public int decode(InputStream is) throws IOException {
+
+    return decode(is, null);
+  }
+
+  public int decode(InputStream is, BerTag tag) throws IOException {
+
+    int decodedLength = 0;
+
+    int tagLength;
+
+    if (tag == null) {
+      tag = new BerTag();
+      tagLength = tag.decode(is);
+      decodedLength += tagLength;
+    } else {
+      tagLength = tag.encode(new ReverseByteArrayOutputStream(10));
     }
 
-    public BerAny(byte[] value) {
-        this.value = value;
-    }
+    BerLength lengthField = new BerLength();
+    int lengthLength = lengthField.decode(is);
+    decodedLength += lengthLength + lengthField.val;
 
-    @Override
-    public int encode(OutputStream reverseOS) throws IOException {
-        reverseOS.write(value);
-        return value.length;
-    }
+    value = new byte[tagLength + lengthLength + lengthField.val];
 
-    @Override
-    public int decode(InputStream is) throws IOException {
+    Util.readFully(is, value, tagLength + lengthLength, lengthField.val);
+    ReverseByteArrayOutputStream os =
+        new ReverseByteArrayOutputStream(value, tagLength + lengthLength - 1);
+    BerLength.encodeLength(os, lengthField.val);
+    tag.encode(os);
 
-        return decode(is, null);
-    }
+    return decodedLength;
+  }
 
-    public int decode(InputStream is, BerTag tag) throws IOException {
-
-        int decodedLength = 0;
-
-        int tagLength;
-
-        if (tag == null) {
-            tag = new BerTag();
-            tagLength = tag.decode(is);
-            decodedLength += tagLength;
-        }
-        else {
-            tagLength = tag.encode(new ReverseByteArrayOutputStream(10));
-        }
-
-        BerLength lengthField = new BerLength();
-        int lengthLength = lengthField.decode(is);
-        decodedLength += lengthLength + lengthField.val;
-
-        value = new byte[tagLength + lengthLength + lengthField.val];
-
-        Util.readFully(is, value, tagLength + lengthLength, lengthField.val);
-        ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(value, tagLength + lengthLength - 1);
-        BerLength.encodeLength(os, lengthField.val);
-        tag.encode(os);
-
-        return decodedLength;
-    }
-
-    @Override
-    public String toString() {
-        return HexConverter.toShortHexString(value);
-    }
-
+  @Override
+  public String toString() {
+    return HexConverter.toShortHexString(value);
+  }
 }

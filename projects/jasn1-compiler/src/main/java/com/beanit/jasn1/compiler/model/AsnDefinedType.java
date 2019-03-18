@@ -14,8 +14,8 @@
 package com.beanit.jasn1.compiler.model;
 
 public class AsnDefinedType extends AsnType {
-    public AsnConstraint constraint;
-    public String moduleOrObjectClassReference = "";
-    public boolean isObjectClassField = false;
-    public String typeName = "";
+  public AsnConstraint constraint;
+  public String moduleOrObjectClassReference = "";
+  public boolean isObjectClassField = false;
+  public String typeName = "";
 }

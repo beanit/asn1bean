@@ -14,7 +14,6 @@
 package com.beanit.jasn1.compiler.model;
 
 public class AsnChoiceValue {
-    public String name;
-    public AsnValue value;
-
+  public String name;
+  public AsnValue value;
 }

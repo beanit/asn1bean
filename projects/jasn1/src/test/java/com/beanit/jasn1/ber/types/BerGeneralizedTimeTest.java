@@ -13,26 +13,23 @@
  */
 package com.beanit.jasn1.ber.types;
 
+import com.beanit.jasn1.ber.ReverseByteArrayOutputStream;
 import java.io.IOException;
-
 import org.junit.Assert;
 import org.junit.Test;
-import com.beanit.jasn1.ber.ReverseByteArrayOutputStream;
 
 public class BerGeneralizedTimeTest {
 
-    @Test
-    public void explicitEncoding() throws IOException {
-        ReverseByteArrayOutputStream berStream = new ReverseByteArrayOutputStream(50);
+  @Test
+  public void explicitEncoding() throws IOException {
+    ReverseByteArrayOutputStream berStream = new ReverseByteArrayOutputStream(50);
 
-        byte[] byteArray = new byte[] { 0x01, 0x02, 0x03 };
-        BerGeneralizedTime berGeneralizedTime = new BerGeneralizedTime(byteArray);
-        int length = berGeneralizedTime.encode(berStream, true);
-        Assert.assertEquals(5, length);
+    byte[] byteArray = new byte[] {0x01, 0x02, 0x03};
+    BerGeneralizedTime berGeneralizedTime = new BerGeneralizedTime(byteArray);
+    int length = berGeneralizedTime.encode(berStream, true);
+    Assert.assertEquals(5, length);
 
-        byte[] expectedBytes = new byte[] { 24, 0x03, 0x01, 0x02, 0x03 };
-        Assert.assertArrayEquals(expectedBytes, berStream.getArray());
-
-    }
-
+    byte[] expectedBytes = new byte[] {24, 0x03, 0x01, 0x02, 0x03};
+    Assert.assertArrayEquals(expectedBytes, berStream.getArray());
+  }
 }

@@ -15,9 +15,8 @@ package com.beanit.jasn1.compiler.model;
 
 public class AsnSequenceOf extends AsnConstructedType {
 
-    public AsnConstraint constraint = null;
-    public boolean isSequenceOf = false; // Differentiates between SEQUENCE OF and SET OF types
-    public boolean isSizeConstraint = false;
-    public AsnElementType componentType = null;
-
+  public AsnConstraint constraint = null;
+  public boolean isSequenceOf = false; // Differentiates between SEQUENCE OF and SET OF types
+  public boolean isSizeConstraint = false;
+  public AsnElementType componentType = null;
 }

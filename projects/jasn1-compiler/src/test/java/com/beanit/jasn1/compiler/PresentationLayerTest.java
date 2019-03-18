@@ -13,13 +13,6 @@
  */
 package com.beanit.jasn1.compiler;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.Assert;
-import org.junit.Test;
 import com.beanit.jasn1.ber.ReverseByteArrayOutputStream;
 import com.beanit.jasn1.ber.types.BerAny;
 import com.beanit.jasn1.ber.types.BerInteger;
@@ -35,60 +28,84 @@ import com.beanit.jasn1.compiler.iso8823_presentation.PresentationContextDefinit
 import com.beanit.jasn1.compiler.iso8823_presentation.PresentationContextIdentifier;
 import com.beanit.jasn1.compiler.iso8823_presentation.TransferSyntaxName;
 import com.beanit.jasn1.compiler.iso8823_presentation.UserData;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.Assert;
+import org.junit.Test;
 
 public class PresentationLayerTest {
 
-    @Test
-    public void encodingDecoding() throws IOException {
+  @Test
+  public void encodingDecoding() throws IOException {
 
-        ReverseByteArrayOutputStream berOS = new ReverseByteArrayOutputStream(1000);
+    ReverseByteArrayOutputStream berOS = new ReverseByteArrayOutputStream(1000);
 
-        List<TransferSyntaxName> berObjectIdentifierList = new ArrayList<>(1);
-        berObjectIdentifierList.add(new TransferSyntaxName(new int[] { 2, 1, 1 }));
+    List<TransferSyntaxName> berObjectIdentifierList = new ArrayList<>(1);
+    berObjectIdentifierList.add(new TransferSyntaxName(new int[] {2, 1, 1}));
 
-        ContextList.SEQUENCE.TransferSyntaxNameList tsnl = new ContextList.SEQUENCE.TransferSyntaxNameList(
-                berObjectIdentifierList);
+    ContextList.SEQUENCE.TransferSyntaxNameList tsnl =
+        new ContextList.SEQUENCE.TransferSyntaxNameList(berObjectIdentifierList);
 
-        ContextList.SEQUENCE context_listSubSeq = new ContextList.SEQUENCE(new PresentationContextIdentifier(1),
-                new AbstractSyntaxName(new int[] { 2, 2, 1, 0, 1 }), tsnl);
+    ContextList.SEQUENCE context_listSubSeq =
+        new ContextList.SEQUENCE(
+            new PresentationContextIdentifier(1),
+            new AbstractSyntaxName(new int[] {2, 2, 1, 0, 1}),
+            tsnl);
 
-        ContextList.SEQUENCE context_listSubSeq2 = new ContextList.SEQUENCE(new PresentationContextIdentifier(3),
-                new AbstractSyntaxName(new int[] { 1, 0, 9506, 2, 1 }), tsnl);
+    ContextList.SEQUENCE context_listSubSeq2 =
+        new ContextList.SEQUENCE(
+            new PresentationContextIdentifier(3),
+            new AbstractSyntaxName(new int[] {1, 0, 9506, 2, 1}),
+            tsnl);
 
-        List<ContextList.SEQUENCE> context_listSubSeqList = new ArrayList<>(2);
+    List<ContextList.SEQUENCE> context_listSubSeqList = new ArrayList<>(2);
 
-        context_listSubSeqList.add(context_listSubSeq);
-        context_listSubSeqList.add(context_listSubSeq2);
+    context_listSubSeqList.add(context_listSubSeq);
+    context_listSubSeqList.add(context_listSubSeq2);
 
-        PresentationContextDefinitionList context_list = new PresentationContextDefinitionList(context_listSubSeqList);
+    PresentationContextDefinitionList context_list =
+        new PresentationContextDefinitionList(context_listSubSeqList);
 
-        PDVList.PresentationDataValues presDataValues = new PDVList.PresentationDataValues(
-                new BerAny(new byte[] { 2, 1, 1 }), null, null);
-        PDVList pdvList = new PDVList(null, new PresentationContextIdentifier(1), presDataValues);
-        List<PDVList> pdvListList = new ArrayList<>(1);
-        pdvListList.add(pdvList);
-        FullyEncodedData fullyEncodedData = new FullyEncodedData(pdvListList);
-        UserData userData = new UserData(null, fullyEncodedData);
+    PDVList.PresentationDataValues presDataValues =
+        new PDVList.PresentationDataValues(new BerAny(new byte[] {2, 1, 1}), null, null);
+    PDVList pdvList = new PDVList(null, new PresentationContextIdentifier(1), presDataValues);
+    List<PDVList> pdvListList = new ArrayList<>(1);
+    pdvListList.add(pdvList);
+    FullyEncodedData fullyEncodedData = new FullyEncodedData(pdvListList);
+    UserData userData = new UserData(null, fullyEncodedData);
 
-        CPType.NormalModeParameters normalModeParameter = new CPType.NormalModeParameters(null,
-                new CallingPresentationSelector(new byte[] { 0, 0, 0, 1 }),
-                new CalledPresentationSelector(new byte[] { 0, 0, 0, 1 }), context_list, null, null, null, userData);
+    CPType.NormalModeParameters normalModeParameter =
+        new CPType.NormalModeParameters(
+            null,
+            new CallingPresentationSelector(new byte[] {0, 0, 0, 1}),
+            new CalledPresentationSelector(new byte[] {0, 0, 0, 1}),
+            context_list,
+            null,
+            null,
+            null,
+            userData);
 
-        ModeSelector modeSelector = new ModeSelector(new BerInteger(1));
+    ModeSelector modeSelector = new ModeSelector(new BerInteger(1));
 
-        CPType cpType = new CPType(modeSelector, normalModeParameter);
+    CPType cpType = new CPType(modeSelector, normalModeParameter);
 
-        cpType.encode(berOS, true);
+    cpType.encode(berOS, true);
 
-        ByteArrayInputStream bais = new ByteArrayInputStream(berOS.getArray());
+    ByteArrayInputStream bais = new ByteArrayInputStream(berOS.getArray());
 
-        CPType cpType_decoded = new CPType();
-        cpType_decoded.decode(bais, true);
+    CPType cpType_decoded = new CPType();
+    cpType_decoded.decode(bais, true);
 
-        Assert.assertEquals("2.2.1.0.1",
-                cpType_decoded.normalModeParameters.presentationContextDefinitionList.seqOf.get(0).abstractSyntaxName
-                        .toString());
-
-    }
-
+    Assert.assertEquals(
+        "2.2.1.0.1",
+        cpType_decoded
+            .normalModeParameters
+            .presentationContextDefinitionList
+            .seqOf
+            .get(0)
+            .abstractSyntaxName
+            .toString());
+  }
 }

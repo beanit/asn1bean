@@ -14,23 +14,21 @@
 package com.beanit.jasn1.ber;
 
 import java.io.IOException;
-
 import org.junit.Assert;
 import org.junit.Test;
 
 public class BerIdentifierTest {
 
-    @Test
-    public void twoByteEncoding() throws IOException {
-        ReverseByteArrayOutputStream berBAOStream = new ReverseByteArrayOutputStream(50);
+  @Test
+  public void twoByteEncoding() throws IOException {
+    ReverseByteArrayOutputStream berBAOStream = new ReverseByteArrayOutputStream(50);
 
-        BerTag berIdentifier = new BerTag(BerTag.APPLICATION_CLASS, BerTag.PRIMITIVE, 31);
+    BerTag berIdentifier = new BerTag(BerTag.APPLICATION_CLASS, BerTag.PRIMITIVE, 31);
 
-        int length = berIdentifier.encode(berBAOStream);
-        Assert.assertEquals(2, length);
+    int length = berIdentifier.encode(berBAOStream);
+    Assert.assertEquals(2, length);
 
-        byte[] expectedBytes = new byte[] { 0x5f, 0x1f };
-        Assert.assertArrayEquals(expectedBytes, berBAOStream.getArray());
-    }
-
+    byte[] expectedBytes = new byte[] {0x5f, 0x1f};
+    Assert.assertArrayEquals(expectedBytes, berBAOStream.getArray());
+  }
 }

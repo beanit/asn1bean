@@ -14,6 +14,5 @@
 package com.beanit.jasn1.compiler.model;
 
 public class AsnObjectIdentifier extends AsnUniversalType {
-    public final String BUILTINTYPE = "OBJECT IDENTIFIER";
-
+  public final String BUILTINTYPE = "OBJECT IDENTIFIER";
 }

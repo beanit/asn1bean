@@ -19,50 +19,48 @@ import java.util.List;
 
 public class AsnModule {
 
-    public enum TagDefault {
-        EXPLICIT,
-        IMPLICIT,
-        AUTOMATIC;
-    }
+  public final HashMap<String, AsnType> typesByName = new HashMap<>();
+  public final HashMap<String, AsnValueAssignment> asnValueAssignmentsByName = new HashMap<>();
+  public final HashMap<String, AsnInformationObjectClass> objectClassesByName = new HashMap<>();
+  public ArrayList exportSymbolList;
+  public boolean exported;
+  public boolean extensible;
+  public List<SymbolsFromModule> importSymbolFromModuleList = new ArrayList<>();
+  public boolean imported;
+  public AsnModuleIdentifier moduleIdentifier;
+  public boolean tag;
+  public TagDefault tagDefault = TagDefault.EXPLICIT;
+  ArrayList importSymbolList;
+  public AsnModule() {
+    exportSymbolList = new ArrayList<>();
+    importSymbolList = new ArrayList<>();
 
-    public ArrayList exportSymbolList;
-    public boolean exported;
-    public boolean extensible;
-    public List<SymbolsFromModule> importSymbolFromModuleList = new ArrayList<>();
-    ArrayList importSymbolList;
-    public boolean imported;
-    public AsnModuleIdentifier moduleIdentifier;
-    public boolean tag;
-    public TagDefault tagDefault = TagDefault.EXPLICIT;
-    public final HashMap<String, AsnType> typesByName = new HashMap<>();
-    public final HashMap<String, AsnValueAssignment> asnValueAssignmentsByName = new HashMap<>();
-    public final HashMap<String, AsnInformationObjectClass> objectClassesByName = new HashMap<>();
+    AsnElementType idElement = new AsnElementType();
+    idElement.name = "id";
+    idElement.typeReference = new AsnObjectIdentifier();
+    AsnElementType typeElement = new AsnElementType();
+    typeElement.name = "Type";
+    typeElement.typeReference = new AsnAny();
+    AsnInformationObjectClass typeIdentifier = new AsnInformationObjectClass();
+    typeIdentifier.elementList.add(idElement);
+    typeIdentifier.elementList.add(typeElement);
 
-    public AsnModule() {
-        exportSymbolList = new ArrayList<>();
-        importSymbolList = new ArrayList<>();
+    objectClassesByName.put("TYPE-IDENTIFIER", typeIdentifier);
 
-        AsnElementType idElement = new AsnElementType();
-        idElement.name = "id";
-        idElement.typeReference = new AsnObjectIdentifier();
-        AsnElementType typeElement = new AsnElementType();
-        typeElement.name = "Type";
-        typeElement.typeReference = new AsnAny();
-        AsnInformationObjectClass typeIdentifier = new AsnInformationObjectClass();
-        typeIdentifier.elementList.add(idElement);
-        typeIdentifier.elementList.add(typeElement);
+    AsnElementType propertyElement = new AsnElementType();
+    propertyElement.name = "property";
+    propertyElement.typeReference = new AsnBitString();
+    AsnInformationObjectClass abstractSyntax = new AsnInformationObjectClass();
+    abstractSyntax.elementList.add(idElement);
+    abstractSyntax.elementList.add(typeElement);
+    abstractSyntax.elementList.add(propertyElement);
 
-        objectClassesByName.put("TYPE-IDENTIFIER", typeIdentifier);
+    objectClassesByName.put("ABSTRACT-SYNTAX", abstractSyntax);
+  }
 
-        AsnElementType propertyElement = new AsnElementType();
-        propertyElement.name = "property";
-        propertyElement.typeReference = new AsnBitString();
-        AsnInformationObjectClass abstractSyntax = new AsnInformationObjectClass();
-        abstractSyntax.elementList.add(idElement);
-        abstractSyntax.elementList.add(typeElement);
-        abstractSyntax.elementList.add(propertyElement);
-
-        objectClassesByName.put("ABSTRACT-SYNTAX", abstractSyntax);
-
-    }
+  public enum TagDefault {
+    EXPLICIT,
+    IMPLICIT,
+    AUTOMATIC;
+  }
 }

@@ -16,6 +16,6 @@ package com.beanit.jasn1.compiler.model;
 import java.util.ArrayList;
 
 public class AsnSequenceOfValue {
-    boolean isValPresent;
-    public ArrayList value = new ArrayList();
+  public ArrayList value = new ArrayList();
+  boolean isValPresent;
 }

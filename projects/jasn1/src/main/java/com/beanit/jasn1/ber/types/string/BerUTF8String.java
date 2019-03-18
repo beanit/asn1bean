@@ -13,64 +13,61 @@
  */
 package com.beanit.jasn1.ber.types.string;
 
+import com.beanit.jasn1.ber.BerTag;
+import com.beanit.jasn1.ber.types.BerOctetString;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
-import com.beanit.jasn1.ber.types.BerOctetString;
-import com.beanit.jasn1.ber.BerTag;
-
 public class BerUTF8String extends BerOctetString {
 
-    private static final long serialVersionUID = 1L;
+  public static final BerTag tag =
+      new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.PRIMITIVE, BerTag.UTF8_STRING_TAG);
+  private static final long serialVersionUID = 1L;
 
-    public final static BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.PRIMITIVE, BerTag.UTF8_STRING_TAG);
+  public BerUTF8String() {}
 
-    public BerUTF8String() {
+  public BerUTF8String(byte[] value) {
+    this.value = value;
+  }
+
+  public BerUTF8String(String valueAsString) throws UnsupportedEncodingException {
+    value = valueAsString.getBytes("UTF-8");
+  }
+
+  @Override
+  public String toString() {
+    try {
+      return new String(value, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      return "Unsupported Encoding";
+    }
+  }
+
+  @Override
+  public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
+
+    int codeLength = super.encode(reverseOS, false);
+
+    if (withTag) {
+      codeLength += tag.encode(reverseOS);
     }
 
-    public BerUTF8String(byte[] value) {
-        this.value = value;
+    return codeLength;
+  }
+
+  @Override
+  public int decode(InputStream is, boolean withTag) throws IOException {
+
+    int codeLength = 0;
+
+    if (withTag) {
+      codeLength += tag.decodeAndCheck(is);
     }
 
-    public BerUTF8String(String valueAsString) throws UnsupportedEncodingException {
-        value = valueAsString.getBytes("UTF-8");
-    }
+    codeLength += super.decode(is, false);
 
-    @Override
-    public String toString() {
-        try {
-            return new String(value, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            return "Unsupported Encoding";
-        }
-    }
-
-    @Override
-    public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
-
-        int codeLength = super.encode(reverseOS, false);
-
-        if (withTag) {
-            codeLength += tag.encode(reverseOS);
-        }
-
-        return codeLength;
-    }
-
-    @Override
-    public int decode(InputStream is, boolean withTag) throws IOException {
-
-        int codeLength = 0;
-
-        if (withTag) {
-            codeLength += tag.decodeAndCheck(is);
-        }
-
-        codeLength += super.decode(is, false);
-
-        return codeLength;
-    }
-
+    return codeLength;
+  }
 }

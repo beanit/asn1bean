@@ -14,6 +14,5 @@
 package com.beanit.jasn1.compiler.model;
 
 public class AsnRelativeOid extends AsnType {
-    final String BUILTINTYPE = "RELATIVE-OID";
-
+  final String BUILTINTYPE = "RELATIVE-OID";
 }

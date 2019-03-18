@@ -14,7 +14,6 @@
 package com.beanit.jasn1.compiler.model;
 
 public class AsnParameter {
-    public String paramGovernor;
-    public String dummyReference;
-
+  public String paramGovernor;
+  public String dummyReference;
 }

@@ -14,7 +14,7 @@
 package com.beanit.jasn1.compiler.model;
 
 public class AsnValueAssignment {
-    public AsnValue value;
-    public Object type;
-    public String name;
+  public AsnValue value;
+  public Object type;
+  public String name;
 }

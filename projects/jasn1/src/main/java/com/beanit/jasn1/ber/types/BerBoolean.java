@@ -13,116 +13,111 @@
  */
 package com.beanit.jasn1.ber.types;
 
+import com.beanit.jasn1.ber.BerLength;
+import com.beanit.jasn1.ber.BerTag;
+import com.beanit.jasn1.ber.ReverseByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 
-import com.beanit.jasn1.ber.BerLength;
-import com.beanit.jasn1.ber.BerTag;
-import com.beanit.jasn1.ber.ReverseByteArrayOutputStream;
-
 public class BerBoolean implements Serializable, BerType {
 
-    private static final long serialVersionUID = 1L;
+  public static final BerTag tag =
+      new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.PRIMITIVE, BerTag.BOOLEAN_TAG);
+  private static final long serialVersionUID = 1L;
+  public byte[] code = null;
 
-    public final static BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.PRIMITIVE, BerTag.BOOLEAN_TAG);
+  public boolean value;
 
-    public byte[] code = null;
+  public BerBoolean() {}
 
-    public boolean value;
+  public BerBoolean(byte[] code) {
+    this.code = code;
+  }
 
-    public BerBoolean() {
+  public BerBoolean(boolean value) {
+    this.value = value;
+  }
+
+  @Override
+  public int encode(OutputStream reverseOS) throws IOException {
+    return encode(reverseOS, true);
+  }
+
+  public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
+
+    if (code != null) {
+      for (int i = code.length - 1; i >= 0; i--) {
+        reverseOS.write(code[i]);
+      }
+      if (withTag) {
+        return tag.encode(reverseOS) + code.length;
+      }
+      return code.length;
     }
 
-    public BerBoolean(byte[] code) {
-        this.code = code;
+    int codeLength = 1;
+
+    if (value) {
+      reverseOS.write(0xff);
+    } else {
+      reverseOS.write(0);
     }
 
-    public BerBoolean(boolean value) {
-        this.value = value;
+    codeLength += BerLength.encodeLength(reverseOS, codeLength);
+
+    if (withTag) {
+      codeLength += tag.encode(reverseOS);
     }
 
-    @Override
-    public int encode(OutputStream reverseOS) throws IOException {
-        return encode(reverseOS, true);
+    return codeLength;
+  }
+
+  @Override
+  public int decode(InputStream is) throws IOException {
+    return decode(is, true);
+  }
+
+  public int decode(InputStream is, boolean withTag) throws IOException {
+
+    int codeLength = 0;
+
+    if (withTag) {
+      codeLength += tag.decodeAndCheck(is);
     }
 
-    public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
+    BerLength length = new BerLength();
+    codeLength += length.decode(is);
 
-        if (code != null) {
-            for (int i = code.length - 1; i >= 0; i--) {
-                reverseOS.write(code[i]);
-            }
-            if (withTag) {
-                return tag.encode(reverseOS) + code.length;
-            }
-            return code.length;
-        }
-
-        int codeLength = 1;
-
-        if (value) {
-            reverseOS.write(0xff);
-        }
-        else {
-            reverseOS.write(0);
-        }
-
-        codeLength += BerLength.encodeLength(reverseOS, codeLength);
-
-        if (withTag) {
-            codeLength += tag.encode(reverseOS);
-        }
-
-        return codeLength;
+    if (length.val != 1) {
+      throw new IOException("Decoded length of BerBoolean is not correct");
     }
 
-    @Override
-    public int decode(InputStream is) throws IOException {
-        return decode(is, true);
+    int nextByte = is.read();
+    if (nextByte == -1) {
+      throw new EOFException("Unexpected end of input stream.");
     }
 
-    public int decode(InputStream is, boolean withTag) throws IOException {
-
-        int codeLength = 0;
-
-        if (withTag) {
-            codeLength += tag.decodeAndCheck(is);
-        }
-
-        BerLength length = new BerLength();
-        codeLength += length.decode(is);
-
-        if (length.val != 1) {
-            throw new IOException("Decoded length of BerBoolean is not correct");
-        }
-
-        int nextByte = is.read();
-        if (nextByte == -1) {
-            throw new EOFException("Unexpected end of input stream.");
-        }
-
-        codeLength++;
-        if (nextByte == 0) {
-            value = false;
-        }
-        else {
-            value = true;
-        }
-
-        return codeLength;
+    codeLength++;
+    if (nextByte == 0) {
+      value = false;
+    } else {
+      value = true;
     }
 
-    public void encodeAndSave(int encodingSizeGuess) throws IOException {
-        ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-        encode(os, false);
-        code = os.getArray();
-    }
+    return codeLength;
+  }
 
-    @Override
-    public String toString() {
-        return "" + value;
-    }
+  public void encodeAndSave(int encodingSizeGuess) throws IOException {
+    ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
+    encode(os, false);
+    code = os.getArray();
+  }
+
+  @Override
+  public String toString() {
+    return "" + value;
+  }
 }

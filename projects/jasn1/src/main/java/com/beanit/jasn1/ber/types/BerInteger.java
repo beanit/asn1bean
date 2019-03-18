@@ -13,127 +13,123 @@
  */
 package com.beanit.jasn1.ber.types;
 
+import com.beanit.jasn1.ber.BerLength;
+import com.beanit.jasn1.ber.BerTag;
+import com.beanit.jasn1.ber.ReverseByteArrayOutputStream;
+import com.beanit.jasn1.ber.internal.Util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.math.BigInteger;
 
-import com.beanit.jasn1.ber.BerLength;
-import com.beanit.jasn1.ber.internal.Util;
-import com.beanit.jasn1.ber.BerTag;
-import com.beanit.jasn1.ber.ReverseByteArrayOutputStream;
-
 public class BerInteger implements Serializable, BerType {
 
-    private static final long serialVersionUID = 1L;
+  public static final BerTag tag =
+      new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.PRIMITIVE, BerTag.INTEGER_TAG);
+  private static final long serialVersionUID = 1L;
+  public byte[] code = null;
 
-    public final static BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.PRIMITIVE, BerTag.INTEGER_TAG);
+  public BigInteger value;
 
-    public byte[] code = null;
+  public BerInteger() {}
 
-    public BigInteger value;
+  public BerInteger(byte[] code) {
+    this.code = code;
+  }
 
-    public BerInteger() {
+  public BerInteger(BigInteger val) {
+    this.value = val;
+  }
+
+  public BerInteger(long val) {
+    this.value = BigInteger.valueOf(val);
+  }
+
+  @Override
+  public int encode(OutputStream reverseOS) throws IOException {
+    return encode(reverseOS, true);
+  }
+
+  public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
+
+    if (code != null) {
+      for (int i = code.length - 1; i >= 0; i--) {
+        reverseOS.write(code[i]);
+      }
+      if (withTag) {
+        return tag.encode(reverseOS) + code.length;
+      }
+      return code.length;
     }
 
-    public BerInteger(byte[] code) {
-        this.code = code;
+    byte[] encoded = value.toByteArray();
+    int codeLength = encoded.length;
+    reverseOS.write(encoded);
+
+    codeLength += BerLength.encodeLength(reverseOS, codeLength);
+
+    if (withTag) {
+      codeLength += tag.encode(reverseOS);
     }
 
-    public BerInteger(BigInteger val) {
-        this.value = val;
+    return codeLength;
+  }
+
+  @Override
+  public int decode(InputStream is) throws IOException {
+    return decode(is, true);
+  }
+
+  public int decode(InputStream is, boolean withTag) throws IOException {
+
+    int codeLength = 0;
+
+    if (withTag) {
+      codeLength += tag.decodeAndCheck(is);
     }
 
-    public BerInteger(long val) {
-        this.value = BigInteger.valueOf(val);
+    BerLength length = new BerLength();
+    codeLength += length.decode(is);
+
+    if (length.val < 1) {
+      throw new IOException("Decoded length of BerInteger is not correct");
     }
 
-    @Override
-    public int encode(OutputStream reverseOS) throws IOException {
-        return encode(reverseOS, true);
-    }
+    byte[] byteCode = new byte[length.val];
+    Util.readFully(is, byteCode);
 
-    public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
+    codeLength += length.val;
 
-        if (code != null) {
-            for (int i = code.length - 1; i >= 0; i--) {
-                reverseOS.write(code[i]);
-            }
-            if (withTag) {
-                return tag.encode(reverseOS) + code.length;
-            }
-            return code.length;
-        }
+    value = new BigInteger(byteCode);
 
-        byte[] encoded = value.toByteArray();
-        int codeLength = encoded.length;
-        reverseOS.write(encoded);
+    return codeLength;
+  }
 
-        codeLength += BerLength.encodeLength(reverseOS, codeLength);
+  public void encodeAndSave(int encodingSizeGuess) throws IOException {
+    ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
+    encode(os, false);
+    code = os.getArray();
+  }
 
-        if (withTag) {
-            codeLength += tag.encode(reverseOS);
-        }
+  @Override
+  public String toString() {
+    return "" + value;
+  }
 
-        return codeLength;
-    }
+  public byte byteValue() {
+    return value.byteValue();
+  }
 
-    @Override
-    public int decode(InputStream is) throws IOException {
-        return decode(is, true);
-    }
+  public short shortValue() {
+    return value.shortValue();
+  }
 
-    public int decode(InputStream is, boolean withTag) throws IOException {
+  public int intValue() {
+    return value.intValue();
+  }
 
-        int codeLength = 0;
-
-        if (withTag) {
-            codeLength += tag.decodeAndCheck(is);
-        }
-
-        BerLength length = new BerLength();
-        codeLength += length.decode(is);
-
-        if (length.val < 1) {
-            throw new IOException("Decoded length of BerInteger is not correct");
-        }
-
-        byte[] byteCode = new byte[length.val];
-        Util.readFully(is, byteCode);
-
-        codeLength += length.val;
-
-        value = new BigInteger(byteCode);
-
-        return codeLength;
-    }
-
-    public void encodeAndSave(int encodingSizeGuess) throws IOException {
-        ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(encodingSizeGuess);
-        encode(os, false);
-        code = os.getArray();
-    }
-
-    @Override
-    public String toString() {
-        return "" + value;
-    }
-
-    public byte byteValue() {
-        return value.byteValue();
-    }
-
-    public short shortValue() {
-        return value.shortValue();
-    }
-
-    public int intValue() {
-        return value.intValue();
-    }
-
-    public long longValue() {
-        return value.longValue();
-    }
-
+  public long longValue() {
+    return value.longValue();
+  }
 }

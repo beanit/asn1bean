@@ -19,8 +19,7 @@ import java.io.OutputStream;
 
 public interface BerType {
 
-    public int encode(OutputStream reverseOS) throws IOException;
+  public int encode(OutputStream reverseOS) throws IOException;
 
-    public int decode(InputStream is) throws IOException;
-
+  public int decode(InputStream is) throws IOException;
 }

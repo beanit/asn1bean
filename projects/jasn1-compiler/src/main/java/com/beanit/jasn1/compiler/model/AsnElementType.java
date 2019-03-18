@@ -14,9 +14,8 @@
 package com.beanit.jasn1.compiler.model;
 
 public class AsnElementType extends AsnTaggedType {
-    public boolean isComponentsOf;
-    public boolean isDefault;
-    public boolean isOptional = false;
-    public AsnValue value;
-
+  public boolean isComponentsOf;
+  public boolean isDefault;
+  public boolean isOptional = false;
+  public AsnValue value;
 }

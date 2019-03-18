@@ -13,58 +13,55 @@
  */
 package com.beanit.jasn1.ber.types;
 
+import com.beanit.jasn1.ber.BerTag;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
 
-import com.beanit.jasn1.ber.BerTag;
-
 public class BerEnum extends BerInteger {
 
-    private static final long serialVersionUID = 1L;
+  public static final BerTag tag =
+      new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.PRIMITIVE, BerTag.ENUMERATED_TAG);
+  private static final long serialVersionUID = 1L;
 
-    public final static BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.PRIMITIVE, BerTag.ENUMERATED_TAG);
+  public BerEnum() {}
 
-    public BerEnum() {
+  public BerEnum(byte[] code) {
+    this.code = code;
+  }
+
+  public BerEnum(BigInteger val) {
+    this.value = val;
+  }
+
+  public BerEnum(long val) {
+    this.value = BigInteger.valueOf(val);
+  }
+
+  @Override
+  public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
+
+    int codeLength = super.encode(reverseOS, false);
+
+    if (withTag) {
+      codeLength += tag.encode(reverseOS);
     }
 
-    public BerEnum(byte[] code) {
-        this.code = code;
+    return codeLength;
+  }
+
+  @Override
+  public int decode(InputStream is, boolean withTag) throws IOException {
+
+    int codeLength = 0;
+
+    if (withTag) {
+      codeLength += tag.decodeAndCheck(is);
     }
 
-    public BerEnum(BigInteger val) {
-        this.value = val;
-    }
+    codeLength += super.decode(is, false);
 
-    public BerEnum(long val) {
-        this.value = BigInteger.valueOf(val);
-    }
-
-    @Override
-    public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
-
-        int codeLength = super.encode(reverseOS, false);
-
-        if (withTag) {
-            codeLength += tag.encode(reverseOS);
-        }
-
-        return codeLength;
-    }
-
-    @Override
-    public int decode(InputStream is, boolean withTag) throws IOException {
-
-        int codeLength = 0;
-
-        if (withTag) {
-            codeLength += tag.decodeAndCheck(is);
-        }
-
-        codeLength += super.decode(is, false);
-
-        return codeLength;
-    }
-
+    return codeLength;
+  }
 }

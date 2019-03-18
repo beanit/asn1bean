@@ -18,6 +18,5 @@ import java.util.List;
 
 public class AsnChoice extends AsnConstructedType {
 
-    public List<AsnElementType> componentTypes = new ArrayList<>();
-
+  public List<AsnElementType> componentTypes = new ArrayList<>();
 }

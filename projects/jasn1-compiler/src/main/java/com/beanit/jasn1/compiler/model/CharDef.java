@@ -16,11 +16,11 @@ package com.beanit.jasn1.compiler.model;
 import java.util.ArrayList;
 
 public class CharDef {
-    public String cStr;
-    public AsnDefinedValue defval;
-    public boolean isCString;
-    boolean isDefinedValue;
-    public boolean isQuadruple;
-    public boolean isTuple;
-    public ArrayList tupleQuad = new ArrayList();
+  public String cStr;
+  public AsnDefinedValue defval;
+  public boolean isCString;
+  public boolean isQuadruple;
+  public boolean isTuple;
+  public ArrayList tupleQuad = new ArrayList();
+  boolean isDefinedValue;
 }

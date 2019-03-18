@@ -18,8 +18,7 @@ import java.util.List;
 
 public class AsnInformationObjectClass {
 
-    public String name = "";
-    public List<AsnElementType> elementList = new ArrayList<>();
-    public List<String> syntaxTokens = new ArrayList<>();
-
+  public String name = "";
+  public List<AsnElementType> elementList = new ArrayList<>();
+  public List<String> syntaxTokens = new ArrayList<>();
 }

@@ -13,6 +13,4 @@
  */
 package com.beanit.jasn1.compiler.model;
 
-public class AsnConstructedType extends AsnUniversalType {
-
-}
+public class AsnConstructedType extends AsnUniversalType {}

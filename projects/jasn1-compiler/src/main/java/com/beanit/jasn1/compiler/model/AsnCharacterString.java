@@ -14,9 +14,8 @@
 package com.beanit.jasn1.compiler.model;
 
 public class AsnCharacterString extends AsnUniversalType {
-    public final String BUILTINTYPE = "CHARACTER STRING";
-    public AsnConstraint constraint;
-    public boolean isUCSType; // Is Unrestricted Character String Type
-    public String stringtype = "";
-
+  public final String BUILTINTYPE = "CHARACTER STRING";
+  public AsnConstraint constraint;
+  public boolean isUCSType; // Is Unrestricted Character String Type
+  public String stringtype = "";
 }
