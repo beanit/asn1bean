@@ -1,5 +1,5 @@
 plugins {
-    id "com.diffplug.gradle.spotless" version "3.19.0"
+    id("com.diffplug.gradle.spotless") version "3.19.0"
 }
 
 spotless {
@@ -11,8 +11,8 @@ spotless {
 
 jar {
     manifest {
-        name = 'jASN1'
-        instruction 'Export-Package', '!*.internal.*,*'
+        name = "jASN1"
+        instruction("Export-Package", "!*.internal.*,*")
     }
 }
 
@@ -21,14 +21,14 @@ uploadArchives {
         mavenDeployer {
 
             pom.project {
-                name 'jASN1'
-                description 'jASN1 is a library used for encoding and decoding ASN.1 BER messages.'
+                name = "jASN1"
+                description = "jASN1 is a library used for encoding and decoding ASN.1 BER messages."
 
                 licenses {
                     license {
-                        name 'Apache License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0'
-                        distribution 'repo'
+                        name = "Apache License, Version 2.0"
+                        url = "http://www.apache.org/licenses/LICENSE-2.0"
+                        distribution = "repo"
                     }
                 }
             }
