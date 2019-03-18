@@ -31,6 +31,7 @@ public class AsnModule {
   public boolean tag;
   public TagDefault tagDefault = TagDefault.EXPLICIT;
   ArrayList importSymbolList;
+
   public AsnModule() {
     exportSymbolList = new ArrayList<>();
     importSymbolList = new ArrayList<>();

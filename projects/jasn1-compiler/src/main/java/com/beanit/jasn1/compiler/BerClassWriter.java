@@ -99,7 +99,7 @@ public class BerClassWriter {
   private static Tag stdSeqTag = new Tag();
   private static Tag stdSetTag = new Tag();
 
-    static {
+  static {
     stdSeqTag.tagClass = TagClass.UNIVERSAL;
     stdSeqTag.value = 16;
     stdSeqTag.typeStructure = TypeStructure.CONSTRUCTED;
@@ -109,7 +109,7 @@ public class BerClassWriter {
     stdSetTag.typeStructure = TypeStructure.CONSTRUCTED;
   };
 
-    private final String basePackageName;;
+  private final String basePackageName;;
   private final boolean supportIndefiniteLength;
   private final boolean jaxbMode;
   private final HashMap<String, AsnModule> modulesByName;
@@ -120,6 +120,7 @@ public class BerClassWriter {
   private AsnModule module;
   private File outputDirectory;
   private String berTypeInterfaceString = "BerType, ";
+
   BerClassWriter(
       HashMap<String, AsnModule> modulesByName,
       String outputBaseDir,
@@ -2710,14 +2711,14 @@ public class BerClassWriter {
     }
   }
 
-public enum TagClass {
+  public enum TagClass {
     UNIVERSAL,
     APPLICATION,
     CONTEXT,
     PRIVATE
   }
 
-public enum TagType {
+  public enum TagType {
     EXPLICIT,
     IMPLICIT
   }

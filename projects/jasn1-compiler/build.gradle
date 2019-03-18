@@ -1,42 +1,52 @@
+plugins {
+    id "com.diffplug.gradle.spotless" version "3.19.0"
+}
+
+spotless {
+    java {
+        googleJavaFormat()
+        targetExclude 'src/main/java-gen/**', 'src/test/java-gen/**'
+    }
+}
 
 dependencies {
-  compile group: 'antlr', name: 'antlr', version: '2.7.7'
-  compile project(':jasn1')
+    compile group: 'antlr', name: 'antlr', version: '2.7.7'
+    compile project(':jasn1')
 }
 
 sourceSets {
-  main {
-    java.srcDirs = ['src/main/java', 'src/main/java-gen']
-  }
-  test {
-    java.srcDirs = ['src/test/java', 'src/test/java-gen']
-  }
+    main {
+        java.srcDirs = ['src/main/java', 'src/main/java-gen']
+    }
+    test {
+        java.srcDirs = ['src/test/java', 'src/test/java-gen']
+    }
 }
 
 jar {
-  manifest {
-    name = 'jASN1 Compiler'
-    instruction 'Export-Package', '!*.internal.*,*'
-  }
+    manifest {
+        name = 'jASN1 Compiler'
+        instruction 'Export-Package', '!*.internal.*,*'
+    }
 }
 
 uploadArchives {
-  repositories {
-    mavenDeployer {
- 
-	pom.project {
-	  name 'jASN1 Compiler'
-	  description 'jASN1 Compiler generates Java classes out of ASN.1 code that can be used to encode/decode BER data.'
- 
-	  licenses {
-	    license {
-          name 'Apache License, Version 2.0'
-          url 'http://www.apache.org/licenses/LICENSE-2.0'
-          distribution 'repo'
-	    }
-	  }
-	
-	}
-      }
+    repositories {
+        mavenDeployer {
+
+            pom.project {
+                name 'jASN1 Compiler'
+                description 'jASN1 Compiler generates Java classes out of ASN.1 code that can be used to encode/decode BER data.'
+
+                licenses {
+                    license {
+                        name 'Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0'
+                        distribution 'repo'
+                    }
+                }
+
+            }
+        }
     }
-  }
+}
