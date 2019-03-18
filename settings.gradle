@@ -1,4 +1,3 @@
-
 include 'jasn1-compiler', 'jasn1'
 
 project(":jasn1-compiler").projectDir = file('projects/jasn1-compiler')

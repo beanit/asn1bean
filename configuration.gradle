@@ -1,75 +1,74 @@
-
 project.ext {
 
-  cfgVersion = "1.11.1-SNAPSHOT"
-  
-  cfgGroup = "com.beanit"
+    cfgVersion = "1.11.1-SNAPSHOT"
 
-  cfgCopyDependencies = true
+    cfgGroup = "com.beanit"
 
-  cfgCopyToRoot = true
+    cfgCopyDependencies = true
 
-  cfgSignPom = true
+    cfgCopyToRoot = true
 
-  cfgRepository = project.properties.sonatypeRepository
+    cfgSignPom = true
 
-  cfgSnapshotRepository = project.properties.sonatypeSnapshotRepository
+    cfgRepository = project.properties.sonatypeRepository
 
-  cfgRepositoryUser = project.properties.sonatypeUser
+    cfgSnapshotRepository = project.properties.sonatypeSnapshotRepository
 
-  cfgRepositoryPass = project.properties.sonatypePass
+    cfgRepositoryUser = project.properties.sonatypeUser
 
-  javaProjects = subprojects
+    cfgRepositoryPass = project.properties.sonatypePass
 
-  distributionProjects = javaProjects
+    javaProjects = subprojects
 
-  docProjects = distributionProjects.findAll {
-    it.getPath() == ":jasn1"
-  }
+    distributionProjects = javaProjects
 
-  repositoryProjects = javaProjects
+    docProjects = distributionProjects.findAll {
+        it.getPath() == ":jasn1"
+    }
+
+    repositoryProjects = javaProjects
 
 }
 
 tasks.withType(Tar) {
 
-  into(project.name) {
-    from("./") {
-      include "build.gradle"
-      include "configuration.gradle"
-      include "LICENSE.txt"
-      include "doc/**"
-      include "bin/**"
-      include "gradle/wrapper/**"
-      include "gradlew"
-      include "gradlew.bat"
-      include "build/libs-all/**"
-      include "src/**"
+    into(project.name) {
+        from("./") {
+            include "build.gradle"
+            include "configuration.gradle"
+            include "LICENSE.txt"
+            include "doc/**"
+            include "bin/**"
+            include "gradle/wrapper/**"
+            include "gradlew"
+            include "gradlew.bat"
+            include "build/libs-all/**"
+            include "src/**"
 
-      include "projects/jasn1/src/**"
-      include "projects/jasn1/build.gradle"
-      include "projects/jasn1/build/docs/**"
+            include "projects/jasn1/src/**"
+            include "projects/jasn1/build.gradle"
+            include "projects/jasn1/build/docs/**"
 
-      include "projects/jasn1-compiler/src/**"
-      include "projects/jasn1-compiler/build.gradle"
-      include "projects/jasn1-compiler/antlr/**"
-      include "projects/jasn1-compiler/dependencies/**"
+            include "projects/jasn1-compiler/src/**"
+            include "projects/jasn1-compiler/build.gradle"
+            include "projects/jasn1-compiler/antlr/**"
+            include "projects/jasn1-compiler/dependencies/**"
+        }
+
+        if (name.equals("tar")) {
+            exclude "**/dependencies/**/src"
+        }
+
+        from("./build/") {
+            include "settings.gradle"
+        }
     }
 
-    if (name.equals("tar") ){
-      exclude "**/dependencies/**/src"
+    into(project.name + "/doc/") {
+        from("./build/docs/") {
+            include "javadoc/**"
+        }
     }
-
-    from("./build/") {
-      include "settings.gradle"
-    }
-  }
-  
-  into(project.name + "/doc/") {
-    from("./build/docs/") {
-      include "javadoc/**"
-    }
-  }
 
 
 }
