@@ -36,6 +36,7 @@ tasks.withType(Tar) {
         from("./") {
             include "build.gradle"
             include "configuration.gradle"
+            include "settings.gradle"
             include "LICENSE.txt"
             include "doc/**"
             include "bin/**"
