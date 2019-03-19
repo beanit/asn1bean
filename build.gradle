@@ -51,6 +51,15 @@ configure(javaProjects) {
         }
     }
 
+    tasks.withType(JavaCompile) {
+        doFirst {
+            if (sourceCompatibility == '1.7' && System.env.JDK7_HOME != null) {
+                options.fork = true
+                options.bootstrapClasspath = files("$System.env.JDK7_HOME/jre/lib/rt.jar")
+            }
+        }
+    }
+
     task jarAll(type: Copy) {
         dependsOn(configurations.default.getAllArtifacts().getBuildDependencies())
 
