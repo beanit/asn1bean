@@ -24,10 +24,9 @@ sourceSets {
 }
 
 jar {
-    bnd("Export-Package": "!*.internal.*,*")
-    manifest {
-        name = "jASN1 Compiler"
-    }
+    bnd("Bundle-Name": "jASN1 Compiler",
+            "Bundle-SymbolicName": "com.beanit.jasn1-compiler",
+            "-exportcontents": "!*.internal.*,*")
 }
 
 uploadArchives {

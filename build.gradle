@@ -14,7 +14,6 @@ configure(javaProjects) {
     apply plugin: "eclipse"
     apply plugin: "maven"
     apply plugin: "signing"
-    apply plugin: "osgi"
     apply plugin: "biz.aQute.bnd.builder"
 
     uploadArchives.enabled = false

@@ -10,10 +10,9 @@ spotless {
 
 
 jar {
-    bnd("Export-Package": "!*.internal.*,*")
-    manifest {
-        name = "jASN1"
-    }
+    bnd("Bundle-Name": "jASN1",
+            "Bundle-SymbolicName": "com.beanit.jasn1",
+            "-exportcontents": "!*.internal.*,*")
 }
 
 uploadArchives {
