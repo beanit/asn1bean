@@ -16,11 +16,10 @@ public class ActionProcessor {
 
   private final BufferedReader reader;
   private final ActionListener actionListener;
-
   private final Map<String, Action> actionMap = new LinkedHashMap<>();
-
   private final Action helpAction = new Action("h", "print help message");
   private final Action quitAction = new Action("q", "quit the application");
+  private volatile boolean closed = false;
 
   public ActionProcessor(ActionListener actionListener) {
     reader = new BufferedReader(new InputStreamReader(System.in));
@@ -46,6 +45,12 @@ public class ActionProcessor {
 
       String actionKey;
       while (true) {
+
+        if (closed) {
+          exit(1);
+          return;
+        }
+
         System.out.println("\n** Enter action key: ");
 
         try {
@@ -53,6 +58,11 @@ public class ActionProcessor {
         } catch (IOException e) {
           System.err.printf("%s. Application is being shut down.\n", e.getMessage());
           exit(2);
+          return;
+        }
+
+        if (closed) {
+          exit(1);
           return;
         }
 
@@ -97,6 +107,7 @@ public class ActionProcessor {
   }
 
   public void close() {
+    closed = true;
     try {
       reader.close();
     } catch (IOException e) {

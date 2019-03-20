@@ -6,10 +6,12 @@ import java.util.List;
 public class StringListCliParameter extends ValueCliParameter {
 
   List<String> value;
+  private List<String> defaultValue = null;
 
   StringListCliParameter(
       CliParameterBuilder builder, String parameterName, List<String> defaultValue) {
     super(builder, parameterName);
+    this.defaultValue = defaultValue;
     value = defaultValue;
   }
 
@@ -65,9 +67,9 @@ public class StringListCliParameter extends ValueCliParameter {
         .append(parameterName)
         .append(">...\n\t    ")
         .append(description);
-    if (value != null) {
+    if (defaultValue != null) {
       sb.append(" Default is \"");
-      for (String stringValue : value) {
+      for (String stringValue : defaultValue) {
         sb.append(stringValue);
       }
       sb.append("\".");

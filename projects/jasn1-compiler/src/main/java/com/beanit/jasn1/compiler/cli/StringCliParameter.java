@@ -3,9 +3,11 @@ package com.beanit.jasn1.compiler.cli;
 public class StringCliParameter extends ValueCliParameter {
 
   String value;
+  private String defaultValue = null;
 
   StringCliParameter(CliParameterBuilder builder, String parameterName, String defaultValue) {
     super(builder, parameterName);
+    this.defaultValue = defaultValue;
     value = defaultValue;
   }
 
@@ -32,8 +34,8 @@ public class StringCliParameter extends ValueCliParameter {
   @Override
   public void appendDescription(StringBuilder sb) {
     super.appendDescription(sb);
-    if (value != null) {
-      sb.append(" Default is \"").append(value).append("\".");
+    if (defaultValue != null) {
+      sb.append(" Default is \"").append(defaultValue).append("\".");
     }
   }
 }
