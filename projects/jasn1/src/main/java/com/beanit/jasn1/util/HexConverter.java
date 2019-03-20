@@ -89,8 +89,8 @@ public class HexConverter {
 
   public static String toShortHexString(byte[] bytes, int offset, int length) {
     char[] hexChars = new char[length * 2];
-    for (int j = offset; j < (offset + length); j++) {
-      int v = bytes[j] & 0xff;
+    for (int j = 0; j < length; j++) {
+      int v = bytes[j + offset] & 0xff;
       hexChars[j * 2] = hexArray[v >>> 4];
       hexChars[j * 2 + 1] = hexArray[v & 0x0f];
     }
