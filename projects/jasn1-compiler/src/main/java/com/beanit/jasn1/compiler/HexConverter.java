@@ -1,10 +1,8 @@
 package com.beanit.jasn1.compiler;
 
-import javax.xml.bind.DatatypeConverter;
-
 public class HexConverter {
 
-  public static final char[] hexArray = "0123456789ABCDEF".toCharArray();
+  private static final char[] hexArray = "0123456789ABCDEF".toCharArray();
 
   /** Don't let anyone instantiate this class. */
   private HexConverter() {}
@@ -53,6 +51,28 @@ public class HexConverter {
   }
 
   /**
+   * Returns the long value as hex string filled with leading zeros. If you do not want leading
+   * zeros use Long.toHexString(long i) instead.
+   *
+   * @param l the long value to be converted
+   * @return the hex string
+   */
+  public static String toShortHexString(long l) {
+    byte[] bytes =
+        new byte[] {
+          (byte) (l >> 56),
+          (byte) (l >> 48),
+          (byte) (l >> 40),
+          (byte) (l >> 32),
+          (byte) (l >> 24),
+          (byte) (l >> 16),
+          (byte) (l >> 8),
+          (byte) (l)
+        };
+    return toShortHexString(bytes);
+  }
+
+  /**
    * Returns the byte as a hex string. If b is less than 16 the hex string returned contains a
    * leading zero.
    *
@@ -64,7 +84,7 @@ public class HexConverter {
   }
 
   public static String toShortHexString(byte[] bytes) {
-    return DatatypeConverter.printHexBinary(bytes);
+    return toShortHexString(bytes, 0, bytes.length);
   }
 
   public static String toShortHexString(byte[] bytes, int offset, int length) {
