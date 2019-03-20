@@ -1,5 +1,6 @@
 plugins {
     id "biz.aQute.bnd.builder" version "4.1.0"
+    id("com.diffplug.gradle.spotless") version "3.19.0" apply false
 }
 
 apply from: "configuration.gradle"
@@ -15,6 +16,8 @@ configure(javaProjects) {
     apply plugin: "maven"
     apply plugin: "signing"
     apply plugin: "biz.aQute.bnd.builder"
+    apply plugin: "com.diffplug.gradle.spotless"
+    
 
     uploadArchives.enabled = false
 
@@ -48,6 +51,12 @@ configure(javaProjects) {
     jar {
         manifest {
             version = project.version.replace("-", ".");
+        }
+    }
+
+    spotless {
+        java {
+            googleJavaFormat()
         }
     }
 

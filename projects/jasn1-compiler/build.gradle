@@ -1,10 +1,5 @@
-plugins {
-    id("com.diffplug.gradle.spotless") version "3.19.0"
-}
-
 spotless {
     java {
-        googleJavaFormat()
         targetExclude("src/main/java-gen/**", "src/test/java-gen/**")
     }
 }

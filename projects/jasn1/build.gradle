@@ -1,14 +1,3 @@
-plugins {
-    id("com.diffplug.gradle.spotless") version "3.19.0"
-}
-
-spotless {
-    java {
-        googleJavaFormat()
-    }
-}
-
-
 jar {
     bnd("Bundle-Name": "jASN1",
             "Bundle-SymbolicName": "com.beanit.jasn1",
