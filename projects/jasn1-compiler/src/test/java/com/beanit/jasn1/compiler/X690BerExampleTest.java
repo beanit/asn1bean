@@ -20,6 +20,7 @@ import com.beanit.jasn1.compiler.x690_ber_example.Date;
 import com.beanit.jasn1.compiler.x690_ber_example.EmployeeNumber;
 import com.beanit.jasn1.compiler.x690_ber_example.Name;
 import com.beanit.jasn1.compiler.x690_ber_example.PersonnelRecord;
+import com.beanit.jasn1.util.HexConverter;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;

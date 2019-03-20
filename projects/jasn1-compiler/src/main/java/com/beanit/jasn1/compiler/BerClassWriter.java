@@ -43,6 +43,7 @@ import com.beanit.jasn1.compiler.model.AsnType;
 import com.beanit.jasn1.compiler.model.AsnUniversalType;
 import com.beanit.jasn1.compiler.model.AsnValueAssignment;
 import com.beanit.jasn1.compiler.model.SymbolsFromModule;
+import com.beanit.jasn1.util.HexConverter;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;

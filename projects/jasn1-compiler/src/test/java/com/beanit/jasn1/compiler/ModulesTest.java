@@ -28,6 +28,7 @@ import com.beanit.jasn1.compiler.modules.module1.PersonnelRecord;
 import com.beanit.jasn1.compiler.modules.module1.TestChoice;
 import com.beanit.jasn1.compiler.modules.module1.TestSequenceOf;
 import com.beanit.jasn1.compiler.modules.module2.EmployeeNumberZ;
+import com.beanit.jasn1.util.HexConverter;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;

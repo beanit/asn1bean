@@ -31,6 +31,7 @@ import com.beanit.jasn1.compiler.pedefinitions.ServicesList;
 import com.beanit.jasn1.compiler.pedefinitions.UInt15;
 import com.beanit.jasn1.compiler.pedefinitions.UInt16;
 import com.beanit.jasn1.compiler.pedefinitions.UInt8;
+import com.beanit.jasn1.util.HexConverter;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
