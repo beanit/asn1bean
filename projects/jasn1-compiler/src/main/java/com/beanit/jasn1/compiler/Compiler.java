@@ -60,6 +60,12 @@ public class Compiler {
                 "By default generated classes implement the BerType interface. Using this flag this behavior can be disabled.")
             .buildFlagParameter();
 
+    FlagCliParameter disableWritingVersion =
+        new CliParameterBuilder("-dv")
+            .setDescription(
+                "By default the jASN1 version is written in the header of the generated classes. Using this flag this behavior can be disabled.")
+            .buildFlagParameter();
+
     FlagCliParameter legacyMode =
         new CliParameterBuilder("-l")
             .setDescription(
@@ -78,6 +84,7 @@ public class Compiler {
     cliParameters.add(basePackageName);
     cliParameters.add(supportIndefiniteLength);
     cliParameters.add(disableBerTypeInterface);
+    cliParameters.add(disableWritingVersion);
     cliParameters.add(legacyMode);
 
     CliParser cliParser =
@@ -115,7 +122,8 @@ public class Compiler {
             basePackageName.getValue(),
             !legacyMode.isSelected(),
             supportIndefiniteLength.isSelected(),
-            disableBerTypeInterface.isSelected());
+            disableBerTypeInterface.isSelected(),
+            disableWritingVersion.isSelected());
 
     classWriter.translate();
     System.out.println("done");
