@@ -20,6 +20,8 @@ project.ext {
 
     cfgRepositoryPass = project.properties.sonatypePass
 
+    cfgStagingProfileId = project.properties.sonatypeStagingProfileId
+
     javaProjects = subprojects
 
     distributionProjects = javaProjects

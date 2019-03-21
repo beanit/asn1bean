@@ -1,12 +1,20 @@
 plugins {
-    id "biz.aQute.bnd.builder" version "4.1.0"
+    id("biz.aQute.bnd.builder") version "4.1.0"
     id("com.diffplug.gradle.spotless") version "3.19.0" apply false
+    id("io.codearte.nexus-staging") version "0.20.0"
 }
 
 apply from: "configuration.gradle"
 
 configure(allprojects) {
     version = cfgVersion
+}
+
+nexusStaging {
+    packageGroup = cfgGroup
+    username = cfgRepositoryUser
+    password = cfgRepositoryPass
+    stagingProfileId = cfgStagingProfileId
 }
 
 configure(javaProjects) {
