@@ -101,11 +101,7 @@ public class BerBoolean implements Serializable, BerType {
     }
 
     codeLength++;
-    if (nextByte == 0) {
-      value = false;
-    } else {
-      value = true;
-    }
+    value = nextByte != 0;
 
     return codeLength;
   }

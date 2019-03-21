@@ -108,9 +108,9 @@ public class BerClassWriter {
     stdSetTag.tagClass = TagClass.UNIVERSAL;
     stdSetTag.value = 17;
     stdSetTag.typeStructure = TypeStructure.CONSTRUCTED;
-  };
+  }
 
-  private final String basePackageName;;
+  private final String basePackageName;
   private final boolean supportIndefiniteLength;
   private final boolean jaxbMode;
   private final HashMap<String, AsnModule> modulesByName;

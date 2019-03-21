@@ -41,11 +41,7 @@ public class AsnConstraint {
 
   // Return if All Except additional Constraint Elements exists
   public boolean addElemSS_isAllExcept() {
-    if (addElemSetSpec.isAllExcept) {
-      return true;
-    } else {
-      return false;
-    }
+    return addElemSetSpec.isAllExcept;
   }
 
   // Return AllExcept Constraint Elements
@@ -55,11 +51,7 @@ public class AsnConstraint {
 
   // Return if All Except Constraint Elements exists
   public boolean elemSS_isAllExcept() {
-    if (elemSetSpec.isAllExcept) {
-      return true;
-    } else {
-      return false;
-    }
+    return elemSetSpec.isAllExcept;
   }
 
   // Return the required additional intersection element

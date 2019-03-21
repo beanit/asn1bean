@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 public class BerUTF8String extends BerOctetString {
 
@@ -33,16 +34,12 @@ public class BerUTF8String extends BerOctetString {
   }
 
   public BerUTF8String(String valueAsString) throws UnsupportedEncodingException {
-    value = valueAsString.getBytes("UTF-8");
+    value = valueAsString.getBytes(StandardCharsets.UTF_8);
   }
 
   @Override
   public String toString() {
-    try {
-      return new String(value, "UTF-8");
-    } catch (UnsupportedEncodingException e) {
-      return "Unsupported Encoding";
-    }
+    return new String(value, StandardCharsets.UTF_8);
   }
 
   @Override

@@ -62,6 +62,6 @@ public class AsnModule {
   public enum TagDefault {
     EXPLICIT,
     IMPLICIT,
-    AUTOMATIC;
+    AUTOMATIC
   }
 }
