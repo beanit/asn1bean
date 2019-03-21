@@ -32,7 +32,13 @@ public class CompileTest {
   public void testCompilingTagging() throws Exception {
     args =
         new String[] {
-          "-o", generatedSrcDir, "-p", rootPackageName, "-f", "src/test/resources/tagging-test.asn"
+          "-o",
+          generatedSrcDir,
+          "-p",
+          rootPackageName,
+          "-f",
+          "src/test/resources/tagging-test.asn",
+          "-dv"
         };
     Compiler.main(args);
   }
@@ -43,6 +49,7 @@ public class CompileTest {
     args =
         new String[] {
           "-il",
+          "-dv",
           "-o",
           generatedSrcDir,
           "-p",
@@ -59,6 +66,7 @@ public class CompileTest {
     args =
         new String[] {
           "-il",
+          "-dv",
           "-o",
           generatedSrcDir,
           "-p",
@@ -75,6 +83,7 @@ public class CompileTest {
     args =
         new String[] {
           "-il",
+          "-dv",
           "-o",
           generatedSrcDir,
           "-p",
@@ -95,7 +104,8 @@ public class CompileTest {
           "-p",
           rootPackageName,
           "-f",
-          "src/test/resources/x690-ber-example.asn"
+          "src/test/resources/x690-ber-example.asn",
+          "-dv"
         };
     Compiler.main(args);
   }
@@ -105,6 +115,7 @@ public class CompileTest {
     args =
         new String[] {
           "-il",
+          "-dv",
           "-o",
           generatedSrcDir,
           "-p",
@@ -123,6 +134,7 @@ public class CompileTest {
     args =
         new String[] {
           "-il",
+          "-dv",
           "-o",
           generatedSrcDir,
           "-p",
@@ -139,6 +151,7 @@ public class CompileTest {
     args =
         new String[] {
           "-il",
+          "-dv",
           "-o",
           generatedSrcDir,
           "-p",
@@ -155,6 +168,7 @@ public class CompileTest {
     args =
         new String[] {
           "-il",
+          "-dv",
           "-o",
           generatedSrcDir,
           "-p",
