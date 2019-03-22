@@ -26,7 +26,6 @@ configure(javaProjects) {
     apply plugin: "biz.aQute.bnd.builder"
     apply plugin: "com.diffplug.gradle.spotless"
     
-
     uploadArchives.enabled = false
 
     group = cfgGroup
@@ -58,7 +57,7 @@ configure(javaProjects) {
 
     jar {
         manifest {
-            version = project.version.replace("-", ".");
+            version = project.version.replace("-", ".")
         }
     }
 
@@ -162,7 +161,6 @@ configure(repositoryProjects) {
                 }
 
                 pom.project {
-
                     //additional pom information can be found in subproject build.gradle files
 
                     packaging "jar"
@@ -175,8 +173,8 @@ configure(repositoryProjects) {
 
                     developers {
                         developer {
-                            id "jasn1"
-                            name "The jASN1 Authors"
+                            id "beanit"
+                            name "Beanit GmbH"
                         }
                     }
                 }

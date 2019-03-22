@@ -10,7 +10,7 @@ project.ext {
 
     cfgSignPom = true
 
-    cfgJavaVersion = '1.7'
+    cfgJavaVersion = "1.7"
 
     cfgRepository = project.properties.sonatypeRepository
 
@@ -57,14 +57,6 @@ tasks.withType(Tar) {
             include "projects/jasn1-compiler/build.gradle"
             include "projects/jasn1-compiler/antlr/**"
             include "projects/jasn1-compiler/dependencies/**"
-        }
-
-        if (name.equals("tar")) {
-            exclude "**/dependencies/**/src"
-        }
-
-        from("./build/") {
-            include "settings.gradle"
         }
     }
 

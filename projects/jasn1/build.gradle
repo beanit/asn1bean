@@ -7,7 +7,6 @@ jar {
 uploadArchives {
     repositories {
         mavenDeployer {
-
             pom.project {
                 name = "jASN1"
                 description = "jASN1 is a library used for encoding and decoding ASN.1 BER messages."
