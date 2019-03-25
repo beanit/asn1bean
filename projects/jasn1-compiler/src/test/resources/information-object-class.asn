@@ -3,6 +3,9 @@ INFORMATION_OBJECTS
 DEFINITIONS IMPLICIT TAGS ::=
 BEGIN
 
+IMPORTS     PRODUCT
+FROM INFORMATION_OBJECT_MODULE;
+
 Attributes{Container} ::= SEQUENCE {
 	attributeId INTEGER (0..127,...),
 	attributeValue Container
@@ -70,13 +73,6 @@ MyManagedExtension ::= SEQUENCE {
 
 --==================== OSS Example ==========================================
 
-PRODUCT ::= CLASS {
-&code	       INTEGER (1..99999) UNIQUE,
-&description	VisibleString (SIZE (1..100)),
-&price	      REAL,
---OpenType-- &Feature	   
-} WITH SYNTAX { CODE &code , DESCRIPTION &description , PRICE &price , FEATURE &Feature }
-
 Item ::= SEQUENCE {
 itemCode        PRODUCT.&code ({ProductCatalog }),
 itemDescription	PRODUCT.&description({ProductCatalog}{@itemCode}),
@@ -95,7 +91,25 @@ ProductCatalog PRODUCT ::= {
 {CODE 105, DESCRIPTION "Glass Egg", PRICE 2000.00, FEATURE NULL}
 }
 
+END
+
+INFORMATION_OBJECT_MODULE
+
+DEFINITIONS IMPLICIT TAGS ::=
+BEGIN
+
+EXPORTS PRODUCT;
+
+
+--==================== OSS Example ==========================================
+
+PRODUCT ::= CLASS {
+&code	       INTEGER (1..99999) UNIQUE,
+&description	VisibleString (SIZE (1..100)),
+&price	      REAL,
+--OpenType-- &Feature
+} WITH SYNTAX { CODE &code , DESCRIPTION &description , PRICE &price , FEATURE &Feature }
+
 
 
 END
-
