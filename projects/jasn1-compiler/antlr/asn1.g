@@ -810,8 +810,8 @@ parameterList returns [List<AsnParameter> parameters]
 
 parameter returns [AsnParameter parameter]
 {parameter = new AsnParameter();} :
-        (((up:UPPER {parameter.paramGovernor = up.getText();}) | (lo:LOWER {parameter.paramGovernor = lo.getText();})) COLON)?
-        (up2:UPPER {parameter.dummyReference = up2.getText();}) | (lo2:LOWER {parameter.dummyReference = lo2.getText();})
+        (((INTEGER_KW{parameter.paramGovernor = "integer";}) | (up:UPPER {parameter.paramGovernor = up.getText();}) | (lo:LOWER {parameter.paramGovernor = lo.getText();})) COLON)?
+        ((up2:UPPER {parameter.dummyReference = up2.getText();}) | (lo2:LOWER {parameter.dummyReference = lo2.getText();}))
 ;
 
 
