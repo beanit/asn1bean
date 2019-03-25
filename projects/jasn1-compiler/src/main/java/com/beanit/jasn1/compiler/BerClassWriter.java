@@ -649,7 +649,8 @@ public class BerClassWriter {
           throw new CompileException(
               "no information object class of name \""
                   + element.definedType.moduleOrObjectClassReference
-                  + "\" found");
+                  + "\" found in asn.1 module "
+                  + module.moduleIdentifier.name);
         }
 
         for (AsnElementType elementType : informationObjectClass.elementList) {
