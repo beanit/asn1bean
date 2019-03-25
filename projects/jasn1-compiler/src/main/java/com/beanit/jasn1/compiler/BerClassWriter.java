@@ -700,11 +700,19 @@ public class BerClassWriter {
 
   private AsnInformationObjectClass getInformationObjectClass(
       String objectClassReference, AsnModule module) {
+
     AsnInformationObjectClass ioClass = module.objectClassesByName.get(objectClassReference);
     if (ioClass == null) {
       AsnType asnType = module.typesByName.get(objectClassReference);
       if (asnType == null) {
-        // TODO check for other modules
+        for (SymbolsFromModule symbolsFromModule : module.importSymbolFromModuleList) {
+          for (String importedTypeName : symbolsFromModule.symbolList) {
+            if (objectClassReference.equals(importedTypeName)) {
+              return getInformationObjectClass(
+                  objectClassReference, getAsnModule(symbolsFromModule.modref));
+            }
+          }
+        }
         return null;
       } else {
         if (asnType instanceof AsnDefinedType) {
@@ -2570,7 +2578,7 @@ public class BerClassWriter {
                 + definedType.moduleOrObjectClassReference
                 + "\"");
       } else {
-        return followAndGetNextTaggedOrUniversalType(definedType.typeName, module, false);
+        return followAndGetNextTaggedOrUniversalType(definedType.typeName, module);
       }
     } else if (asnType instanceof AsnUniversalType) {
       return asnType;
@@ -2579,8 +2587,8 @@ public class BerClassWriter {
     }
   }
 
-  private AsnType followAndGetNextTaggedOrUniversalType(
-      String typeName, AsnModule module, boolean firstCall) throws CompileException {
+  private AsnType followAndGetNextTaggedOrUniversalType(String typeName, AsnModule module)
+      throws CompileException {
 
     AsnType asnType = module.typesByName.get(typeName);
     if (asnType != null) {
@@ -2590,7 +2598,7 @@ public class BerClassWriter {
       for (String importedTypeName : symbolsFromModule.symbolList) {
         if (typeName.equals(importedTypeName)) {
           return followAndGetNextTaggedOrUniversalType(
-              typeName, getAsnModule(symbolsFromModule.modref), false);
+              typeName, getAsnModule(symbolsFromModule.modref));
         }
       }
     }
