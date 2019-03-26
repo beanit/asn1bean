@@ -924,12 +924,216 @@ public class SequenceNameClashTest implements BerType, Serializable {
 
 	}
 
+	public static class SequenceNameClashTest_ implements BerType, Serializable {
+
+		private static final long serialVersionUID = 1L;
+
+		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
+
+		public byte[] code = null;
+		public com.beanit.jasn1.compiler.various_tests.UntaggedInteger myInteger = null;
+		public BerBoolean myBoolean = null;
+		
+		public SequenceNameClashTest_() {
+		}
+
+		public SequenceNameClashTest_(byte[] code) {
+			this.code = code;
+		}
+
+		public SequenceNameClashTest_(com.beanit.jasn1.compiler.various_tests.UntaggedInteger myInteger, BerBoolean myBoolean) {
+			this.myInteger = myInteger;
+			this.myBoolean = myBoolean;
+		}
+
+		public int encode(OutputStream reverseOS) throws IOException {
+			return encode(reverseOS, true);
+		}
+
+		public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
+
+			if (code != null) {
+				for (int i = code.length - 1; i >= 0; i--) {
+					reverseOS.write(code[i]);
+				}
+				if (withTag) {
+					return tag.encode(reverseOS) + code.length;
+				}
+				return code.length;
+			}
+
+			int codeLength = 0;
+			int sublength;
+
+			sublength = myBoolean.encode(reverseOS, true);
+			codeLength += sublength;
+			codeLength += BerLength.encodeLength(reverseOS, sublength);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 10
+			reverseOS.write(0xAA);
+			codeLength += 1;
+			
+			sublength = myInteger.encode(reverseOS, true);
+			codeLength += sublength;
+			codeLength += BerLength.encodeLength(reverseOS, sublength);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 9
+			reverseOS.write(0xA9);
+			codeLength += 1;
+			
+			codeLength += BerLength.encodeLength(reverseOS, codeLength);
+
+			if (withTag) {
+				codeLength += tag.encode(reverseOS);
+			}
+
+			return codeLength;
+
+		}
+
+		public int decode(InputStream is) throws IOException {
+			return decode(is, true);
+		}
+
+		public int decode(InputStream is, boolean withTag) throws IOException {
+			int codeLength = 0;
+			int subCodeLength = 0;
+			BerTag berTag = new BerTag();
+
+			if (withTag) {
+				codeLength += tag.decodeAndCheck(is);
+			}
+
+			BerLength length = new BerLength();
+			codeLength += length.decode(is);
+
+			int totalLength = length.val;
+			if (totalLength == -1) {
+				subCodeLength += berTag.decode(is);
+
+				if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
+					int nextByte = is.read();
+					if (nextByte != 0) {
+						if (nextByte == -1) {
+							throw new EOFException("Unexpected end of input stream.");
+						}
+						throw new IOException("Decoded sequence has wrong end of contents octets");
+					}
+					codeLength += subCodeLength + 1;
+					return codeLength;
+				}
+				if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 9)) {
+					codeLength += length.decode(is);
+					myInteger = new com.beanit.jasn1.compiler.various_tests.UntaggedInteger();
+					subCodeLength += myInteger.decode(is, true);
+					subCodeLength += berTag.decode(is);
+				}
+				if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
+					int nextByte = is.read();
+					if (nextByte != 0) {
+						if (nextByte == -1) {
+							throw new EOFException("Unexpected end of input stream.");
+						}
+						throw new IOException("Decoded sequence has wrong end of contents octets");
+					}
+					codeLength += subCodeLength + 1;
+					return codeLength;
+				}
+				if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 10)) {
+					codeLength += length.decode(is);
+					myBoolean = new BerBoolean();
+					subCodeLength += myBoolean.decode(is, true);
+					subCodeLength += berTag.decode(is);
+				}
+				int nextByte = is.read();
+				if (berTag.tagNumber != 0 || berTag.tagClass != 0 || berTag.primitive != 0
+				|| nextByte != 0) {
+					if (nextByte == -1) {
+						throw new EOFException("Unexpected end of input stream.");
+					}
+					throw new IOException("Decoded sequence has wrong end of contents octets");
+				}
+				codeLength += subCodeLength + 1;
+				return codeLength;
+			}
+
+			codeLength += totalLength;
+
+			subCodeLength += berTag.decode(is);
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 9)) {
+				subCodeLength += length.decode(is);
+				myInteger = new com.beanit.jasn1.compiler.various_tests.UntaggedInteger();
+				subCodeLength += myInteger.decode(is, true);
+				subCodeLength += berTag.decode(is);
+			}
+			else {
+				throw new IOException("Tag does not match the mandatory sequence element tag.");
+			}
+			
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 10)) {
+				subCodeLength += length.decode(is);
+				myBoolean = new BerBoolean();
+				subCodeLength += myBoolean.decode(is, true);
+				if (subCodeLength == totalLength) {
+					return codeLength;
+				}
+			}
+			throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
+
+			
+		}
+
+		public void encodeAndSave(int encodingSizeGuess) throws IOException {
+			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
+			encode(reverseOS, false);
+			code = reverseOS.getArray();
+		}
+
+		public String toString() {
+			StringBuilder sb = new StringBuilder();
+			appendAsString(sb, 0);
+			return sb.toString();
+		}
+
+		public void appendAsString(StringBuilder sb, int indentLevel) {
+
+			sb.append("{");
+			sb.append("\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			if (myInteger != null) {
+				sb.append("myInteger: ").append(myInteger);
+			}
+			else {
+				sb.append("myInteger: <empty-required-field>");
+			}
+			
+			sb.append(",\n");
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			if (myBoolean != null) {
+				sb.append("myBoolean: ").append(myBoolean);
+			}
+			else {
+				sb.append("myBoolean: <empty-required-field>");
+			}
+			
+			sb.append("\n");
+			for (int i = 0; i < indentLevel; i++) {
+				sb.append("\t");
+			}
+			sb.append("}");
+		}
+
+	}
+
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 43);
 
 	public byte[] code = null;
 	public Myseqof myseqof = null;
 	public UntaggedInteger untaggedInteger = null;
 	public MyChoice myChoice = null;
+	public SequenceNameClashTest_ sequenceNameClashTest = null;
 	
 	public SequenceNameClashTest() {
 	}
@@ -938,10 +1142,11 @@ public class SequenceNameClashTest implements BerType, Serializable {
 		this.code = code;
 	}
 
-	public SequenceNameClashTest(Myseqof myseqof, UntaggedInteger untaggedInteger, MyChoice myChoice) {
+	public SequenceNameClashTest(Myseqof myseqof, UntaggedInteger untaggedInteger, MyChoice myChoice, SequenceNameClashTest_ sequenceNameClashTest) {
 		this.myseqof = myseqof;
 		this.untaggedInteger = untaggedInteger;
 		this.myChoice = myChoice;
+		this.sequenceNameClashTest = sequenceNameClashTest;
 	}
 
 	public int encode(OutputStream reverseOS) throws IOException {
@@ -963,6 +1168,13 @@ public class SequenceNameClashTest implements BerType, Serializable {
 		int codeLength = 0;
 		int sublength;
 
+		sublength = sequenceNameClashTest.encode(reverseOS, true);
+		codeLength += sublength;
+		codeLength += BerLength.encodeLength(reverseOS, sublength);
+		// write tag: CONTEXT_CLASS, CONSTRUCTED, 8
+		reverseOS.write(0xA8);
+		codeLength += 1;
+		
 		codeLength += myChoice.encode(reverseOS);
 		
 		if (untaggedInteger != null) {
@@ -1069,6 +1281,23 @@ public class SequenceNameClashTest implements BerType, Serializable {
 				myChoice = null;
 			}
 
+			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
+				int nextByte = is.read();
+				if (nextByte != 0) {
+					if (nextByte == -1) {
+						throw new EOFException("Unexpected end of input stream.");
+					}
+					throw new IOException("Decoded sequence has wrong end of contents octets");
+				}
+				codeLength += subCodeLength + 1;
+				return codeLength;
+			}
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 8)) {
+				codeLength += length.decode(is);
+				sequenceNameClashTest = new SequenceNameClashTest_();
+				subCodeLength += sequenceNameClashTest.decode(is, true);
+				subCodeLength += berTag.decode(is);
+			}
 			int nextByte = is.read();
 			if (berTag.tagNumber != 0 || berTag.tagClass != 0 || berTag.primitive != 0
 			|| nextByte != 0) {
@@ -1116,8 +1345,15 @@ public class SequenceNameClashTest implements BerType, Serializable {
 		
 		myChoice = new MyChoice();
 		subCodeLength += myChoice.decode(is, berTag);
-		if (subCodeLength == totalLength) {
-			return codeLength;
+		subCodeLength += berTag.decode(is);
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 8)) {
+			subCodeLength += length.decode(is);
+			sequenceNameClashTest = new SequenceNameClashTest_();
+			subCodeLength += sequenceNameClashTest.decode(is, true);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
 		}
 		throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
 
@@ -1170,6 +1406,18 @@ public class SequenceNameClashTest implements BerType, Serializable {
 		}
 		else {
 			sb.append("myChoice: <empty-required-field>");
+		}
+		
+		sb.append(",\n");
+		for (int i = 0; i < indentLevel + 1; i++) {
+			sb.append("\t");
+		}
+		if (sequenceNameClashTest != null) {
+			sb.append("sequenceNameClashTest: ");
+			sequenceNameClashTest.appendAsString(sb, indentLevel + 1);
+		}
+		else {
+			sb.append("sequenceNameClashTest: <empty-required-field>");
 		}
 		
 		sb.append("\n");

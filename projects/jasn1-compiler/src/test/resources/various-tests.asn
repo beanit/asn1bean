@@ -19,8 +19,13 @@ SequenceNameClashTest ::= [43] SEQUENCE {
 			myBoolean [10] BOOLEAN
 		},
 		myseqof [1] SEQUENCE OF UntaggedInteger
-	}
+	},
+	sequenceNameClashTest [8] SEQUENCE {
+   	myInteger [9] UntaggedInteger,
+   	myBoolean [10] BOOLEAN
+  }
 }
+
 
 UntaggedInteger ::= INTEGER
 

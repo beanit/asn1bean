@@ -580,7 +580,7 @@ public class BerClassWriter {
     for (AsnElementType componentType : componentTypes) {
       if (componentType.typeReference != null
           && (componentType.typeReference instanceof AsnConstructedType)) {
-        listOfSubClassNames.add(getClassNameOfComponent(componentType));
+        listOfSubClassNames.add(getClassNameOfComponent(componentType, className));
       }
     }
 
@@ -588,13 +588,13 @@ public class BerClassWriter {
 
       if (isInnerType(componentType)) {
 
-        String subClassName = getClassNameOfComponent(componentType);
+        String subClassName = getClassNameOfComponent(componentType, className);
         writeConstructedTypeClass(
             subClassName, componentType.typeReference, null, true, listOfSubClassNames);
       }
     }
 
-    setClassNamesOfComponents(listOfSubClassNames, componentTypes);
+    setClassNamesOfComponents(listOfSubClassNames, componentTypes, className);
 
     writePublicMembers(componentTypes);
 
@@ -620,9 +620,15 @@ public class BerClassWriter {
   }
 
   private void setClassNamesOfComponents(
-      List<String> listOfSubClassNames, List<AsnElementType> componentTypes) {
+      List<String> listOfSubClassNames, List<AsnElementType> componentTypes, String parentClass) {
     for (AsnElementType element : componentTypes) {
-      element.className = getClassNameOfComponent(listOfSubClassNames, element);
+      element.className = getClassNameOfComponent(listOfSubClassNames, element, parentClass);
+    }
+  }
+
+  private void setClassNamesOfComponents(List<AsnElementType> componentTypes, String parentClass) {
+    for (AsnElementType element : componentTypes) {
+      element.className = getClassNameOfComponent(null, element, parentClass);
     }
   }
 
@@ -630,10 +636,19 @@ public class BerClassWriter {
     if (asnElementType.className != "") {
       return asnElementType.className;
     }
-    return getClassNameOfComponent(null, asnElementType);
+    return getClassNameOfComponent(null, asnElementType, null);
   }
 
-  private String getClassNameOfComponent(List<String> listOfSubClassNames, AsnTaggedType element) {
+  private String getClassNameOfComponent(AsnElementType asnElementType, String parentClass)
+      throws IOException {
+    if (asnElementType.className != "") {
+      return asnElementType.className;
+    }
+    return getClassNameOfComponent(null, asnElementType, parentClass);
+  }
+
+  private String getClassNameOfComponent(
+      List<String> listOfSubClassNames, AsnTaggedType element, String parentClass) {
 
     if (listOfSubClassNames == null) {
       listOfSubClassNames = new ArrayList<>();
@@ -655,7 +670,7 @@ public class BerClassWriter {
 
         for (AsnElementType elementType : informationObjectClass.elementList) {
           if (elementType.name.equals(element.definedType.typeName)) {
-            return getClassNameOfComponent(listOfSubClassNames, elementType);
+            return getClassNameOfComponent(listOfSubClassNames, elementType, parentClass);
           }
         }
 
@@ -691,7 +706,13 @@ public class BerClassWriter {
       AsnType typeDefinition = element.typeReference;
 
       if (typeDefinition instanceof AsnConstructedType) {
-        return cleanUpName(capitalizeFirstCharacter(element.name));
+        String cleanedUpName = cleanUpName(capitalizeFirstCharacter(element.name));
+        if (parentClass != null) {
+          if (cleanedUpName.equals(parentClass)) {
+            cleanedUpName = cleanedUpName + "_";
+          }
+        }
+        return cleanedUpName;
       } else {
         return getBerType(typeDefinition);
       }
@@ -762,7 +783,7 @@ public class BerClassWriter {
 
       if (isInnerType(componentType)) {
 
-        String subClassName = getClassNameOfComponent(componentType);
+        String subClassName = getClassNameOfComponent(componentType, className);
 
         writeConstructedTypeClass(
             subClassName, componentType.typeReference, null, true, listOfSubClassNames);
@@ -787,7 +808,7 @@ public class BerClassWriter {
 
     write("public byte[] code = null;");
 
-    setClassNamesOfComponents(listOfSubClassNames, componentTypes);
+    setClassNamesOfComponents(listOfSubClassNames, componentTypes, className);
 
     writePublicMembers(componentTypes);
 
