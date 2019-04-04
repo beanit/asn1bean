@@ -193,23 +193,10 @@ public class BerObjectIdentifier implements Serializable, BerType {
       return "";
     }
 
-    String objIDString = "";
-    objIDString += value[0];
+    StringBuilder sb = new StringBuilder(Integer.toString(value[0]));
     for (int i = 1; i < value.length; i++) {
-      objIDString += "." + value[i];
+      sb.append(".").append(value[i]);
     }
-    return objIDString;
-  }
-
-  public BerObjectIdentifier append(int value) {
-    if (this.value == null) {
-      return new BerObjectIdentifier(new int[] {value});
-    }
-    int[] values = new int[this.value.length + 1];
-    for (int i = 0; i < this.value.length; ++i) {
-      values[i] = this.value[i];
-    }
-    values[values.length - 1] = value;
-    return new BerObjectIdentifier(values);
+    return sb.toString();
   }
 }

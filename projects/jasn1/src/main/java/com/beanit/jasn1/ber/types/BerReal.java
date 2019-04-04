@@ -136,7 +136,7 @@ public class BerReal implements Serializable, BerType {
     reverseOS.write(exponentBytes);
     codeLength += exponentBytes.length;
 
-    byte exponentFormat = 0;
+    byte exponentFormat;
     if (exponentBytes.length < 4) {
       exponentFormat = (byte) (exponentBytes.length - 1);
     } else {

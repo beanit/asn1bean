@@ -42,7 +42,6 @@ public class BerLength implements Serializable {
 
     // check for indefinite length
     if (lengthLength == 0) {
-      val = -1;
       return 1;
     }
 

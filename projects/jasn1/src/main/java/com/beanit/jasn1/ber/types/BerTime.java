@@ -18,7 +18,6 @@ import com.beanit.jasn1.ber.types.string.BerVisibleString;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 
 public class BerTime extends BerVisibleString {
 
@@ -32,7 +31,7 @@ public class BerTime extends BerVisibleString {
     super(value);
   }
 
-  public BerTime(String valueAsString) throws UnsupportedEncodingException {
+  public BerTime(String valueAsString) {
     super(valueAsString);
   }
 

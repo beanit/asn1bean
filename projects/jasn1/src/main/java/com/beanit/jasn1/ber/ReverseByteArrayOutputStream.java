@@ -13,7 +13,6 @@
  */
 package com.beanit.jasn1.ber;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
@@ -57,11 +56,11 @@ public class ReverseByteArrayOutputStream extends OutputStream {
   }
 
   @Override
-  public void write(int arg0) throws IOException {
+  public void write(int arg0) {
     write((byte) arg0);
   }
 
-  public void write(byte arg0) throws IOException {
+  public void write(byte arg0) {
     try {
       buffer[index] = arg0;
     } catch (ArrayIndexOutOfBoundsException e) {
@@ -84,7 +83,7 @@ public class ReverseByteArrayOutputStream extends OutputStream {
   }
 
   @Override
-  public void write(byte[] byteArray) throws IOException {
+  public void write(byte[] byteArray) {
     for (int i = byteArray.length - 1; i >= 0; i--) {
       try {
         buffer[index] = byteArray[i];

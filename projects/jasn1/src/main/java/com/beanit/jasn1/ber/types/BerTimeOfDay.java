@@ -17,7 +17,6 @@ import com.beanit.jasn1.ber.BerTag;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 
 public class BerTimeOfDay extends BerTime {
 
@@ -31,7 +30,7 @@ public class BerTimeOfDay extends BerTime {
     super(value);
   }
 
-  public BerTimeOfDay(String valueAsString) throws UnsupportedEncodingException {
+  public BerTimeOfDay(String valueAsString) {
     super(valueAsString);
   }
 

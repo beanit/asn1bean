@@ -28,25 +28,25 @@ public class BerIntegerTest {
   @Test
   public void encodeDecodeLargeLongs() throws IOException {
     ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(50);
-    BerInteger myInt = new BerInteger(BigInteger.valueOf(20093243433l));
+    BerInteger myInt = new BerInteger(BigInteger.valueOf(20093243433L));
     myInt.encode(os, true);
 
     ByteArrayInputStream berInputStream = new ByteArrayInputStream(os.getArray());
     BerInteger myInt2 = new BerInteger();
     myInt2.decode(berInputStream, true);
-    Assert.assertEquals(20093243433l, myInt2.value.longValue());
+    Assert.assertEquals(20093243433L, myInt2.value.longValue());
   }
 
   @Test
   public void encodeDecodeLargeNegativeLongs() throws IOException {
     ReverseByteArrayOutputStream berBAOStream = new ReverseByteArrayOutputStream(50);
-    BerInteger myInt = new BerInteger(BigInteger.valueOf(-20093243433l));
+    BerInteger myInt = new BerInteger(BigInteger.valueOf(-20093243433L));
     myInt.encode(berBAOStream, true);
 
     ByteArrayInputStream berInputStream = new ByteArrayInputStream(berBAOStream.getArray());
     BerInteger myInt2 = new BerInteger();
     myInt2.decode(berInputStream, true);
-    Assert.assertEquals(-20093243433l, myInt2.value.longValue());
+    Assert.assertEquals(-20093243433L, myInt2.value.longValue());
   }
 
   @Test
@@ -198,7 +198,7 @@ public class BerIntegerTest {
   public class IntegerUnivPrim extends BerInteger {
 
     // in the final version identifier needs to be static
-    protected final BerTag identifier = new BerTag(BerTag.APPLICATION_CLASS, BerTag.PRIMITIVE, 2);
+    final BerTag identifier = new BerTag(BerTag.APPLICATION_CLASS, BerTag.PRIMITIVE, 2);
 
     IntegerUnivPrim(BigInteger val) {
       super(val);
