@@ -147,7 +147,7 @@ public class BerTag implements Serializable {
    */
   public int decodeAndCheck(InputStream is) throws IOException {
 
-    for (Byte identifierByte : tagBytes) {
+    for (byte identifierByte : tagBytes) {
       int nextByte = is.read();
       if (nextByte == -1) {
         throw new EOFException("Unexpected end of input stream.");
