@@ -36,7 +36,6 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javax.xml.bind.DatatypeConverter;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -54,7 +53,7 @@ public class MobileTest {
       byte pukReference, String pukValue, Byte maxNumOfAttempts, Byte retryNumLeft) {
     return new PUKConfiguration(
         new PUKKeyReferenceValue(pukReference & 0xff),
-        new BerOctetString(DatatypeConverter.parseHexBinary(pukValue)),
+        new BerOctetString(HexConverter.fromShortHexString(pukValue)),
         maxNumOfAttempts != null && retryNumLeft != null
             ? new UInt8((maxNumOfAttempts << 4) | retryNumLeft)
             : null);
@@ -157,7 +156,7 @@ public class MobileTest {
                 null,
                 null,
                 new BerOctetString(
-                    DatatypeConverter.parseHexBinary(fileRecordContent.fillFileContent))));
+                    HexConverter.fromShortHexString(fileRecordContent.fillFileContent))));
       }
     }
     return fileManagementChoices;
@@ -182,18 +181,18 @@ public class MobileTest {
       String linkPath) {
 
     return new Fcp(
-        new BerOctetString(DatatypeConverter.parseHexBinary(fileDescriptor)),
+        new BerOctetString(HexConverter.fromShortHexString(fileDescriptor)),
         new BerOctetString(unsignedShortToByteArray(fileId)),
         null,
         null,
         new BerOctetString(new byte[] {arrReference}),
         efFileSize != null ? new BerOctetString(unsignedShortToByteArray(efFileSize)) : null,
         pinStatusTemplateDo != null
-            ? new BerOctetString(DatatypeConverter.parseHexBinary(pinStatusTemplateDo))
+            ? new BerOctetString(HexConverter.fromShortHexString(pinStatusTemplateDo))
             : null,
         shortEfId != null ? new BerOctetString(new byte[] {shortEfId.byteValue()}) : null,
         null,
-        linkPath != null ? new BerOctetString(DatatypeConverter.parseHexBinary(linkPath)) : null);
+        linkPath != null ? new BerOctetString(HexConverter.fromShortHexString(linkPath)) : null);
   }
 
   @Test
@@ -203,7 +202,7 @@ public class MobileTest {
         "A1 820237 A0 05 80 00 81 01 01 A1 82022C 30 820228 62 10 82 02 7821 83 02 3F00 8B 01 0E C6 03 01020A 62 11 82 02 4121 83 02 2F05 8B 01 0F 80 01 03 88 01 28 62 0E 82 02 4121 83 02 2FE2 8B 01 0B 80 01 0A 81 0A 98109909002143658739 62 14 82 04 4221002683 02 2F00 8B 01 0A 80 02 0098 88 01 F0 81 1A 61184F10A0000000871002FF33FF01890000010050045553494D 62 11 82 04 42210025 83 02 2F06 8B 01 0A 80 02 01EF 81 1B 8001019000800102A406830101950108800158A40683010A950108 02 01 0A 81 16 800101A40683010195010880015AA40683010A950108 02 01 0F 81 0B 80015BA40683010A950108 02 01 1A 81 0A 800101900080015A9700 02 01 1B 81 16 800103A406830101950108800158A40683010A950108 02 01 0F 81 16 800111A40683010195010880014AA40683010A950108 02 01 0F 81 21 800103A406830101950108800158A40683010A950108840132A406830101950108 02 01 04 81 21 800101A406830101950108800102A406830181950108800158A40683010A950108 02 01 04 81 1B 800101900080011AA406830101950108800140A40683010A950108 02 01 0A 81 10 800101900080015AA40683010A950108 02 01 15 81 15 8001019000800118A40683010A9501088001429700 02 01 0E 81 10 800101A40683010195010880015A9700 02 01 15 81 16 800113A406830101950108800148A40683010A950108 02 01 0D 81 0B 80015EA40683010A950108 02 01 1A81 25 8001019000800102A010A406830101950108A406830102950108800158A40683010A950108 62 0E 82 02 4121 83 02 2F08 8B 01 0A 80 01 05"
             .replaceAll("\\s", "");
 
-    byte[] code = DatatypeConverter.parseHexBinary(expected);
+    byte[] code = HexConverter.fromShortHexString(expected);
 
     ProfileElement rereadProfileElement = new ProfileElement();
     rereadProfileElement.decode(new ByteArrayInputStream(code), null);
@@ -234,7 +233,7 @@ public class MobileTest {
             new UInt8(2),
             new UInt8(0),
             new BerUTF8String("SIMalliance Sample Profile"),
-            new BerOctetString(DatatypeConverter.parseHexBinary("89019990001234567893")),
+            new BerOctetString(HexConverter.fromShortHexString("89019990001234567893")),
             null,
             servicesList,
             GFSTEList,
@@ -256,7 +255,7 @@ public class MobileTest {
     String expected =
         "A0 48 80 01 02 81 01 00 82 1A 53494D616C6C69616E63652053616D706C652050726F66696C65 83 0A 89019990001234567893 A5 06 81 00 84 00 8B 00 A6 10 06 06 67810F010201 06 06 67810F010204"
             .replaceAll("\\s", "");
-    Assert.assertEquals(expected, DatatypeConverter.printHexBinary(code));
+    Assert.assertEquals(expected, HexConverter.toShortHexString(code));
   }
 
   @Test
@@ -290,7 +289,7 @@ public class MobileTest {
     String expected =
         "A3 3F A0 05 80 00 81 01 02 A1 36 30 11 80 01 01 81 08 3030303030303030 82 02 0099 30 0D 80 01 02 81 08 3132333435363738 30 12 80 02 0081 81 08 3132333435363738 82 02 0088"
             .replaceAll("\\s", "");
-    Assert.assertEquals(expected, DatatypeConverter.printHexBinary(code));
+    Assert.assertEquals(expected, HexConverter.toShortHexString(code));
   }
 
   @Test
@@ -352,7 +351,7 @@ public class MobileTest {
     ReverseByteArrayOutputStream reverseOutputStream = new ReverseByteArrayOutputStream(2048, true);
     genericFileManagementProfileElement.encode(reverseOutputStream);
     byte[] code = reverseOutputStream.getArray();
-    System.out.println(DatatypeConverter.printHexBinary(code));
+    System.out.println(HexConverter.toShortHexString(code));
     ProfileElement rereadProfileElement = new ProfileElement();
     rereadProfileElement.decode(new ByteArrayInputStream(code), null);
     ReverseByteArrayOutputStream reverseOutputStream2 =
@@ -364,7 +363,7 @@ public class MobileTest {
     String expected =
         "A1 820237 A0 05 80 00 81 01 01 A1 82022C 30 820228 62 10 82 02 7821 83 02 3F00 8B 01 0E C6 03 01020A 62 11 82 02 4121 83 02 2F05 8B 01 0F 80 01 03 88 01 28 62 0E 82 02 4121 83 02 2FE2 8B 01 0B 80 01 0A 81 0A 98109909002143658739 62 14 82 04 4221002683 02 2F00 8B 01 0A 80 02 0098 88 01 F0 81 1A 61184F10A0000000871002FF33FF01890000010050045553494D 62 11 82 04 42210025 83 02 2F06 8B 01 0A 80 02 01EF 81 1B 8001019000800102A406830101950108800158A40683010A950108 02 01 0A 81 16 800101A40683010195010880015AA40683010A950108 02 01 0F 81 0B 80015BA40683010A950108 02 01 1A 81 0A 800101900080015A9700 02 01 1B 81 16 800103A406830101950108800158A40683010A950108 02 01 0F 81 16 800111A40683010195010880014AA40683010A950108 02 01 0F 81 21 800103A406830101950108800158A40683010A950108840132A406830101950108 02 01 04 81 21 800101A406830101950108800102A406830181950108800158A40683010A950108 02 01 04 81 1B 800101900080011AA406830101950108800140A40683010A950108 02 01 0A 81 10 800101900080015AA40683010A950108 02 01 15 81 15 8001019000800118A40683010A9501088001429700 02 01 0E 81 10 800101A40683010195010880015A9700 02 01 15 81 16 800113A406830101950108800148A40683010A950108 02 01 0D 81 0B 80015EA40683010A950108 02 01 1A81 25 8001019000800102A010A406830101950108A406830102950108800158A40683010A950108 62 0E 82 02 4121 83 02 2F08 8B 01 0A 80 01 05"
             .replaceAll("\\s", "");
-    Assert.assertEquals(expected, DatatypeConverter.printHexBinary(code));
+    Assert.assertEquals(expected, HexConverter.toShortHexString(code));
   }
 
   private static class FileRecordContent {
