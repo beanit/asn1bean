@@ -7,11 +7,11 @@ import com.beanit.jasn1.compiler.x690_ber_example.Date;
 import com.beanit.jasn1.compiler.x690_ber_example.EmployeeNumber;
 import com.beanit.jasn1.compiler.x690_ber_example.Name;
 import com.beanit.jasn1.compiler.x690_ber_example.PersonnelRecord;
+import com.beanit.jasn1.util.HexConverter;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import javax.xml.bind.DatatypeConverter;
 
 public class Jasn1Sample {
 
@@ -97,7 +97,7 @@ public class Jasn1Sample {
     personnelRecord.encode(os);
 
     System.out.println("Encoded bytes:");
-    System.out.println(DatatypeConverter.printHexBinary(os.getArray()));
+    System.out.println(HexConverter.toHexString(os.getArray()));
 
     InputStream is = new ByteArrayInputStream(os.getArray());
 
