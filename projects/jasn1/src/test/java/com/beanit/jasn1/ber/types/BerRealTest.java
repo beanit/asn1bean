@@ -14,9 +14,9 @@
 package com.beanit.jasn1.ber.types;
 
 import com.beanit.jasn1.ber.ReverseByteArrayOutputStream;
+import com.beanit.jasn1.util.HexConverter;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import javax.xml.bind.DatatypeConverter;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -29,7 +29,7 @@ public class BerRealTest {
     BerReal berReal = new BerReal(0);
     berReal.encode(berStream, true);
 
-    Assert.assertArrayEquals(DatatypeConverter.parseHexBinary("0900"), berStream.getArray());
+    Assert.assertArrayEquals(HexConverter.fromShortHexString("0900"), berStream.getArray());
 
     ByteArrayInputStream berInputStream = new ByteArrayInputStream(berStream.getArray());
     BerReal berRealDecoded = new BerReal();
@@ -45,7 +45,7 @@ public class BerRealTest {
     BerReal berReal = new BerReal(Double.NEGATIVE_INFINITY);
     berReal.encode(berStream, true);
 
-    Assert.assertArrayEquals(DatatypeConverter.parseHexBinary("090141"), berStream.getArray());
+    Assert.assertArrayEquals(HexConverter.fromShortHexString("090141"), berStream.getArray());
 
     ByteArrayInputStream berInputStream = new ByteArrayInputStream(berStream.getArray());
     BerReal berRealDecoded = new BerReal();
@@ -62,7 +62,7 @@ public class BerRealTest {
     berReal.encode(berStream, true);
 
     // System.out.println(DatatypeConverter.printHexBinary(berStream.getArray()));
-    Assert.assertArrayEquals(DatatypeConverter.parseHexBinary("090380FF03"), berStream.getArray());
+    Assert.assertArrayEquals(HexConverter.fromShortHexString("090380FF03"), berStream.getArray());
 
     ByteArrayInputStream berInputStream = new ByteArrayInputStream(berStream.getArray());
     BerReal berRealDecoded = new BerReal();
@@ -79,7 +79,7 @@ public class BerRealTest {
 
     // System.out.println(DatatypeConverter.printHexBinary(baos.getArray()));
     Assert.assertArrayEquals(
-        DatatypeConverter.parseHexBinary("090980CC0B333333333333"), baos.getArray());
+        HexConverter.fromShortHexString("090980CC0B333333333333"), baos.getArray());
 
     final BerReal decoded = new BerReal();
     decoded.decode(new ByteArrayInputStream(baos.getArray()), true);
