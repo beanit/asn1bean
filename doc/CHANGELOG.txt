@@ -1,3 +1,6 @@
+v1.11.1 03-May-2019
+--------------------
+
 - removed use of JAXB function to make jASN1 compatible with Java 11
 
 - insertion of jASN1 version in generated class headers can now be
