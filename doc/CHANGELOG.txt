@@ -1,3 +1,16 @@
+- removed use of JAXB function to make jASN1 compatible with Java 11
+
+- insertion of jASN1 version in generated class headers can now be
+  disabled with -dv flag
+
+- added support for information object classes defined in external
+  modules
+
+- fixed name clash issue if a sequence, set or choice has an element
+  with the same name as the sequence, set or choice
+
+- fixed several minor inefficiencies such as unnecessary autoboxing
+
 v1.11.0 15-Mar-2019
 --------------------
 
