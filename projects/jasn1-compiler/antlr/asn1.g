@@ -133,7 +133,7 @@ LESS				:	'<'		;
 L_BRACE				:	'{'		;
 L_BRACKET			:	'['		;
 L_PAREN				:	'('		;
-MINUS				:	'-'		;
+protected MINUS				:	'-'		;
 PLUS				:	'+'		;
 R_BRACE				:	'}'		;
 R_BRACKET			:	']'		;
@@ -172,8 +172,25 @@ ML_COMMENT
 //	: L_BRACE ((~'}')*);
 
 
-NUMBER	:	('0'..'9')+ ;
+protected DIGIT  : ('0'..'9');
 
+protected NUMBER		 :		 (DIGIT)+ ;
+
+protected NEG_NUMBER : MINUS NUMBER ;
+
+protected SCIENTIFIC_NUMBER
+		 : (MINUS)? NUMBER '.' NUMBER
+		 | (MINUS)? NUMBER (('E'|'e') (MINUS)? NUMBER ) ;
+		 
+NUMBER_OR_SCIENTIFIC_NUMBER
+	:	( (MINUS)? NUMBER ".." )							=> NUMBER						{ $setType(NUMBER); }
+	|	( (MINUS)? NUMBER '.' NUMBER ) 						=> SCIENTIFIC_NUMBER			{ $setType(SCIENTIFIC_NUMBER); }
+	|	( (MINUS)? NUMBER ('E'|'e') ) 						=> SCIENTIFIC_NUMBER			{ $setType(SCIENTIFIC_NUMBER); }
+	|   ( MINUS NUMBER)										=> NEG_NUMBER					{ $setType(NEG_NUMBER); } 
+	|   NUMBER 																				{ $setType(NUMBER); }							
+
+ 	;
+ 
 UPPER	
 options {testLiterals = false;}
 	:   ('A'..'Z') 
@@ -411,6 +428,7 @@ syntaxTokens returns [List<String> syntaxTokens]
          lo:LOWER {syntaxTokens.add(lo.getText());} |
          COMMA {syntaxTokens.add(",");} |
          AMPERSAND {syntaxTokens.add("&");} |
+         AT_SIGN {syntaxTokens.add("@");} |
         C_STRING |
         DOT |
         NULL_KW |
@@ -586,8 +604,10 @@ AsnConstraint cnstrnt ; obj = null;}
 	;
 
 real_type returns [AsnType obj]
-{AsnReal rl = new AsnReal();obj = null;}
-	: REAL_KW  {obj = rl ; rl = null;}		
+{AsnReal rl = new AsnReal(); AsnConstraint cnstrnt; obj = null;}
+	: ( REAL_KW  
+			(cnstrnt = constraint {rl.constraint = cnstrnt;})? )
+		{obj = rl ; rl = null;}	
 	;
 
 relativeOid_type returns [AsnType obj]
@@ -782,11 +802,12 @@ constraint returns [AsnConstraint cnstrnt]
     ;
 
 constraint2 returns [AsnConstraint cnstrnt]
-{cnstrnt=new AsnConstraint();} :
-        L_PAREN 
-        (
-            cnstrnt=constraint2 |
-            ~R_PAREN )*
+{cnstrnt=new AsnConstraint(); ConstraintElements cnsElem;} :
+        L_PAREN
+        	cnsElem = constraint_elements {cnstrnt.cnsElem = cnsElem; }
+//        (
+//            cnstrnt=constraint2 |
+//           ~R_PAREN )*
         R_PAREN
     ;    
 
@@ -859,13 +880,14 @@ intersections returns [Intersection intersect]
 constraint_elements	returns [ConstraintElements cnsElem]
 { cnsElem = new ConstraintElements(); AsnValue val;
 AsnConstraint cns; ElementSetSpec elespec;Object typ; }
-	:  (val = value {cnsElem.isValue=true;cnsElem.value=val;})
-    |   (value_range[cnsElem])=>(value_range[cnsElem]	{cnsElem.isValueRange=true;})
+	:   (val = value2 {cnsElem.isValue=true;cnsElem.values.add(val);} ((BAR)? (value2) {cnsElem.values.add(val);} )*  ) 
+    |   (((value_range[cnsElem])=>(value_range[cnsElem] {cnsElem.isValueRange=true;})) (COMMA ELLIPSIS)?)
 	|	(SIZE_KW cns=constraint {cnsElem.isSizeConstraint=true;cnsElem.constraint=cns;})
-	|	(FROM_KW cns=constraint {cnsElem.isAlphabetConstraint=true;cnsElem.constraint=cns;})
+//	|	(FROM_KW cns=constraint {cnsElem.isAlphabetConstraint=true;cnsElem.constraint=cns;})
+	|	(FROM_KW L_PAREN elespec=element_set_spec {cnsElem.isElementSetSpec=true;cnsElem.elespec=elespec;} R_PAREN)
 	|	(L_PAREN elespec=element_set_spec {cnsElem.isElementSetSpec=true;cnsElem.elespec=elespec;} R_PAREN)
 	|	((INCLUDES {cnsElem.isIncludeType=true;})? typ=type {cnsElem.isTypeConstraint=true;cnsElem.type=typ;})
-	|	(PATTERN_KW val=value {cnsElem.isPatternValue=true;cnsElem.value=val;})
+	|	(PATTERN_KW val=value {cnsElem.isPatternValue=true;cnsElem.values.add(val);})
 	|	(WITH_KW 
 		((COMPONENT_KW cns=constraint {cnsElem.isWithComponent=true;cnsElem.constraint=cns;})
 		|	
@@ -900,7 +922,7 @@ named_constraint returns [NamedConstraint namecns]
 
 value returns [AsnValue value]
 {value = new AsnValue(); AsnSequenceValue seqval;
-AsnDefinedValue defval;String aStr;AsnSignedNumber num; 
+AsnDefinedValue defval;String aStr;AsnSignedNumber num; AsnScientificNumber snum;
 AsnOidComponentList cmplst;List<String> valueInBracesTokens;}		
 
 	: 	(TRUE_KW)=>(TRUE_KW 				{value.isTrueKW = true; })
@@ -908,6 +930,7 @@ AsnOidComponentList cmplst;List<String> valueInBracesTokens;}
 	|	(NULL_KW)=>(NULL_KW				{value.isNullKW = true;})
 	|	(C_STRING)=>(c:C_STRING				{value.isCString=true; value.cStr = c.getText();})
 	|	(defined_value)=>(defval = defined_value {value.isDefinedValue = true; value.definedValue = defval;})
+ 	|	(scientific_number)=>(snum = scientific_number	{value.scientificNumber = snum;}) 
 	|	(signed_number)=>(num = signed_number	{value.isSignedNumber=true ; value.signedNumber = num;}) 
 	|	(choice_value[value])=>(choice_value[value]	{value.isChoiceValue = true;})
 	|	(sequence_value)=>(seqval=sequence_value	{value.isSequenceValue=true;value.seqval=seqval;})
@@ -921,7 +944,7 @@ AsnOidComponentList cmplst;List<String> valueInBracesTokens;}
 
 value2 returns [AsnValue value]
 {value = new AsnValue(); AsnSequenceValue seqval;
-AsnDefinedValue defval;String aStr;AsnSignedNumber num; 
+AsnDefinedValue defval;String aStr;AsnSignedNumber num; AsnScientificNumber snum;
 AsnOidComponentList cmplst;List<String> valueInBracesTokens;}		
 
 	: 	(TRUE_KW)=>(TRUE_KW 				{value.isTrueKW = true; })
@@ -929,6 +952,7 @@ AsnOidComponentList cmplst;List<String> valueInBracesTokens;}
 	|	(NULL_KW)=>(NULL_KW				{value.isNullKW = true;})
 	|	(C_STRING)=>(c:C_STRING				{value.isCString=true; value.cStr = c.getText();})
 	|	(defined_value)=>(defval = defined_value {value.isDefinedValue = true; value.definedValue = defval;})
+ 	|	(scientific_number) => (snum = scientific_number	{value.scientificNumber = snum;}) 
 	|	(signed_number)=>(num = signed_number	{value.isSignedNumber=true ; value.signedNumber = num;}) 
 	|	(choice_value[value])=>(choice_value[value]	{value.isChoiceValue = true;})
     |   (valueInBracesTokens = valueInBraces {value.isValueInBraces=true;value.valueInBracesTokens = valueInBracesTokens;}) 
@@ -1026,8 +1050,13 @@ defined_value returns [AsnDefinedValue defval]
 		
 signed_number returns [AsnSignedNumber i]
 {i = new AsnSignedNumber() ; String s ; }
-	:	((MINUS {i.positive=false;})? 
-		(n:NUMBER  {s = n.getText(); i.num= new BigInteger(s);}) )
+	:	(nn:NEG_NUMBER  {s = nn.getText(); i.num= new BigInteger(s); i.positive=false;})
+	|	(n:NUMBER  {s = n.getText(); i.num= new BigInteger(s); }) 
+	;
+
+scientific_number returns [AsnScientificNumber r]
+{r = new AsnScientificNumber() ; String s ; }
+	:	 (n:SCIENTIFIC_NUMBER  {s = n.getText(); r.num= new Double(s);}) 
 	;
 	
 named_value returns [AsnNamedValue nameval]

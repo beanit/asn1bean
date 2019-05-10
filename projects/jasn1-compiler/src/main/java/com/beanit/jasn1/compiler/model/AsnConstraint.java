@@ -22,6 +22,7 @@ public class AsnConstraint {
 
   public ElementSetSpec addElemSetSpec;
   public AsnDefinedValue definedValue;
+  public ConstraintElements cnsElem;
   public ElementSetSpec elemSetSpec;
   public boolean isAdditionalElementSpec;
   public boolean isColonValue;

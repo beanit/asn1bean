@@ -35,5 +35,5 @@ public class ConstraintElements {
   public AsnValue lEndValue, uEndValue;
   public Object type;
   public ArrayList typeConstraintList = new ArrayList();
-  public AsnValue value;
+  public ArrayList<AsnValue> values = new ArrayList<AsnValue>();
 }

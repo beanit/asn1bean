@@ -45,4 +45,6 @@ public class AsnValue {
   String hStr, enumIntVal;
   boolean isBStrOrOstrValue;
   boolean isEnumIntValue;
+  public AsnNamedValue namedval;
+  public AsnScientificNumber scientificNumber;
 }

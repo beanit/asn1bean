@@ -19,13 +19,12 @@ SequenceNameClashTest ::= [43] SEQUENCE {
 			myBoolean [10] BOOLEAN
 		},
 		myseqof [1] SEQUENCE OF UntaggedInteger
-	},
+    },
 	sequenceNameClashTest [8] SEQUENCE {
    	myInteger [9] UntaggedInteger,
    	myBoolean [10] BOOLEAN
   }
 }
-
 
 UntaggedInteger ::= INTEGER
 
@@ -39,5 +38,20 @@ EnumerationWithoutValue ::= ENUMERATED {
 	value1,
 	value2
 }
+
+IntTest ::= INTEGER
+
+InTestCst ::= INTEGER (1..10)
+
+IntTestNegCst ::= INTEGER (-1..10)
+
+IntTestSingleValue ::= INTEGER (1 | 5)
+
+RealTest ::= REAL 
+
+RealTestRange ::= REAL (-1.0 .. 2.0)
+
+RealTestRange ::= REAL (-9E-10..1E6)
+
 
 END
