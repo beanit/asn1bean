@@ -1,3 +1,12 @@
+- added compile support for various forms of INTEGER and REAL value
+  constraints
+
+- significant performance improvements to
+  ReverseByteArrayOutputStream.write(byte[]) and
+  BerLength.encodeLength
+
+Thanks to the European Space Agency for these contributions.
+
 v1.11.1 03-May-2019
 --------------------
 
