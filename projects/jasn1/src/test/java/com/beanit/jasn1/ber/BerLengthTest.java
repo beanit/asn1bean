@@ -47,6 +47,46 @@ public class BerLengthTest {
   }
 
   @Test
+  public void encodeLength3() throws IOException {
+    ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(50);
+
+    int codedLength = BerLength.encodeLength(os, 65536);
+
+    Assert.assertEquals(4, codedLength);
+
+    byte[] expectedBytes = new byte[] {(byte) 0x83, 1, 0, 0};
+
+    Assert.assertArrayEquals(expectedBytes, os.getArray());
+  }
+
+  @Test
+  public void encodeLength4() throws IOException {
+    ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(50);
+
+    int codedLength = BerLength.encodeLength(os, 256);
+
+    Assert.assertEquals(3, codedLength);
+
+    byte[] expectedBytes = new byte[] {(byte) 0x82, 1, 0};
+
+    Assert.assertArrayEquals(expectedBytes, os.getArray());
+  }
+
+
+  @Test
+  public void encodeLength5() throws IOException {
+    ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(50);
+
+    int codedLength = BerLength.encodeLength(os, 16777216);
+
+    Assert.assertEquals(5, codedLength);
+
+    byte[] expectedBytes = new byte[] {(byte) 0x84, 1, 0,0,0};
+
+    Assert.assertArrayEquals(expectedBytes, os.getArray());
+  }
+
+  @Test
   public void explicitDecoding() throws IOException {
     byte[] byteCode = new byte[] {(byte) 0x81, (byte) 128};
     ByteArrayInputStream berInputStream = new ByteArrayInputStream(byteCode);

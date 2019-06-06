@@ -60,28 +60,45 @@ public class BerLength implements Serializable {
   }
 
   public static int encodeLength(OutputStream reverseOS, int length) throws IOException {
-    // the indefinite form is ignored for now
 
     if (length <= 127) {
-      // this is the short form, it is coded differently than the long
-      // form for values > 127
-      reverseOS.write((byte) length);
+      // this is the short form
+      reverseOS.write(length);
       return 1;
-    } else {
-      int numLengthBytes = 1;
-
-      while (((int) (Math.pow(2, 8 * numLengthBytes) - 1)) < length) {
-        numLengthBytes++;
-      }
-
-      for (int i = 0; i < numLengthBytes; i++) {
-        reverseOS.write((length >> 8 * i) & 0xff);
-      }
-
-      reverseOS.write(0x80 | numLengthBytes);
-
-      return 1 + numLengthBytes;
     }
+
+    if (length <= 255) {
+      reverseOS.write(length);
+      reverseOS.write(0x81);
+      return 2;
+    }
+
+    if (length <= 65535) {
+      reverseOS.write(length);
+      reverseOS.write(length >> 8);
+      reverseOS.write(0x82);
+      return 3;
+    }
+
+    if (length <= 16777215) {
+      reverseOS.write(length);
+      reverseOS.write(length >> 8);
+      reverseOS.write(length >> 16);
+      reverseOS.write(0x83);
+      return 4;
+    }
+
+    int numLengthBytes = 1;
+    while (((int) (Math.pow(2, 8 * numLengthBytes) - 1)) < length) {
+      numLengthBytes++;
+    }
+
+    for (int i = 0; i < numLengthBytes; i++) {
+      reverseOS.write(length >> (8 * i));
+    }
+    reverseOS.write(0x80 | numLengthBytes);
+
+    return 1 + numLengthBytes;
   }
 
   public int decode(InputStream is) throws IOException {
