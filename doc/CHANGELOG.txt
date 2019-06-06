@@ -1,3 +1,6 @@
+v1.11.2 06-Jun-2019
+--------------------
+
 - added compile support for various forms of INTEGER and REAL value
   constraints
 
