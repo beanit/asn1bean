@@ -72,7 +72,6 @@ public class BerLengthTest {
     Assert.assertArrayEquals(expectedBytes, os.getArray());
   }
 
-
   @Test
   public void encodeLength5() throws IOException {
     ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(50);
@@ -81,7 +80,7 @@ public class BerLengthTest {
 
     Assert.assertEquals(5, codedLength);
 
-    byte[] expectedBytes = new byte[] {(byte) 0x84, 1, 0,0,0};
+    byte[] expectedBytes = new byte[] {(byte) 0x84, 1, 0, 0, 0};
 
     Assert.assertArrayEquals(expectedBytes, os.getArray());
   }
