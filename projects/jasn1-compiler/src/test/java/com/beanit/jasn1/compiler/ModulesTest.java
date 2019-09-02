@@ -13,6 +13,8 @@
  */
 package com.beanit.jasn1.compiler;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.beanit.jasn1.ber.ReverseByteArrayOutputStream;
 import com.beanit.jasn1.ber.types.BerEmbeddedPdv;
 import com.beanit.jasn1.ber.types.BerInteger;
@@ -33,8 +35,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class ModulesTest {
 
@@ -57,7 +58,7 @@ public class ModulesTest {
     byte[] code = HexConverter.fromShortHexString("a303020102");
     InputStream is = new ByteArrayInputStream(code);
     myInt2Decode.decode(is, true);
-    Assert.assertEquals(myInt2Decode.value.intValue(), 2);
+    assertEquals(myInt2Decode.value.intValue(), 2);
 
     PersonnelRecord pr = new PersonnelRecord();
 

@@ -13,10 +13,12 @@
  */
 package com.beanit.jasn1.ber.types;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.beanit.jasn1.ber.ReverseByteArrayOutputStream;
 import java.io.IOException;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class BerGeneralizedTimeTest {
 
@@ -27,9 +29,9 @@ public class BerGeneralizedTimeTest {
     byte[] byteArray = new byte[] {0x01, 0x02, 0x03};
     BerGeneralizedTime berGeneralizedTime = new BerGeneralizedTime(byteArray);
     int length = berGeneralizedTime.encode(berStream, true);
-    Assert.assertEquals(5, length);
+    assertEquals(5, length);
 
     byte[] expectedBytes = new byte[] {24, 0x03, 0x01, 0x02, 0x03};
-    Assert.assertArrayEquals(expectedBytes, berStream.getArray());
+    assertArrayEquals(expectedBytes, berStream.getArray());
   }
 }

@@ -13,6 +13,9 @@
  */
 package com.beanit.jasn1.ber.types;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.beanit.jasn1.ber.BerLength;
 import com.beanit.jasn1.ber.BerTag;
 import com.beanit.jasn1.ber.ReverseByteArrayOutputStream;
@@ -20,8 +23,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigInteger;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class BerIntegerTest {
 
@@ -34,7 +36,7 @@ public class BerIntegerTest {
     ByteArrayInputStream berInputStream = new ByteArrayInputStream(os.getArray());
     BerInteger myInt2 = new BerInteger();
     myInt2.decode(berInputStream, true);
-    Assert.assertEquals(20093243433L, myInt2.value.longValue());
+    assertEquals(20093243433L, myInt2.value.longValue());
   }
 
   @Test
@@ -46,7 +48,7 @@ public class BerIntegerTest {
     ByteArrayInputStream berInputStream = new ByteArrayInputStream(berBAOStream.getArray());
     BerInteger myInt2 = new BerInteger();
     myInt2.decode(berInputStream, true);
-    Assert.assertEquals(-20093243433L, myInt2.value.longValue());
+    assertEquals(-20093243433L, myInt2.value.longValue());
   }
 
   @Test
@@ -56,10 +58,10 @@ public class BerIntegerTest {
     // 51 is the example in X.690
     IntegerUnivPrim testInteger = new IntegerUnivPrim(BigInteger.valueOf(51));
     int length = testInteger.encode(berBAOStream, false);
-    Assert.assertEquals(2, length);
+    assertEquals(2, length);
 
     byte[] expectedBytes = new byte[] {0x01, 0x33};
-    Assert.assertArrayEquals(expectedBytes, berBAOStream.getArray());
+    assertArrayEquals(expectedBytes, berBAOStream.getArray());
   }
 
   @Test
@@ -68,10 +70,10 @@ public class BerIntegerTest {
 
     IntegerUnivPrim testInteger = new IntegerUnivPrim(BigInteger.valueOf(256));
     int length = testInteger.encode(berBAOStream, false);
-    Assert.assertEquals(3, length);
+    assertEquals(3, length);
 
     byte[] expectedBytes = new byte[] {0x02, 0x01, 0x00};
-    Assert.assertArrayEquals(expectedBytes, berBAOStream.getArray());
+    assertArrayEquals(expectedBytes, berBAOStream.getArray());
   }
 
   @Test
@@ -80,10 +82,10 @@ public class BerIntegerTest {
 
     IntegerUnivPrim testInteger = new IntegerUnivPrim(BigInteger.valueOf(0));
     int length = testInteger.encode(berBAOStream, false);
-    Assert.assertEquals(2, length);
+    assertEquals(2, length);
 
     byte[] expectedBytes = new byte[] {0x01, 0x00};
-    Assert.assertArrayEquals(expectedBytes, berBAOStream.getArray());
+    assertArrayEquals(expectedBytes, berBAOStream.getArray());
   }
 
   @Test
@@ -92,10 +94,10 @@ public class BerIntegerTest {
 
     IntegerUnivPrim testInteger = new IntegerUnivPrim(BigInteger.valueOf(127));
     int length = testInteger.encode(berBAOStream, false);
-    Assert.assertEquals(2, length);
+    assertEquals(2, length);
 
     byte[] expectedBytes = new byte[] {0x01, 0x7f};
-    Assert.assertArrayEquals(expectedBytes, berBAOStream.getArray());
+    assertArrayEquals(expectedBytes, berBAOStream.getArray());
   }
 
   @Test
@@ -104,10 +106,10 @@ public class BerIntegerTest {
 
     IntegerUnivPrim testInteger = new IntegerUnivPrim(BigInteger.valueOf(128));
     int length = testInteger.encode(berBAOStream, false);
-    Assert.assertEquals(3, length);
+    assertEquals(3, length);
 
     byte[] expectedBytes = new byte[] {0x02, 0x00, (byte) 0x80};
-    Assert.assertArrayEquals(expectedBytes, berBAOStream.getArray());
+    assertArrayEquals(expectedBytes, berBAOStream.getArray());
   }
 
   @Test
@@ -116,10 +118,10 @@ public class BerIntegerTest {
 
     IntegerUnivPrim testInteger = new IntegerUnivPrim(BigInteger.valueOf(-128));
     int length = testInteger.encode(berBAOStream, false);
-    Assert.assertEquals(2, length);
+    assertEquals(2, length);
 
     byte[] expectedBytes = new byte[] {0x01, (byte) 0x80};
-    Assert.assertArrayEquals(expectedBytes, berBAOStream.getArray());
+    assertArrayEquals(expectedBytes, berBAOStream.getArray());
   }
 
   @Test
@@ -128,10 +130,10 @@ public class BerIntegerTest {
 
     IntegerUnivPrim testInteger = new IntegerUnivPrim(BigInteger.valueOf(-129));
     int length = testInteger.encode(berBAOStream, false);
-    Assert.assertEquals(3, length);
+    assertEquals(3, length);
 
     byte[] expectedBytes = new byte[] {0x02, (byte) 0xff, (byte) 0x7f};
-    Assert.assertArrayEquals(expectedBytes, berBAOStream.getArray());
+    assertArrayEquals(expectedBytes, berBAOStream.getArray());
   }
 
   @Test
@@ -141,10 +143,10 @@ public class BerIntegerTest {
     // 51 is the example in X.690
     BerInteger testInteger = new BerInteger(BigInteger.valueOf(51));
     int length = testInteger.encode(berStream, true);
-    Assert.assertEquals(3, length);
+    assertEquals(3, length);
 
     byte[] expectedBytes = new byte[] {0x02, 0x01, 0x33};
-    Assert.assertArrayEquals(expectedBytes, berStream.getArray());
+    assertArrayEquals(expectedBytes, berStream.getArray());
   }
 
   @Test
@@ -153,7 +155,7 @@ public class BerIntegerTest {
     ByteArrayInputStream berInputStream = new ByteArrayInputStream(byteCode);
     BerInteger asn1Integer = new BerInteger();
     asn1Integer.decode(berInputStream, true);
-    Assert.assertEquals(51, asn1Integer.value.intValue());
+    assertEquals(51, asn1Integer.value.intValue());
   }
 
   @Test
@@ -162,10 +164,10 @@ public class BerIntegerTest {
 
     BerInteger testInteger = new BerInteger(BigInteger.valueOf(5555));
     int length = testInteger.encode(berStream, true);
-    Assert.assertEquals(4, length);
+    assertEquals(4, length);
 
     byte[] expectedBytes = new byte[] {0x02, 0x02, 0x15, (byte) 0xb3};
-    Assert.assertArrayEquals(expectedBytes, berStream.getArray());
+    assertArrayEquals(expectedBytes, berStream.getArray());
   }
 
   @Test
@@ -174,7 +176,7 @@ public class BerIntegerTest {
     ByteArrayInputStream berInputStream = new ByteArrayInputStream(byteCode);
     BerInteger asn1Integer = new BerInteger();
     asn1Integer.decode(berInputStream, true);
-    Assert.assertEquals(5555, asn1Integer.value.intValue());
+    assertEquals(5555, asn1Integer.value.intValue());
   }
 
   @Test
@@ -183,7 +185,7 @@ public class BerIntegerTest {
     ByteArrayInputStream berInputStream = new ByteArrayInputStream(byteCode);
     BerInteger asn1Integer = new BerInteger();
     asn1Integer.decode(berInputStream, true);
-    Assert.assertEquals(-64, asn1Integer.value.intValue());
+    assertEquals(-64, asn1Integer.value.intValue());
   }
 
   @Test
@@ -192,7 +194,7 @@ public class BerIntegerTest {
     ByteArrayInputStream berInputStream = new ByteArrayInputStream(byteCode);
     BerInteger asn1Integer = new BerInteger();
     asn1Integer.decode(berInputStream, true);
-    Assert.assertEquals(-255, asn1Integer.value.intValue());
+    assertEquals(-255, asn1Integer.value.intValue());
   }
 
   public class IntegerUnivPrim extends BerInteger {

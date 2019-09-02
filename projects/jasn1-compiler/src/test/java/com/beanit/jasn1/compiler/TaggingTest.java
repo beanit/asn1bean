@@ -13,6 +13,11 @@
  */
 package com.beanit.jasn1.compiler;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import com.beanit.jasn1.ber.ReverseByteArrayOutputStream;
 import com.beanit.jasn1.ber.types.BerAny;
 import com.beanit.jasn1.ber.types.BerBoolean;
@@ -30,8 +35,7 @@ import com.beanit.jasn1.compiler.tagging_test.TaggedChoice;
 import com.beanit.jasn1.util.HexConverter;
 import java.io.ByteArrayInputStream;
 import java.util.List;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TaggingTest {
 
@@ -47,8 +51,7 @@ public class TaggingTest {
     ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
     seqOf.encode(os);
 
-    Assert.assertArrayEquals(
-        HexConverter.fromShortHexString("300AA303020103A303020104"), os.getArray());
+    assertArrayEquals(HexConverter.fromShortHexString("300AA303020103A303020104"), os.getArray());
 
     seqOf = new SeqOfExplicitlyTaggedType();
     seqOf.decode(new ByteArrayInputStream(os.getArray()));
@@ -63,13 +66,13 @@ public class TaggingTest {
     ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
     choice.encode(os);
 
-    Assert.assertArrayEquals(HexConverter.fromShortHexString("BF2103830101"), os.getArray());
+    assertArrayEquals(HexConverter.fromShortHexString("BF2103830101"), os.getArray());
 
     choice = new RetaggedUntaggedChoice();
     choice.decode(new ByteArrayInputStream(os.getArray()));
 
-    Assert.assertNotNull(choice.getMyInteger());
-    Assert.assertNull(choice.getMyBoolean());
+    assertNotNull(choice.getMyInteger());
+    assertNull(choice.getMyBoolean());
   }
 
   @Test
@@ -82,14 +85,13 @@ public class TaggingTest {
     ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
     sequence.encode(os);
 
-    Assert.assertArrayEquals(
-        HexConverter.fromShortHexString("BF210830060201010101FF"), os.getArray());
+    assertArrayEquals(HexConverter.fromShortHexString("BF210830060201010101FF"), os.getArray());
 
     sequence = new ExplicitlyTaggedSequence();
     sequence.decode(new ByteArrayInputStream(os.getArray()));
 
-    Assert.assertNotNull(sequence.getMyInteger());
-    Assert.assertNotNull(sequence.getMyBoolean());
+    assertNotNull(sequence.getMyInteger());
+    assertNotNull(sequence.getMyBoolean());
   }
 
   @Test
@@ -102,14 +104,13 @@ public class TaggingTest {
     ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
     set.encode(os);
 
-    Assert.assertArrayEquals(
-        HexConverter.fromShortHexString("BF210831060201010101FF"), os.getArray());
+    assertArrayEquals(HexConverter.fromShortHexString("BF210831060201010101FF"), os.getArray());
 
     set = new ExplicitlyTaggedSet();
     set.decode(new ByteArrayInputStream(os.getArray()));
 
-    Assert.assertNotNull(set.getMyInteger());
-    Assert.assertNotNull(set.getMyBoolean());
+    assertNotNull(set.getMyInteger());
+    assertNotNull(set.getMyBoolean());
   }
 
   @Test
@@ -126,8 +127,7 @@ public class TaggingTest {
 
     System.out.println("seqOf : " + HexConverter.toShortHexString(os.getArray()));
 
-    Assert.assertArrayEquals(
-        HexConverter.fromShortHexString("BF21083006020103020104"), os.getArray());
+    assertArrayEquals(HexConverter.fromShortHexString("BF21083006020103020104"), os.getArray());
 
     seqOf = new ExplicitlyTaggedSeqOf();
     seqOf.decode(new ByteArrayInputStream(os.getArray()));
@@ -147,8 +147,7 @@ public class TaggingTest {
 
     System.out.println("setOf : " + HexConverter.toShortHexString(os.getArray()));
 
-    Assert.assertArrayEquals(
-        HexConverter.fromShortHexString("BF21083106020103020104"), os.getArray());
+    assertArrayEquals(HexConverter.fromShortHexString("BF21083106020103020104"), os.getArray());
 
     setOf = new ExplicitlyTaggedSetOf();
     setOf.decode(new ByteArrayInputStream(os.getArray()));
@@ -163,13 +162,13 @@ public class TaggingTest {
     ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
     choice.encode(os);
 
-    Assert.assertArrayEquals(HexConverter.fromShortHexString("BF2203020101"), os.getArray());
+    assertArrayEquals(HexConverter.fromShortHexString("BF2203020101"), os.getArray());
 
     choice = new TaggedChoice();
     choice.decode(new ByteArrayInputStream(os.getArray()));
 
-    Assert.assertNotNull(choice.getMyInteger());
-    Assert.assertNull(choice.getMyBoolean());
+    assertNotNull(choice.getMyInteger());
+    assertNull(choice.getMyBoolean());
   }
 
   @Test
@@ -180,7 +179,7 @@ public class TaggingTest {
     ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
     implicitlyTaggedInteger.encode(os);
 
-    Assert.assertArrayEquals(HexConverter.fromShortHexString("9F210101"), os.getArray());
+    assertArrayEquals(HexConverter.fromShortHexString("9F210101"), os.getArray());
   }
 
   @Test
@@ -192,7 +191,7 @@ public class TaggingTest {
     ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
     choice.encode(os);
 
-    Assert.assertArrayEquals(HexConverter.fromShortHexString("A303020101"), os.getArray());
+    assertArrayEquals(HexConverter.fromShortHexString("A303020101"), os.getArray());
   }
 
   @Test
@@ -217,21 +216,20 @@ public class TaggingTest {
     ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
     sequence.encode(os);
 
-    Assert.assertArrayEquals(
+    assertArrayEquals(
         HexConverter.fromShortHexString("BF2B18020101A1030201028201038401FFA503830104A603020101"),
         os.getArray());
 
     sequence = new SequenceOfDirectTypes();
     sequence.decode(new ByteArrayInputStream(os.getArray()));
 
-    Assert.assertEquals(1, sequence.getUntaggedInt().value.intValue());
-    Assert.assertEquals(2, sequence.getExplicitlyTaggedInt().value.intValue());
-    Assert.assertEquals(3, sequence.getImplicitlyTaggedInt().value.intValue());
-    Assert.assertEquals(true, untaggedChoice.getMyBoolean().value);
-    Assert.assertEquals(4, sequence.getTaggedChoice().getMyInteger().value.intValue());
+    assertEquals(1, sequence.getUntaggedInt().value.intValue());
+    assertEquals(2, sequence.getExplicitlyTaggedInt().value.intValue());
+    assertEquals(3, sequence.getImplicitlyTaggedInt().value.intValue());
+    assertEquals(true, untaggedChoice.getMyBoolean().value);
+    assertEquals(4, sequence.getTaggedChoice().getMyInteger().value.intValue());
     System.out.println(HexConverter.toShortHexString(sequence.getTaggedAny().value));
-    Assert.assertArrayEquals(
-        HexConverter.fromShortHexString("020101"), sequence.getTaggedAny().value);
-    Assert.assertNull(sequence.getUntaggedChoice2());
+    assertArrayEquals(HexConverter.fromShortHexString("020101"), sequence.getTaggedAny().value);
+    assertNull(sequence.getUntaggedChoice2());
   }
 }

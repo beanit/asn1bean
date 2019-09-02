@@ -13,11 +13,13 @@
  */
 package com.beanit.jasn1.ber.types;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.beanit.jasn1.ber.ReverseByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class BerOctetStringTest {
 
@@ -28,10 +30,10 @@ public class BerOctetStringTest {
     byte[] byteArray = new byte[] {0x01, 0x02, 0x03};
     BerOctetString asn1OctetString = new BerOctetString(byteArray);
     int length = asn1OctetString.encode(berStream, true);
-    Assert.assertEquals(5, length);
+    assertEquals(5, length);
 
     byte[] expectedBytes = new byte[] {0x04, 0x03, 0x01, 0x02, 0x03};
-    Assert.assertArrayEquals(expectedBytes, berStream.getArray());
+    assertArrayEquals(expectedBytes, berStream.getArray());
   }
 
   @Test
@@ -40,12 +42,12 @@ public class BerOctetStringTest {
     ByteArrayInputStream berInputStream = new ByteArrayInputStream(byteCode);
     BerOctetString asn1OctetString = new BerOctetString();
     asn1OctetString.decode(berInputStream, true);
-    Assert.assertEquals(0, asn1OctetString.value.length);
+    assertEquals(0, asn1OctetString.value.length);
   }
 
   @Test
   public void toStringTest() {
     BerOctetString octetString = new BerOctetString(new byte[] {1, 2, (byte) 0xa0});
-    Assert.assertEquals("0102A0", octetString.toString());
+    assertEquals("0102A0", octetString.toString());
   }
 }

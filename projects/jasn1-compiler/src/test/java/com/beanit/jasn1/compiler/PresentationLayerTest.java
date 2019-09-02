@@ -13,6 +13,8 @@
  */
 package com.beanit.jasn1.compiler;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.beanit.jasn1.ber.ReverseByteArrayOutputStream;
 import com.beanit.jasn1.ber.types.BerAny;
 import com.beanit.jasn1.ber.types.BerInteger;
@@ -32,8 +34,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class PresentationLayerTest {
 
@@ -98,7 +99,7 @@ public class PresentationLayerTest {
     CPType cpType_decoded = new CPType();
     cpType_decoded.decode(bais, true);
 
-    Assert.assertEquals(
+    assertEquals(
         "2.2.1.0.1",
         cpType_decoded
             .normalModeParameters

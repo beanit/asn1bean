@@ -13,10 +13,12 @@
  */
 package com.beanit.jasn1.ber;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class BerLengthTest {
 
@@ -26,11 +28,11 @@ public class BerLengthTest {
 
     int codedLength = BerLength.encodeLength(os, 128);
 
-    Assert.assertEquals(2, codedLength);
+    assertEquals(2, codedLength);
 
     byte[] expectedBytes = new byte[] {(byte) 0x81, (byte) 128};
 
-    Assert.assertArrayEquals(expectedBytes, os.getArray());
+    assertArrayEquals(expectedBytes, os.getArray());
   }
 
   @Test
@@ -39,11 +41,11 @@ public class BerLengthTest {
 
     int codedLength = BerLength.encodeLength(os, 128);
 
-    Assert.assertEquals(2, codedLength);
+    assertEquals(2, codedLength);
 
     byte[] expectedBytes = new byte[] {(byte) 0x81, (byte) 128};
 
-    Assert.assertArrayEquals(expectedBytes, os.getArray());
+    assertArrayEquals(expectedBytes, os.getArray());
   }
 
   @Test
@@ -52,11 +54,11 @@ public class BerLengthTest {
 
     int codedLength = BerLength.encodeLength(os, 65536);
 
-    Assert.assertEquals(4, codedLength);
+    assertEquals(4, codedLength);
 
     byte[] expectedBytes = new byte[] {(byte) 0x83, 1, 0, 0};
 
-    Assert.assertArrayEquals(expectedBytes, os.getArray());
+    assertArrayEquals(expectedBytes, os.getArray());
   }
 
   @Test
@@ -65,11 +67,11 @@ public class BerLengthTest {
 
     int codedLength = BerLength.encodeLength(os, 256);
 
-    Assert.assertEquals(3, codedLength);
+    assertEquals(3, codedLength);
 
     byte[] expectedBytes = new byte[] {(byte) 0x82, 1, 0};
 
-    Assert.assertArrayEquals(expectedBytes, os.getArray());
+    assertArrayEquals(expectedBytes, os.getArray());
   }
 
   @Test
@@ -78,11 +80,11 @@ public class BerLengthTest {
 
     int codedLength = BerLength.encodeLength(os, 16777216);
 
-    Assert.assertEquals(5, codedLength);
+    assertEquals(5, codedLength);
 
     byte[] expectedBytes = new byte[] {(byte) 0x84, 1, 0, 0, 0};
 
-    Assert.assertArrayEquals(expectedBytes, os.getArray());
+    assertArrayEquals(expectedBytes, os.getArray());
   }
 
   @Test
@@ -91,6 +93,6 @@ public class BerLengthTest {
     ByteArrayInputStream berInputStream = new ByteArrayInputStream(byteCode);
     BerLength berLength = new BerLength();
     berLength.decode(berInputStream);
-    Assert.assertEquals(128, berLength.val);
+    assertEquals(128, berLength.val);
   }
 }

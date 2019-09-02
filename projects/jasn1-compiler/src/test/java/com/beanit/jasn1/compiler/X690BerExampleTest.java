@@ -13,6 +13,9 @@
  */
 package com.beanit.jasn1.compiler;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.beanit.jasn1.ber.ReverseByteArrayOutputStream;
 import com.beanit.jasn1.ber.types.string.BerVisibleString;
 import com.beanit.jasn1.compiler.x690_ber_example.ChildInformation;
@@ -25,8 +28,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.List;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class X690BerExampleTest {
 
@@ -141,7 +143,7 @@ public class X690BerExampleTest {
                   (byte) 0x31
                 }));
 
-    Assert.assertArrayEquals(
+    assertArrayEquals(
         new byte[] {
           (byte) 0x1f,
           (byte) 0x61,
@@ -345,18 +347,18 @@ public class X690BerExampleTest {
     System.out.println("encoded structure:");
     System.out.println(getByteArrayString(berOS.getArray()));
 
-    Assert.assertArrayEquals(expectedBytes, berOS.getArray());
+    assertArrayEquals(expectedBytes, berOS.getArray());
 
     ByteBuffer byteBuffer = berOS.getByteBuffer();
-    Assert.assertEquals((byte) 0x60, byteBuffer.get());
-    Assert.assertEquals((byte) 0x37, byteBuffer.get(byteBuffer.limit() - 1));
+    assertEquals((byte) 0x60, byteBuffer.get());
+    assertEquals((byte) 0x37, byteBuffer.get(byteBuffer.limit() - 1));
 
     ByteArrayInputStream bais = new ByteArrayInputStream(berOS.getArray());
 
     PersonnelRecord personnelRecord_decoded = new PersonnelRecord();
     personnelRecord_decoded.decode(bais, true);
 
-    Assert.assertEquals("John", new String(personnelRecord_decoded.getName().getGivenName().value));
+    assertEquals("John", new String(personnelRecord_decoded.getName().getGivenName().value));
 
     // System.out
     // .println("presentation_context_identifier= "

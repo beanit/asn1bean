@@ -13,9 +13,11 @@
  */
 package com.beanit.jasn1.ber;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.io.IOException;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class BerIdentifierTest {
 
@@ -26,9 +28,9 @@ public class BerIdentifierTest {
     BerTag berIdentifier = new BerTag(BerTag.APPLICATION_CLASS, BerTag.PRIMITIVE, 31);
 
     int length = berIdentifier.encode(berBAOStream);
-    Assert.assertEquals(2, length);
+    assertEquals(2, length);
 
     byte[] expectedBytes = new byte[] {0x5f, 0x1f};
-    Assert.assertArrayEquals(expectedBytes, berBAOStream.getArray());
+    assertArrayEquals(expectedBytes, berBAOStream.getArray());
   }
 }

@@ -13,11 +13,13 @@
  */
 package com.beanit.jasn1.ber.types;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.beanit.jasn1.ber.ReverseByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class BerObjectIdentifierTest {
 
@@ -34,9 +36,9 @@ public class BerObjectIdentifierTest {
 
     int length = oi.encode(berBAOStream, true);
 
-    Assert.assertEquals(7, length);
+    assertEquals(7, length);
 
-    Assert.assertArrayEquals(expectedBytes, berBAOStream.getArray());
+    assertArrayEquals(expectedBytes, berBAOStream.getArray());
   }
 
   @Test
@@ -47,7 +49,7 @@ public class BerObjectIdentifierTest {
 
     oi.decode(berInputStream, true);
 
-    Assert.assertArrayEquals(objectIdentifierComponents, oi.value);
+    assertArrayEquals(objectIdentifierComponents, oi.value);
 
     ByteArrayInputStream berInputStream2 = new ByteArrayInputStream(expectedBytes2);
     BerObjectIdentifier oi2 = new BerObjectIdentifier();

@@ -13,15 +13,16 @@
  */
 package com.beanit.jasn1.ber.types;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
 
 public class BerBitStringTest {
 
   @Test
   public void toStringTest() {
     BerBitString bitString = new BerBitString(new byte[] {1, 2, 7}, 23);
-    Assert.assertEquals("00000001000000100000011", bitString.toString());
+    assertEquals("00000001000000100000011", bitString.toString());
   }
 
   @Test
@@ -32,6 +33,6 @@ public class BerBitStringTest {
               false, false, false, false, false, false, false, true, false, false, false, false,
               false, false, true, false, false, false, false, false, false, true, true
             });
-    Assert.assertEquals("00000001000000100000011", bitString.toString());
+    assertEquals("00000001000000100000011", bitString.toString());
   }
 }
