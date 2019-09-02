@@ -18,9 +18,11 @@ sourceSets {
     }
 }
 
+ext.moduleName = "com.beanit.jasn1-compiler"
+
 jar {
     bnd("Bundle-Name": "jASN1 Compiler",
-            "Bundle-SymbolicName": "com.beanit.jasn1-compiler",
+            "Bundle-SymbolicName": moduleName,
             "-exportcontents": "!*.internal.*,*")
 }
 

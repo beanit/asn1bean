@@ -1,6 +1,8 @@
+ext.moduleName = "com.beanit.jasn1"
+
 jar {
     bnd("Bundle-Name": "jASN1",
-            "Bundle-SymbolicName": "com.beanit.jasn1",
+            "Bundle-SymbolicName": moduleName,
             "-exportcontents": "!*.internal.*,*")
 }
 
