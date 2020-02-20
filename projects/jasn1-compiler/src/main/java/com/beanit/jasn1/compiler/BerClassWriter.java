@@ -737,6 +737,12 @@ public class BerClassWriter {
         return null;
       } else {
         if (asnType instanceof AsnDefinedType) {
+          System.out.println("getInformationObjectClass for " + objectClassReference + " of type " + ((AsnDefinedType) asnType).typeName);	
+          
+          // error handling: if the reference and the type name are the same, this is an infinite loop
+          if(objectClassReference.equals(((AsnDefinedType) asnType).typeName)) {
+        	  throw new CompileException("Self reference " + objectClassReference + " to " + ((AsnDefinedType) asnType).typeName);
+          }
           return getInformationObjectClass(((AsnDefinedType) asnType).typeName, module);
         }
       }
