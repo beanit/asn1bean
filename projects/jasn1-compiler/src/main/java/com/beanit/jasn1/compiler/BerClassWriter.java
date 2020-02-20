@@ -737,11 +737,6 @@ public class BerClassWriter {
         return null;
       } else {
         if (asnType instanceof AsnDefinedType) {
-          System.out.println(
-              "getInformationObjectClass for "
-                  + objectClassReference
-                  + " of type "
-                  + ((AsnDefinedType) asnType).typeName);
 
           // error handling: if the reference and the type name are the same, this is an infinite
           // loop
