@@ -178,16 +178,17 @@ protected NUMBER		 :		 (DIGIT)+ ;
 
 protected NEG_NUMBER : MINUS NUMBER ;
 
+protected EXPONENT : ('e' | 'E') ('-' | '+')?   NUMBER;
+
 protected SCIENTIFIC_NUMBER
-		 : (MINUS)? NUMBER '.' NUMBER
-		 | (MINUS)? NUMBER (('E'|'e') (MINUS)? NUMBER ) ;
+		 : (MINUS)? NUMBER '.' NUMBER (EXPONENT)?
+		 | (MINUS)? NUMBER EXPONENT ;
 		 
 NUMBER_OR_SCIENTIFIC_NUMBER
-	:	( (MINUS)? NUMBER ".." )							=> NUMBER						{ $setType(NUMBER); }
-	|	( (MINUS)? NUMBER '.' NUMBER ) 						=> SCIENTIFIC_NUMBER			{ $setType(SCIENTIFIC_NUMBER); }
-	|	( (MINUS)? NUMBER ('E'|'e') ) 						=> SCIENTIFIC_NUMBER			{ $setType(SCIENTIFIC_NUMBER); }
-	|   ( MINUS NUMBER)										=> NEG_NUMBER					{ $setType(NEG_NUMBER); } 
-	|   NUMBER 																				{ $setType(NUMBER); }							
+	:	( (MINUS)? NUMBER ".." )		=> NUMBER						{ $setType(NUMBER); }
+	|	( SCIENTIFIC_NUMBER )			=> SCIENTIFIC_NUMBER			{ $setType(SCIENTIFIC_NUMBER); }
+	|   ( MINUS NUMBER)					=> NEG_NUMBER					{ $setType(NEG_NUMBER); } 
+	|   NUMBER 															{ $setType(NUMBER); }							
 
  	;
  
@@ -950,7 +951,9 @@ AsnOidComponentList cmplst;List<String> valueInBracesTokens;}
 	: 	(TRUE_KW)=>(TRUE_KW 				{value.isTrueKW = true; })
 	|	(FALSE_KW)=>(FALSE_KW				{value.isFalseKW = true;})
 	|	(NULL_KW)=>(NULL_KW				{value.isNullKW = true;})
-	|	(C_STRING)=>(c:C_STRING				{value.isCString=true; value.cStr = c.getText();})
+	|	(H_STRING)=>(h:H_STRING				{value.isHString=true; value.cStr = h.getText();})
+	|	(B_STRING)=>(b:B_STRING				{value.isBString=true; value.bStr = b.getText();})
+	|	(C_STRING)=>(c:C_STRING				{value.isCString=true; value.hStr = c.getText();})
 	|	(defined_value)=>(defval = defined_value {value.isDefinedValue = true; value.definedValue = defval;})
  	|	(scientific_number) => (snum = scientific_number	{value.scientificNumber = snum;}) 
 	|	(signed_number)=>(num = signed_number	{value.isSignedNumber=true ; value.signedNumber = num;}) 

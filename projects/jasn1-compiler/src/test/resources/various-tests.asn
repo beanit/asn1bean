@@ -49,9 +49,14 @@ IntTestSingleValue ::= INTEGER (1 | 5)
 
 RealTest ::= REAL 
 
-RealTestRange ::= REAL (-1.0 .. 2.0)
+RealTestRange1 ::= REAL (-1.0 .. 2.0)
 
-RealTestRange ::= REAL (-9E-10..1E6)
+RealTestRange2 ::= REAL (-9E-10..1E6)
 
+RealTestRange3 ::=	 REAL (0.0 .. 7.0E-2)
+
+OctetStringConstraint1 ::=  OCTET STRING (SIZE( 1))  ('55'H)
+
+OctetStringConstraint2 ::=  OCTET STRING (SIZE( 1))  ('10'B)
 
 END

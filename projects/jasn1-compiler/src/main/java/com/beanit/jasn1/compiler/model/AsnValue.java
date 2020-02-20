@@ -23,7 +23,9 @@ public class AsnValue {
   public AsnDefinedValue definedValue;
   public boolean isAsnOIDValue;
   public boolean isCStrValue;
+  public boolean isBString;
   public boolean isCString;
+  public boolean isHString;
   public boolean isChoiceValue;
   public boolean isDefinedValue;
   public boolean isFalseKW;
@@ -41,8 +43,8 @@ public class AsnValue {
   public AsnSignedNumber signedNumber;
   public boolean isValueInBraces = false;
   public List<String> valueInBracesTokens;
-  String bStr;
-  String hStr, enumIntVal;
+  public String bStr;
+  public String hStr, enumIntVal;
   boolean isBStrOrOstrValue;
   boolean isEnumIntValue;
   public AsnNamedValue namedval;
