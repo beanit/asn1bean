@@ -33,4 +33,4 @@ for i in $@; do
     fi
 done
 
-java $SYSPROPS -cp $CLASSPATH $MAIN_CLASS $PARAMS
+java $SYSPROPS -cp "$CLASSPATH" $MAIN_CLASS $PARAMS
