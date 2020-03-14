@@ -1,3 +1,6 @@
+v1.11.3 14-Mar-2020
+--------------------
+
 - switched from Java 7 to Java 8
 
 - Improved parsing of scientific number like 7.0E-2 and single value
