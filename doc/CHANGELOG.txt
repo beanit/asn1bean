@@ -1,3 +1,12 @@
+- switched from Java 7 to Java 8
+
+- Improved parsing of scientific number like 7.0E-2 and single value
+  constraint for octet strings like OCTET STRING (SIZE( 1)) ('55'H)
+
+- certain self reference like A ::= A; now cause an error message
+
+- minor fix in run script to allow for spaces in parent directories
+
 v1.11.2 06-Jun-2019
 --------------------
 
