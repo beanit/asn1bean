@@ -147,6 +147,23 @@ public class CompileTest {
   }
 
   @Test
+  public void testCompilingMobile3() throws Exception {
+    args =
+            new String[] {
+                    "-il",
+                    "-dv",
+                    "-o",
+                    generatedSrcDir,
+                    "-p",
+                    rootPackageName,
+                    "-f",
+                    "src/test/resources/mobile/Profile interoperability technical specification_V2.3.1.asn",
+                    "-l"
+            };
+    Compiler.main(args);
+  }
+
+  @Test
   public void testCompilingVariousTests() throws Exception {
     args =
         new String[] {

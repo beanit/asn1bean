@@ -47,6 +47,9 @@ public class ServicesList implements BerType, Serializable {
 	public BerNull berTlv = null;
 	public BerNull dfLink = null;
 	public BerNull catTp = null;
+	public BerNull getIdentity = null;
+	public BerNull profileAX25519 = null;
+	public BerNull profileBP256 = null;
 	
 	public ServicesList() {
 	}
@@ -55,7 +58,7 @@ public class ServicesList implements BerType, Serializable {
 		this.code = code;
 	}
 
-	public ServicesList(BerNull contactless, BerNull usim, BerNull isim, BerNull csim, BerNull milenage, BerNull tuak128, BerNull cave, BerNull gbaUsim, BerNull gbaIsim, BerNull mbms, BerNull eap, BerNull javacard, BerNull multos, BerNull multipleUsim, BerNull multipleIsim, BerNull multipleCsim, BerNull tuak256, BerNull usimTestAlgorithm, BerNull berTlv, BerNull dfLink, BerNull catTp) {
+	public ServicesList(BerNull contactless, BerNull usim, BerNull isim, BerNull csim, BerNull milenage, BerNull tuak128, BerNull cave, BerNull gbaUsim, BerNull gbaIsim, BerNull mbms, BerNull eap, BerNull javacard, BerNull multos, BerNull multipleUsim, BerNull multipleIsim, BerNull multipleCsim, BerNull tuak256, BerNull usimTestAlgorithm, BerNull berTlv, BerNull dfLink, BerNull catTp, BerNull getIdentity, BerNull profileAX25519, BerNull profileBP256) {
 		this.contactless = contactless;
 		this.usim = usim;
 		this.isim = isim;
@@ -77,6 +80,9 @@ public class ServicesList implements BerType, Serializable {
 		this.berTlv = berTlv;
 		this.dfLink = dfLink;
 		this.catTp = catTp;
+		this.getIdentity = getIdentity;
+		this.profileAX25519 = profileAX25519;
+		this.profileBP256 = profileBP256;
 	}
 
 	public int encode(OutputStream reverseOS) throws IOException {
@@ -96,6 +102,27 @@ public class ServicesList implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
+		if (profileBP256 != null) {
+			codeLength += profileBP256.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 23
+			reverseOS.write(0x97);
+			codeLength += 1;
+		}
+		
+		if (profileAX25519 != null) {
+			codeLength += profileAX25519.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 22
+			reverseOS.write(0x96);
+			codeLength += 1;
+		}
+		
+		if (getIdentity != null) {
+			codeLength += getIdentity.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 21
+			reverseOS.write(0x95);
+			codeLength += 1;
+		}
+		
 		if (catTp != null) {
 			codeLength += catTp.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 20
@@ -609,6 +636,54 @@ public class ServicesList implements BerType, Serializable {
 				subCodeLength += catTp.decode(is, false);
 				subCodeLength += berTag.decode(is);
 			}
+			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
+				int nextByte = is.read();
+				if (nextByte != 0) {
+					if (nextByte == -1) {
+						throw new EOFException("Unexpected end of input stream.");
+					}
+					throw new IOException("Decoded sequence has wrong end of contents octets");
+				}
+				codeLength += subCodeLength + 1;
+				return codeLength;
+			}
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 21)) {
+				getIdentity = new BerNull();
+				subCodeLength += getIdentity.decode(is, false);
+				subCodeLength += berTag.decode(is);
+			}
+			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
+				int nextByte = is.read();
+				if (nextByte != 0) {
+					if (nextByte == -1) {
+						throw new EOFException("Unexpected end of input stream.");
+					}
+					throw new IOException("Decoded sequence has wrong end of contents octets");
+				}
+				codeLength += subCodeLength + 1;
+				return codeLength;
+			}
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 22)) {
+				profileAX25519 = new BerNull();
+				subCodeLength += profileAX25519.decode(is, false);
+				subCodeLength += berTag.decode(is);
+			}
+			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
+				int nextByte = is.read();
+				if (nextByte != 0) {
+					if (nextByte == -1) {
+						throw new EOFException("Unexpected end of input stream.");
+					}
+					throw new IOException("Decoded sequence has wrong end of contents octets");
+				}
+				codeLength += subCodeLength + 1;
+				return codeLength;
+			}
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 23)) {
+				profileBP256 = new BerNull();
+				subCodeLength += profileBP256.decode(is, false);
+				subCodeLength += berTag.decode(is);
+			}
 			int nextByte = is.read();
 			if (berTag.tagNumber != 0 || berTag.tagClass != 0 || berTag.primitive != 0
 			|| nextByte != 0) {
@@ -810,6 +885,33 @@ public class ServicesList implements BerType, Serializable {
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 20)) {
 			catTp = new BerNull();
 			subCodeLength += catTp.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 21)) {
+			getIdentity = new BerNull();
+			subCodeLength += getIdentity.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 22)) {
+			profileAX25519 = new BerNull();
+			subCodeLength += profileAX25519.decode(is, false);
+			if (subCodeLength == totalLength) {
+				return codeLength;
+			}
+			subCodeLength += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 23)) {
+			profileBP256 = new BerNull();
+			subCodeLength += profileBP256.decode(is, false);
 			if (subCodeLength == totalLength) {
 				return codeLength;
 			}
@@ -1061,6 +1163,39 @@ public class ServicesList implements BerType, Serializable {
 				sb.append("\t");
 			}
 			sb.append("catTp: ").append(catTp);
+			firstSelectedElement = false;
+		}
+		
+		if (getIdentity != null) {
+			if (!firstSelectedElement) {
+				sb.append(",\n");
+			}
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("getIdentity: ").append(getIdentity);
+			firstSelectedElement = false;
+		}
+		
+		if (profileAX25519 != null) {
+			if (!firstSelectedElement) {
+				sb.append(",\n");
+			}
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("profileAX25519: ").append(profileAX25519);
+			firstSelectedElement = false;
+		}
+		
+		if (profileBP256 != null) {
+			if (!firstSelectedElement) {
+				sb.append(",\n");
+			}
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("profileBP256: ").append(profileBP256);
 			firstSelectedElement = false;
 		}
 		
