@@ -148,274 +148,125 @@ public class BuiltInStandardAttributes implements BerType, Serializable {
 	}
 
 	public int decode(InputStream is, boolean withTag) throws IOException {
-		int codeLength = 0;
-		int subCodeLength = 0;
+		int tlByteCount = 0;
+		int vByteCount = 0;
 		BerTag berTag = new BerTag();
 
 		if (withTag) {
-			codeLength += tag.decodeAndCheck(is);
+			tlByteCount += tag.decodeAndCheck(is);
 		}
 
 		BerLength length = new BerLength();
-		codeLength += length.decode(is);
+		tlByteCount += length.decode(is);
 
-		int totalLength = length.val;
-		if (totalLength == -1) {
-			subCodeLength += berTag.decode(is);
-
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(CountryName.tag)) {
-				countryName = new CountryName();
-				subCodeLength += countryName.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(AdministrationDomainName.tag)) {
-				administrationDomainName = new AdministrationDomainName();
-				subCodeLength += administrationDomainName.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 0)) {
-				networkAddress = new NetworkAddress();
-				subCodeLength += networkAddress.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 1)) {
-				terminalIdentifier = new TerminalIdentifier();
-				subCodeLength += terminalIdentifier.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 2)) {
-				subCodeLength += length.decode(is);
-				privateDomainName = new PrivateDomainName();
-				int choiceDecodeLength = privateDomainName.decode(is, null);
-				if (choiceDecodeLength != 0) {
-					subCodeLength += choiceDecodeLength;
-					subCodeLength += berTag.decode(is);
-				}
-				else {
-					privateDomainName = null;
-				}
-
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 3)) {
-				organizationName = new OrganizationName();
-				subCodeLength += organizationName.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 4)) {
-				numericUserIdentifier = new NumericUserIdentifier();
-				subCodeLength += numericUserIdentifier.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 5)) {
-				personalName = new PersonalName();
-				subCodeLength += personalName.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 6)) {
-				organizationalUnitNames = new OrganizationalUnitNames();
-				subCodeLength += organizationalUnitNames.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			int nextByte = is.read();
-			if (berTag.tagNumber != 0 || berTag.tagClass != 0 || berTag.primitive != 0
-			|| nextByte != 0) {
-				if (nextByte == -1) {
-					throw new EOFException("Unexpected end of input stream.");
-				}
-				throw new IOException("Decoded sequence has wrong end of contents octets");
-			}
-			codeLength += subCodeLength + 1;
-			return codeLength;
+		int lengthVal = length.val;
+		if (lengthVal == 0) {
+			return tlByteCount;
 		}
-
-		codeLength += totalLength;
-
-		if (totalLength == 0) {
-			return codeLength;
-		}
-		subCodeLength += berTag.decode(is);
+		vByteCount += berTag.decode(is);
 		if (berTag.equals(CountryName.tag)) {
 			countryName = new CountryName();
-			subCodeLength += countryName.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += countryName.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(AdministrationDomainName.tag)) {
 			administrationDomainName = new AdministrationDomainName();
-			subCodeLength += administrationDomainName.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += administrationDomainName.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 0)) {
 			networkAddress = new NetworkAddress();
-			subCodeLength += networkAddress.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += networkAddress.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 1)) {
 			terminalIdentifier = new TerminalIdentifier();
-			subCodeLength += terminalIdentifier.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += terminalIdentifier.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 2)) {
-			subCodeLength += length.decode(is);
+			vByteCount += length.decode(is);
 			privateDomainName = new PrivateDomainName();
-			subCodeLength += privateDomainName.decode(is, null);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += privateDomainName.decode(is, null);
+			if (length.val < 0) {
+				vByteCount += 2;
+				is.read();
+				is.read();
 			}
-			subCodeLength += berTag.decode(is);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 3)) {
 			organizationName = new OrganizationName();
-			subCodeLength += organizationName.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += organizationName.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 4)) {
 			numericUserIdentifier = new NumericUserIdentifier();
-			subCodeLength += numericUserIdentifier.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += numericUserIdentifier.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 5)) {
 			personalName = new PersonalName();
-			subCodeLength += personalName.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += personalName.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 6)) {
 			organizationalUnitNames = new OrganizationalUnitNames();
-			subCodeLength += organizationalUnitNames.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += organizationalUnitNames.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
+			vByteCount += berTag.decode(is);
 		}
-		throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
-
 		
+		if (lengthVal < 0) {
+			if (!berTag.equals(0, 0, 0)) {
+				throw new IOException("Decoded sequence has wrong end of contents octets");
+			}
+			int lastByte = is.read();
+			if (lastByte == -1) {
+				throw new EOFException();
+			}
+			if (lastByte != 0) {
+				throw new IOException("Decoded sequence has wrong end of contents octets");
+			}
+			return tlByteCount + vByteCount + 1;
+		}
+
+		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", actual sequence length: " + vByteCount);
+
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {

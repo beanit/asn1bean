@@ -316,116 +316,129 @@ public class SequenceOfIndirectOptionalTypes implements BerType, Serializable {
 	}
 
 	public int decode(InputStream is, boolean withTag) throws IOException {
-		int codeLength = 0;
-		int subCodeLength = 0;
+		int tlByteCount = 0;
+		int vByteCount = 0;
 		BerTag berTag = new BerTag();
 
 		if (withTag) {
-			codeLength += tag.decodeAndCheck(is);
+			tlByteCount += tag.decodeAndCheck(is);
 		}
 
 		BerLength length = new BerLength();
-		codeLength += length.decode(is);
+		tlByteCount += length.decode(is);
 
-		int totalLength = length.val;
-		codeLength += totalLength;
-
-		if (totalLength == 0) {
-			return codeLength;
+		int lengthVal = length.val;
+		if (lengthVal == 0) {
+			return tlByteCount;
 		}
-		subCodeLength += berTag.decode(is);
+		vByteCount += berTag.decode(is);
 		if (berTag.equals(UntaggedInteger.tag)) {
 			untaggedInt = new UntaggedInteger();
-			subCodeLength += untaggedInt.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += untaggedInt.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(ExplicitlyTaggedInteger.tag)) {
 			untaggedInt2 = new ExplicitlyTaggedInteger();
-			subCodeLength += untaggedInt2.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += untaggedInt2.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(ImplicitlyTaggedInteger.tag)) {
 			untaggedInt3 = new ImplicitlyTaggedInteger();
-			subCodeLength += untaggedInt3.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += untaggedInt3.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
-			subCodeLength += length.decode(is);
+			vByteCount += length.decode(is);
 			explicitlyTaggedInt = new UntaggedInteger();
-			subCodeLength += explicitlyTaggedInt.decode(is, true);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += explicitlyTaggedInt.decode(is, true);
+			if (length.val < 0) {
+				vByteCount += 2;
+				is.read();
+				is.read();
 			}
-			subCodeLength += berTag.decode(is);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 11)) {
-			subCodeLength += length.decode(is);
+			vByteCount += length.decode(is);
 			explicitlyTaggedInt2 = new ExplicitlyTaggedInteger();
-			subCodeLength += explicitlyTaggedInt2.decode(is, true);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += explicitlyTaggedInt2.decode(is, true);
+			if (length.val < 0) {
+				vByteCount += 2;
+				is.read();
+				is.read();
 			}
-			subCodeLength += berTag.decode(is);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 21)) {
-			subCodeLength += length.decode(is);
+			vByteCount += length.decode(is);
 			explicitlyTaggedInt3 = new ImplicitlyTaggedInteger();
-			subCodeLength += explicitlyTaggedInt3.decode(is, true);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += explicitlyTaggedInt3.decode(is, true);
+			if (length.val < 0) {
+				vByteCount += 2;
+				is.read();
+				is.read();
 			}
-			subCodeLength += berTag.decode(is);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 2)) {
 			implicitlyTaggedInt = new UntaggedInteger();
-			subCodeLength += implicitlyTaggedInt.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += implicitlyTaggedInt.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 12)) {
 			implicitlyTaggedInt2 = new ExplicitlyTaggedInteger();
-			subCodeLength += implicitlyTaggedInt2.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += implicitlyTaggedInt2.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 23)) {
 			implicitlyTaggedInt3 = new ImplicitlyTaggedInteger();
-			subCodeLength += implicitlyTaggedInt3.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += implicitlyTaggedInt3.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		untaggedChoice = new UntaggedChoice();
 		int choiceDecodeLength = untaggedChoice.decode(is, berTag);
 		if (choiceDecodeLength != 0) {
-			subCodeLength += choiceDecodeLength;
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += choiceDecodeLength;
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			untaggedChoice = null;
@@ -433,61 +446,86 @@ public class SequenceOfIndirectOptionalTypes implements BerType, Serializable {
 		
 		if (berTag.equals(TaggedChoice.tag)) {
 			untaggedChoice2 = new TaggedChoice();
-			subCodeLength += untaggedChoice2.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += untaggedChoice2.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 5)) {
-			subCodeLength += length.decode(is);
+			vByteCount += length.decode(is);
 			taggedChoice = new UntaggedChoice();
-			subCodeLength += taggedChoice.decode(is, null);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += taggedChoice.decode(is, null);
+			if (length.val < 0) {
+				vByteCount += 2;
+				is.read();
+				is.read();
 			}
-			subCodeLength += berTag.decode(is);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 15)) {
 			taggedChoice2 = new TaggedChoice();
-			subCodeLength += taggedChoice2.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += taggedChoice2.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(TaggedAny.tag)) {
 			untaggedAny = new TaggedAny();
-			subCodeLength += untaggedAny.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += untaggedAny.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 8)) {
-			subCodeLength += length.decode(is);
+			vByteCount += length.decode(is);
 			taggedAny = new UntaggedAny();
-			subCodeLength += taggedAny.decode(is, null);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += taggedAny.decode(is, null);
+			if (length.val < 0) {
+				vByteCount += 2;
+				is.read();
+				is.read();
 			}
-			subCodeLength += berTag.decode(is);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 18)) {
 			taggedAny2 = new TaggedAny();
-			subCodeLength += taggedAny2.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += taggedAny2.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
+			vByteCount += berTag.decode(is);
 		}
-		throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
-
 		
+		if (lengthVal < 0) {
+			if (!berTag.equals(0, 0, 0)) {
+				throw new IOException("Decoded sequence has wrong end of contents octets");
+			}
+			int lastByte = is.read();
+			if (lastByte == -1) {
+				throw new EOFException();
+			}
+			if (lastByte != 0) {
+				throw new IOException("Decoded sequence has wrong end of contents octets");
+			}
+			return tlByteCount + vByteCount + 1;
+		}
+
+		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", actual sequence length: " + vByteCount);
+
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {

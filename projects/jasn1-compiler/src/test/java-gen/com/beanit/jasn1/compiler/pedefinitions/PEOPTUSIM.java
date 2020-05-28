@@ -794,1256 +794,23 @@ public class PEOPTUSIM implements BerType, Serializable {
 	}
 
 	public int decode(InputStream is, boolean withTag) throws IOException {
-		int codeLength = 0;
-		int subCodeLength = 0;
+		int tlByteCount = 0;
+		int vByteCount = 0;
 		BerTag berTag = new BerTag();
 
 		if (withTag) {
-			codeLength += tag.decodeAndCheck(is);
+			tlByteCount += tag.decodeAndCheck(is);
 		}
 
 		BerLength length = new BerLength();
-		codeLength += length.decode(is);
+		tlByteCount += length.decode(is);
 
-		int totalLength = length.val;
-		if (totalLength == -1) {
-			subCodeLength += berTag.decode(is);
-
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 0)) {
-				optusimHeader = new PEHeader();
-				subCodeLength += optusimHeader.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 1)) {
-				templateID = new BerObjectIdentifier();
-				subCodeLength += templateID.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 2)) {
-				efLi = new File();
-				subCodeLength += efLi.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 3)) {
-				efAcmax = new File();
-				subCodeLength += efAcmax.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 4)) {
-				efAcm = new File();
-				subCodeLength += efAcm.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 5)) {
-				efGid1 = new File();
-				subCodeLength += efGid1.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 6)) {
-				efGid2 = new File();
-				subCodeLength += efGid2.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 7)) {
-				efMsisdn = new File();
-				subCodeLength += efMsisdn.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 8)) {
-				efPuct = new File();
-				subCodeLength += efPuct.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 9)) {
-				efCbmi = new File();
-				subCodeLength += efCbmi.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 10)) {
-				efCbmid = new File();
-				subCodeLength += efCbmid.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 11)) {
-				efSdn = new File();
-				subCodeLength += efSdn.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 12)) {
-				efExt2 = new File();
-				subCodeLength += efExt2.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 13)) {
-				efExt3 = new File();
-				subCodeLength += efExt3.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 14)) {
-				efCbmir = new File();
-				subCodeLength += efCbmir.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 15)) {
-				efPlmnwact = new File();
-				subCodeLength += efPlmnwact.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 16)) {
-				efOplmnwact = new File();
-				subCodeLength += efOplmnwact.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 17)) {
-				efHplmnwact = new File();
-				subCodeLength += efHplmnwact.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 18)) {
-				efDck = new File();
-				subCodeLength += efDck.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 19)) {
-				efCnl = new File();
-				subCodeLength += efCnl.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 20)) {
-				efSmsr = new File();
-				subCodeLength += efSmsr.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 21)) {
-				efBdn = new File();
-				subCodeLength += efBdn.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 22)) {
-				efExt5 = new File();
-				subCodeLength += efExt5.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 23)) {
-				efCcp2 = new File();
-				subCodeLength += efCcp2.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 24)) {
-				efExt4 = new File();
-				subCodeLength += efExt4.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 25)) {
-				efAcl = new File();
-				subCodeLength += efAcl.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 26)) {
-				efCmi = new File();
-				subCodeLength += efCmi.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 27)) {
-				efIci = new File();
-				subCodeLength += efIci.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 28)) {
-				efOci = new File();
-				subCodeLength += efOci.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 29)) {
-				efIct = new File();
-				subCodeLength += efIct.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 30)) {
-				efOct = new File();
-				subCodeLength += efOct.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 31)) {
-				efVgcs = new File();
-				subCodeLength += efVgcs.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 32)) {
-				efVgcss = new File();
-				subCodeLength += efVgcss.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 33)) {
-				efVbs = new File();
-				subCodeLength += efVbs.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 34)) {
-				efVbss = new File();
-				subCodeLength += efVbss.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 35)) {
-				efEmlpp = new File();
-				subCodeLength += efEmlpp.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 36)) {
-				efAaem = new File();
-				subCodeLength += efAaem.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 37)) {
-				efHiddenkey = new File();
-				subCodeLength += efHiddenkey.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 38)) {
-				efPnn = new File();
-				subCodeLength += efPnn.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 39)) {
-				efOpl = new File();
-				subCodeLength += efOpl.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 40)) {
-				efMbdn = new File();
-				subCodeLength += efMbdn.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 41)) {
-				efExt6 = new File();
-				subCodeLength += efExt6.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 42)) {
-				efMbi = new File();
-				subCodeLength += efMbi.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 43)) {
-				efMwis = new File();
-				subCodeLength += efMwis.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 44)) {
-				efCfis = new File();
-				subCodeLength += efCfis.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 45)) {
-				efExt7 = new File();
-				subCodeLength += efExt7.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 46)) {
-				efSpdi = new File();
-				subCodeLength += efSpdi.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 47)) {
-				efMmsn = new File();
-				subCodeLength += efMmsn.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 48)) {
-				efExt8 = new File();
-				subCodeLength += efExt8.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 49)) {
-				efMmsicp = new File();
-				subCodeLength += efMmsicp.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 50)) {
-				efMmsup = new File();
-				subCodeLength += efMmsup.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 51)) {
-				efMmsucp = new File();
-				subCodeLength += efMmsucp.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 52)) {
-				efNia = new File();
-				subCodeLength += efNia.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 53)) {
-				efVgcsca = new File();
-				subCodeLength += efVgcsca.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 54)) {
-				efVbsca = new File();
-				subCodeLength += efVbsca.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 55)) {
-				efGbabp = new File();
-				subCodeLength += efGbabp.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 56)) {
-				efMsk = new File();
-				subCodeLength += efMsk.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 57)) {
-				efMuk = new File();
-				subCodeLength += efMuk.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 58)) {
-				efEhplmn = new File();
-				subCodeLength += efEhplmn.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 59)) {
-				efGbanl = new File();
-				subCodeLength += efGbanl.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 60)) {
-				efEhplmnpi = new File();
-				subCodeLength += efEhplmnpi.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 61)) {
-				efLrplmnsi = new File();
-				subCodeLength += efLrplmnsi.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 62)) {
-				efNafkca = new File();
-				subCodeLength += efNafkca.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 63)) {
-				efSpni = new File();
-				subCodeLength += efSpni.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 64)) {
-				efPnni = new File();
-				subCodeLength += efPnni.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 65)) {
-				efNcpIp = new File();
-				subCodeLength += efNcpIp.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 66)) {
-				efUfc = new File();
-				subCodeLength += efUfc.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 67)) {
-				efNasconfig = new File();
-				subCodeLength += efNasconfig.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 68)) {
-				efUicciari = new File();
-				subCodeLength += efUicciari.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 69)) {
-				efPws = new File();
-				subCodeLength += efPws.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 70)) {
-				efFdnuri = new File();
-				subCodeLength += efFdnuri.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 71)) {
-				efBdnuri = new File();
-				subCodeLength += efBdnuri.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 72)) {
-				efSdnuri = new File();
-				subCodeLength += efSdnuri.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 73)) {
-				efIwl = new File();
-				subCodeLength += efIwl.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 74)) {
-				efIps = new File();
-				subCodeLength += efIps.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 75)) {
-				efIpd = new File();
-				subCodeLength += efIpd.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			int nextByte = is.read();
-			if (berTag.tagNumber != 0 || berTag.tagClass != 0 || berTag.primitive != 0
-			|| nextByte != 0) {
-				if (nextByte == -1) {
-					throw new EOFException("Unexpected end of input stream.");
-				}
-				throw new IOException("Decoded sequence has wrong end of contents octets");
-			}
-			codeLength += subCodeLength + 1;
-			return codeLength;
-		}
-
-		codeLength += totalLength;
-
-		subCodeLength += berTag.decode(is);
+		int lengthVal = length.val;
+		vByteCount += berTag.decode(is);
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 0)) {
 			optusimHeader = new PEHeader();
-			subCodeLength += optusimHeader.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += optusimHeader.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -2051,11 +818,11 @@ public class PEOPTUSIM implements BerType, Serializable {
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 1)) {
 			templateID = new BerObjectIdentifier();
-			subCodeLength += templateID.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += templateID.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -2063,671 +830,686 @@ public class PEOPTUSIM implements BerType, Serializable {
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 2)) {
 			efLi = new File();
-			subCodeLength += efLi.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efLi.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 3)) {
 			efAcmax = new File();
-			subCodeLength += efAcmax.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efAcmax.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 4)) {
 			efAcm = new File();
-			subCodeLength += efAcm.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efAcm.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 5)) {
 			efGid1 = new File();
-			subCodeLength += efGid1.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efGid1.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 6)) {
 			efGid2 = new File();
-			subCodeLength += efGid2.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efGid2.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 7)) {
 			efMsisdn = new File();
-			subCodeLength += efMsisdn.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efMsisdn.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 8)) {
 			efPuct = new File();
-			subCodeLength += efPuct.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efPuct.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 9)) {
 			efCbmi = new File();
-			subCodeLength += efCbmi.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efCbmi.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 10)) {
 			efCbmid = new File();
-			subCodeLength += efCbmid.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efCbmid.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 11)) {
 			efSdn = new File();
-			subCodeLength += efSdn.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efSdn.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 12)) {
 			efExt2 = new File();
-			subCodeLength += efExt2.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efExt2.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 13)) {
 			efExt3 = new File();
-			subCodeLength += efExt3.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efExt3.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 14)) {
 			efCbmir = new File();
-			subCodeLength += efCbmir.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efCbmir.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 15)) {
 			efPlmnwact = new File();
-			subCodeLength += efPlmnwact.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efPlmnwact.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 16)) {
 			efOplmnwact = new File();
-			subCodeLength += efOplmnwact.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efOplmnwact.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 17)) {
 			efHplmnwact = new File();
-			subCodeLength += efHplmnwact.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efHplmnwact.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 18)) {
 			efDck = new File();
-			subCodeLength += efDck.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efDck.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 19)) {
 			efCnl = new File();
-			subCodeLength += efCnl.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efCnl.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 20)) {
 			efSmsr = new File();
-			subCodeLength += efSmsr.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efSmsr.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 21)) {
 			efBdn = new File();
-			subCodeLength += efBdn.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efBdn.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 22)) {
 			efExt5 = new File();
-			subCodeLength += efExt5.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efExt5.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 23)) {
 			efCcp2 = new File();
-			subCodeLength += efCcp2.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efCcp2.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 24)) {
 			efExt4 = new File();
-			subCodeLength += efExt4.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efExt4.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 25)) {
 			efAcl = new File();
-			subCodeLength += efAcl.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efAcl.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 26)) {
 			efCmi = new File();
-			subCodeLength += efCmi.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efCmi.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 27)) {
 			efIci = new File();
-			subCodeLength += efIci.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efIci.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 28)) {
 			efOci = new File();
-			subCodeLength += efOci.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efOci.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 29)) {
 			efIct = new File();
-			subCodeLength += efIct.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efIct.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 30)) {
 			efOct = new File();
-			subCodeLength += efOct.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efOct.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 31)) {
 			efVgcs = new File();
-			subCodeLength += efVgcs.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efVgcs.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 32)) {
 			efVgcss = new File();
-			subCodeLength += efVgcss.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efVgcss.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 33)) {
 			efVbs = new File();
-			subCodeLength += efVbs.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efVbs.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 34)) {
 			efVbss = new File();
-			subCodeLength += efVbss.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efVbss.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 35)) {
 			efEmlpp = new File();
-			subCodeLength += efEmlpp.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efEmlpp.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 36)) {
 			efAaem = new File();
-			subCodeLength += efAaem.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efAaem.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 37)) {
 			efHiddenkey = new File();
-			subCodeLength += efHiddenkey.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efHiddenkey.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 38)) {
 			efPnn = new File();
-			subCodeLength += efPnn.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efPnn.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 39)) {
 			efOpl = new File();
-			subCodeLength += efOpl.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efOpl.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 40)) {
 			efMbdn = new File();
-			subCodeLength += efMbdn.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efMbdn.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 41)) {
 			efExt6 = new File();
-			subCodeLength += efExt6.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efExt6.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 42)) {
 			efMbi = new File();
-			subCodeLength += efMbi.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efMbi.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 43)) {
 			efMwis = new File();
-			subCodeLength += efMwis.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efMwis.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 44)) {
 			efCfis = new File();
-			subCodeLength += efCfis.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efCfis.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 45)) {
 			efExt7 = new File();
-			subCodeLength += efExt7.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efExt7.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 46)) {
 			efSpdi = new File();
-			subCodeLength += efSpdi.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efSpdi.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 47)) {
 			efMmsn = new File();
-			subCodeLength += efMmsn.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efMmsn.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 48)) {
 			efExt8 = new File();
-			subCodeLength += efExt8.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efExt8.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 49)) {
 			efMmsicp = new File();
-			subCodeLength += efMmsicp.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efMmsicp.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 50)) {
 			efMmsup = new File();
-			subCodeLength += efMmsup.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efMmsup.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 51)) {
 			efMmsucp = new File();
-			subCodeLength += efMmsucp.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efMmsucp.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 52)) {
 			efNia = new File();
-			subCodeLength += efNia.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efNia.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 53)) {
 			efVgcsca = new File();
-			subCodeLength += efVgcsca.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efVgcsca.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 54)) {
 			efVbsca = new File();
-			subCodeLength += efVbsca.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efVbsca.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 55)) {
 			efGbabp = new File();
-			subCodeLength += efGbabp.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efGbabp.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 56)) {
 			efMsk = new File();
-			subCodeLength += efMsk.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efMsk.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 57)) {
 			efMuk = new File();
-			subCodeLength += efMuk.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efMuk.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 58)) {
 			efEhplmn = new File();
-			subCodeLength += efEhplmn.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efEhplmn.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 59)) {
 			efGbanl = new File();
-			subCodeLength += efGbanl.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efGbanl.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 60)) {
 			efEhplmnpi = new File();
-			subCodeLength += efEhplmnpi.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efEhplmnpi.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 61)) {
 			efLrplmnsi = new File();
-			subCodeLength += efLrplmnsi.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efLrplmnsi.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 62)) {
 			efNafkca = new File();
-			subCodeLength += efNafkca.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efNafkca.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 63)) {
 			efSpni = new File();
-			subCodeLength += efSpni.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efSpni.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 64)) {
 			efPnni = new File();
-			subCodeLength += efPnni.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efPnni.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 65)) {
 			efNcpIp = new File();
-			subCodeLength += efNcpIp.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efNcpIp.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 66)) {
 			efUfc = new File();
-			subCodeLength += efUfc.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efUfc.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 67)) {
 			efNasconfig = new File();
-			subCodeLength += efNasconfig.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efNasconfig.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 68)) {
 			efUicciari = new File();
-			subCodeLength += efUicciari.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efUicciari.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 69)) {
 			efPws = new File();
-			subCodeLength += efPws.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efPws.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 70)) {
 			efFdnuri = new File();
-			subCodeLength += efFdnuri.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efFdnuri.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 71)) {
 			efBdnuri = new File();
-			subCodeLength += efBdnuri.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efBdnuri.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 72)) {
 			efSdnuri = new File();
-			subCodeLength += efSdnuri.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efSdnuri.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 73)) {
 			efIwl = new File();
-			subCodeLength += efIwl.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efIwl.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 74)) {
 			efIps = new File();
-			subCodeLength += efIps.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efIps.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 75)) {
 			efIpd = new File();
-			subCodeLength += efIpd.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += efIpd.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
+			vByteCount += berTag.decode(is);
 		}
-		throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
-
 		
+		if (lengthVal < 0) {
+			if (!berTag.equals(0, 0, 0)) {
+				throw new IOException("Decoded sequence has wrong end of contents octets");
+			}
+			int lastByte = is.read();
+			if (lastByte == -1) {
+				throw new EOFException();
+			}
+			if (lastByte != 0) {
+				throw new IOException("Decoded sequence has wrong end of contents octets");
+			}
+			return tlByteCount + vByteCount + 1;
+		}
+
+		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", actual sequence length: " + vByteCount);
+
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {

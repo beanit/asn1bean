@@ -213,571 +213,29 @@ public class SequenceOfAll implements BerType, Serializable {
 	}
 
 	public int decode(InputStream is, boolean withTag) throws IOException {
-		int codeLength = 0;
-		int subCodeLength = 0;
+		int tlByteCount = 0;
+		int vByteCount = 0;
 		BerTag berTag = new BerTag();
 
 		if (withTag) {
-			codeLength += tag.decodeAndCheck(is);
+			tlByteCount += tag.decodeAndCheck(is);
 		}
 
 		BerLength length = new BerLength();
-		codeLength += length.decode(is);
+		tlByteCount += length.decode(is);
 
-		int totalLength = length.val;
-		if (totalLength == -1) {
-			subCodeLength += berTag.decode(is);
-
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 30)) {
-				myInteger = new BerInteger();
-				subCodeLength += myInteger.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 31)) {
-				myInteger2 = new BerInteger();
-				subCodeLength += myInteger2.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerBoolean.tag)) {
-				myBoolean = new BerBoolean();
-				subCodeLength += myBoolean.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerBitString.tag)) {
-				bitString = new BerBitString();
-				subCodeLength += bitString.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerEnum.tag)) {
-				enumerated = new BerEnum();
-				subCodeLength += enumerated.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerGeneralizedTime.tag)) {
-				generalizedTime = new BerGeneralizedTime();
-				subCodeLength += generalizedTime.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerNull.tag)) {
-				myNull = new BerNull();
-				subCodeLength += myNull.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerObjectIdentifier.tag)) {
-				objectIdentifier = new BerObjectIdentifier();
-				subCodeLength += objectIdentifier.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerOctetString.tag)) {
-				octetString = new BerOctetString();
-				subCodeLength += octetString.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerReal.tag)) {
-				real = new BerReal();
-				subCodeLength += real.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(IntegerWithValues.tag)) {
-				testIntegerWithValues = new IntegerWithValues();
-				subCodeLength += testIntegerWithValues.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(OctetStringWithSize.tag)) {
-				testOctetStringWithSize = new OctetStringWithSize();
-				subCodeLength += testOctetStringWithSize.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(SequenceWithSize.tag)) {
-				testSequenceWithSize = new SequenceWithSize();
-				subCodeLength += testSequenceWithSize.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTime.tag)) {
-				time = new BerTime();
-				subCodeLength += time.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerDate.tag)) {
-				date2 = new BerDate();
-				subCodeLength += date2.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTimeOfDay.tag)) {
-				timeOfDay = new BerTimeOfDay();
-				subCodeLength += timeOfDay.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerDateTime.tag)) {
-				dateTime = new BerDateTime();
-				subCodeLength += dateTime.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerDuration.tag)) {
-				duration = new BerDuration();
-				subCodeLength += duration.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerBMPString.tag)) {
-				bmpString = new BerBMPString();
-				subCodeLength += bmpString.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerGeneralString.tag)) {
-				generalString = new BerGeneralString();
-				subCodeLength += generalString.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerGraphicString.tag)) {
-				graphicString = new BerGraphicString();
-				subCodeLength += graphicString.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerIA5String.tag)) {
-				iA5String = new BerIA5String();
-				subCodeLength += iA5String.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerNumericString.tag)) {
-				numericString = new BerNumericString();
-				subCodeLength += numericString.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerPrintableString.tag)) {
-				printableString = new BerPrintableString();
-				subCodeLength += printableString.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTeletexString.tag)) {
-				teletexString = new BerTeletexString();
-				subCodeLength += teletexString.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerUniversalString.tag)) {
-				universalString = new BerUniversalString();
-				subCodeLength += universalString.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerUTF8String.tag)) {
-				utf8String = new BerUTF8String();
-				subCodeLength += utf8String.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerVideotexString.tag)) {
-				videotexString = new BerVideotexString();
-				subCodeLength += videotexString.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerVisibleString.tag)) {
-				visibleString = new BerVisibleString();
-				subCodeLength += visibleString.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 9)) {
-				subCodeLength += length.decode(is);
-				any = new BerAny();
-				int choiceDecodeLength = any.decode(is, null);
-				if (choiceDecodeLength != 0) {
-					subCodeLength += choiceDecodeLength;
-					subCodeLength += berTag.decode(is);
-				}
-				else {
-					any = null;
-				}
-
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(MySequence.tag)) {
-				mySequence = new MySequence();
-				subCodeLength += mySequence.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			myChoice = new MyChoice();
-			int choiceDecodeLength = myChoice.decode(is, berTag);
-			if (choiceDecodeLength != 0) {
-				subCodeLength += choiceDecodeLength;
-				subCodeLength += berTag.decode(is);
-			}
-			else {
-				myChoice = null;
-			}
-
-			int nextByte = is.read();
-			if (berTag.tagNumber != 0 || berTag.tagClass != 0 || berTag.primitive != 0
-			|| nextByte != 0) {
-				if (nextByte == -1) {
-					throw new EOFException("Unexpected end of input stream.");
-				}
-				throw new IOException("Decoded sequence has wrong end of contents octets");
-			}
-			codeLength += subCodeLength + 1;
-			return codeLength;
-		}
-
-		codeLength += totalLength;
-
-		subCodeLength += berTag.decode(is);
+		int lengthVal = length.val;
+		vByteCount += berTag.decode(is);
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 30)) {
 			myInteger = new BerInteger();
-			subCodeLength += myInteger.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += myInteger.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 31)) {
 			myInteger2 = new BerInteger();
-			subCodeLength += myInteger2.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += myInteger2.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -785,8 +243,8 @@ public class SequenceOfAll implements BerType, Serializable {
 		
 		if (berTag.equals(BerBoolean.tag)) {
 			myBoolean = new BerBoolean();
-			subCodeLength += myBoolean.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += myBoolean.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -794,8 +252,8 @@ public class SequenceOfAll implements BerType, Serializable {
 		
 		if (berTag.equals(BerBitString.tag)) {
 			bitString = new BerBitString();
-			subCodeLength += bitString.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += bitString.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -803,8 +261,8 @@ public class SequenceOfAll implements BerType, Serializable {
 		
 		if (berTag.equals(BerEnum.tag)) {
 			enumerated = new BerEnum();
-			subCodeLength += enumerated.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += enumerated.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -812,8 +270,8 @@ public class SequenceOfAll implements BerType, Serializable {
 		
 		if (berTag.equals(BerGeneralizedTime.tag)) {
 			generalizedTime = new BerGeneralizedTime();
-			subCodeLength += generalizedTime.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += generalizedTime.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -821,8 +279,8 @@ public class SequenceOfAll implements BerType, Serializable {
 		
 		if (berTag.equals(BerNull.tag)) {
 			myNull = new BerNull();
-			subCodeLength += myNull.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += myNull.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -830,8 +288,8 @@ public class SequenceOfAll implements BerType, Serializable {
 		
 		if (berTag.equals(BerObjectIdentifier.tag)) {
 			objectIdentifier = new BerObjectIdentifier();
-			subCodeLength += objectIdentifier.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += objectIdentifier.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -839,8 +297,8 @@ public class SequenceOfAll implements BerType, Serializable {
 		
 		if (berTag.equals(BerOctetString.tag)) {
 			octetString = new BerOctetString();
-			subCodeLength += octetString.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += octetString.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -848,8 +306,8 @@ public class SequenceOfAll implements BerType, Serializable {
 		
 		if (berTag.equals(BerReal.tag)) {
 			real = new BerReal();
-			subCodeLength += real.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += real.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -857,8 +315,8 @@ public class SequenceOfAll implements BerType, Serializable {
 		
 		if (berTag.equals(IntegerWithValues.tag)) {
 			testIntegerWithValues = new IntegerWithValues();
-			subCodeLength += testIntegerWithValues.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += testIntegerWithValues.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -866,8 +324,8 @@ public class SequenceOfAll implements BerType, Serializable {
 		
 		if (berTag.equals(OctetStringWithSize.tag)) {
 			testOctetStringWithSize = new OctetStringWithSize();
-			subCodeLength += testOctetStringWithSize.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += testOctetStringWithSize.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -875,8 +333,8 @@ public class SequenceOfAll implements BerType, Serializable {
 		
 		if (berTag.equals(SequenceWithSize.tag)) {
 			testSequenceWithSize = new SequenceWithSize();
-			subCodeLength += testSequenceWithSize.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += testSequenceWithSize.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -884,8 +342,8 @@ public class SequenceOfAll implements BerType, Serializable {
 		
 		if (berTag.equals(BerTime.tag)) {
 			time = new BerTime();
-			subCodeLength += time.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += time.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -893,8 +351,8 @@ public class SequenceOfAll implements BerType, Serializable {
 		
 		if (berTag.equals(BerDate.tag)) {
 			date2 = new BerDate();
-			subCodeLength += date2.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += date2.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -902,8 +360,8 @@ public class SequenceOfAll implements BerType, Serializable {
 		
 		if (berTag.equals(BerTimeOfDay.tag)) {
 			timeOfDay = new BerTimeOfDay();
-			subCodeLength += timeOfDay.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += timeOfDay.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -911,8 +369,8 @@ public class SequenceOfAll implements BerType, Serializable {
 		
 		if (berTag.equals(BerDateTime.tag)) {
 			dateTime = new BerDateTime();
-			subCodeLength += dateTime.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += dateTime.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -920,8 +378,8 @@ public class SequenceOfAll implements BerType, Serializable {
 		
 		if (berTag.equals(BerDuration.tag)) {
 			duration = new BerDuration();
-			subCodeLength += duration.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += duration.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -929,8 +387,8 @@ public class SequenceOfAll implements BerType, Serializable {
 		
 		if (berTag.equals(BerBMPString.tag)) {
 			bmpString = new BerBMPString();
-			subCodeLength += bmpString.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += bmpString.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -938,8 +396,8 @@ public class SequenceOfAll implements BerType, Serializable {
 		
 		if (berTag.equals(BerGeneralString.tag)) {
 			generalString = new BerGeneralString();
-			subCodeLength += generalString.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += generalString.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -947,8 +405,8 @@ public class SequenceOfAll implements BerType, Serializable {
 		
 		if (berTag.equals(BerGraphicString.tag)) {
 			graphicString = new BerGraphicString();
-			subCodeLength += graphicString.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += graphicString.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -956,8 +414,8 @@ public class SequenceOfAll implements BerType, Serializable {
 		
 		if (berTag.equals(BerIA5String.tag)) {
 			iA5String = new BerIA5String();
-			subCodeLength += iA5String.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += iA5String.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -965,8 +423,8 @@ public class SequenceOfAll implements BerType, Serializable {
 		
 		if (berTag.equals(BerNumericString.tag)) {
 			numericString = new BerNumericString();
-			subCodeLength += numericString.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += numericString.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -974,8 +432,8 @@ public class SequenceOfAll implements BerType, Serializable {
 		
 		if (berTag.equals(BerPrintableString.tag)) {
 			printableString = new BerPrintableString();
-			subCodeLength += printableString.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += printableString.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -983,8 +441,8 @@ public class SequenceOfAll implements BerType, Serializable {
 		
 		if (berTag.equals(BerTeletexString.tag)) {
 			teletexString = new BerTeletexString();
-			subCodeLength += teletexString.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += teletexString.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -992,8 +450,8 @@ public class SequenceOfAll implements BerType, Serializable {
 		
 		if (berTag.equals(BerUniversalString.tag)) {
 			universalString = new BerUniversalString();
-			subCodeLength += universalString.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += universalString.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -1001,8 +459,8 @@ public class SequenceOfAll implements BerType, Serializable {
 		
 		if (berTag.equals(BerUTF8String.tag)) {
 			utf8String = new BerUTF8String();
-			subCodeLength += utf8String.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += utf8String.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -1010,8 +468,8 @@ public class SequenceOfAll implements BerType, Serializable {
 		
 		if (berTag.equals(BerVideotexString.tag)) {
 			videotexString = new BerVideotexString();
-			subCodeLength += videotexString.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += videotexString.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -1019,18 +477,23 @@ public class SequenceOfAll implements BerType, Serializable {
 		
 		if (berTag.equals(BerVisibleString.tag)) {
 			visibleString = new BerVisibleString();
-			subCodeLength += visibleString.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += visibleString.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 9)) {
-			subCodeLength += length.decode(is);
+			vByteCount += length.decode(is);
 			any = new BerAny();
-			subCodeLength += any.decode(is, null);
-			subCodeLength += berTag.decode(is);
+			vByteCount += any.decode(is, null);
+			if (length.val < 0) {
+				vByteCount += 2;
+				is.read();
+				is.read();
+			}
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -1038,21 +501,36 @@ public class SequenceOfAll implements BerType, Serializable {
 		
 		if (berTag.equals(MySequence.tag)) {
 			mySequence = new MySequence();
-			subCodeLength += mySequence.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += mySequence.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
 		}
 		
 		myChoice = new MyChoice();
-		subCodeLength += myChoice.decode(is, berTag);
-		if (subCodeLength == totalLength) {
-			return codeLength;
+		vByteCount += myChoice.decode(is, berTag);
+		if (lengthVal >= 0 && vByteCount == lengthVal) {
+			return tlByteCount + vByteCount;
 		}
-		throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
-
+		vByteCount += berTag.decode(is);
 		
+		if (lengthVal < 0) {
+			if (!berTag.equals(0, 0, 0)) {
+				throw new IOException("Decoded sequence has wrong end of contents octets");
+			}
+			int lastByte = is.read();
+			if (lastByte == -1) {
+				throw new EOFException();
+			}
+			if (lastByte != 0) {
+				throw new IOException("Decoded sequence has wrong end of contents octets");
+			}
+			return tlByteCount + vByteCount + 1;
+		}
+
+		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", actual sequence length: " + vByteCount);
+
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {

@@ -92,20 +92,18 @@ public class ExplicitlyTaggedSequence implements BerType, Serializable {
 	}
 
 	public int decode(InputStream is, boolean withTag) throws IOException {
-		int codeLength = 0;
-		int subCodeLength = 0;
+		int tlByteCount = 0;
+		int vByteCount = 0;
 		BerTag berTag = new BerTag();
 
 		if (withTag) {
-			codeLength += tag.decodeAndCheck(is);
+			tlByteCount += tag.decodeAndCheck(is);
 		}
 
 		BerLength length = new BerLength();
-		codeLength += length.decode(is);
+		tlByteCount += length.decode(is);
 
-		int totalLength = length.val;
-		codeLength += totalLength;
-
+		int lengthVal = length.val;
 		int nextByte = is.read();
 		if (nextByte == -1) {
 			throw new EOFException("Unexpected end of input stream.");
@@ -114,13 +112,13 @@ public class ExplicitlyTaggedSequence implements BerType, Serializable {
 			throw new IOException("Tag does not match!");
 		}
 		length.decode(is);
-		totalLength = length.val;
+		lengthVal = length.val;
 
-		subCodeLength += berTag.decode(is);
+		vByteCount += berTag.decode(is);
 		if (berTag.equals(BerInteger.tag)) {
 			myInteger = new BerInteger();
-			subCodeLength += myInteger.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += myInteger.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -128,14 +126,32 @@ public class ExplicitlyTaggedSequence implements BerType, Serializable {
 		
 		if (berTag.equals(BerBoolean.tag)) {
 			myBoolean = new BerBoolean();
-			subCodeLength += myBoolean.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += myBoolean.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
+			vByteCount += berTag.decode(is);
 		}
-		throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
-
+		else {
+			throw new IOException("Tag does not match the mandatory sequence element tag.");
+		}
 		
+		if (lengthVal < 0) {
+			if (!berTag.equals(0, 0, 0)) {
+				throw new IOException("Decoded sequence has wrong end of contents octets");
+			}
+			int lastByte = is.read();
+			if (lastByte == -1) {
+				throw new EOFException();
+			}
+			if (lastByte != 0) {
+				throw new IOException("Decoded sequence has wrong end of contents octets");
+			}
+			return tlByteCount + vByteCount + 1;
+		}
+
+		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", actual sequence length: " + vByteCount);
+
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {

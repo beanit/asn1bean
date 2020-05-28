@@ -1373,13 +1373,22 @@ public class BerClassWriter {
 
         write("if (berTag.equals(" + getBerTagParametersString(componentTag) + ")) {");
 
-        if (componentTag.type == TagType.EXPLICIT) {
-          write("codeLength += BerLength.skip(is);");
+        if (isExplicit(componentTag)) {
+          write("BerLength explicitTagLength = new BerLength();");
+          write("codeLength += explicitTagLength.decode(is);");
         }
 
         write(getName(componentType) + " = new " + getClassNameOfComponent(componentType) + "();");
 
         write("codeLength += " + getName(componentType) + ".decode(is" + explicitEncoding + ");");
+
+        if (isExplicit(componentTag)) {
+          write("if (explicitTagLength.val < 0) {");
+          write("codeLength += 2;");
+          write("is.read();");
+          write("is.read();");
+          write("}");
+        }
 
         write("return codeLength;");
 
@@ -1436,22 +1445,16 @@ public class BerClassWriter {
   private void writeSequenceDecodeFunction(
       List<AsnElementType> componentTypes, boolean hasExplicitTag) throws IOException {
     write("public int decode(InputStream is, boolean withTag) throws IOException {");
-    write("int codeLength = 0;");
-    write("int subCodeLength = 0;");
+    write("int tlByteCount = 0;");
+    write("int vByteCount = 0;");
     write("BerTag berTag = new BerTag();\n");
 
     write("if (withTag) {");
-    write("codeLength += tag.decodeAndCheck(is);");
+    write("tlByteCount += tag.decodeAndCheck(is);");
     write("}\n");
     write("BerLength length = new BerLength();");
-    write("codeLength += length.decode(is);\n");
-    write("int totalLength = length.val;");
-
-    if (supportIndefiniteLength) {
-      writeSequenceDecodeIndefiniteLenghtPart(componentTypes);
-    }
-
-    write("codeLength += totalLength;\n");
+    write("tlByteCount += length.decode(is);\n");
+    write("int lengthVal = length.val;");
 
     if (hasExplicitTag) {
       write("int nextByte = is.read();");
@@ -1462,7 +1465,7 @@ public class BerClassWriter {
       write("throw new IOException(\"Tag does not match!\");");
       write("}");
       write("length.decode(is);");
-      write("totalLength = length.val;\n");
+      write("lengthVal = length.val;\n");
     }
 
     int lastNoneOptionalFieldIndex = -1;
@@ -1475,12 +1478,12 @@ public class BerClassWriter {
     }
 
     if (lastNoneOptionalFieldIndex == -1) {
-      write("if (totalLength == 0) {");
-      write("return codeLength;");
+      write("if (lengthVal == 0) {");
+      write("return tlByteCount;");
       write("}");
     }
 
-    write("subCodeLength += berTag.decode(is);");
+    write("vByteCount += berTag.decode(is);");
 
     String initChoiceDecodeLength = "int ";
 
@@ -1493,28 +1496,27 @@ public class BerClassWriter {
       if (componentTag != null) {
         write("if (berTag.equals(" + getBerTagParametersString(componentTag) + ")) {");
         if (isExplicit(componentTag)) {
-          write("subCodeLength += length.decode(is);");
+          write("vByteCount += length.decode(is);");
         }
 
         write(getName(componentType) + " = new " + getClassNameOfComponent(componentType) + "();");
-        write(
-            "subCodeLength += " + getName(componentType) + ".decode(is" + explicitEncoding + ");");
+        write("vByteCount += " + getName(componentType) + ".decode(is" + explicitEncoding + ");");
 
-        if (lastNoneOptionalFieldIndex <= j) {
-          write("if (subCodeLength == totalLength) {");
-          write("return codeLength;");
+        if (isExplicit(componentTag)) {
+          write("if (length.val < 0) {");
+          write("vByteCount += 2;");
+          write("is.read();");
+          write("is.read();");
           write("}");
         }
-        if (j != (componentTypes.size() - 1)) {
-          write("subCodeLength += berTag.decode(is);");
+
+        if (lastNoneOptionalFieldIndex <= j) {
+          writeReturnIfDefiniteLengthMatchesDecodedBytes();
         }
+        write("vByteCount += berTag.decode(is);");
 
         write("}");
-
-        if (j == (componentTypes.size() - 1)) {
-          write(
-              "throw new IOException(\"Unexpected end of sequence, length tag: \" + totalLength + \", actual sequence length: \" + subCodeLength);\n");
-        } else if (!isOptional(componentType)) {
+        if (!isOptional(componentType)) {
           write("else {");
           write(
               "throw new IOException(\"Tag does not match the mandatory sequence element tag.\");");
@@ -1522,9 +1524,8 @@ public class BerClassWriter {
         }
 
       } else {
-
+        // no tag
         if (isDirectAnyOrChoice(componentType)) {
-
           write(
               getName(componentType) + " = new " + getClassNameOfComponent(componentType) + "();");
 
@@ -1542,14 +1543,12 @@ public class BerClassWriter {
             if (j != (componentTypes.size() - 1)) {
 
               write("if (choiceDecodeLength != 0) {");
-              write("subCodeLength += choiceDecodeLength;");
+              write("vByteCount += choiceDecodeLength;");
 
               if (lastNoneOptionalFieldIndex <= j) {
-                write("if (subCodeLength == totalLength) {");
-                write("return codeLength;");
-                write("}");
+                writeReturnIfDefiniteLengthMatchesDecodedBytes();
               }
-              write("subCodeLength += berTag.decode(is);");
+              write("vByteCount += berTag.decode(is);");
               write("}");
               write("else {");
               write(getName(componentType) + " = null;");
@@ -1557,35 +1556,17 @@ public class BerClassWriter {
 
             } else {
               // if last sequence element
-              write("subCodeLength += choiceDecodeLength;");
-              write("if (subCodeLength == totalLength) {");
-              write("return codeLength;");
-              write("}");
+              write("vByteCount += choiceDecodeLength;");
+              writeReturnIfDefiniteLengthMatchesDecodedBytes();
+              write("vByteCount += berTag.decode(is);");
             }
           } else {
             write(
-                "subCodeLength += "
-                    + getName(componentType)
-                    + ".decode(is"
-                    + explicitEncoding
-                    + ");");
-            if (j != (componentTypes.size() - 1)) {
-              if (lastNoneOptionalFieldIndex <= j) {
-                write("if (subCodeLength == totalLength) {");
-                write("return codeLength;");
-                write("}");
-              }
-              write("subCodeLength += berTag.decode(is);");
-            } else {
-              write("if (subCodeLength == totalLength) {");
-              write("return codeLength;");
-              write("}");
+                "vByteCount += " + getName(componentType) + ".decode(is" + explicitEncoding + ");");
+            if (lastNoneOptionalFieldIndex <= j) {
+              writeReturnIfDefiniteLengthMatchesDecodedBytes();
             }
-          }
-
-          if (j == (componentTypes.size() - 1)) {
-            write(
-                "throw new IOException(\"Unexpected end of sequence, length tag: \" + totalLength + \", actual sequence length: \" + subCodeLength);\n");
+            write("vByteCount += berTag.decode(is);");
           }
 
         } else {
@@ -1595,28 +1576,15 @@ public class BerClassWriter {
           write(
               getName(componentType) + " = new " + getClassNameOfComponent(componentType) + "();");
 
-          write(
-              "subCodeLength += "
-                  + getName(componentType)
-                  + ".decode(is"
-                  + explicitEncoding
-                  + ");");
+          write("vByteCount += " + getName(componentType) + ".decode(is" + explicitEncoding + ");");
 
           if (lastNoneOptionalFieldIndex <= j) {
-            write("if (subCodeLength == totalLength) {");
-            write("return codeLength;");
-            write("}");
+            writeReturnIfDefiniteLengthMatchesDecodedBytes();
           }
-          if (j != (componentTypes.size() - 1)) {
-            write("subCodeLength += berTag.decode(is);");
-          }
-
+          write("vByteCount += berTag.decode(is);");
           write("}");
 
-          if (j == (componentTypes.size() - 1)) {
-            write(
-                "throw new IOException(\"Unexpected end of sequence, length tag: \" + totalLength + \", actual sequence length: \" + subCodeLength);\n");
-          } else if (!isOptional(componentType)) {
+          if (!isOptional(componentType)) {
             write("else {");
             write(
                 "throw new IOException(\"Tag does not match the mandatory sequence element tag.\");");
@@ -1628,10 +1596,30 @@ public class BerClassWriter {
       write("");
     }
 
-    if (componentTypes.isEmpty()) {
-      write("return subCodeLength;");
-    }
+    write("if (lengthVal < 0) {");
+    write("if (!berTag.equals(0, 0, 0)) {");
+    write("throw new IOException(\"Decoded sequence has wrong end of contents octets\");");
+    write("}");
+    write("int lastByte = is.read();");
+    write("if (lastByte == -1) {");
+    write("throw new EOFException();");
+    write("}");
+    write("if (lastByte != 0) {");
+    write("throw new IOException(\"Decoded sequence has wrong end of contents octets\");");
+    write("}");
+    write("return tlByteCount + vByteCount + 1;");
     write("}\n");
+
+    write(
+        "throw new IOException(\"Unexpected end of sequence, length tag: \" + lengthVal + \", actual sequence length: \" + vByteCount);\n");
+
+    write("}\n");
+  }
+
+  private void writeReturnIfDefiniteLengthMatchesDecodedBytes() throws IOException {
+    write("if (lengthVal >= 0 && vByteCount == lengthVal) {");
+    write("return tlByteCount + vByteCount;");
+    write("}");
   }
 
   private void writeSequenceOrSetOfDecodeFunction(

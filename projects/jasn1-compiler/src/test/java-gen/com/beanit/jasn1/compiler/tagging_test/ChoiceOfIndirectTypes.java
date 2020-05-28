@@ -344,23 +344,41 @@ public class ChoiceOfIndirectTypes implements BerType, Serializable {
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
-			codeLength += BerLength.skip(is);
+			BerLength explicitTagLength = new BerLength();
+			codeLength += explicitTagLength.decode(is);
 			explicitlyTaggedInt = new UntaggedInteger();
 			codeLength += explicitlyTaggedInt.decode(is, true);
+			if (explicitTagLength.val < 0) {
+				codeLength += 2;
+				is.read();
+				is.read();
+			}
 			return codeLength;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 11)) {
-			codeLength += BerLength.skip(is);
+			BerLength explicitTagLength = new BerLength();
+			codeLength += explicitTagLength.decode(is);
 			explicitlyTaggedInt2 = new ExplicitlyTaggedInteger();
 			codeLength += explicitlyTaggedInt2.decode(is, true);
+			if (explicitTagLength.val < 0) {
+				codeLength += 2;
+				is.read();
+				is.read();
+			}
 			return codeLength;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 21)) {
-			codeLength += BerLength.skip(is);
+			BerLength explicitTagLength = new BerLength();
+			codeLength += explicitTagLength.decode(is);
 			explicitlyTaggedInt3 = new ImplicitlyTaggedInteger();
 			codeLength += explicitlyTaggedInt3.decode(is, true);
+			if (explicitTagLength.val < 0) {
+				codeLength += 2;
+				is.read();
+				is.read();
+			}
 			return codeLength;
 		}
 
@@ -398,9 +416,15 @@ public class ChoiceOfIndirectTypes implements BerType, Serializable {
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 5)) {
-			codeLength += BerLength.skip(is);
+			BerLength explicitTagLength = new BerLength();
+			codeLength += explicitTagLength.decode(is);
 			taggedChoice = new UntaggedChoice();
 			codeLength += taggedChoice.decode(is, null);
+			if (explicitTagLength.val < 0) {
+				codeLength += 2;
+				is.read();
+				is.read();
+			}
 			return codeLength;
 		}
 
@@ -417,9 +441,15 @@ public class ChoiceOfIndirectTypes implements BerType, Serializable {
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 8)) {
-			codeLength += BerLength.skip(is);
+			BerLength explicitTagLength = new BerLength();
+			codeLength += explicitTagLength.decode(is);
 			taggedAny = new UntaggedAny();
 			codeLength += taggedAny.decode(is, null);
+			if (explicitTagLength.val < 0) {
+				codeLength += 2;
+				is.read();
+				is.read();
+			}
 			return codeLength;
 		}
 

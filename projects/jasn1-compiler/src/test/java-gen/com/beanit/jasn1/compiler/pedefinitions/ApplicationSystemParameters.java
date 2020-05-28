@@ -177,340 +177,146 @@ public class ApplicationSystemParameters implements BerType, Serializable {
 	}
 
 	public int decode(InputStream is, boolean withTag) throws IOException {
-		int codeLength = 0;
-		int subCodeLength = 0;
+		int tlByteCount = 0;
+		int vByteCount = 0;
 		BerTag berTag = new BerTag();
 
 		if (withTag) {
-			codeLength += tag.decodeAndCheck(is);
+			tlByteCount += tag.decodeAndCheck(is);
 		}
 
 		BerLength length = new BerLength();
-		codeLength += length.decode(is);
+		tlByteCount += length.decode(is);
 
-		int totalLength = length.val;
-		if (totalLength == -1) {
-			subCodeLength += berTag.decode(is);
-
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.PRIVATE_CLASS, BerTag.PRIMITIVE, 7)) {
-				volatileMemoryQuotaC7 = new BerOctetString();
-				subCodeLength += volatileMemoryQuotaC7.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.PRIVATE_CLASS, BerTag.PRIMITIVE, 8)) {
-				nonVolatileMemoryQuotaC8 = new BerOctetString();
-				subCodeLength += nonVolatileMemoryQuotaC8.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.PRIVATE_CLASS, BerTag.PRIMITIVE, 11)) {
-				globalServiceParameters = new BerOctetString();
-				subCodeLength += globalServiceParameters.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.PRIVATE_CLASS, BerTag.PRIMITIVE, 15)) {
-				implicitSelectionParameter = new BerOctetString();
-				subCodeLength += implicitSelectionParameter.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.PRIVATE_CLASS, BerTag.PRIMITIVE, 23)) {
-				volatileReservedMemory = new BerOctetString();
-				subCodeLength += volatileReservedMemory.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.PRIVATE_CLASS, BerTag.PRIMITIVE, 24)) {
-				nonVolatileReservedMemory = new BerOctetString();
-				subCodeLength += nonVolatileReservedMemory.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.PRIVATE_CLASS, BerTag.PRIMITIVE, 10)) {
-				ts102226SIMFileAccessToolkitParameter = new BerOctetString();
-				subCodeLength += ts102226SIMFileAccessToolkitParameter.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 0)) {
-				ts102226AdditionalContactlessParameters = new TS102226AdditionalContactlessParameters();
-				subCodeLength += ts102226AdditionalContactlessParameters.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.PRIVATE_CLASS, BerTag.PRIMITIVE, 25)) {
-				contactlessProtocolParameters = new BerOctetString();
-				subCodeLength += contactlessProtocolParameters.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.PRIVATE_CLASS, BerTag.PRIMITIVE, 26)) {
-				userInteractionContactlessParameters = new BerOctetString();
-				subCodeLength += userInteractionContactlessParameters.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 2)) {
-				cumulativeGrantedVolatileMemory = new BerOctetString();
-				subCodeLength += cumulativeGrantedVolatileMemory.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 3)) {
-				cumulativeGrantedNonVolatileMemory = new BerOctetString();
-				subCodeLength += cumulativeGrantedNonVolatileMemory.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			int nextByte = is.read();
-			if (berTag.tagNumber != 0 || berTag.tagClass != 0 || berTag.primitive != 0
-			|| nextByte != 0) {
-				if (nextByte == -1) {
-					throw new EOFException("Unexpected end of input stream.");
-				}
-				throw new IOException("Decoded sequence has wrong end of contents octets");
-			}
-			codeLength += subCodeLength + 1;
-			return codeLength;
+		int lengthVal = length.val;
+		if (lengthVal == 0) {
+			return tlByteCount;
 		}
-
-		codeLength += totalLength;
-
-		if (totalLength == 0) {
-			return codeLength;
-		}
-		subCodeLength += berTag.decode(is);
+		vByteCount += berTag.decode(is);
 		if (berTag.equals(BerTag.PRIVATE_CLASS, BerTag.PRIMITIVE, 7)) {
 			volatileMemoryQuotaC7 = new BerOctetString();
-			subCodeLength += volatileMemoryQuotaC7.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += volatileMemoryQuotaC7.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.PRIVATE_CLASS, BerTag.PRIMITIVE, 8)) {
 			nonVolatileMemoryQuotaC8 = new BerOctetString();
-			subCodeLength += nonVolatileMemoryQuotaC8.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += nonVolatileMemoryQuotaC8.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.PRIVATE_CLASS, BerTag.PRIMITIVE, 11)) {
 			globalServiceParameters = new BerOctetString();
-			subCodeLength += globalServiceParameters.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += globalServiceParameters.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.PRIVATE_CLASS, BerTag.PRIMITIVE, 15)) {
 			implicitSelectionParameter = new BerOctetString();
-			subCodeLength += implicitSelectionParameter.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += implicitSelectionParameter.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.PRIVATE_CLASS, BerTag.PRIMITIVE, 23)) {
 			volatileReservedMemory = new BerOctetString();
-			subCodeLength += volatileReservedMemory.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += volatileReservedMemory.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.PRIVATE_CLASS, BerTag.PRIMITIVE, 24)) {
 			nonVolatileReservedMemory = new BerOctetString();
-			subCodeLength += nonVolatileReservedMemory.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += nonVolatileReservedMemory.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.PRIVATE_CLASS, BerTag.PRIMITIVE, 10)) {
 			ts102226SIMFileAccessToolkitParameter = new BerOctetString();
-			subCodeLength += ts102226SIMFileAccessToolkitParameter.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += ts102226SIMFileAccessToolkitParameter.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 0)) {
 			ts102226AdditionalContactlessParameters = new TS102226AdditionalContactlessParameters();
-			subCodeLength += ts102226AdditionalContactlessParameters.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += ts102226AdditionalContactlessParameters.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.PRIVATE_CLASS, BerTag.PRIMITIVE, 25)) {
 			contactlessProtocolParameters = new BerOctetString();
-			subCodeLength += contactlessProtocolParameters.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += contactlessProtocolParameters.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.PRIVATE_CLASS, BerTag.PRIMITIVE, 26)) {
 			userInteractionContactlessParameters = new BerOctetString();
-			subCodeLength += userInteractionContactlessParameters.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += userInteractionContactlessParameters.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 2)) {
 			cumulativeGrantedVolatileMemory = new BerOctetString();
-			subCodeLength += cumulativeGrantedVolatileMemory.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += cumulativeGrantedVolatileMemory.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
-			subCodeLength += berTag.decode(is);
+			vByteCount += berTag.decode(is);
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 3)) {
 			cumulativeGrantedNonVolatileMemory = new BerOctetString();
-			subCodeLength += cumulativeGrantedNonVolatileMemory.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += cumulativeGrantedNonVolatileMemory.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
+			vByteCount += berTag.decode(is);
 		}
-		throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
-
 		
+		if (lengthVal < 0) {
+			if (!berTag.equals(0, 0, 0)) {
+				throw new IOException("Decoded sequence has wrong end of contents octets");
+			}
+			int lastByte = is.read();
+			if (lastByte == -1) {
+				throw new EOFException();
+			}
+			if (lastByte != 0) {
+				throw new IOException("Decoded sequence has wrong end of contents octets");
+			}
+			return tlByteCount + vByteCount + 1;
+		}
+
+		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", actual sequence length: " + vByteCount);
+
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {

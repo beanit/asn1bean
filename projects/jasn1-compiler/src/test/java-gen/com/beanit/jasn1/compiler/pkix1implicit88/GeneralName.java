@@ -187,9 +187,15 @@ public class GeneralName implements BerType, Serializable {
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 4)) {
-			codeLength += BerLength.skip(is);
+			BerLength explicitTagLength = new BerLength();
+			codeLength += explicitTagLength.decode(is);
 			directoryName = new Name();
 			codeLength += directoryName.decode(is, null);
+			if (explicitTagLength.val < 0) {
+				codeLength += 2;
+				is.read();
+				is.read();
+			}
 			return codeLength;
 		}
 

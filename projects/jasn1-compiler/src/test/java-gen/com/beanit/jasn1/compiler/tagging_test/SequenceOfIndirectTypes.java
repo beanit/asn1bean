@@ -284,25 +284,23 @@ public class SequenceOfIndirectTypes implements BerType, Serializable {
 	}
 
 	public int decode(InputStream is, boolean withTag) throws IOException {
-		int codeLength = 0;
-		int subCodeLength = 0;
+		int tlByteCount = 0;
+		int vByteCount = 0;
 		BerTag berTag = new BerTag();
 
 		if (withTag) {
-			codeLength += tag.decodeAndCheck(is);
+			tlByteCount += tag.decodeAndCheck(is);
 		}
 
 		BerLength length = new BerLength();
-		codeLength += length.decode(is);
+		tlByteCount += length.decode(is);
 
-		int totalLength = length.val;
-		codeLength += totalLength;
-
-		subCodeLength += berTag.decode(is);
+		int lengthVal = length.val;
+		vByteCount += berTag.decode(is);
 		if (berTag.equals(UntaggedInteger.tag)) {
 			untaggedInt = new UntaggedInteger();
-			subCodeLength += untaggedInt.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += untaggedInt.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -310,8 +308,8 @@ public class SequenceOfIndirectTypes implements BerType, Serializable {
 		
 		if (berTag.equals(ExplicitlyTaggedInteger.tag)) {
 			untaggedInt2 = new ExplicitlyTaggedInteger();
-			subCodeLength += untaggedInt2.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += untaggedInt2.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -319,38 +317,53 @@ public class SequenceOfIndirectTypes implements BerType, Serializable {
 		
 		if (berTag.equals(ImplicitlyTaggedInteger.tag)) {
 			untaggedInt3 = new ImplicitlyTaggedInteger();
-			subCodeLength += untaggedInt3.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += untaggedInt3.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
-			subCodeLength += length.decode(is);
+			vByteCount += length.decode(is);
 			explicitlyTaggedInt = new UntaggedInteger();
-			subCodeLength += explicitlyTaggedInt.decode(is, true);
-			subCodeLength += berTag.decode(is);
+			vByteCount += explicitlyTaggedInt.decode(is, true);
+			if (length.val < 0) {
+				vByteCount += 2;
+				is.read();
+				is.read();
+			}
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 11)) {
-			subCodeLength += length.decode(is);
+			vByteCount += length.decode(is);
 			explicitlyTaggedInt2 = new ExplicitlyTaggedInteger();
-			subCodeLength += explicitlyTaggedInt2.decode(is, true);
-			subCodeLength += berTag.decode(is);
+			vByteCount += explicitlyTaggedInt2.decode(is, true);
+			if (length.val < 0) {
+				vByteCount += 2;
+				is.read();
+				is.read();
+			}
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 21)) {
-			subCodeLength += length.decode(is);
+			vByteCount += length.decode(is);
 			explicitlyTaggedInt3 = new ImplicitlyTaggedInteger();
-			subCodeLength += explicitlyTaggedInt3.decode(is, true);
-			subCodeLength += berTag.decode(is);
+			vByteCount += explicitlyTaggedInt3.decode(is, true);
+			if (length.val < 0) {
+				vByteCount += 2;
+				is.read();
+				is.read();
+			}
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -358,8 +371,8 @@ public class SequenceOfIndirectTypes implements BerType, Serializable {
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 2)) {
 			implicitlyTaggedInt = new UntaggedInteger();
-			subCodeLength += implicitlyTaggedInt.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += implicitlyTaggedInt.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -367,8 +380,8 @@ public class SequenceOfIndirectTypes implements BerType, Serializable {
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 12)) {
 			implicitlyTaggedInt2 = new ExplicitlyTaggedInteger();
-			subCodeLength += implicitlyTaggedInt2.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += implicitlyTaggedInt2.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -376,31 +389,36 @@ public class SequenceOfIndirectTypes implements BerType, Serializable {
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 23)) {
 			implicitlyTaggedInt3 = new ImplicitlyTaggedInteger();
-			subCodeLength += implicitlyTaggedInt3.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += implicitlyTaggedInt3.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
 		}
 		
 		untaggedChoice = new UntaggedChoice();
-		subCodeLength += untaggedChoice.decode(is, berTag);
-		subCodeLength += berTag.decode(is);
+		vByteCount += untaggedChoice.decode(is, berTag);
+		vByteCount += berTag.decode(is);
 		
 		if (berTag.equals(TaggedChoice.tag)) {
 			untaggedChoice2 = new TaggedChoice();
-			subCodeLength += untaggedChoice2.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += untaggedChoice2.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 5)) {
-			subCodeLength += length.decode(is);
+			vByteCount += length.decode(is);
 			taggedChoice = new UntaggedChoice();
-			subCodeLength += taggedChoice.decode(is, null);
-			subCodeLength += berTag.decode(is);
+			vByteCount += taggedChoice.decode(is, null);
+			if (length.val < 0) {
+				vByteCount += 2;
+				is.read();
+				is.read();
+			}
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -408,8 +426,8 @@ public class SequenceOfIndirectTypes implements BerType, Serializable {
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 15)) {
 			taggedChoice2 = new TaggedChoice();
-			subCodeLength += taggedChoice2.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += taggedChoice2.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -417,18 +435,23 @@ public class SequenceOfIndirectTypes implements BerType, Serializable {
 		
 		if (berTag.equals(TaggedAny.tag)) {
 			untaggedAny = new TaggedAny();
-			subCodeLength += untaggedAny.decode(is, false);
-			subCodeLength += berTag.decode(is);
+			vByteCount += untaggedAny.decode(is, false);
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 8)) {
-			subCodeLength += length.decode(is);
+			vByteCount += length.decode(is);
 			taggedAny = new UntaggedAny();
-			subCodeLength += taggedAny.decode(is, null);
-			subCodeLength += berTag.decode(is);
+			vByteCount += taggedAny.decode(is, null);
+			if (length.val < 0) {
+				vByteCount += 2;
+				is.read();
+				is.read();
+			}
+			vByteCount += berTag.decode(is);
 		}
 		else {
 			throw new IOException("Tag does not match the mandatory sequence element tag.");
@@ -436,14 +459,32 @@ public class SequenceOfIndirectTypes implements BerType, Serializable {
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 18)) {
 			taggedAny2 = new TaggedAny();
-			subCodeLength += taggedAny2.decode(is, false);
-			if (subCodeLength == totalLength) {
-				return codeLength;
+			vByteCount += taggedAny2.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
 			}
+			vByteCount += berTag.decode(is);
 		}
-		throw new IOException("Unexpected end of sequence, length tag: " + totalLength + ", actual sequence length: " + subCodeLength);
-
+		else {
+			throw new IOException("Tag does not match the mandatory sequence element tag.");
+		}
 		
+		if (lengthVal < 0) {
+			if (!berTag.equals(0, 0, 0)) {
+				throw new IOException("Decoded sequence has wrong end of contents octets");
+			}
+			int lastByte = is.read();
+			if (lastByte == -1) {
+				throw new EOFException();
+			}
+			if (lastByte != 0) {
+				throw new IOException("Decoded sequence has wrong end of contents octets");
+			}
+			return tlByteCount + vByteCount + 1;
+		}
+
+		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", actual sequence length: " + vByteCount);
+
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
