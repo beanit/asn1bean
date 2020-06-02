@@ -118,8 +118,7 @@ public class BerTag implements Serializable {
 
     if (tagNumber == 0x1f) {
       tagNumber = 0;
-
-      int counter = 0;
+      int numTagBytes = 0;
 
       do {
         nextByte = is.read();
@@ -128,13 +127,13 @@ public class BerTag implements Serializable {
         }
 
         codeLength++;
-        if (counter >= 6) {
-          throw new IOException("Invalid Tag");
+        if (numTagBytes >= 6) {
+          throw new IOException("Tag is too large.");
         }
         tagNumber = tagNumber << 7;
         tagNumber |= (nextByte & 0x7f);
-        counter++;
-      } while ((nextByte & 0x80) == 0x80);
+        numTagBytes++;
+      } while ((nextByte & 0x80) != 0);
     }
 
     return codeLength;

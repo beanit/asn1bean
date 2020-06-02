@@ -76,7 +76,7 @@ public class BerLength implements Serializable {
     // check for short form
     if (val < 128) {
       if (val == -1) {
-        throw new EOFException();
+        throw new EOFException("Unexpected end of input stream.");
       }
       return 1;
     }
@@ -96,7 +96,7 @@ public class BerLength implements Serializable {
     for (int i = 0; i < lengthLength; i++) {
       int nextByte = is.read();
       if (nextByte == -1) {
-        throw new EOFException();
+        throw new EOFException("Unexpected end of input stream.");
       }
       val |= nextByte << (8 * (lengthLength - i - 1));
     }
@@ -125,7 +125,7 @@ public class BerLength implements Serializable {
     int b = is.read();
     if (b != 0) {
       if (b == -1) {
-        throw new EOFException();
+        throw new EOFException("Unexpected end of input stream.");
       }
       throw new IOException(
           "Byte "
