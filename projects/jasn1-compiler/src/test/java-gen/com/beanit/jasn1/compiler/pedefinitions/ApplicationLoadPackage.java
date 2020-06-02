@@ -138,9 +138,9 @@ public class ApplicationLoadPackage implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(BerTag.APPLICATION_CLASS, BerTag.PRIMITIVE, 15)) {
 			loadPackageAID = new ApplicationIdentifier();
 			vByteCount += loadPackageAID.decode(is, false);

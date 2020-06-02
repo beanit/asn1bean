@@ -95,9 +95,9 @@ public class CancelSessionResponseOk implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(EuiccCancelSessionSigned.tag)) {
 			euiccCancelSessionSigned = new EuiccCancelSessionSigned();
 			vByteCount += euiccCancelSessionSigned.decode(is, false);

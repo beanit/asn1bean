@@ -97,9 +97,9 @@ public class PolicyMappings implements BerType, Serializable {
 
 			BerLength length = new BerLength();
 			tlByteCount += length.decode(is);
-
 			int lengthVal = length.val;
 			vByteCount += berTag.decode(is);
+
 			if (berTag.equals(CertPolicyId.tag)) {
 				issuerDomainPolicy = new CertPolicyId();
 				vByteCount += issuerDomainPolicy.decode(is, false);

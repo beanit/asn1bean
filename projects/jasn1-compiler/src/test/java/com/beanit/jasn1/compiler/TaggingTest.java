@@ -34,6 +34,7 @@ import com.beanit.jasn1.compiler.tagging_test.SequenceOfDirectTypes;
 import com.beanit.jasn1.compiler.tagging_test.TaggedChoice;
 import com.beanit.jasn1.util.HexConverter;
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -85,13 +86,28 @@ public class TaggingTest {
     ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
     sequence.encode(os);
 
-    assertArrayEquals(HexConverter.fromShortHexString("BF210830060201010101FF"), os.getArray());
+    byte[] code = HexConverter.fromShortHexString("BF210830060201010101FF");
+    assertArrayEquals(code, os.getArray());
 
     sequence = new ExplicitlyTaggedSequence();
-    sequence.decode(new ByteArrayInputStream(os.getArray()));
+    int numDecodedBytes = sequence.decode(new ByteArrayInputStream(os.getArray()));
 
     assertNotNull(sequence.getMyInteger());
     assertNotNull(sequence.getMyBoolean());
+    assertEquals(code.length, numDecodedBytes);
+  }
+
+  @Test
+  public void explicitlyTaggedSequenceIndefiniteTest() throws Exception {
+    byte[] code = HexConverter.fromShortHexString("BF218030800201010101FF00000000");
+    ExplicitlyTaggedSequence sequence = new ExplicitlyTaggedSequence();
+    InputStream is = new ByteArrayInputStream(code);
+    int numDecodedBytes = sequence.decode(is);
+
+    assertNotNull(sequence.getMyInteger());
+    assertNotNull(sequence.getMyBoolean());
+    assertEquals(-1, is.read());
+    assertEquals(code.length, numDecodedBytes);
   }
 
   @Test

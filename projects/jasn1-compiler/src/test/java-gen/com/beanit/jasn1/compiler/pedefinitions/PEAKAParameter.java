@@ -391,9 +391,9 @@ public class PEAKAParameter implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 0)) {
 			akaHeader = new PEHeader();
 			vByteCount += akaHeader.decode(is, false);

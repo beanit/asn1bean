@@ -87,9 +87,9 @@ public class Validity implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		notBefore = new Time();
 		vByteCount += notBefore.decode(is, berTag);
 		vByteCount += berTag.decode(is);

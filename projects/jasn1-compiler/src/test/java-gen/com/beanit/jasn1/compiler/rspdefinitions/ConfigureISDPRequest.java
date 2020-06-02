@@ -92,12 +92,12 @@ public class ConfigureISDPRequest implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		if (lengthVal == 0) {
 			return tlByteCount;
 		}
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 24)) {
 			dpProprietaryData = new DpProprietaryData();
 			vByteCount += dpProprietaryData.decode(is, false);

@@ -103,9 +103,9 @@ public class AuthenticateResponseOk implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(EuiccSigned1.tag)) {
 			euiccSigned1 = new EuiccSigned1();
 			vByteCount += euiccSigned1.decode(is, false);

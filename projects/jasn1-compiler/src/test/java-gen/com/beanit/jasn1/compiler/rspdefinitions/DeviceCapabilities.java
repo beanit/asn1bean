@@ -155,12 +155,12 @@ public class DeviceCapabilities implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		if (lengthVal == 0) {
 			return tlByteCount;
 		}
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 0)) {
 			gsmSupportedRelease = new VersionType();
 			vByteCount += gsmSupportedRelease.decode(is, false);

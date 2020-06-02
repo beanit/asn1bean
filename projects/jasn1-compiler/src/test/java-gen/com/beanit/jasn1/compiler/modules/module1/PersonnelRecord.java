@@ -348,9 +348,9 @@ public class PersonnelRecord implements BerType, Serializable {
 
 				BerLength length = new BerLength();
 				tlByteCount += length.decode(is);
-
 				int lengthVal = length.val;
 				vByteCount += berTag.decode(is);
+
 				if (berTag.equals(BerInteger.tag)) {
 					test1 = new BerInteger();
 					vByteCount += test1.decode(is, false);
@@ -868,9 +868,9 @@ public class PersonnelRecord implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(Name.tag)) {
 			name = new Name();
 			vByteCount += name.decode(is, false);

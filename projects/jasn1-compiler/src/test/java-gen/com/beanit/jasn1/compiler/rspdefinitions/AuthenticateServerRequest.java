@@ -107,9 +107,9 @@ public class AuthenticateServerRequest implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(ServerSigned1.tag)) {
 			serverSigned1 = new ServerSigned1();
 			vByteCount += serverSigned1.decode(is, false);

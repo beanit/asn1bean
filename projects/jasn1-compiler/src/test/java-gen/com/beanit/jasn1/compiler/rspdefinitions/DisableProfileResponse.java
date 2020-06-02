@@ -90,9 +90,9 @@ public class DisableProfileResponse implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 0)) {
 			disableResult = new BerInteger();
 			vByteCount += disableResult.decode(is, false);

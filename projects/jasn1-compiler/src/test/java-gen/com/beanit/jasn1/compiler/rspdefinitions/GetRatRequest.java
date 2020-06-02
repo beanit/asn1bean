@@ -80,12 +80,12 @@ public class GetRatRequest implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		if (lengthVal == 0) {
 			return tlByteCount;
 		}
 		vByteCount += berTag.decode(is);
+
 		if (lengthVal < 0) {
 			if (!berTag.equals(0, 0, 0)) {
 				throw new IOException("Decoded sequence has wrong end of contents octets");

@@ -94,9 +94,9 @@ public class SuccessResult implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(BerTag.APPLICATION_CLASS, BerTag.PRIMITIVE, 15)) {
 			aid = new BerOctetString();
 			vByteCount += aid.decode(is, false);

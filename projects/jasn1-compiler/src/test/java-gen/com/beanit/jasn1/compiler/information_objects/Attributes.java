@@ -98,9 +98,9 @@ public class Attributes implements Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(BerInteger.tag)) {
 			attributeId = new BerInteger();
 			vByteCount += attributeId.decode(is, false);

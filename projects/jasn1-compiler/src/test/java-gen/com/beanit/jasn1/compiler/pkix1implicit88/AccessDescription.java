@@ -93,9 +93,9 @@ public class AccessDescription implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(BerObjectIdentifier.tag)) {
 			accessMethod = new BerObjectIdentifier();
 			vByteCount += accessMethod.decode(is, false);

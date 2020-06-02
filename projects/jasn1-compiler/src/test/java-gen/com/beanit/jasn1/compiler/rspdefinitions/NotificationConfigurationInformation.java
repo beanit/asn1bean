@@ -97,9 +97,9 @@ public class NotificationConfigurationInformation implements BerType, Serializab
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 0)) {
 			profileManagementOperation = new NotificationEvent();
 			vByteCount += profileManagementOperation.decode(is, false);

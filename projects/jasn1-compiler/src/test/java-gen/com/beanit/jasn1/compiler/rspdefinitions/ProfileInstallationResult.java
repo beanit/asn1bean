@@ -95,9 +95,9 @@ public class ProfileInstallationResult implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 39)) {
 			profileInstallationResultData = new ProfileInstallationResultData();
 			vByteCount += profileInstallationResultData.decode(is, false);

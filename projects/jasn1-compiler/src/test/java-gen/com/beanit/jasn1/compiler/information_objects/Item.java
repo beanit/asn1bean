@@ -153,9 +153,9 @@ public class Item implements Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(BerInteger.tag)) {
 			itemCode = new BerInteger();
 			vByteCount += itemCode.decode(is, false);

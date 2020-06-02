@@ -232,9 +232,9 @@ public class PDVList implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(TransferSyntaxName.tag)) {
 			transferSyntaxName = new TransferSyntaxName();
 			vByteCount += transferSyntaxName.decode(is, false);

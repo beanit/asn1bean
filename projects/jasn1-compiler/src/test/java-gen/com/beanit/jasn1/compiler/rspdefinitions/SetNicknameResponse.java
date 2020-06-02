@@ -90,9 +90,9 @@ public class SetNicknameResponse implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 0)) {
 			setNicknameResult = new BerInteger();
 			vByteCount += setNicknameResult.decode(is, false);

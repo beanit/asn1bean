@@ -110,9 +110,9 @@ public class KeyObject implements BerType, Serializable {
 
 				BerLength length = new BerLength();
 				tlByteCount += length.decode(is);
-
 				int lengthVal = length.val;
 				vByteCount += berTag.decode(is);
+
 				if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 0)) {
 					keyType = new BerOctetString();
 					vByteCount += keyType.decode(is, false);
@@ -449,9 +449,9 @@ public class KeyObject implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 21)) {
 			keyUsageQualifier = new BerOctetString();
 			vByteCount += keyUsageQualifier.decode(is, false);

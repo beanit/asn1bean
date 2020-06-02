@@ -90,9 +90,9 @@ public class GetEuiccChallengeResponse implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 0)) {
 			euiccChallenge = new Octet16();
 			vByteCount += euiccChallenge.decode(is, false);

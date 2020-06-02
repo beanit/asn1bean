@@ -94,9 +94,9 @@ public class SetNicknameRequest implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(Iccid.tag)) {
 			iccid = new Iccid();
 			vByteCount += iccid.decode(is, false);

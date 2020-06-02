@@ -87,9 +87,9 @@ public class BuiltInDomainDefinedAttribute implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(BerPrintableString.tag)) {
 			type = new BerPrintableString();
 			vByteCount += type.decode(is, false);

@@ -106,12 +106,12 @@ public class ProprietaryInfo implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		if (lengthVal == 0) {
 			return tlByteCount;
 		}
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(BerTag.PRIVATE_CLASS, BerTag.PRIMITIVE, 0)) {
 			specialFileInformation = new BerOctetString();
 			vByteCount += specialFileInformation.decode(is, false);

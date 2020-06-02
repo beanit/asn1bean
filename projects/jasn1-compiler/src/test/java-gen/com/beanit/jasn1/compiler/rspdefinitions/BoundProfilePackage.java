@@ -717,9 +717,9 @@ public class BoundProfilePackage implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 35)) {
 			initialiseSecureChannelRequest = new InitialiseSecureChannelRequest();
 			vByteCount += initialiseSecureChannelRequest.decode(is, false);

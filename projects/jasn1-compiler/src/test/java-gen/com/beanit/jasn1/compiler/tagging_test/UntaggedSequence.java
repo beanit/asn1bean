@@ -98,9 +98,9 @@ public class UntaggedSequence implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(BerInteger.tag)) {
 			myInteger = new BerInteger();
 			vByteCount += myInteger.decode(is, false);

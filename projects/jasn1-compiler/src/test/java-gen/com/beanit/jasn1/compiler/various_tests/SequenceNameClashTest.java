@@ -499,9 +499,9 @@ public class SequenceNameClashTest implements BerType, Serializable {
 
 				BerLength length = new BerLength();
 				tlByteCount += length.decode(is);
-
 				int lengthVal = length.val;
 				vByteCount += berTag.decode(is);
+
 				if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 9)) {
 					vByteCount += length.decode(is);
 					myInteger = new com.beanit.jasn1.compiler.various_tests.UntaggedInteger();
@@ -983,9 +983,9 @@ public class SequenceNameClashTest implements BerType, Serializable {
 
 			BerLength length = new BerLength();
 			tlByteCount += length.decode(is);
-
 			int lengthVal = length.val;
 			vByteCount += berTag.decode(is);
+
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 9)) {
 				vByteCount += length.decode(is);
 				myInteger = new com.beanit.jasn1.compiler.various_tests.UntaggedInteger();
@@ -1157,21 +1157,15 @@ public class SequenceNameClashTest implements BerType, Serializable {
 			tlByteCount += tag.decodeAndCheck(is);
 		}
 
+		BerLength explicitTagLength = new BerLength();
+		tlByteCount += explicitTagLength.decode(is);
+		tlByteCount += BerTag.SEQUENCE.decodeAndCheck(is);
+
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
-		int nextByte = is.read();
-		if (nextByte == -1) {
-			throw new EOFException("Unexpected end of input stream.");
-		}
-		if (nextByte != (0x30)) {
-			throw new IOException("Tag does not match!");
-		}
-		length.decode(is);
-		lengthVal = length.val;
-
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
 			vByteCount += length.decode(is);
 			myseqof = new Myseqof();
@@ -1216,6 +1210,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 				throw new IOException("Decoded sequence has wrong end of contents octets");
 			}
 			vByteCount += BerLength.readEocByte(is);
+			vByteCount += explicitTagLength.readEocIfIndefinite(is);
 			return tlByteCount + vByteCount;
 		}
 

@@ -95,9 +95,9 @@ public class PrepareDownloadResponseOk implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(EUICCSigned2.tag)) {
 			euiccSigned2 = new EUICCSigned2();
 			vByteCount += euiccSigned2.decode(is, false);

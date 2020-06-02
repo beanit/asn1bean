@@ -1448,21 +1448,16 @@ public class BerClassWriter {
     write("if (withTag) {");
     write("tlByteCount += tag.decodeAndCheck(is);");
     write("}\n");
-    write("BerLength length = new BerLength();");
-    write("tlByteCount += length.decode(is);\n");
-    write("int lengthVal = length.val;");
 
     if (hasExplicitTag) {
-      write("int nextByte = is.read();");
-      write("if (nextByte == -1) {");
-      write("throw new EOFException(\"Unexpected end of input stream.\");");
-      write("}");
-      write("if (nextByte != (0x30)) {");
-      write("throw new IOException(\"Tag does not match!\");");
-      write("}");
-      write("length.decode(is);");
-      write("lengthVal = length.val;\n");
+      write("BerLength explicitTagLength = new BerLength();");
+      write("tlByteCount += explicitTagLength.decode(is);");
+      write("tlByteCount += BerTag.SEQUENCE.decodeAndCheck(is);\n");
     }
+
+    write("BerLength length = new BerLength();");
+    write("tlByteCount += length.decode(is);");
+    write("int lengthVal = length.val;");
 
     int lastNoneOptionalFieldIndex = -1;
     for (int j = 0; j < componentTypes.size(); j++) {
@@ -1479,7 +1474,7 @@ public class BerClassWriter {
       write("}");
     }
 
-    write("vByteCount += berTag.decode(is);");
+    write("vByteCount += berTag.decode(is);\n");
 
     String initChoiceDecodeLength = "int ";
 
@@ -1585,6 +1580,9 @@ public class BerClassWriter {
     write("throw new IOException(\"Decoded sequence has wrong end of contents octets\");");
     write("}");
     write("vByteCount += BerLength.readEocByte(is);");
+    if (hasExplicitTag) {
+      write("vByteCount += explicitTagLength.readEocIfIndefinite(is);");
+    }
     write("return tlByteCount + vByteCount;");
     write("}\n");
 

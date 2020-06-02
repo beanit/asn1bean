@@ -87,9 +87,9 @@ public class TeletexDomainDefinedAttribute implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(BerTeletexString.tag)) {
 			type = new BerTeletexString();
 			vByteCount += type.decode(is, false);

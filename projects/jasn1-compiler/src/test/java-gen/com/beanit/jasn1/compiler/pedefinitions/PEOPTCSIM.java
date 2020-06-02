@@ -734,9 +734,9 @@ public class PEOPTCSIM implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 0)) {
 			optcsimHeader = new PEHeader();
 			vByteCount += optcsimHeader.decode(is, false);

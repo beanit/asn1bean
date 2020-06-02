@@ -294,9 +294,9 @@ public class SequenceOfIndirectTypes implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(UntaggedInteger.tag)) {
 			untaggedInt = new UntaggedInteger();
 			vByteCount += untaggedInt.decode(is, false);

@@ -119,9 +119,9 @@ public class ManagedExtension2 implements Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(BerObjectIdentifier.tag)) {
 			identifier = new BerObjectIdentifier();
 			vByteCount += identifier.decode(is, false);

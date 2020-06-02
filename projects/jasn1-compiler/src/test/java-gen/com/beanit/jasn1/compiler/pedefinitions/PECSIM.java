@@ -344,9 +344,9 @@ public class PECSIM implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 0)) {
 			csimHeader = new PEHeader();
 			vByteCount += csimHeader.decode(is, false);

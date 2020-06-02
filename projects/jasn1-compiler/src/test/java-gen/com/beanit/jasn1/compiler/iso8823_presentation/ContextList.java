@@ -240,9 +240,9 @@ public class ContextList implements BerType, Serializable {
 
 			BerLength length = new BerLength();
 			tlByteCount += length.decode(is);
-
 			int lengthVal = length.val;
 			vByteCount += berTag.decode(is);
+
 			if (berTag.equals(PresentationContextIdentifier.tag)) {
 				presentationContextIdentifier = new PresentationContextIdentifier();
 				vByteCount += presentationContextIdentifier.decode(is, false);

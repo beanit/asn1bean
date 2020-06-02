@@ -238,9 +238,9 @@ public class NoticeReference implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		organization = new DisplayText();
 		vByteCount += organization.decode(is, berTag);
 		vByteCount += berTag.decode(is);

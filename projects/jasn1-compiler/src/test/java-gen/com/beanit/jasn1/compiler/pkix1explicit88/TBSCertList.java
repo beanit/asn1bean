@@ -101,9 +101,9 @@ public class TBSCertList implements BerType, Serializable {
 
 				BerLength length = new BerLength();
 				tlByteCount += length.decode(is);
-
 				int lengthVal = length.val;
 				vByteCount += berTag.decode(is);
+
 				if (berTag.equals(CertificateSerialNumber.tag)) {
 					userCertificate = new CertificateSerialNumber();
 					vByteCount += userCertificate.decode(is, false);
@@ -437,9 +437,9 @@ public class TBSCertList implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(Version.tag)) {
 			version = new Version();
 			vByteCount += version.decode(is, false);

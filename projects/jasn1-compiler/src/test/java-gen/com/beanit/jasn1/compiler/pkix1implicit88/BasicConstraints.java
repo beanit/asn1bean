@@ -97,12 +97,12 @@ public class BasicConstraints implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		if (lengthVal == 0) {
 			return tlByteCount;
 		}
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(BerBoolean.tag)) {
 			cA = new BerBoolean();
 			vByteCount += cA.decode(is, false);

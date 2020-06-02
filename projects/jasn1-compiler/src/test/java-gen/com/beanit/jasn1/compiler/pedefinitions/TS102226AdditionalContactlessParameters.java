@@ -86,9 +86,9 @@ public class TS102226AdditionalContactlessParameters implements BerType, Seriali
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 0)) {
 			protocolParameterData = new BerOctetString();
 			vByteCount += protocolParameterData.decode(is, false);

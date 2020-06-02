@@ -100,21 +100,15 @@ public class ExplicitlyTaggedSequence implements BerType, Serializable {
 			tlByteCount += tag.decodeAndCheck(is);
 		}
 
+		BerLength explicitTagLength = new BerLength();
+		tlByteCount += explicitTagLength.decode(is);
+		tlByteCount += BerTag.SEQUENCE.decodeAndCheck(is);
+
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
-		int nextByte = is.read();
-		if (nextByte == -1) {
-			throw new EOFException("Unexpected end of input stream.");
-		}
-		if (nextByte != (0x30)) {
-			throw new IOException("Tag does not match!");
-		}
-		length.decode(is);
-		lengthVal = length.val;
-
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(BerInteger.tag)) {
 			myInteger = new BerInteger();
 			vByteCount += myInteger.decode(is, false);
@@ -141,6 +135,7 @@ public class ExplicitlyTaggedSequence implements BerType, Serializable {
 				throw new IOException("Decoded sequence has wrong end of contents octets");
 			}
 			vByteCount += BerLength.readEocByte(is);
+			vByteCount += explicitTagLength.readEocIfIndefinite(is);
 			return tlByteCount + vByteCount;
 		}
 

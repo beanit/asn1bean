@@ -117,9 +117,9 @@ public class InitialiseSecureChannelRequest implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(RemoteOpId.tag)) {
 			remoteOpId = new RemoteOpId();
 			vByteCount += remoteOpId.decode(is, false);

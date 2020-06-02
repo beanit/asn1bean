@@ -388,12 +388,12 @@ public class PESecurityDomain implements BerType, Serializable {
 
 			BerLength length = new BerLength();
 			tlByteCount += length.decode(is);
-
 			int lengthVal = length.val;
 			if (lengthVal == 0) {
 				return tlByteCount;
 			}
 			vByteCount += berTag.decode(is);
+
 			if (berTag.equals(BerTag.PRIVATE_CLASS, BerTag.PRIMITIVE, 25)) {
 				restrictParameter = new BerOctetString();
 				vByteCount += restrictParameter.decode(is, false);
@@ -543,9 +543,9 @@ public class PESecurityDomain implements BerType, Serializable {
 
 			BerLength length = new BerLength();
 			tlByteCount += length.decode(is);
-
 			int lengthVal = length.val;
 			vByteCount += berTag.decode(is);
+
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 0)) {
 				catTpMaxSduSize = new UInt16();
 				vByteCount += catTpMaxSduSize.decode(is, false);
@@ -731,9 +731,9 @@ public class PESecurityDomain implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 0)) {
 			sdHeader = new PEHeader();
 			vByteCount += sdHeader.decode(is, false);

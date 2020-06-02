@@ -103,12 +103,12 @@ public class NameConstraints implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		if (lengthVal == 0) {
 			return tlByteCount;
 		}
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 0)) {
 			permittedSubtrees = new GeneralSubtrees();
 			vByteCount += permittedSubtrees.decode(is, false);

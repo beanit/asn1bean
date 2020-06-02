@@ -95,9 +95,9 @@ public class ORAddress implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(BuiltInStandardAttributes.tag)) {
 			builtInStandardAttributes = new BuiltInStandardAttributes();
 			vByteCount += builtInStandardAttributes.decode(is, false);

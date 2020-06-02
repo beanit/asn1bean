@@ -90,9 +90,9 @@ public class GetEuiccDataRequest implements BerType, Serializable {
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
-
 		int lengthVal = length.val;
 		vByteCount += berTag.decode(is);
+
 		if (berTag.equals(BerTag.APPLICATION_CLASS, BerTag.PRIMITIVE, 28)) {
 			tagList = new Octet1();
 			vByteCount += tagList.decode(is, false);
