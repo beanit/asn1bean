@@ -13,6 +13,7 @@
  */
 package com.beanit.jasn1.ber;
 
+import com.beanit.jasn1.util.HexConverter;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -105,15 +106,13 @@ public class BerLength implements Serializable {
 
     val = is.read();
     if (val == -1) {
-      throw new EOFException("Unexpected end of input stream.");
+      throw new EOFException();
     }
-
     if ((val & 0x80) == 0) {
       return 1;
     }
 
     int lengthLength = val & 0x7f;
-
     // check for indefinite length
     if (lengthLength == 0) {
       val = -1;
@@ -121,7 +120,7 @@ public class BerLength implements Serializable {
     }
 
     if (lengthLength > 4) {
-      throw new IOException("Length is out of bound!");
+      throw new IOException("Length is out of bounds: " + lengthLength);
     }
 
     val = 0;
@@ -129,11 +128,43 @@ public class BerLength implements Serializable {
     for (int i = 0; i < lengthLength; i++) {
       int nextByte = is.read();
       if (nextByte == -1) {
-        throw new EOFException("Unexpected end of input stream.");
+        throw new EOFException();
       }
       val |= nextByte << (8 * (lengthLength - i - 1));
     }
 
     return lengthLength + 1;
+  }
+
+  /**
+   * Reads the end of contents octets from the given input stream if this length object has the
+   * indefinite form.
+   *
+   * @param is the input stream
+   * @return the number of bytes read from the input stream
+   * @throws IOException if an error occurs while reading from the input stream
+   */
+  public int readEocIfIndefinite(InputStream is) throws IOException {
+    if (val >= 0) {
+      return 0;
+    }
+    for (int i = 0; i < 2; i++) {
+      readEocByte(is);
+    }
+    return 2;
+  }
+
+  public static int readEocByte(InputStream is) throws IOException {
+    int b = is.read();
+    if (b != 0) {
+      if (b == -1) {
+        throw new EOFException();
+      }
+      throw new IOException(
+          "Byte "
+              + HexConverter.toHexString((byte) b)
+              + " does not match end of contents octet of zero.");
+    }
+    return 1;
   }
 }

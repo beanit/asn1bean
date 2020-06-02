@@ -348,11 +348,7 @@ public class ChoiceOfIndirectTypes implements BerType, Serializable {
 			codeLength += explicitTagLength.decode(is);
 			explicitlyTaggedInt = new UntaggedInteger();
 			codeLength += explicitlyTaggedInt.decode(is, true);
-			if (explicitTagLength.val < 0) {
-				codeLength += 2;
-				is.read();
-				is.read();
-			}
+			codeLength += explicitTagLength.readEocIfIndefinite(is);
 			return codeLength;
 		}
 
@@ -361,11 +357,7 @@ public class ChoiceOfIndirectTypes implements BerType, Serializable {
 			codeLength += explicitTagLength.decode(is);
 			explicitlyTaggedInt2 = new ExplicitlyTaggedInteger();
 			codeLength += explicitlyTaggedInt2.decode(is, true);
-			if (explicitTagLength.val < 0) {
-				codeLength += 2;
-				is.read();
-				is.read();
-			}
+			codeLength += explicitTagLength.readEocIfIndefinite(is);
 			return codeLength;
 		}
 
@@ -374,11 +366,7 @@ public class ChoiceOfIndirectTypes implements BerType, Serializable {
 			codeLength += explicitTagLength.decode(is);
 			explicitlyTaggedInt3 = new ImplicitlyTaggedInteger();
 			codeLength += explicitlyTaggedInt3.decode(is, true);
-			if (explicitTagLength.val < 0) {
-				codeLength += 2;
-				is.read();
-				is.read();
-			}
+			codeLength += explicitTagLength.readEocIfIndefinite(is);
 			return codeLength;
 		}
 
@@ -420,11 +408,7 @@ public class ChoiceOfIndirectTypes implements BerType, Serializable {
 			codeLength += explicitTagLength.decode(is);
 			taggedChoice = new UntaggedChoice();
 			codeLength += taggedChoice.decode(is, null);
-			if (explicitTagLength.val < 0) {
-				codeLength += 2;
-				is.read();
-				is.read();
-			}
+			codeLength += explicitTagLength.readEocIfIndefinite(is);
 			return codeLength;
 		}
 
@@ -445,11 +429,7 @@ public class ChoiceOfIndirectTypes implements BerType, Serializable {
 			codeLength += explicitTagLength.decode(is);
 			taggedAny = new UntaggedAny();
 			codeLength += taggedAny.decode(is, null);
-			if (explicitTagLength.val < 0) {
-				codeLength += 2;
-				is.read();
-				is.read();
-			}
+			codeLength += explicitTagLength.readEocIfIndefinite(is);
 			return codeLength;
 		}
 

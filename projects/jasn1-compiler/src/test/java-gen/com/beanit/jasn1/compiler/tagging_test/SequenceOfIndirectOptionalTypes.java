@@ -363,11 +363,7 @@ public class SequenceOfIndirectOptionalTypes implements BerType, Serializable {
 			vByteCount += length.decode(is);
 			explicitlyTaggedInt = new UntaggedInteger();
 			vByteCount += explicitlyTaggedInt.decode(is, true);
-			if (length.val < 0) {
-				vByteCount += 2;
-				is.read();
-				is.read();
-			}
+			vByteCount += length.readEocIfIndefinite(is);
 			if (lengthVal >= 0 && vByteCount == lengthVal) {
 				return tlByteCount + vByteCount;
 			}
@@ -378,11 +374,7 @@ public class SequenceOfIndirectOptionalTypes implements BerType, Serializable {
 			vByteCount += length.decode(is);
 			explicitlyTaggedInt2 = new ExplicitlyTaggedInteger();
 			vByteCount += explicitlyTaggedInt2.decode(is, true);
-			if (length.val < 0) {
-				vByteCount += 2;
-				is.read();
-				is.read();
-			}
+			vByteCount += length.readEocIfIndefinite(is);
 			if (lengthVal >= 0 && vByteCount == lengthVal) {
 				return tlByteCount + vByteCount;
 			}
@@ -393,11 +385,7 @@ public class SequenceOfIndirectOptionalTypes implements BerType, Serializable {
 			vByteCount += length.decode(is);
 			explicitlyTaggedInt3 = new ImplicitlyTaggedInteger();
 			vByteCount += explicitlyTaggedInt3.decode(is, true);
-			if (length.val < 0) {
-				vByteCount += 2;
-				is.read();
-				is.read();
-			}
+			vByteCount += length.readEocIfIndefinite(is);
 			if (lengthVal >= 0 && vByteCount == lengthVal) {
 				return tlByteCount + vByteCount;
 			}
@@ -457,11 +445,7 @@ public class SequenceOfIndirectOptionalTypes implements BerType, Serializable {
 			vByteCount += length.decode(is);
 			taggedChoice = new UntaggedChoice();
 			vByteCount += taggedChoice.decode(is, null);
-			if (length.val < 0) {
-				vByteCount += 2;
-				is.read();
-				is.read();
-			}
+			vByteCount += length.readEocIfIndefinite(is);
 			if (lengthVal >= 0 && vByteCount == lengthVal) {
 				return tlByteCount + vByteCount;
 			}
@@ -490,11 +474,7 @@ public class SequenceOfIndirectOptionalTypes implements BerType, Serializable {
 			vByteCount += length.decode(is);
 			taggedAny = new UntaggedAny();
 			vByteCount += taggedAny.decode(is, null);
-			if (length.val < 0) {
-				vByteCount += 2;
-				is.read();
-				is.read();
-			}
+			vByteCount += length.readEocIfIndefinite(is);
 			if (lengthVal >= 0 && vByteCount == lengthVal) {
 				return tlByteCount + vByteCount;
 			}
@@ -514,14 +494,8 @@ public class SequenceOfIndirectOptionalTypes implements BerType, Serializable {
 			if (!berTag.equals(0, 0, 0)) {
 				throw new IOException("Decoded sequence has wrong end of contents octets");
 			}
-			int lastByte = is.read();
-			if (lastByte == -1) {
-				throw new EOFException();
-			}
-			if (lastByte != 0) {
-				throw new IOException("Decoded sequence has wrong end of contents octets");
-			}
-			return tlByteCount + vByteCount + 1;
+			vByteCount += BerLength.readEocByte(is);
+			return tlByteCount + vByteCount;
 		}
 
 		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", actual sequence length: " + vByteCount);

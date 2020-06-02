@@ -242,11 +242,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 				codeLength += explicitTagLength.decode(is);
 				myInteger = new com.beanit.jasn1.compiler.various_tests.UntaggedInteger();
 				codeLength += myInteger.decode(is, true);
-				if (explicitTagLength.val < 0) {
-					codeLength += 2;
-					is.read();
-					is.read();
-				}
+				codeLength += explicitTagLength.readEocIfIndefinite(is);
 				return codeLength;
 			}
 
@@ -255,11 +251,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 				codeLength += explicitTagLength.decode(is);
 				myBoolean = new BerBoolean();
 				codeLength += myBoolean.decode(is, true);
-				if (explicitTagLength.val < 0) {
-					codeLength += 2;
-					is.read();
-					is.read();
-				}
+				codeLength += explicitTagLength.readEocIfIndefinite(is);
 				return codeLength;
 			}
 
@@ -378,11 +370,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 					codeLength += explicitTagLength.decode(is);
 					myInteger = new com.beanit.jasn1.compiler.various_tests.UntaggedInteger();
 					codeLength += myInteger.decode(is, true);
-					if (explicitTagLength.val < 0) {
-						codeLength += 2;
-						is.read();
-						is.read();
-					}
+					codeLength += explicitTagLength.readEocIfIndefinite(is);
 					return codeLength;
 				}
 
@@ -391,11 +379,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 					codeLength += explicitTagLength.decode(is);
 					myBoolean = new BerBoolean();
 					codeLength += myBoolean.decode(is, true);
-					if (explicitTagLength.val < 0) {
-						codeLength += 2;
-						is.read();
-						is.read();
-					}
+					codeLength += explicitTagLength.readEocIfIndefinite(is);
 					return codeLength;
 				}
 
@@ -522,11 +506,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 					vByteCount += length.decode(is);
 					myInteger = new com.beanit.jasn1.compiler.various_tests.UntaggedInteger();
 					vByteCount += myInteger.decode(is, true);
-					if (length.val < 0) {
-						vByteCount += 2;
-						is.read();
-						is.read();
-					}
+					vByteCount += length.readEocIfIndefinite(is);
 					vByteCount += berTag.decode(is);
 				}
 				else {
@@ -537,11 +517,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 					vByteCount += length.decode(is);
 					myBoolean = new BerBoolean();
 					vByteCount += myBoolean.decode(is, true);
-					if (length.val < 0) {
-						vByteCount += 2;
-						is.read();
-						is.read();
-					}
+					vByteCount += length.readEocIfIndefinite(is);
 					if (lengthVal >= 0 && vByteCount == lengthVal) {
 						return tlByteCount + vByteCount;
 					}
@@ -555,14 +531,8 @@ public class SequenceNameClashTest implements BerType, Serializable {
 					if (!berTag.equals(0, 0, 0)) {
 						throw new IOException("Decoded sequence has wrong end of contents octets");
 					}
-					int lastByte = is.read();
-					if (lastByte == -1) {
-						throw new EOFException();
-					}
-					if (lastByte != 0) {
-						throw new IOException("Decoded sequence has wrong end of contents octets");
-					}
-					return tlByteCount + vByteCount + 1;
+					vByteCount += BerLength.readEocByte(is);
+					return tlByteCount + vByteCount;
 				}
 
 				throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", actual sequence length: " + vByteCount);
@@ -853,11 +823,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 				codeLength += explicitTagLength.decode(is);
 				myInteger = new com.beanit.jasn1.compiler.various_tests.UntaggedInteger();
 				codeLength += myInteger.decode(is, true);
-				if (explicitTagLength.val < 0) {
-					codeLength += 2;
-					is.read();
-					is.read();
-				}
+				codeLength += explicitTagLength.readEocIfIndefinite(is);
 				return codeLength;
 			}
 
@@ -866,11 +832,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 				codeLength += explicitTagLength.decode(is);
 				myChoice2 = new MyChoice2();
 				codeLength += myChoice2.decode(is, null);
-				if (explicitTagLength.val < 0) {
-					codeLength += 2;
-					is.read();
-					is.read();
-				}
+				codeLength += explicitTagLength.readEocIfIndefinite(is);
 				return codeLength;
 			}
 
@@ -879,11 +841,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 				codeLength += explicitTagLength.decode(is);
 				mySequence = new MySequence();
 				codeLength += mySequence.decode(is, true);
-				if (explicitTagLength.val < 0) {
-					codeLength += 2;
-					is.read();
-					is.read();
-				}
+				codeLength += explicitTagLength.readEocIfIndefinite(is);
 				return codeLength;
 			}
 
@@ -892,11 +850,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 				codeLength += explicitTagLength.decode(is);
 				myseqof = new Myseqof();
 				codeLength += myseqof.decode(is, true);
-				if (explicitTagLength.val < 0) {
-					codeLength += 2;
-					is.read();
-					is.read();
-				}
+				codeLength += explicitTagLength.readEocIfIndefinite(is);
 				return codeLength;
 			}
 
@@ -1036,11 +990,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 				vByteCount += length.decode(is);
 				myInteger = new com.beanit.jasn1.compiler.various_tests.UntaggedInteger();
 				vByteCount += myInteger.decode(is, true);
-				if (length.val < 0) {
-					vByteCount += 2;
-					is.read();
-					is.read();
-				}
+				vByteCount += length.readEocIfIndefinite(is);
 				vByteCount += berTag.decode(is);
 			}
 			else {
@@ -1051,11 +1001,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 				vByteCount += length.decode(is);
 				myBoolean = new BerBoolean();
 				vByteCount += myBoolean.decode(is, true);
-				if (length.val < 0) {
-					vByteCount += 2;
-					is.read();
-					is.read();
-				}
+				vByteCount += length.readEocIfIndefinite(is);
 				if (lengthVal >= 0 && vByteCount == lengthVal) {
 					return tlByteCount + vByteCount;
 				}
@@ -1069,14 +1015,8 @@ public class SequenceNameClashTest implements BerType, Serializable {
 				if (!berTag.equals(0, 0, 0)) {
 					throw new IOException("Decoded sequence has wrong end of contents octets");
 				}
-				int lastByte = is.read();
-				if (lastByte == -1) {
-					throw new EOFException();
-				}
-				if (lastByte != 0) {
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				return tlByteCount + vByteCount + 1;
+				vByteCount += BerLength.readEocByte(is);
+				return tlByteCount + vByteCount;
 			}
 
 			throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", actual sequence length: " + vByteCount);
@@ -1236,11 +1176,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 			vByteCount += length.decode(is);
 			myseqof = new Myseqof();
 			vByteCount += myseqof.decode(is, true);
-			if (length.val < 0) {
-				vByteCount += 2;
-				is.read();
-				is.read();
-			}
+			vByteCount += length.readEocIfIndefinite(is);
 			vByteCount += berTag.decode(is);
 		}
 		else {
@@ -1265,11 +1201,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 			vByteCount += length.decode(is);
 			sequenceNameClashTest = new SequenceNameClashTest_();
 			vByteCount += sequenceNameClashTest.decode(is, true);
-			if (length.val < 0) {
-				vByteCount += 2;
-				is.read();
-				is.read();
-			}
+			vByteCount += length.readEocIfIndefinite(is);
 			if (lengthVal >= 0 && vByteCount == lengthVal) {
 				return tlByteCount + vByteCount;
 			}
@@ -1283,14 +1215,8 @@ public class SequenceNameClashTest implements BerType, Serializable {
 			if (!berTag.equals(0, 0, 0)) {
 				throw new IOException("Decoded sequence has wrong end of contents octets");
 			}
-			int lastByte = is.read();
-			if (lastByte == -1) {
-				throw new EOFException();
-			}
-			if (lastByte != 0) {
-				throw new IOException("Decoded sequence has wrong end of contents octets");
-			}
-			return tlByteCount + vByteCount + 1;
+			vByteCount += BerLength.readEocByte(is);
+			return tlByteCount + vByteCount;
 		}
 
 		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", actual sequence length: " + vByteCount);

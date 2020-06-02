@@ -191,11 +191,7 @@ public class GeneralName implements BerType, Serializable {
 			codeLength += explicitTagLength.decode(is);
 			directoryName = new Name();
 			codeLength += directoryName.decode(is, null);
-			if (explicitTagLength.val < 0) {
-				codeLength += 2;
-				is.read();
-				is.read();
-			}
+			codeLength += explicitTagLength.readEocIfIndefinite(is);
 			return codeLength;
 		}
 

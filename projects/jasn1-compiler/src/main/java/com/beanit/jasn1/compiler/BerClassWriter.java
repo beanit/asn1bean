@@ -1383,11 +1383,7 @@ public class BerClassWriter {
         write("codeLength += " + getName(componentType) + ".decode(is" + explicitEncoding + ");");
 
         if (isExplicit(componentTag)) {
-          write("if (explicitTagLength.val < 0) {");
-          write("codeLength += 2;");
-          write("is.read();");
-          write("is.read();");
-          write("}");
+          write("codeLength += explicitTagLength.readEocIfIndefinite(is);");
         }
 
         write("return codeLength;");
@@ -1503,11 +1499,7 @@ public class BerClassWriter {
         write("vByteCount += " + getName(componentType) + ".decode(is" + explicitEncoding + ");");
 
         if (isExplicit(componentTag)) {
-          write("if (length.val < 0) {");
-          write("vByteCount += 2;");
-          write("is.read();");
-          write("is.read();");
-          write("}");
+          write("vByteCount += length.readEocIfIndefinite(is);");
         }
 
         if (lastNoneOptionalFieldIndex <= j) {
@@ -1592,14 +1584,8 @@ public class BerClassWriter {
     write("if (!berTag.equals(0, 0, 0)) {");
     write("throw new IOException(\"Decoded sequence has wrong end of contents octets\");");
     write("}");
-    write("int lastByte = is.read();");
-    write("if (lastByte == -1) {");
-    write("throw new EOFException();");
-    write("}");
-    write("if (lastByte != 0) {");
-    write("throw new IOException(\"Decoded sequence has wrong end of contents octets\");");
-    write("}");
-    write("return tlByteCount + vByteCount + 1;");
+    write("vByteCount += BerLength.readEocByte(is);");
+    write("return tlByteCount + vByteCount;");
     write("}\n");
 
     write(

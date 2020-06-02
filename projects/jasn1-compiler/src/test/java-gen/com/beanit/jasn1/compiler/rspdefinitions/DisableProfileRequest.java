@@ -216,11 +216,7 @@ public class DisableProfileRequest implements BerType, Serializable {
 			vByteCount += length.decode(is);
 			profileIdentifier = new ProfileIdentifier();
 			vByteCount += profileIdentifier.decode(is, null);
-			if (length.val < 0) {
-				vByteCount += 2;
-				is.read();
-				is.read();
-			}
+			vByteCount += length.readEocIfIndefinite(is);
 			vByteCount += berTag.decode(is);
 		}
 		else {
@@ -243,14 +239,8 @@ public class DisableProfileRequest implements BerType, Serializable {
 			if (!berTag.equals(0, 0, 0)) {
 				throw new IOException("Decoded sequence has wrong end of contents octets");
 			}
-			int lastByte = is.read();
-			if (lastByte == -1) {
-				throw new EOFException();
-			}
-			if (lastByte != 0) {
-				throw new IOException("Decoded sequence has wrong end of contents octets");
-			}
-			return tlByteCount + vByteCount + 1;
+			vByteCount += BerLength.readEocByte(is);
+			return tlByteCount + vByteCount;
 		}
 
 		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", actual sequence length: " + vByteCount);

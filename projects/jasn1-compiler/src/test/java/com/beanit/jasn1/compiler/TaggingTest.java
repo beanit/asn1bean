@@ -238,7 +238,7 @@ public class TaggingTest {
 
     byte[] encodedBytes =
         HexConverter.fromShortHexString(
-            "BF2B80020101A1030201028201038401FFA503830104A6030201010000");
+            "BF2B80020101A18002010200008201038401FFA503830104A6030201010000");
 
     SequenceOfDirectTypes sequence = new SequenceOfDirectTypes();
     sequence.decode(new ByteArrayInputStream(encodedBytes));

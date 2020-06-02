@@ -554,11 +554,7 @@ public class ChoiceOfDirectTypes implements BerType, Serializable {
 			codeLength += explicitTagLength.decode(is);
 			explicitlyTaggedInt = new BerInteger();
 			codeLength += explicitlyTaggedInt.decode(is, true);
-			if (explicitTagLength.val < 0) {
-				codeLength += 2;
-				is.read();
-				is.read();
-			}
+			codeLength += explicitTagLength.readEocIfIndefinite(is);
 			return codeLength;
 		}
 
@@ -582,11 +578,7 @@ public class ChoiceOfDirectTypes implements BerType, Serializable {
 			codeLength += explicitTagLength.decode(is);
 			taggedChoice = new TaggedChoice();
 			codeLength += taggedChoice.decode(is, null);
-			if (explicitTagLength.val < 0) {
-				codeLength += 2;
-				is.read();
-				is.read();
-			}
+			codeLength += explicitTagLength.readEocIfIndefinite(is);
 			return codeLength;
 		}
 
@@ -595,11 +587,7 @@ public class ChoiceOfDirectTypes implements BerType, Serializable {
 			codeLength += explicitTagLength.decode(is);
 			taggedAny = new BerAny();
 			codeLength += taggedAny.decode(is, null);
-			if (explicitTagLength.val < 0) {
-				codeLength += 2;
-				is.read();
-				is.read();
-			}
+			codeLength += explicitTagLength.readEocIfIndefinite(is);
 			return codeLength;
 		}
 
