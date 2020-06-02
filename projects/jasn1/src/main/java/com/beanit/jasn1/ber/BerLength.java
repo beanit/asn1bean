@@ -28,38 +28,6 @@ public class BerLength implements Serializable {
 
   public BerLength() {}
 
-  public static int skip(InputStream is) throws IOException {
-
-    int val = is.read();
-    if (val == -1) {
-      throw new EOFException("Unexpected end of input stream.");
-    }
-
-    if ((val & 0x80) == 0) {
-      return 1;
-    }
-
-    int lengthLength = val & 0x7f;
-
-    // check for indefinite length
-    if (lengthLength == 0) {
-      return 1;
-    }
-
-    if (lengthLength > 4) {
-      throw new IOException("Length is out of bound!");
-    }
-
-    for (int i = 0; i < lengthLength; i++) {
-      int nextByte = is.read();
-      if (nextByte == -1) {
-        throw new EOFException("Unexpected end of input stream.");
-      }
-    }
-
-    return lengthLength + 1;
-  }
-
   public static int encodeLength(OutputStream reverseOS, int length) throws IOException {
 
     if (length <= 127) {
@@ -105,10 +73,11 @@ public class BerLength implements Serializable {
   public int decode(InputStream is) throws IOException {
 
     val = is.read();
-    if (val == -1) {
-      throw new EOFException();
-    }
-    if ((val & 0x80) == 0) {
+    // check for short form
+    if (val < 128) {
+      if (val == -1) {
+        throw new EOFException();
+      }
       return 1;
     }
 
@@ -124,7 +93,6 @@ public class BerLength implements Serializable {
     }
 
     val = 0;
-
     for (int i = 0; i < lengthLength; i++) {
       int nextByte = is.read();
       if (nextByte == -1) {
@@ -148,9 +116,8 @@ public class BerLength implements Serializable {
     if (val >= 0) {
       return 0;
     }
-    for (int i = 0; i < 2; i++) {
-      readEocByte(is);
-    }
+    readEocByte(is);
+    readEocByte(is);
     return 2;
   }
 
