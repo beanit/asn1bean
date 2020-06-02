@@ -106,11 +106,16 @@ public class AlgorithmIdentifier implements BerType, Serializable {
 		
 		parameters = new BerAny();
 		int choiceDecodeLength = parameters.decode(is, berTag);
-		vByteCount += choiceDecodeLength;
-		if (lengthVal >= 0 && vByteCount == lengthVal) {
-			return tlByteCount + vByteCount;
+		if (choiceDecodeLength != 0) {
+			vByteCount += choiceDecodeLength;
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
 		}
-		vByteCount += berTag.decode(is);
+		else {
+			parameters = null;
+		}
 		
 		if (lengthVal < 0) {
 			if (!berTag.equals(0, 0, 0)) {

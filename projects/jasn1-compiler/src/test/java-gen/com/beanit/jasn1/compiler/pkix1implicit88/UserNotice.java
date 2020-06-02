@@ -114,11 +114,16 @@ public class UserNotice implements BerType, Serializable {
 		
 		explicitText = new DisplayText();
 		int choiceDecodeLength = explicitText.decode(is, berTag);
-		vByteCount += choiceDecodeLength;
-		if (lengthVal >= 0 && vByteCount == lengthVal) {
-			return tlByteCount + vByteCount;
+		if (choiceDecodeLength != 0) {
+			vByteCount += choiceDecodeLength;
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
 		}
-		vByteCount += berTag.decode(is);
+		else {
+			explicitText = null;
+		}
 		
 		if (lengthVal < 0) {
 			if (!berTag.equals(0, 0, 0)) {

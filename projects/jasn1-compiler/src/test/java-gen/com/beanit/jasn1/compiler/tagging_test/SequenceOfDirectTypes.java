@@ -616,11 +616,16 @@ public class SequenceOfDirectTypes implements BerType, Serializable {
 		
 		untaggedChoice2 = new UntaggedChoice2();
 		int choiceDecodeLength = untaggedChoice2.decode(is, berTag);
-		vByteCount += choiceDecodeLength;
-		if (lengthVal >= 0 && vByteCount == lengthVal) {
-			return tlByteCount + vByteCount;
+		if (choiceDecodeLength != 0) {
+			vByteCount += choiceDecodeLength;
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
 		}
-		vByteCount += berTag.decode(is);
+		else {
+			untaggedChoice2 = null;
+		}
 		
 		if (lengthVal < 0) {
 			if (!berTag.equals(0, 0, 0)) {

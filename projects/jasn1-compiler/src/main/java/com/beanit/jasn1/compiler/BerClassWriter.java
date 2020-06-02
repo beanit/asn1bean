@@ -1540,26 +1540,18 @@ public class BerClassWriter {
 
             initChoiceDecodeLength = "";
 
-            if (j != (componentTypes.size() - 1)) {
+            write("if (choiceDecodeLength != 0) {");
+            write("vByteCount += choiceDecodeLength;");
 
-              write("if (choiceDecodeLength != 0) {");
-              write("vByteCount += choiceDecodeLength;");
-
-              if (lastNoneOptionalFieldIndex <= j) {
-                writeReturnIfDefiniteLengthMatchesDecodedBytes();
-              }
-              write("vByteCount += berTag.decode(is);");
-              write("}");
-              write("else {");
-              write(getName(componentType) + " = null;");
-              write("}");
-
-            } else {
-              // if last sequence element
-              write("vByteCount += choiceDecodeLength;");
+            if (lastNoneOptionalFieldIndex <= j) {
               writeReturnIfDefiniteLengthMatchesDecodedBytes();
-              write("vByteCount += berTag.decode(is);");
             }
+            write("vByteCount += berTag.decode(is);");
+            write("}");
+            write("else {");
+            write(getName(componentType) + " = null;");
+            write("}");
+
           } else {
             write(
                 "vByteCount += " + getName(componentType) + ".decode(is" + explicitEncoding + ");");

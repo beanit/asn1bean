@@ -223,11 +223,16 @@ public class CPType implements BerType, Serializable {
 			
 			userData = new UserData();
 			int choiceDecodeLength = userData.decode(is, berTag);
-			vByteCount += choiceDecodeLength;
-			if (lengthVal >= 0 && vByteCount == lengthVal) {
-				return tlByteCount + vByteCount;
+			if (choiceDecodeLength != 0) {
+				vByteCount += choiceDecodeLength;
+				if (lengthVal >= 0 && vByteCount == lengthVal) {
+					return tlByteCount + vByteCount;
+				}
+				vByteCount += berTag.decode(is);
 			}
-			vByteCount += berTag.decode(is);
+			else {
+				userData = null;
+			}
 			
 			if (lengthVal < 0) {
 				if (!berTag.equals(0, 0, 0)) {

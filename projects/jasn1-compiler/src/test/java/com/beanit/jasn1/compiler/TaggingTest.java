@@ -232,4 +232,24 @@ public class TaggingTest {
     assertArrayEquals(HexConverter.fromShortHexString("020101"), sequence.getTaggedAny().value);
     assertNull(sequence.getUntaggedChoice2());
   }
+
+  @Test
+  public void sequenceOfDirectTypesIndefiniteTest() throws Exception {
+
+    byte[] encodedBytes =
+        HexConverter.fromShortHexString(
+            "BF2B80020101A1030201028201038401FFA503830104A6030201010000");
+
+    SequenceOfDirectTypes sequence = new SequenceOfDirectTypes();
+    sequence.decode(new ByteArrayInputStream(encodedBytes));
+
+    assertEquals(1, sequence.getUntaggedInt().value.intValue());
+    assertEquals(2, sequence.getExplicitlyTaggedInt().value.intValue());
+    assertEquals(3, sequence.getImplicitlyTaggedInt().value.intValue());
+    assertEquals(true, sequence.getUntaggedChoice().getMyBoolean().value);
+    assertEquals(4, sequence.getTaggedChoice().getMyInteger().value.intValue());
+    System.out.println(HexConverter.toShortHexString(sequence.getTaggedAny().value));
+    assertArrayEquals(HexConverter.fromShortHexString("020101"), sequence.getTaggedAny().value);
+    assertNull(sequence.getUntaggedChoice2());
+  }
 }
