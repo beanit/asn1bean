@@ -74,27 +74,27 @@ public class UserData implements BerType, Serializable {
 
 	public int decode(InputStream is, BerTag berTag) throws IOException {
 
-		int codeLength = 0;
-		BerTag passedTag = berTag;
+		int tlvByteCount = 0;
+		boolean tagWasPassed = (berTag != null);
 
 		if (berTag == null) {
 			berTag = new BerTag();
-			codeLength += berTag.decode(is);
+			tlvByteCount += berTag.decode(is);
 		}
 
 		if (berTag.equals(BerTag.APPLICATION_CLASS, BerTag.PRIMITIVE, 0)) {
 			simplyEncodedData = new SimplyEncodedData();
-			codeLength += simplyEncodedData.decode(is, false);
-			return codeLength;
+			tlvByteCount += simplyEncodedData.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.APPLICATION_CLASS, BerTag.CONSTRUCTED, 1)) {
 			fullyEncodedData = new FullyEncodedData();
-			codeLength += fullyEncodedData.decode(is, false);
-			return codeLength;
+			tlvByteCount += fullyEncodedData.decode(is, false);
+			return tlvByteCount;
 		}
 
-		if (passedTag != null) {
+		if (tagWasPassed) {
 			return 0;
 		}
 

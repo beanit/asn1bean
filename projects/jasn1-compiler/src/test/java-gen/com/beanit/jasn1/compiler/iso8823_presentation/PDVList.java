@@ -92,36 +92,36 @@ public class PDVList implements BerType, Serializable {
 
 		public int decode(InputStream is, BerTag berTag) throws IOException {
 
-			int codeLength = 0;
-			BerTag passedTag = berTag;
+			int tlvByteCount = 0;
+			boolean tagWasPassed = (berTag != null);
 
 			if (berTag == null) {
 				berTag = new BerTag();
-				codeLength += berTag.decode(is);
+				tlvByteCount += berTag.decode(is);
 			}
 
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 0)) {
 				BerLength explicitTagLength = new BerLength();
-				codeLength += explicitTagLength.decode(is);
+				tlvByteCount += explicitTagLength.decode(is);
 				singleASN1Type = new BerAny();
-				codeLength += singleASN1Type.decode(is, null);
-				codeLength += explicitTagLength.readEocIfIndefinite(is);
-				return codeLength;
+				tlvByteCount += singleASN1Type.decode(is, null);
+				tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+				return tlvByteCount;
 			}
 
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 1)) {
 				octetAligned = new BerOctetString();
-				codeLength += octetAligned.decode(is, false);
-				return codeLength;
+				tlvByteCount += octetAligned.decode(is, false);
+				return tlvByteCount;
 			}
 
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 2)) {
 				arbitrary = new BerBitString();
-				codeLength += arbitrary.decode(is, false);
-				return codeLength;
+				tlvByteCount += arbitrary.decode(is, false);
+				return tlvByteCount;
 			}
 
-			if (passedTag != null) {
+			if (tagWasPassed) {
 				return 0;
 			}
 

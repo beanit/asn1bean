@@ -98,39 +98,39 @@ public class File implements BerType, Serializable {
 
 		public int decode(InputStream is, BerTag berTag) throws IOException {
 
-			int codeLength = 0;
-			BerTag passedTag = berTag;
+			int tlvByteCount = 0;
+			boolean tagWasPassed = (berTag != null);
 
 			if (berTag == null) {
 				berTag = new BerTag();
-				codeLength += berTag.decode(is);
+				tlvByteCount += berTag.decode(is);
 			}
 
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 0)) {
 				doNotCreate = new BerNull();
-				codeLength += doNotCreate.decode(is, false);
-				return codeLength;
+				tlvByteCount += doNotCreate.decode(is, false);
+				return tlvByteCount;
 			}
 
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
 				fileDescriptor = new Fcp();
-				codeLength += fileDescriptor.decode(is, false);
-				return codeLength;
+				tlvByteCount += fileDescriptor.decode(is, false);
+				return tlvByteCount;
 			}
 
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 2)) {
 				fillFileOffset = new UInt16();
-				codeLength += fillFileOffset.decode(is, false);
-				return codeLength;
+				tlvByteCount += fillFileOffset.decode(is, false);
+				return tlvByteCount;
 			}
 
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 3)) {
 				fillFileContent = new BerOctetString();
-				codeLength += fillFileContent.decode(is, false);
-				return codeLength;
+				tlvByteCount += fillFileContent.decode(is, false);
+				return tlvByteCount;
 			}
 
-			if (passedTag != null) {
+			if (tagWasPassed) {
 				return 0;
 			}
 

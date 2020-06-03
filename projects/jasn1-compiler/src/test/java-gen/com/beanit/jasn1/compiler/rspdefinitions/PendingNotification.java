@@ -76,27 +76,27 @@ public class PendingNotification implements BerType, Serializable {
 
 	public int decode(InputStream is, BerTag berTag) throws IOException {
 
-		int codeLength = 0;
-		BerTag passedTag = berTag;
+		int tlvByteCount = 0;
+		boolean tagWasPassed = (berTag != null);
 
 		if (berTag == null) {
 			berTag = new BerTag();
-			codeLength += berTag.decode(is);
+			tlvByteCount += berTag.decode(is);
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 55)) {
 			profileInstallationResult = new ProfileInstallationResult();
-			codeLength += profileInstallationResult.decode(is, false);
-			return codeLength;
+			tlvByteCount += profileInstallationResult.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(OtherSignedNotification.tag)) {
 			otherSignedNotification = new OtherSignedNotification();
-			codeLength += otherSignedNotification.decode(is, false);
-			return codeLength;
+			tlvByteCount += otherSignedNotification.decode(is, false);
+			return tlvByteCount;
 		}
 
-		if (passedTag != null) {
+		if (tagWasPassed) {
 			return 0;
 		}
 

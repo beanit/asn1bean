@@ -82,27 +82,27 @@ public class RetrieveNotificationsListRequest implements BerType, Serializable {
 
 		public int decode(InputStream is, BerTag berTag) throws IOException {
 
-			int codeLength = 0;
-			BerTag passedTag = berTag;
+			int tlvByteCount = 0;
+			boolean tagWasPassed = (berTag != null);
 
 			if (berTag == null) {
 				berTag = new BerTag();
-				codeLength += berTag.decode(is);
+				tlvByteCount += berTag.decode(is);
 			}
 
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 0)) {
 				seqNumber = new BerInteger();
-				codeLength += seqNumber.decode(is, false);
-				return codeLength;
+				tlvByteCount += seqNumber.decode(is, false);
+				return tlvByteCount;
 			}
 
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 1)) {
 				profileManagementOperation = new NotificationEvent();
-				codeLength += profileManagementOperation.decode(is, false);
-				return codeLength;
+				tlvByteCount += profileManagementOperation.decode(is, false);
+				return tlvByteCount;
 			}
 
-			if (passedTag != null) {
+			if (tagWasPassed) {
 				return 0;
 			}
 

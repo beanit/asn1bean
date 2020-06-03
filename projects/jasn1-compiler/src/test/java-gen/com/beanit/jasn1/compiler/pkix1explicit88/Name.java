@@ -61,21 +61,21 @@ public class Name implements BerType, Serializable {
 
 	public int decode(InputStream is, BerTag berTag) throws IOException {
 
-		int codeLength = 0;
-		BerTag passedTag = berTag;
+		int tlvByteCount = 0;
+		boolean tagWasPassed = (berTag != null);
 
 		if (berTag == null) {
 			berTag = new BerTag();
-			codeLength += berTag.decode(is);
+			tlvByteCount += berTag.decode(is);
 		}
 
 		if (berTag.equals(RDNSequence.tag)) {
 			rdnSequence = new RDNSequence();
-			codeLength += rdnSequence.decode(is, false);
-			return codeLength;
+			tlvByteCount += rdnSequence.decode(is, false);
+			return tlvByteCount;
 		}
 
-		if (passedTag != null) {
+		if (tagWasPassed) {
 			return 0;
 		}
 

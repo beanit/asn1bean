@@ -317,81 +317,81 @@ public class ChoiceOfIndirectTypes implements BerType, Serializable {
 
 	public int decode(InputStream is, BerTag berTag) throws IOException {
 
-		int codeLength = 0;
-		BerTag passedTag = berTag;
+		int tlvByteCount = 0;
+		boolean tagWasPassed = (berTag != null);
 
 		if (berTag == null) {
 			berTag = new BerTag();
-			codeLength += berTag.decode(is);
+			tlvByteCount += berTag.decode(is);
 		}
 
 		if (berTag.equals(UntaggedInteger.tag)) {
 			untaggedInt = new UntaggedInteger();
-			codeLength += untaggedInt.decode(is, false);
-			return codeLength;
+			tlvByteCount += untaggedInt.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(ExplicitlyTaggedInteger.tag)) {
 			untaggedInt2 = new ExplicitlyTaggedInteger();
-			codeLength += untaggedInt2.decode(is, false);
-			return codeLength;
+			tlvByteCount += untaggedInt2.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(ImplicitlyTaggedInteger.tag)) {
 			untaggedInt3 = new ImplicitlyTaggedInteger();
-			codeLength += untaggedInt3.decode(is, false);
-			return codeLength;
+			tlvByteCount += untaggedInt3.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
 			BerLength explicitTagLength = new BerLength();
-			codeLength += explicitTagLength.decode(is);
+			tlvByteCount += explicitTagLength.decode(is);
 			explicitlyTaggedInt = new UntaggedInteger();
-			codeLength += explicitlyTaggedInt.decode(is, true);
-			codeLength += explicitTagLength.readEocIfIndefinite(is);
-			return codeLength;
+			tlvByteCount += explicitlyTaggedInt.decode(is, true);
+			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 11)) {
 			BerLength explicitTagLength = new BerLength();
-			codeLength += explicitTagLength.decode(is);
+			tlvByteCount += explicitTagLength.decode(is);
 			explicitlyTaggedInt2 = new ExplicitlyTaggedInteger();
-			codeLength += explicitlyTaggedInt2.decode(is, true);
-			codeLength += explicitTagLength.readEocIfIndefinite(is);
-			return codeLength;
+			tlvByteCount += explicitlyTaggedInt2.decode(is, true);
+			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 21)) {
 			BerLength explicitTagLength = new BerLength();
-			codeLength += explicitTagLength.decode(is);
+			tlvByteCount += explicitTagLength.decode(is);
 			explicitlyTaggedInt3 = new ImplicitlyTaggedInteger();
-			codeLength += explicitlyTaggedInt3.decode(is, true);
-			codeLength += explicitTagLength.readEocIfIndefinite(is);
-			return codeLength;
+			tlvByteCount += explicitlyTaggedInt3.decode(is, true);
+			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 2)) {
 			implicitlyTaggedInt = new UntaggedInteger();
-			codeLength += implicitlyTaggedInt.decode(is, false);
-			return codeLength;
+			tlvByteCount += implicitlyTaggedInt.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 12)) {
 			implicitlyTaggedInt2 = new ExplicitlyTaggedInteger();
-			codeLength += implicitlyTaggedInt2.decode(is, false);
-			return codeLength;
+			tlvByteCount += implicitlyTaggedInt2.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 23)) {
 			implicitlyTaggedInt3 = new ImplicitlyTaggedInteger();
-			codeLength += implicitlyTaggedInt3.decode(is, false);
-			return codeLength;
+			tlvByteCount += implicitlyTaggedInt3.decode(is, false);
+			return tlvByteCount;
 		}
 
 		untaggedChoice = new UntaggedChoice();
 		int choiceDecodeLength = untaggedChoice.decode(is, berTag);
 		if (choiceDecodeLength != 0) {
-			return codeLength + choiceDecodeLength;
+			return tlvByteCount + choiceDecodeLength;
 		}
 		else {
 			untaggedChoice = null;
@@ -399,47 +399,47 @@ public class ChoiceOfIndirectTypes implements BerType, Serializable {
 
 		if (berTag.equals(TaggedChoice.tag)) {
 			untaggedChoice2 = new TaggedChoice();
-			codeLength += untaggedChoice2.decode(is, false);
-			return codeLength;
+			tlvByteCount += untaggedChoice2.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 5)) {
 			BerLength explicitTagLength = new BerLength();
-			codeLength += explicitTagLength.decode(is);
+			tlvByteCount += explicitTagLength.decode(is);
 			taggedChoice = new UntaggedChoice();
-			codeLength += taggedChoice.decode(is, null);
-			codeLength += explicitTagLength.readEocIfIndefinite(is);
-			return codeLength;
+			tlvByteCount += taggedChoice.decode(is, null);
+			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 15)) {
 			taggedChoice2 = new TaggedChoice();
-			codeLength += taggedChoice2.decode(is, false);
-			return codeLength;
+			tlvByteCount += taggedChoice2.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(TaggedAny.tag)) {
 			untaggedAny = new TaggedAny();
-			codeLength += untaggedAny.decode(is, false);
-			return codeLength;
+			tlvByteCount += untaggedAny.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 8)) {
 			BerLength explicitTagLength = new BerLength();
-			codeLength += explicitTagLength.decode(is);
+			tlvByteCount += explicitTagLength.decode(is);
 			taggedAny = new UntaggedAny();
-			codeLength += taggedAny.decode(is, null);
-			codeLength += explicitTagLength.readEocIfIndefinite(is);
-			return codeLength;
+			tlvByteCount += taggedAny.decode(is, null);
+			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 18)) {
 			taggedAny2 = new TaggedAny();
-			codeLength += taggedAny2.decode(is, false);
-			return codeLength;
+			tlvByteCount += taggedAny2.decode(is, false);
+			return tlvByteCount;
 		}
 
-		if (passedTag != null) {
+		if (tagWasPassed) {
 			return 0;
 		}
 

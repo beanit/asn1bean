@@ -68,18 +68,18 @@ public class MyChoice implements BerType, Serializable {
 
 	public int decode(InputStream is, BerTag berTag) throws IOException {
 
-		int codeLength = 0;
-		BerTag passedTag = berTag;
+		int tlvByteCount = 0;
+		boolean tagWasPassed = (berTag != null);
 
 		if (berTag == null) {
 			berTag = new BerTag();
-			codeLength += berTag.decode(is);
+			tlvByteCount += berTag.decode(is);
 		}
 
 		myChoice2 = new MyChoice2();
 		int choiceDecodeLength = myChoice2.decode(is, berTag);
 		if (choiceDecodeLength != 0) {
-			return codeLength + choiceDecodeLength;
+			return tlvByteCount + choiceDecodeLength;
 		}
 		else {
 			myChoice2 = null;
@@ -87,11 +87,11 @@ public class MyChoice implements BerType, Serializable {
 
 		if (berTag.equals(BerBoolean.tag)) {
 			myboolean = new BerBoolean();
-			codeLength += myboolean.decode(is, false);
-			return codeLength;
+			tlvByteCount += myboolean.decode(is, false);
+			return tlvByteCount;
 		}
 
-		if (passedTag != null) {
+		if (tagWasPassed) {
 			return 0;
 		}
 

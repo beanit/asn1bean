@@ -334,183 +334,183 @@ public class ProfileElement implements BerType, Serializable {
 
 	public int decode(InputStream is, BerTag berTag) throws IOException {
 
-		int codeLength = 0;
-		BerTag passedTag = berTag;
+		int tlvByteCount = 0;
+		boolean tagWasPassed = (berTag != null);
 
 		if (berTag == null) {
 			berTag = new BerTag();
-			codeLength += berTag.decode(is);
+			tlvByteCount += berTag.decode(is);
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 0)) {
 			header = new ProfileHeader();
-			codeLength += header.decode(is, false);
-			return codeLength;
+			tlvByteCount += header.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
 			genericFileManagement = new PEGenericFileManagement();
-			codeLength += genericFileManagement.decode(is, false);
-			return codeLength;
+			tlvByteCount += genericFileManagement.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 2)) {
 			pinCodes = new PEPINCodes();
-			codeLength += pinCodes.decode(is, false);
-			return codeLength;
+			tlvByteCount += pinCodes.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 3)) {
 			pukCodes = new PEPUKCodes();
-			codeLength += pukCodes.decode(is, false);
-			return codeLength;
+			tlvByteCount += pukCodes.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 4)) {
 			akaParameter = new PEAKAParameter();
-			codeLength += akaParameter.decode(is, false);
-			return codeLength;
+			tlvByteCount += akaParameter.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 5)) {
 			cdmaParameter = new PECDMAParameter();
-			codeLength += cdmaParameter.decode(is, false);
-			return codeLength;
+			tlvByteCount += cdmaParameter.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 6)) {
 			securityDomain = new PESecurityDomain();
-			codeLength += securityDomain.decode(is, false);
-			return codeLength;
+			tlvByteCount += securityDomain.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 7)) {
 			rfm = new PERFM();
-			codeLength += rfm.decode(is, false);
-			return codeLength;
+			tlvByteCount += rfm.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 8)) {
 			application = new PEApplication();
-			codeLength += application.decode(is, false);
-			return codeLength;
+			tlvByteCount += application.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 9)) {
 			nonStandard = new PENonStandard();
-			codeLength += nonStandard.decode(is, false);
-			return codeLength;
+			tlvByteCount += nonStandard.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 10)) {
 			end = new PEEnd();
-			codeLength += end.decode(is, false);
-			return codeLength;
+			tlvByteCount += end.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 11)) {
 			rfu1 = new PEDummy();
-			codeLength += rfu1.decode(is, false);
-			return codeLength;
+			tlvByteCount += rfu1.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 12)) {
 			rfu2 = new PEDummy();
-			codeLength += rfu2.decode(is, false);
-			return codeLength;
+			tlvByteCount += rfu2.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 13)) {
 			rfu3 = new PEDummy();
-			codeLength += rfu3.decode(is, false);
-			return codeLength;
+			tlvByteCount += rfu3.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 14)) {
 			rfu4 = new PEDummy();
-			codeLength += rfu4.decode(is, false);
-			return codeLength;
+			tlvByteCount += rfu4.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 15)) {
 			rfu5 = new PEDummy();
-			codeLength += rfu5.decode(is, false);
-			return codeLength;
+			tlvByteCount += rfu5.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 16)) {
 			mf = new PEMF();
-			codeLength += mf.decode(is, false);
-			return codeLength;
+			tlvByteCount += mf.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 17)) {
 			cd = new PECD();
-			codeLength += cd.decode(is, false);
-			return codeLength;
+			tlvByteCount += cd.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 18)) {
 			telecom = new PETELECOM();
-			codeLength += telecom.decode(is, false);
-			return codeLength;
+			tlvByteCount += telecom.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 19)) {
 			usim = new PEUSIM();
-			codeLength += usim.decode(is, false);
-			return codeLength;
+			tlvByteCount += usim.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 20)) {
 			optUsim = new PEOPTUSIM();
-			codeLength += optUsim.decode(is, false);
-			return codeLength;
+			tlvByteCount += optUsim.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 21)) {
 			isim = new PEISIM();
-			codeLength += isim.decode(is, false);
-			return codeLength;
+			tlvByteCount += isim.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 22)) {
 			optIsim = new PEOPTISIM();
-			codeLength += optIsim.decode(is, false);
-			return codeLength;
+			tlvByteCount += optIsim.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 23)) {
 			phonebook = new PEPHONEBOOK();
-			codeLength += phonebook.decode(is, false);
-			return codeLength;
+			tlvByteCount += phonebook.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 24)) {
 			gsmAccess = new PEGSMACCESS();
-			codeLength += gsmAccess.decode(is, false);
-			return codeLength;
+			tlvByteCount += gsmAccess.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 25)) {
 			csim = new PECSIM();
-			codeLength += csim.decode(is, false);
-			return codeLength;
+			tlvByteCount += csim.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 26)) {
 			optCsim = new PEOPTCSIM();
-			codeLength += optCsim.decode(is, false);
-			return codeLength;
+			tlvByteCount += optCsim.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 27)) {
 			eap = new PEEAP();
-			codeLength += eap.decode(is, false);
-			return codeLength;
+			tlvByteCount += eap.decode(is, false);
+			return tlvByteCount;
 		}
 
-		if (passedTag != null) {
+		if (tagWasPassed) {
 			return 0;
 		}
 

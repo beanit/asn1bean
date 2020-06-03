@@ -1365,28 +1365,28 @@ public class BerClassWriter {
       writeSimpleDecodeFunction("true");
 
       write("public int decode(InputStream is, boolean withTag) throws IOException {");
-      write("int codeLength = 0;");
+      write("int tlvByteCount = 0;");
       write("BerLength length = new BerLength();");
       write("BerTag berTag = new BerTag();\n");
 
       write("if (withTag) {");
-      write("codeLength += tag.decodeAndCheck(is);");
+      write("tlvByteCount += tag.decodeAndCheck(is);");
       write("}\n");
 
-      write("codeLength += length.decode(is);");
-      write("codeLength += berTag.decode(is);\n");
+      write("tlvByteCount += length.decode(is);");
+      write("tlvByteCount += berTag.decode(is);\n");
     } else {
 
       writeSimpleDecodeFunction("null");
 
       write("public int decode(InputStream is, BerTag berTag) throws IOException {\n");
 
-      write("int codeLength = 0;");
-      write("BerTag passedTag = berTag;\n");
+      write("int tlvByteCount = 0;");
+      write("boolean tagWasPassed = (berTag != null);\n");
 
       write("if (berTag == null) {");
       write("berTag = new BerTag();");
-      write("codeLength += berTag.decode(is);");
+      write("tlvByteCount += berTag.decode(is);");
       write("}\n");
     }
 
@@ -1403,23 +1403,23 @@ public class BerClassWriter {
 
         if (isExplicit(componentTag)) {
           write("BerLength explicitTagLength = new BerLength();");
-          write("codeLength += explicitTagLength.decode(is);");
+          write("tlvByteCount += explicitTagLength.decode(is);");
         }
 
         write(getVariableName(componentType) + " = new " + getClassName(componentType) + "();");
 
         write(
-            "codeLength += "
+            "tlvByteCount += "
                 + getVariableName(componentType)
                 + ".decode(is"
                 + explicitEncoding
                 + ");");
 
         if (isExplicit(componentTag)) {
-          write("codeLength += explicitTagLength.readEocIfIndefinite(is);");
+          write("tlvByteCount += explicitTagLength.readEocIfIndefinite(is);");
         }
 
-        write("return codeLength;");
+        write("return tlvByteCount;");
 
       } else {
         if (isDirectAnyOrChoice(componentType)) {
@@ -1434,7 +1434,7 @@ public class BerClassWriter {
                   + ");");
           initChoiceDecodeLength = "";
           write("if (choiceDecodeLength != 0) {");
-          write("return codeLength + choiceDecodeLength;");
+          write("return tlvByteCount + choiceDecodeLength;");
           write("}");
           write("else {");
           write(getVariableName(componentType) + " = null;");
@@ -1446,20 +1446,20 @@ public class BerClassWriter {
           write(getVariableName(componentType) + " = new " + getClassName(componentType) + "();");
 
           write(
-              "codeLength += "
+              "tlvByteCount += "
                   + getVariableName(componentType)
                   + ".decode(is"
                   + explicitEncoding
                   + ");");
 
-          write("return codeLength;");
+          write("return tlvByteCount;");
         }
       }
       write("}\n");
     }
 
     if (!hasExplicitTag) {
-      write("if (passedTag != null) {");
+      write("if (tagWasPassed) {");
       write("return 0;");
       write("}\n");
     }

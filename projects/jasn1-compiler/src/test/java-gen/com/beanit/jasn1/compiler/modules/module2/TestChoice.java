@@ -79,27 +79,27 @@ public class TestChoice implements BerType, Serializable {
 
 	public int decode(InputStream is, BerTag berTag) throws IOException {
 
-		int codeLength = 0;
-		BerTag passedTag = berTag;
+		int tlvByteCount = 0;
+		boolean tagWasPassed = (berTag != null);
 
 		if (berTag == null) {
 			berTag = new BerTag();
-			codeLength += berTag.decode(is);
+			tlvByteCount += berTag.decode(is);
 		}
 
 		if (berTag.equals(BerInteger.tag)) {
 			element1 = new BerInteger();
-			codeLength += element1.decode(is, false);
-			return codeLength;
+			tlvByteCount += element1.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerInteger.tag)) {
 			element2 = new BerInteger();
-			codeLength += element2.decode(is, false);
-			return codeLength;
+			tlvByteCount += element2.decode(is, false);
+			return tlvByteCount;
 		}
 
-		if (passedTag != null) {
+		if (tagWasPassed) {
 			return 0;
 		}
 

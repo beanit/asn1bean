@@ -68,27 +68,27 @@ public class PrivateDomainName implements BerType, Serializable {
 
 	public int decode(InputStream is, BerTag berTag) throws IOException {
 
-		int codeLength = 0;
-		BerTag passedTag = berTag;
+		int tlvByteCount = 0;
+		boolean tagWasPassed = (berTag != null);
 
 		if (berTag == null) {
 			berTag = new BerTag();
-			codeLength += berTag.decode(is);
+			tlvByteCount += berTag.decode(is);
 		}
 
 		if (berTag.equals(BerNumericString.tag)) {
 			numeric = new BerNumericString();
-			codeLength += numeric.decode(is, false);
-			return codeLength;
+			tlvByteCount += numeric.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerPrintableString.tag)) {
 			printable = new BerPrintableString();
-			codeLength += printable.decode(is, false);
-			return codeLength;
+			tlvByteCount += printable.decode(is, false);
+			return tlvByteCount;
 		}
 
-		if (passedTag != null) {
+		if (tagWasPassed) {
 			return 0;
 		}
 

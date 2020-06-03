@@ -229,33 +229,33 @@ public class SequenceNameClashTest implements BerType, Serializable {
 
 		public int decode(InputStream is, BerTag berTag) throws IOException {
 
-			int codeLength = 0;
-			BerTag passedTag = berTag;
+			int tlvByteCount = 0;
+			boolean tagWasPassed = (berTag != null);
 
 			if (berTag == null) {
 				berTag = new BerTag();
-				codeLength += berTag.decode(is);
+				tlvByteCount += berTag.decode(is);
 			}
 
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 2)) {
 				BerLength explicitTagLength = new BerLength();
-				codeLength += explicitTagLength.decode(is);
+				tlvByteCount += explicitTagLength.decode(is);
 				myInteger = new com.beanit.jasn1.compiler.various_tests.UntaggedInteger();
-				codeLength += myInteger.decode(is, true);
-				codeLength += explicitTagLength.readEocIfIndefinite(is);
-				return codeLength;
+				tlvByteCount += myInteger.decode(is, true);
+				tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+				return tlvByteCount;
 			}
 
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 3)) {
 				BerLength explicitTagLength = new BerLength();
-				codeLength += explicitTagLength.decode(is);
+				tlvByteCount += explicitTagLength.decode(is);
 				myBoolean = new BerBoolean();
-				codeLength += myBoolean.decode(is, true);
-				codeLength += explicitTagLength.readEocIfIndefinite(is);
-				return codeLength;
+				tlvByteCount += myBoolean.decode(is, true);
+				tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+				return tlvByteCount;
 			}
 
-			if (passedTag != null) {
+			if (tagWasPassed) {
 				return 0;
 			}
 
@@ -357,33 +357,33 @@ public class SequenceNameClashTest implements BerType, Serializable {
 
 			public int decode(InputStream is, BerTag berTag) throws IOException {
 
-				int codeLength = 0;
-				BerTag passedTag = berTag;
+				int tlvByteCount = 0;
+				boolean tagWasPassed = (berTag != null);
 
 				if (berTag == null) {
 					berTag = new BerTag();
-					codeLength += berTag.decode(is);
+					tlvByteCount += berTag.decode(is);
 				}
 
 				if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 6)) {
 					BerLength explicitTagLength = new BerLength();
-					codeLength += explicitTagLength.decode(is);
+					tlvByteCount += explicitTagLength.decode(is);
 					myInteger = new com.beanit.jasn1.compiler.various_tests.UntaggedInteger();
-					codeLength += myInteger.decode(is, true);
-					codeLength += explicitTagLength.readEocIfIndefinite(is);
-					return codeLength;
+					tlvByteCount += myInteger.decode(is, true);
+					tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+					return tlvByteCount;
 				}
 
 				if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 7)) {
 					BerLength explicitTagLength = new BerLength();
-					codeLength += explicitTagLength.decode(is);
+					tlvByteCount += explicitTagLength.decode(is);
 					myBoolean = new BerBoolean();
-					codeLength += myBoolean.decode(is, true);
-					codeLength += explicitTagLength.readEocIfIndefinite(is);
-					return codeLength;
+					tlvByteCount += myBoolean.decode(is, true);
+					tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+					return tlvByteCount;
 				}
 
-				if (passedTag != null) {
+				if (tagWasPassed) {
 					return 0;
 				}
 
@@ -810,51 +810,51 @@ public class SequenceNameClashTest implements BerType, Serializable {
 
 		public int decode(InputStream is, BerTag berTag) throws IOException {
 
-			int codeLength = 0;
-			BerTag passedTag = berTag;
+			int tlvByteCount = 0;
+			boolean tagWasPassed = (berTag != null);
 
 			if (berTag == null) {
 				berTag = new BerTag();
-				codeLength += berTag.decode(is);
+				tlvByteCount += berTag.decode(is);
 			}
 
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 4)) {
 				BerLength explicitTagLength = new BerLength();
-				codeLength += explicitTagLength.decode(is);
+				tlvByteCount += explicitTagLength.decode(is);
 				myInteger = new com.beanit.jasn1.compiler.various_tests.UntaggedInteger();
-				codeLength += myInteger.decode(is, true);
-				codeLength += explicitTagLength.readEocIfIndefinite(is);
-				return codeLength;
+				tlvByteCount += myInteger.decode(is, true);
+				tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+				return tlvByteCount;
 			}
 
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 5)) {
 				BerLength explicitTagLength = new BerLength();
-				codeLength += explicitTagLength.decode(is);
+				tlvByteCount += explicitTagLength.decode(is);
 				myChoice2 = new MyChoice2();
-				codeLength += myChoice2.decode(is, null);
-				codeLength += explicitTagLength.readEocIfIndefinite(is);
-				return codeLength;
+				tlvByteCount += myChoice2.decode(is, null);
+				tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+				return tlvByteCount;
 			}
 
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 8)) {
 				BerLength explicitTagLength = new BerLength();
-				codeLength += explicitTagLength.decode(is);
+				tlvByteCount += explicitTagLength.decode(is);
 				mySequence = new MySequence();
-				codeLength += mySequence.decode(is, true);
-				codeLength += explicitTagLength.readEocIfIndefinite(is);
-				return codeLength;
+				tlvByteCount += mySequence.decode(is, true);
+				tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+				return tlvByteCount;
 			}
 
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
 				BerLength explicitTagLength = new BerLength();
-				codeLength += explicitTagLength.decode(is);
+				tlvByteCount += explicitTagLength.decode(is);
 				myseqof = new Myseqof();
-				codeLength += myseqof.decode(is, true);
-				codeLength += explicitTagLength.readEocIfIndefinite(is);
-				return codeLength;
+				tlvByteCount += myseqof.decode(is, true);
+				tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+				return tlvByteCount;
 			}
 
-			if (passedTag != null) {
+			if (tagWasPassed) {
 				return 0;
 			}
 

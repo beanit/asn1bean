@@ -68,27 +68,27 @@ public class PhysicalDeliveryCountryName implements BerType, Serializable {
 
 	public int decode(InputStream is, BerTag berTag) throws IOException {
 
-		int codeLength = 0;
-		BerTag passedTag = berTag;
+		int tlvByteCount = 0;
+		boolean tagWasPassed = (berTag != null);
 
 		if (berTag == null) {
 			berTag = new BerTag();
-			codeLength += berTag.decode(is);
+			tlvByteCount += berTag.decode(is);
 		}
 
 		if (berTag.equals(BerNumericString.tag)) {
 			x121DccCode = new BerNumericString();
-			codeLength += x121DccCode.decode(is, false);
-			return codeLength;
+			tlvByteCount += x121DccCode.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerPrintableString.tag)) {
 			iso3166Alpha2Code = new BerPrintableString();
-			codeLength += iso3166Alpha2Code.decode(is, false);
-			return codeLength;
+			tlvByteCount += iso3166Alpha2Code.decode(is, false);
+			return tlvByteCount;
 		}
 
-		if (passedTag != null) {
+		if (tagWasPassed) {
 			return 0;
 		}
 

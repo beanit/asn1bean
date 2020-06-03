@@ -82,27 +82,27 @@ public class ProfileInstallationResultData implements BerType, Serializable {
 
 		public int decode(InputStream is, BerTag berTag) throws IOException {
 
-			int codeLength = 0;
-			BerTag passedTag = berTag;
+			int tlvByteCount = 0;
+			boolean tagWasPassed = (berTag != null);
 
 			if (berTag == null) {
 				berTag = new BerTag();
-				codeLength += berTag.decode(is);
+				tlvByteCount += berTag.decode(is);
 			}
 
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 0)) {
 				successResult = new SuccessResult();
-				codeLength += successResult.decode(is, false);
-				return codeLength;
+				tlvByteCount += successResult.decode(is, false);
+				return tlvByteCount;
 			}
 
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
 				errorResult = new ErrorResult();
-				codeLength += errorResult.decode(is, false);
-				return codeLength;
+				tlvByteCount += errorResult.decode(is, false);
+				return tlvByteCount;
 			}
 
-			if (passedTag != null) {
+			if (tagWasPassed) {
 				return 0;
 			}
 

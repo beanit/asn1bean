@@ -79,27 +79,27 @@ public class EnableProfileRequest implements BerType, Serializable {
 
 		public int decode(InputStream is, BerTag berTag) throws IOException {
 
-			int codeLength = 0;
-			BerTag passedTag = berTag;
+			int tlvByteCount = 0;
+			boolean tagWasPassed = (berTag != null);
 
 			if (berTag == null) {
 				berTag = new BerTag();
-				codeLength += berTag.decode(is);
+				tlvByteCount += berTag.decode(is);
 			}
 
 			if (berTag.equals(BerTag.APPLICATION_CLASS, BerTag.PRIMITIVE, 15)) {
 				isdpAid = new OctetTo16();
-				codeLength += isdpAid.decode(is, false);
-				return codeLength;
+				tlvByteCount += isdpAid.decode(is, false);
+				return tlvByteCount;
 			}
 
 			if (berTag.equals(Iccid.tag)) {
 				iccid = new Iccid();
-				codeLength += iccid.decode(is, false);
-				return codeLength;
+				tlvByteCount += iccid.decode(is, false);
+				return tlvByteCount;
 			}
 
-			if (passedTag != null) {
+			if (tagWasPassed) {
 				return 0;
 			}
 

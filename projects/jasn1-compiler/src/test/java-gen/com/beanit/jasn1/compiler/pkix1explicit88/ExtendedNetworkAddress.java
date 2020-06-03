@@ -226,27 +226,27 @@ public class ExtendedNetworkAddress implements BerType, Serializable {
 
 	public int decode(InputStream is, BerTag berTag) throws IOException {
 
-		int codeLength = 0;
-		BerTag passedTag = berTag;
+		int tlvByteCount = 0;
+		boolean tagWasPassed = (berTag != null);
 
 		if (berTag == null) {
 			berTag = new BerTag();
-			codeLength += berTag.decode(is);
+			tlvByteCount += berTag.decode(is);
 		}
 
 		if (berTag.equals(E1634Address.tag)) {
 			e1634Address = new E1634Address();
-			codeLength += e1634Address.decode(is, false);
-			return codeLength;
+			tlvByteCount += e1634Address.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 0)) {
 			psapAddress = new PresentationAddress();
-			codeLength += psapAddress.decode(is, false);
-			return codeLength;
+			tlvByteCount += psapAddress.decode(is, false);
+			return tlvByteCount;
 		}
 
-		if (passedTag != null) {
+		if (tagWasPassed) {
 			return 0;
 		}
 

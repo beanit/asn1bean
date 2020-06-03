@@ -141,45 +141,45 @@ public class RemoteProfileProvisioningRequest implements BerType, Serializable {
 	}
 
 	public int decode(InputStream is, boolean withTag) throws IOException {
-		int codeLength = 0;
+		int tlvByteCount = 0;
 		BerLength length = new BerLength();
 		BerTag berTag = new BerTag();
 
 		if (withTag) {
-			codeLength += tag.decodeAndCheck(is);
+			tlvByteCount += tag.decodeAndCheck(is);
 		}
 
-		codeLength += length.decode(is);
-		codeLength += berTag.decode(is);
+		tlvByteCount += length.decode(is);
+		tlvByteCount += berTag.decode(is);
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 57)) {
 			initiateAuthenticationRequest = new InitiateAuthenticationRequest();
-			codeLength += initiateAuthenticationRequest.decode(is, false);
-			return codeLength;
+			tlvByteCount += initiateAuthenticationRequest.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 59)) {
 			authenticateClientRequest = new AuthenticateClientRequest();
-			codeLength += authenticateClientRequest.decode(is, false);
-			return codeLength;
+			tlvByteCount += authenticateClientRequest.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 58)) {
 			getBoundProfilePackageRequest = new GetBoundProfilePackageRequest();
-			codeLength += getBoundProfilePackageRequest.decode(is, false);
-			return codeLength;
+			tlvByteCount += getBoundProfilePackageRequest.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 65)) {
 			cancelSessionRequestEs9 = new CancelSessionRequestEs9();
-			codeLength += cancelSessionRequestEs9.decode(is, false);
-			return codeLength;
+			tlvByteCount += cancelSessionRequestEs9.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 61)) {
 			handleNotification = new HandleNotification();
-			codeLength += handleNotification.decode(is, false);
-			return codeLength;
+			tlvByteCount += handleNotification.decode(is, false);
+			return tlvByteCount;
 		}
 
 		throw new IOException("Error decoding CHOICE: Tag " + berTag + " matched to no item.");

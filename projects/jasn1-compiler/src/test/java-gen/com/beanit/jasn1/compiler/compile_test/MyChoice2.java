@@ -66,21 +66,21 @@ public class MyChoice2 implements BerType, Serializable {
 
 		public int decode(InputStream is, BerTag berTag) throws IOException {
 
-			int codeLength = 0;
-			BerTag passedTag = berTag;
+			int tlvByteCount = 0;
+			boolean tagWasPassed = (berTag != null);
 
 			if (berTag == null) {
 				berTag = new BerTag();
-				codeLength += berTag.decode(is);
+				tlvByteCount += berTag.decode(is);
 			}
 
 			if (berTag.equals(BerInteger.tag)) {
 				test = new BerInteger();
-				codeLength += test.decode(is, false);
-				return codeLength;
+				tlvByteCount += test.decode(is, false);
+				return tlvByteCount;
 			}
 
-			if (passedTag != null) {
+			if (tagWasPassed) {
 				return 0;
 			}
 
@@ -160,27 +160,27 @@ public class MyChoice2 implements BerType, Serializable {
 
 		public int decode(InputStream is, BerTag berTag) throws IOException {
 
-			int codeLength = 0;
-			BerTag passedTag = berTag;
+			int tlvByteCount = 0;
+			boolean tagWasPassed = (berTag != null);
 
 			if (berTag == null) {
 				berTag = new BerTag();
-				codeLength += berTag.decode(is);
+				tlvByteCount += berTag.decode(is);
 			}
 
 			if (berTag.equals(BerInteger.tag)) {
 				test = new BerInteger();
-				codeLength += test.decode(is, false);
-				return codeLength;
+				tlvByteCount += test.decode(is, false);
+				return tlvByteCount;
 			}
 
 			if (berTag.equals(BerBoolean.tag)) {
 				test2 = new BerBoolean();
-				codeLength += test2.decode(is, false);
-				return codeLength;
+				tlvByteCount += test2.decode(is, false);
+				return tlvByteCount;
 			}
 
-			if (passedTag != null) {
+			if (tagWasPassed) {
 				return 0;
 			}
 
@@ -274,18 +274,18 @@ public class MyChoice2 implements BerType, Serializable {
 
 	public int decode(InputStream is, BerTag berTag) throws IOException {
 
-		int codeLength = 0;
-		BerTag passedTag = berTag;
+		int tlvByteCount = 0;
+		boolean tagWasPassed = (berTag != null);
 
 		if (berTag == null) {
 			berTag = new BerTag();
-			codeLength += berTag.decode(is);
+			tlvByteCount += berTag.decode(is);
 		}
 
 		element1 = new Element1();
 		int choiceDecodeLength = element1.decode(is, berTag);
 		if (choiceDecodeLength != 0) {
-			return codeLength + choiceDecodeLength;
+			return tlvByteCount + choiceDecodeLength;
 		}
 		else {
 			element1 = null;
@@ -293,26 +293,26 @@ public class MyChoice2 implements BerType, Serializable {
 
 		if (berTag.equals(BerInteger.tag)) {
 			element2 = new BerInteger();
-			codeLength += element2.decode(is, false);
-			return codeLength;
+			tlvByteCount += element2.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerBoolean.tag)) {
 			myboolean = new BerBoolean();
-			codeLength += myboolean.decode(is, false);
-			return codeLength;
+			tlvByteCount += myboolean.decode(is, false);
+			return tlvByteCount;
 		}
 
 		element4 = new Element4();
 		choiceDecodeLength = element4.decode(is, berTag);
 		if (choiceDecodeLength != 0) {
-			return codeLength + choiceDecodeLength;
+			return tlvByteCount + choiceDecodeLength;
 		}
 		else {
 			element4 = null;
 		}
 
-		if (passedTag != null) {
+		if (tagWasPassed) {
 			return 0;
 		}
 

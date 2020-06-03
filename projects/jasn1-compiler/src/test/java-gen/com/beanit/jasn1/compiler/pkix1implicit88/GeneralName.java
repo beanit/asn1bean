@@ -154,72 +154,72 @@ public class GeneralName implements BerType, Serializable {
 
 	public int decode(InputStream is, BerTag berTag) throws IOException {
 
-		int codeLength = 0;
-		BerTag passedTag = berTag;
+		int tlvByteCount = 0;
+		boolean tagWasPassed = (berTag != null);
 
 		if (berTag == null) {
 			berTag = new BerTag();
-			codeLength += berTag.decode(is);
+			tlvByteCount += berTag.decode(is);
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 0)) {
 			otherName = new AnotherName();
-			codeLength += otherName.decode(is, false);
-			return codeLength;
+			tlvByteCount += otherName.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 1)) {
 			rfc822Name = new BerIA5String();
-			codeLength += rfc822Name.decode(is, false);
-			return codeLength;
+			tlvByteCount += rfc822Name.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 2)) {
 			dNSName = new BerIA5String();
-			codeLength += dNSName.decode(is, false);
-			return codeLength;
+			tlvByteCount += dNSName.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 3)) {
 			x400Address = new ORAddress();
-			codeLength += x400Address.decode(is, false);
-			return codeLength;
+			tlvByteCount += x400Address.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 4)) {
 			BerLength explicitTagLength = new BerLength();
-			codeLength += explicitTagLength.decode(is);
+			tlvByteCount += explicitTagLength.decode(is);
 			directoryName = new Name();
-			codeLength += directoryName.decode(is, null);
-			codeLength += explicitTagLength.readEocIfIndefinite(is);
-			return codeLength;
+			tlvByteCount += directoryName.decode(is, null);
+			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 5)) {
 			ediPartyName = new EDIPartyName();
-			codeLength += ediPartyName.decode(is, false);
-			return codeLength;
+			tlvByteCount += ediPartyName.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 6)) {
 			uniformResourceIdentifier = new BerIA5String();
-			codeLength += uniformResourceIdentifier.decode(is, false);
-			return codeLength;
+			tlvByteCount += uniformResourceIdentifier.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 7)) {
 			iPAddress = new BerOctetString();
-			codeLength += iPAddress.decode(is, false);
-			return codeLength;
+			tlvByteCount += iPAddress.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 8)) {
 			registeredID = new BerObjectIdentifier();
-			codeLength += registeredID.decode(is, false);
-			return codeLength;
+			tlvByteCount += registeredID.decode(is, false);
+			return tlvByteCount;
 		}
 
-		if (passedTag != null) {
+		if (tagWasPassed) {
 			return 0;
 		}
 

@@ -90,27 +90,27 @@ public class ChoiceOfDirectTypes implements BerType, Serializable {
 
 		public int decode(InputStream is, BerTag berTag) throws IOException {
 
-			int codeLength = 0;
-			BerTag passedTag = berTag;
+			int tlvByteCount = 0;
+			boolean tagWasPassed = (berTag != null);
 
 			if (berTag == null) {
 				berTag = new BerTag();
-				codeLength += berTag.decode(is);
+				tlvByteCount += berTag.decode(is);
 			}
 
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 3)) {
 				myInteger = new BerInteger();
-				codeLength += myInteger.decode(is, false);
-				return codeLength;
+				tlvByteCount += myInteger.decode(is, false);
+				return tlvByteCount;
 			}
 
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 4)) {
 				myBoolean = new BerBoolean();
-				codeLength += myBoolean.decode(is, false);
-				return codeLength;
+				tlvByteCount += myBoolean.decode(is, false);
+				return tlvByteCount;
 			}
 
-			if (passedTag != null) {
+			if (tagWasPassed) {
 				return 0;
 			}
 
@@ -212,27 +212,27 @@ public class ChoiceOfDirectTypes implements BerType, Serializable {
 
 		public int decode(InputStream is, BerTag berTag) throws IOException {
 
-			int codeLength = 0;
-			BerTag passedTag = berTag;
+			int tlvByteCount = 0;
+			boolean tagWasPassed = (berTag != null);
 
 			if (berTag == null) {
 				berTag = new BerTag();
-				codeLength += berTag.decode(is);
+				tlvByteCount += berTag.decode(is);
 			}
 
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 3)) {
 				myInteger = new BerInteger();
-				codeLength += myInteger.decode(is, false);
-				return codeLength;
+				tlvByteCount += myInteger.decode(is, false);
+				return tlvByteCount;
 			}
 
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 4)) {
 				myBoolean = new BerBoolean();
-				codeLength += myBoolean.decode(is, false);
-				return codeLength;
+				tlvByteCount += myBoolean.decode(is, false);
+				return tlvByteCount;
 			}
 
-			if (passedTag != null) {
+			if (tagWasPassed) {
 				return 0;
 			}
 
@@ -334,27 +334,27 @@ public class ChoiceOfDirectTypes implements BerType, Serializable {
 
 		public int decode(InputStream is, BerTag berTag) throws IOException {
 
-			int codeLength = 0;
-			BerTag passedTag = berTag;
+			int tlvByteCount = 0;
+			boolean tagWasPassed = (berTag != null);
 
 			if (berTag == null) {
 				berTag = new BerTag();
-				codeLength += berTag.decode(is);
+				tlvByteCount += berTag.decode(is);
 			}
 
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 8)) {
 				myInteger = new BerInteger();
-				codeLength += myInteger.decode(is, false);
-				return codeLength;
+				tlvByteCount += myInteger.decode(is, false);
+				return tlvByteCount;
 			}
 
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 9)) {
 				myBoolean = new BerBoolean();
-				codeLength += myBoolean.decode(is, false);
-				return codeLength;
+				tlvByteCount += myBoolean.decode(is, false);
+				return tlvByteCount;
 			}
 
-			if (passedTag != null) {
+			if (tagWasPassed) {
 				return 0;
 			}
 
@@ -535,39 +535,39 @@ public class ChoiceOfDirectTypes implements BerType, Serializable {
 
 	public int decode(InputStream is, BerTag berTag) throws IOException {
 
-		int codeLength = 0;
-		BerTag passedTag = berTag;
+		int tlvByteCount = 0;
+		boolean tagWasPassed = (berTag != null);
 
 		if (berTag == null) {
 			berTag = new BerTag();
-			codeLength += berTag.decode(is);
+			tlvByteCount += berTag.decode(is);
 		}
 
 		if (berTag.equals(BerInteger.tag)) {
 			untaggedInt = new BerInteger();
-			codeLength += untaggedInt.decode(is, false);
-			return codeLength;
+			tlvByteCount += untaggedInt.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
 			BerLength explicitTagLength = new BerLength();
-			codeLength += explicitTagLength.decode(is);
+			tlvByteCount += explicitTagLength.decode(is);
 			explicitlyTaggedInt = new BerInteger();
-			codeLength += explicitlyTaggedInt.decode(is, true);
-			codeLength += explicitTagLength.readEocIfIndefinite(is);
-			return codeLength;
+			tlvByteCount += explicitlyTaggedInt.decode(is, true);
+			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 2)) {
 			implicitlyTaggedInt = new BerInteger();
-			codeLength += implicitlyTaggedInt.decode(is, false);
-			return codeLength;
+			tlvByteCount += implicitlyTaggedInt.decode(is, false);
+			return tlvByteCount;
 		}
 
 		untaggedChoice = new UntaggedChoice();
 		int choiceDecodeLength = untaggedChoice.decode(is, berTag);
 		if (choiceDecodeLength != 0) {
-			return codeLength + choiceDecodeLength;
+			return tlvByteCount + choiceDecodeLength;
 		}
 		else {
 			untaggedChoice = null;
@@ -575,32 +575,32 @@ public class ChoiceOfDirectTypes implements BerType, Serializable {
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 5)) {
 			BerLength explicitTagLength = new BerLength();
-			codeLength += explicitTagLength.decode(is);
+			tlvByteCount += explicitTagLength.decode(is);
 			taggedChoice = new TaggedChoice();
-			codeLength += taggedChoice.decode(is, null);
-			codeLength += explicitTagLength.readEocIfIndefinite(is);
-			return codeLength;
+			tlvByteCount += taggedChoice.decode(is, null);
+			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 6)) {
 			BerLength explicitTagLength = new BerLength();
-			codeLength += explicitTagLength.decode(is);
+			tlvByteCount += explicitTagLength.decode(is);
 			taggedAny = new BerAny();
-			codeLength += taggedAny.decode(is, null);
-			codeLength += explicitTagLength.readEocIfIndefinite(is);
-			return codeLength;
+			tlvByteCount += taggedAny.decode(is, null);
+			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+			return tlvByteCount;
 		}
 
 		untaggedChoice2 = new UntaggedChoice2();
 		choiceDecodeLength = untaggedChoice2.decode(is, berTag);
 		if (choiceDecodeLength != 0) {
-			return codeLength + choiceDecodeLength;
+			return tlvByteCount + choiceDecodeLength;
 		}
 		else {
 			untaggedChoice2 = null;
 		}
 
-		if (passedTag != null) {
+		if (tagWasPassed) {
 			return 0;
 		}
 

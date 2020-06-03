@@ -89,45 +89,45 @@ public class DirectoryString implements BerType, Serializable {
 
 	public int decode(InputStream is, BerTag berTag) throws IOException {
 
-		int codeLength = 0;
-		BerTag passedTag = berTag;
+		int tlvByteCount = 0;
+		boolean tagWasPassed = (berTag != null);
 
 		if (berTag == null) {
 			berTag = new BerTag();
-			codeLength += berTag.decode(is);
+			tlvByteCount += berTag.decode(is);
 		}
 
 		if (berTag.equals(BerTeletexString.tag)) {
 			teletexString = new BerTeletexString();
-			codeLength += teletexString.decode(is, false);
-			return codeLength;
+			tlvByteCount += teletexString.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerPrintableString.tag)) {
 			printableString = new BerPrintableString();
-			codeLength += printableString.decode(is, false);
-			return codeLength;
+			tlvByteCount += printableString.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerUniversalString.tag)) {
 			universalString = new BerUniversalString();
-			codeLength += universalString.decode(is, false);
-			return codeLength;
+			tlvByteCount += universalString.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerUTF8String.tag)) {
 			utf8String = new BerUTF8String();
-			codeLength += utf8String.decode(is, false);
-			return codeLength;
+			tlvByteCount += utf8String.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerBMPString.tag)) {
 			bmpString = new BerBMPString();
-			codeLength += bmpString.decode(is, false);
-			return codeLength;
+			tlvByteCount += bmpString.decode(is, false);
+			return tlvByteCount;
 		}
 
-		if (passedTag != null) {
+		if (tagWasPassed) {
 			return 0;
 		}
 

@@ -239,27 +239,27 @@ public class ProfileInfoListResponse implements BerType, Serializable {
 	}
 
 	public int decode(InputStream is, boolean withTag) throws IOException {
-		int codeLength = 0;
+		int tlvByteCount = 0;
 		BerLength length = new BerLength();
 		BerTag berTag = new BerTag();
 
 		if (withTag) {
-			codeLength += tag.decodeAndCheck(is);
+			tlvByteCount += tag.decodeAndCheck(is);
 		}
 
-		codeLength += length.decode(is);
-		codeLength += berTag.decode(is);
+		tlvByteCount += length.decode(is);
+		tlvByteCount += berTag.decode(is);
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 0)) {
 			profileInfoListOk = new ProfileInfoListOk();
-			codeLength += profileInfoListOk.decode(is, false);
-			return codeLength;
+			tlvByteCount += profileInfoListOk.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 1)) {
 			profileInfoListError = new ProfileInfoListError();
-			codeLength += profileInfoListError.decode(is, false);
-			return codeLength;
+			tlvByteCount += profileInfoListError.decode(is, false);
+			return tlvByteCount;
 		}
 
 		throw new IOException("Error decoding CHOICE: Tag " + berTag + " matched to no item.");

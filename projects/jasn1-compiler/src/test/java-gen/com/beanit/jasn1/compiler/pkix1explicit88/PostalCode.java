@@ -68,27 +68,27 @@ public class PostalCode implements BerType, Serializable {
 
 	public int decode(InputStream is, BerTag berTag) throws IOException {
 
-		int codeLength = 0;
-		BerTag passedTag = berTag;
+		int tlvByteCount = 0;
+		boolean tagWasPassed = (berTag != null);
 
 		if (berTag == null) {
 			berTag = new BerTag();
-			codeLength += berTag.decode(is);
+			tlvByteCount += berTag.decode(is);
 		}
 
 		if (berTag.equals(BerNumericString.tag)) {
 			numericCode = new BerNumericString();
-			codeLength += numericCode.decode(is, false);
-			return codeLength;
+			tlvByteCount += numericCode.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerPrintableString.tag)) {
 			printableCode = new BerPrintableString();
-			codeLength += printableCode.decode(is, false);
-			return codeLength;
+			tlvByteCount += printableCode.decode(is, false);
+			return tlvByteCount;
 		}
 
-		if (passedTag != null) {
+		if (tagWasPassed) {
 			return 0;
 		}
 

@@ -68,27 +68,27 @@ public class Time implements BerType, Serializable {
 
 	public int decode(InputStream is, BerTag berTag) throws IOException {
 
-		int codeLength = 0;
-		BerTag passedTag = berTag;
+		int tlvByteCount = 0;
+		boolean tagWasPassed = (berTag != null);
 
 		if (berTag == null) {
 			berTag = new BerTag();
-			codeLength += berTag.decode(is);
+			tlvByteCount += berTag.decode(is);
 		}
 
 		if (berTag.equals(BerUtcTime.tag)) {
 			utcTime = new BerUtcTime();
-			codeLength += utcTime.decode(is, false);
-			return codeLength;
+			tlvByteCount += utcTime.decode(is, false);
+			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerGeneralizedTime.tag)) {
 			generalTime = new BerGeneralizedTime();
-			codeLength += generalTime.decode(is, false);
-			return codeLength;
+			tlvByteCount += generalTime.decode(is, false);
+			return tlvByteCount;
 		}
 
-		if (passedTag != null) {
+		if (tagWasPassed) {
 			return 0;
 		}
 
