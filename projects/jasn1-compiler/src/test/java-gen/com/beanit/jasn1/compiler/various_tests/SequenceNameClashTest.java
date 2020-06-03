@@ -510,7 +510,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 					vByteCount += berTag.decode(is);
 				}
 				else {
-					throw new IOException("Tag does not match the mandatory sequence element tag.");
+					throw new IOException("Tag does not match mandatory sequence component.");
 				}
 				
 				if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 10)) {
@@ -524,7 +524,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 					vByteCount += berTag.decode(is);
 				}
 				else {
-					throw new IOException("Tag does not match the mandatory sequence element tag.");
+					throw new IOException("Tag does not match mandatory sequence component.");
 				}
 				
 				if (lengthVal < 0) {
@@ -994,7 +994,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 				vByteCount += berTag.decode(is);
 			}
 			else {
-				throw new IOException("Tag does not match the mandatory sequence element tag.");
+				throw new IOException("Tag does not match mandatory sequence component.");
 			}
 			
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 10)) {
@@ -1008,7 +1008,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 				vByteCount += berTag.decode(is);
 			}
 			else {
-				throw new IOException("Tag does not match the mandatory sequence element tag.");
+				throw new IOException("Tag does not match mandatory sequence component.");
 			}
 			
 			if (lengthVal < 0) {
@@ -1174,7 +1174,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		untaggedInteger = new UntaggedInteger();
@@ -1188,8 +1188,14 @@ public class SequenceNameClashTest implements BerType, Serializable {
 		}
 		
 		myChoice = new MyChoice();
-		vByteCount += myChoice.decode(is, berTag);
-		vByteCount += berTag.decode(is);
+		choiceDecodeLength = myChoice.decode(is, berTag);
+		if (choiceDecodeLength != 0) {
+			vByteCount += choiceDecodeLength;
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 8)) {
 			vByteCount += length.decode(is);
@@ -1202,7 +1208,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (lengthVal < 0) {

@@ -114,7 +114,7 @@ public class PrepareDownloadRequest implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (berTag.equals(BerTag.APPLICATION_CLASS, BerTag.PRIMITIVE, 55)) {
@@ -123,7 +123,7 @@ public class PrepareDownloadRequest implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (berTag.equals(Octet32.tag)) {
@@ -141,7 +141,7 @@ public class PrepareDownloadRequest implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (lengthVal < 0) {

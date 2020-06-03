@@ -125,7 +125,7 @@ public class EuiccSigned1 implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 3)) {
@@ -134,7 +134,7 @@ public class EuiccSigned1 implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 4)) {
@@ -143,7 +143,7 @@ public class EuiccSigned1 implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 34)) {
@@ -152,15 +152,21 @@ public class EuiccSigned1 implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		ctxParams1 = new CtxParams1();
-		vByteCount += ctxParams1.decode(is, berTag);
-		if (lengthVal >= 0 && vByteCount == lengthVal) {
-			return tlByteCount + vByteCount;
+		int choiceDecodeLength = ctxParams1.decode(is, berTag);
+		if (choiceDecodeLength != 0) {
+			vByteCount += choiceDecodeLength;
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
 		}
-		vByteCount += berTag.decode(is);
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
 		
 		if (lengthVal < 0) {
 			if (!berTag.equals(0, 0, 0)) {

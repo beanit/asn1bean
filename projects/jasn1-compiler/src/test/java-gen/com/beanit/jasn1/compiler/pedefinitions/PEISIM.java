@@ -153,7 +153,7 @@ public class PEISIM implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 1)) {
@@ -162,7 +162,7 @@ public class PEISIM implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 2)) {
@@ -171,7 +171,7 @@ public class PEISIM implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 3)) {
@@ -180,7 +180,7 @@ public class PEISIM implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 4)) {
@@ -189,7 +189,7 @@ public class PEISIM implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 5)) {
@@ -198,7 +198,7 @@ public class PEISIM implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 6)) {
@@ -207,7 +207,7 @@ public class PEISIM implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 7)) {
@@ -225,7 +225,7 @@ public class PEISIM implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (lengthVal < 0) {

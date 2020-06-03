@@ -106,7 +106,7 @@ public class PolicyMappings implements BerType, Serializable {
 				vByteCount += berTag.decode(is);
 			}
 			else {
-				throw new IOException("Tag does not match the mandatory sequence element tag.");
+				throw new IOException("Tag does not match mandatory sequence component.");
 			}
 			
 			if (berTag.equals(CertPolicyId.tag)) {
@@ -118,7 +118,7 @@ public class PolicyMappings implements BerType, Serializable {
 				vByteCount += berTag.decode(is);
 			}
 			else {
-				throw new IOException("Tag does not match the mandatory sequence element tag.");
+				throw new IOException("Tag does not match mandatory sequence component.");
 			}
 			
 			if (lengthVal < 0) {

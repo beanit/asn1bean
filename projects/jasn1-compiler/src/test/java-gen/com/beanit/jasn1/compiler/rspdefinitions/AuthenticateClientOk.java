@@ -123,7 +123,7 @@ public class AuthenticateClientOk implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 37)) {
@@ -132,7 +132,7 @@ public class AuthenticateClientOk implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (berTag.equals(SmdpSigned2.tag)) {
@@ -141,7 +141,7 @@ public class AuthenticateClientOk implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (berTag.equals(BerTag.APPLICATION_CLASS, BerTag.PRIMITIVE, 55)) {
@@ -150,7 +150,7 @@ public class AuthenticateClientOk implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (berTag.equals(Certificate.tag)) {
@@ -162,7 +162,7 @@ public class AuthenticateClientOk implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (lengthVal < 0) {

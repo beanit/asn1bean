@@ -1503,38 +1503,32 @@ public class BerClassWriter {
       } else {
         // no tag
         if (isDirectAnyOrChoice(componentType)) {
+          write(componentVariableName + " = new " + componentClassName + "();");
+          write(
+              initChoiceDecodeLength
+                  + "choiceDecodeLength = "
+                  + componentVariableName
+                  + ".decode(is"
+                  + componentDecodeTagParameter
+                  + ");");
+
+          initChoiceDecodeLength = "";
+
+          write("if (choiceDecodeLength != 0) {");
+          write("vByteCount += choiceDecodeLength;");
+
+          if (mayBeLastComponent) {
+            writeReturnIfDefiniteLengthMatchesDecodedBytes();
+          }
+          write("vByteCount += berTag.decode(is);");
+          write("}");
           if (isOptional(componentType)) {
-            write(componentVariableName + " = new " + componentClassName + "();");
-            write(
-                initChoiceDecodeLength
-                    + "choiceDecodeLength = "
-                    + componentVariableName
-                    + ".decode(is"
-                    + componentDecodeTagParameter
-                    + ");");
-
-            initChoiceDecodeLength = "";
-
-            write("if (choiceDecodeLength != 0) {");
-            write("vByteCount += choiceDecodeLength;");
-
-            if (mayBeLastComponent) {
-              writeReturnIfDefiniteLengthMatchesDecodedBytes();
-            }
-            write("vByteCount += berTag.decode(is);");
-            write("}");
             write("else {");
             write(componentVariableName + " = null;");
             write("}");
           } else {
-            writeDecodingRegularSequenceComponent(
-                mayBeLastComponent,
-                componentDecodeTagParameter,
-                componentVariableName,
-                componentClassName,
-                false);
+            writeElseThrowTagMatchingException();
           }
-
         } else {
           write("if (berTag.equals(" + componentClassName + ".tag)) {");
           writeDecodingRegularSequenceComponent(
@@ -1572,7 +1566,7 @@ public class BerClassWriter {
 
   private void writeElseThrowTagMatchingException() throws IOException {
     write("else {");
-    write("throw new IOException(\"Tag does not match the mandatory sequence element tag.\");");
+    write("throw new IOException(\"Tag does not match mandatory sequence component.\");");
     write("}");
   }
 

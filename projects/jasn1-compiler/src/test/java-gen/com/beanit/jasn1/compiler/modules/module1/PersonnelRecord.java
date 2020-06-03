@@ -357,7 +357,7 @@ public class PersonnelRecord implements BerType, Serializable {
 					vByteCount += berTag.decode(is);
 				}
 				else {
-					throw new IOException("Tag does not match the mandatory sequence element tag.");
+					throw new IOException("Tag does not match mandatory sequence component.");
 				}
 				
 				if (berTag.equals(BerInteger.tag)) {
@@ -369,7 +369,7 @@ public class PersonnelRecord implements BerType, Serializable {
 					vByteCount += berTag.decode(is);
 				}
 				else {
-					throw new IOException("Tag does not match the mandatory sequence element tag.");
+					throw new IOException("Tag does not match mandatory sequence component.");
 				}
 				
 				if (lengthVal < 0) {
@@ -877,7 +877,7 @@ public class PersonnelRecord implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 0)) {
@@ -886,7 +886,7 @@ public class PersonnelRecord implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (berTag.equals(com.beanit.jasn1.compiler.modules.module2.EmployeeNumberZ.tag)) {
@@ -895,7 +895,7 @@ public class PersonnelRecord implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 1)) {
@@ -904,7 +904,7 @@ public class PersonnelRecord implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 2)) {
@@ -913,7 +913,7 @@ public class PersonnelRecord implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 3)) {
@@ -928,7 +928,7 @@ public class PersonnelRecord implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 6)) {
@@ -937,7 +937,7 @@ public class PersonnelRecord implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		test2 = new TestChoice();
@@ -951,8 +951,14 @@ public class PersonnelRecord implements BerType, Serializable {
 		}
 		
 		test3 = new TestChoice();
-		vByteCount += test3.decode(is, berTag);
-		vByteCount += berTag.decode(is);
+		choiceDecodeLength = test3.decode(is, berTag);
+		if (choiceDecodeLength != 0) {
+			vByteCount += choiceDecodeLength;
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 8)) {
 			vByteCount += length.decode(is);
@@ -970,7 +976,7 @@ public class PersonnelRecord implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 10)) {
@@ -981,7 +987,7 @@ public class PersonnelRecord implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		employeeNumberZ = new EmployeeNumberZ();
@@ -1000,7 +1006,7 @@ public class PersonnelRecord implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (berTag.equals(TestSequenceOf.tag)) {
@@ -1009,7 +1015,7 @@ public class PersonnelRecord implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (berTag.equals(TestSequenceOf2.tag)) {
@@ -1018,7 +1024,7 @@ public class PersonnelRecord implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (berTag.equals(BerEmbeddedPdv.tag)) {
@@ -1030,7 +1036,7 @@ public class PersonnelRecord implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (lengthVal < 0) {

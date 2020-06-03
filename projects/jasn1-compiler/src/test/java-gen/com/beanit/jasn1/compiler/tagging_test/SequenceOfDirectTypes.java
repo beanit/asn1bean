@@ -550,7 +550,7 @@ public class SequenceOfDirectTypes implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
@@ -561,7 +561,7 @@ public class SequenceOfDirectTypes implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 2)) {
@@ -570,12 +570,18 @@ public class SequenceOfDirectTypes implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		untaggedChoice = new UntaggedChoice();
-		vByteCount += untaggedChoice.decode(is, berTag);
-		vByteCount += berTag.decode(is);
+		int choiceDecodeLength = untaggedChoice.decode(is, berTag);
+		if (choiceDecodeLength != 0) {
+			vByteCount += choiceDecodeLength;
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 5)) {
 			vByteCount += length.decode(is);
@@ -585,7 +591,7 @@ public class SequenceOfDirectTypes implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 6)) {
@@ -599,11 +605,11 @@ public class SequenceOfDirectTypes implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		untaggedChoice2 = new UntaggedChoice2();
-		int choiceDecodeLength = untaggedChoice2.decode(is, berTag);
+		choiceDecodeLength = untaggedChoice2.decode(is, berTag);
 		if (choiceDecodeLength != 0) {
 			vByteCount += choiceDecodeLength;
 			if (lengthVal >= 0 && vByteCount == lengthVal) {

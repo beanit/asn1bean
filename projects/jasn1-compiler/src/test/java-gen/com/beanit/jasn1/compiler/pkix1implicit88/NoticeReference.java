@@ -242,8 +242,14 @@ public class NoticeReference implements BerType, Serializable {
 		vByteCount += berTag.decode(is);
 
 		organization = new DisplayText();
-		vByteCount += organization.decode(is, berTag);
-		vByteCount += berTag.decode(is);
+		int choiceDecodeLength = organization.decode(is, berTag);
+		if (choiceDecodeLength != 0) {
+			vByteCount += choiceDecodeLength;
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
 		
 		if (berTag.equals(NoticeNumbers.tag)) {
 			noticeNumbers = new NoticeNumbers();
@@ -254,7 +260,7 @@ public class NoticeReference implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (lengthVal < 0) {

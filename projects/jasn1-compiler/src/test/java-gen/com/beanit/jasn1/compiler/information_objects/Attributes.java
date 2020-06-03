@@ -107,15 +107,21 @@ public class Attributes implements Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		attributeValue = new BerAny();
-		vByteCount += attributeValue.decode(is, berTag);
-		if (lengthVal >= 0 && vByteCount == lengthVal) {
-			return tlByteCount + vByteCount;
+		int choiceDecodeLength = attributeValue.decode(is, berTag);
+		if (choiceDecodeLength != 0) {
+			vByteCount += choiceDecodeLength;
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
 		}
-		vByteCount += berTag.decode(is);
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
 		
 		if (lengthVal < 0) {
 			if (!berTag.equals(0, 0, 0)) {

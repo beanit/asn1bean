@@ -91,15 +91,27 @@ public class Validity implements BerType, Serializable {
 		vByteCount += berTag.decode(is);
 
 		notBefore = new Time();
-		vByteCount += notBefore.decode(is, berTag);
-		vByteCount += berTag.decode(is);
+		int choiceDecodeLength = notBefore.decode(is, berTag);
+		if (choiceDecodeLength != 0) {
+			vByteCount += choiceDecodeLength;
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
 		
 		notAfter = new Time();
-		vByteCount += notAfter.decode(is, berTag);
-		if (lengthVal >= 0 && vByteCount == lengthVal) {
-			return tlByteCount + vByteCount;
+		choiceDecodeLength = notAfter.decode(is, berTag);
+		if (choiceDecodeLength != 0) {
+			vByteCount += choiceDecodeLength;
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
 		}
-		vByteCount += berTag.decode(is);
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
 		
 		if (lengthVal < 0) {
 			if (!berTag.equals(0, 0, 0)) {

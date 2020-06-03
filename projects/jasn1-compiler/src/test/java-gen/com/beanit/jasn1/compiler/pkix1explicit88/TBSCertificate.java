@@ -162,7 +162,7 @@ public class TBSCertificate implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (berTag.equals(AlgorithmIdentifier.tag)) {
@@ -171,12 +171,18 @@ public class TBSCertificate implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		issuer = new Name();
-		vByteCount += issuer.decode(is, berTag);
-		vByteCount += berTag.decode(is);
+		int choiceDecodeLength = issuer.decode(is, berTag);
+		if (choiceDecodeLength != 0) {
+			vByteCount += choiceDecodeLength;
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
 		
 		if (berTag.equals(Validity.tag)) {
 			validity = new Validity();
@@ -184,12 +190,18 @@ public class TBSCertificate implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		subject = new Name();
-		vByteCount += subject.decode(is, berTag);
-		vByteCount += berTag.decode(is);
+		choiceDecodeLength = subject.decode(is, berTag);
+		if (choiceDecodeLength != 0) {
+			vByteCount += choiceDecodeLength;
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
 		
 		if (berTag.equals(SubjectPublicKeyInfo.tag)) {
 			subjectPublicKeyInfo = new SubjectPublicKeyInfo();
@@ -200,7 +212,7 @@ public class TBSCertificate implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 1)) {

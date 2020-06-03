@@ -110,15 +110,21 @@ public class TBSCertList implements BerType, Serializable {
 					vByteCount += berTag.decode(is);
 				}
 				else {
-					throw new IOException("Tag does not match the mandatory sequence element tag.");
+					throw new IOException("Tag does not match mandatory sequence component.");
 				}
 				
 				revocationDate = new Time();
-				vByteCount += revocationDate.decode(is, berTag);
-				if (lengthVal >= 0 && vByteCount == lengthVal) {
-					return tlByteCount + vByteCount;
+				int choiceDecodeLength = revocationDate.decode(is, berTag);
+				if (choiceDecodeLength != 0) {
+					vByteCount += choiceDecodeLength;
+					if (lengthVal >= 0 && vByteCount == lengthVal) {
+						return tlByteCount + vByteCount;
+					}
+					vByteCount += berTag.decode(is);
 				}
-				vByteCount += berTag.decode(is);
+				else {
+					throw new IOException("Tag does not match mandatory sequence component.");
+				}
 				
 				if (berTag.equals(Extensions.tag)) {
 					crlEntryExtensions = new Extensions();
@@ -452,22 +458,34 @@ public class TBSCertList implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		else {
-			throw new IOException("Tag does not match the mandatory sequence element tag.");
+			throw new IOException("Tag does not match mandatory sequence component.");
 		}
 		
 		issuer = new Name();
-		vByteCount += issuer.decode(is, berTag);
-		vByteCount += berTag.decode(is);
+		int choiceDecodeLength = issuer.decode(is, berTag);
+		if (choiceDecodeLength != 0) {
+			vByteCount += choiceDecodeLength;
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
 		
 		thisUpdate = new Time();
-		vByteCount += thisUpdate.decode(is, berTag);
-		if (lengthVal >= 0 && vByteCount == lengthVal) {
-			return tlByteCount + vByteCount;
+		choiceDecodeLength = thisUpdate.decode(is, berTag);
+		if (choiceDecodeLength != 0) {
+			vByteCount += choiceDecodeLength;
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
 		}
-		vByteCount += berTag.decode(is);
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
 		
 		nextUpdate = new Time();
-		int choiceDecodeLength = nextUpdate.decode(is, berTag);
+		choiceDecodeLength = nextUpdate.decode(is, berTag);
 		if (choiceDecodeLength != 0) {
 			vByteCount += choiceDecodeLength;
 			if (lengthVal >= 0 && vByteCount == lengthVal) {
