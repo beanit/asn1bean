@@ -60,6 +60,7 @@ GENERALIZED_TIME_KW		=	"GeneralizedTime"	;
 GENERAL_STR_KW			=	"GeneralString"		;
 GRAPHIC_STR_KW			=	"GraphicString"		;
 IA5_STRING_KW			=	"IA5String"			;
+IA5_STRING_UPPER_KW			=	"IA5STRING"			;
 IDENTIFIER_KW			=	"IDENTIFIER"		;
 IMPLICIT_KW				=	"IMPLICIT"			;
 IMPLIED_KW				=	"IMPLIED"			;
@@ -529,6 +530,7 @@ character_set returns [String s]
 	|	(s3:GENERAL_STR_KW		{s = s3.getText();})
 	|	(s4:GRAPHIC_STR_KW		{s = s4.getText();})
 	|	(s5:IA5_STRING_KW		{s = s5.getText();})
+	| (IA5_STRING_UPPER_KW  {s = "IA5String";})
 	|	(s6:ISO646_STR_KW		{s = s6.getText();})
 	|	(s7:NUMERIC_STR_KW		{s = s7.getText();})
 	|	(s8:PRINTABLE_STR_KW	{s = s8.getText();})

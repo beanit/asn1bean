@@ -95,6 +95,7 @@ ImplBMPString ::= [APPLICATION 3] IMPLICIT BMPString
 ImplGeneralString ::= [APPLICATION 3] IMPLICIT GeneralString
 ImplGraphicString ::= [APPLICATION 3] IMPLICIT GraphicString
 ImplIA5String ::= [APPLICATION 3] IMPLICIT IA5String
+ImplIA5String2 ::= [APPLICATION 3] IMPLICIT IA5STRING
 ImplNumericString ::= [APPLICATION 3] IMPLICIT NumericString
 ImplPrintableString ::= [APPLICATION 3] IMPLICIT PrintableString
 ImplTeletexString ::= [APPLICATION 3] IMPLICIT TeletexString
