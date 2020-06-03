@@ -9,8 +9,7 @@ class ComponentInfo {
   final Tag tag;
   final boolean mayBeLast;
   final boolean isOptionalOrDefault;
-  final boolean isUntaggedChoiceOrAny;
-  final String decodeTagParameter;
+  final boolean isDirectChoiceOrAny;
 
   public ComponentInfo(
       String variableName,
@@ -18,14 +17,12 @@ class ComponentInfo {
       Tag tag,
       boolean mayBeLast,
       boolean isOptionalOrDefault,
-      boolean isUntaggedChoiceOrAny,
-      String decodeTagParameter) {
+      boolean isDirectChoiceOrAny) {
     this.variableName = variableName;
     this.className = className;
     this.tag = tag;
     this.mayBeLast = mayBeLast;
     this.isOptionalOrDefault = isOptionalOrDefault;
-    this.isUntaggedChoiceOrAny = isUntaggedChoiceOrAny;
-    this.decodeTagParameter = decodeTagParameter;
+    this.isDirectChoiceOrAny = isDirectChoiceOrAny;
   }
 }

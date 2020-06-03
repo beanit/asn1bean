@@ -853,8 +853,7 @@ public class BerClassWriter {
       boolean mayBeLastComponent = lastRequiredComponentIndex <= i;
       Tag componentTag = getTag(asnElementType);
       boolean isOptional = isOptional(asnElementType);
-      boolean isUntaggedAnyOrChoice = isDirectAnyOrChoice(asnElementType) && (componentTag == null);
-      String decodeTagParameter = getTagParameterString(asnElementType);
+      boolean isUntaggedAnyOrChoice = isDirectAnyOrChoice(asnElementType);
 
       componentInfos.add(
           new ComponentInfo(
@@ -863,8 +862,7 @@ public class BerClassWriter {
               componentTag,
               mayBeLastComponent,
               isOptional,
-              isUntaggedAnyOrChoice,
-              decodeTagParameter));
+              isUntaggedAnyOrChoice));
       i++;
     }
     return componentInfos;
@@ -1392,7 +1390,6 @@ public class BerClassWriter {
       write("}\n");
     }
 
-    // TODO rename "choiceDecodeLength" because it could also be of type ANY
     String initChoiceDecodeLength = "int ";
 
     for (AsnElementType componentType : componentTypes) {
@@ -1505,7 +1502,7 @@ public class BerClassWriter {
     write("vByteCount += berTag.decode(is);\n");
 
     for (ComponentInfo component : components) {
-      if (component.isUntaggedChoiceOrAny) {
+      if (component.isDirectChoiceOrAny && (component.tag == null)) {
         writeDecodingUntaggedChoiceOrAnySequenceComponent(component);
       } else {
         writeDecodingRegularSequenceComponent(component);
@@ -1532,7 +1529,9 @@ public class BerClassWriter {
 
   private boolean containsUntaggedChoiceOrAny(List<ComponentInfo> components) {
     for (ComponentInfo component : components) {
-      if (component.isUntaggedChoiceOrAny) return true;
+      if (component.isDirectChoiceOrAny && (component.tag == null)) {
+        return true;
+      }
     }
     return false;
   }
@@ -1543,8 +1542,8 @@ public class BerClassWriter {
     write(
         "numDecodedBytes = "
             + component.variableName
-            + ".decode(is"
-            + component.decodeTagParameter
+            + ".decode(is, "
+            + getDecodeTagParameter(component)
             + ");");
 
     write("if (numDecodedBytes != 0) {");
@@ -1561,6 +1560,14 @@ public class BerClassWriter {
       write("}");
     } else {
       writeElseThrowTagMatchingException();
+    }
+  }
+
+  private String getDecodeTagParameter(ComponentInfo component) {
+    if (component.isDirectChoiceOrAny) {
+      return isExplicit(component.tag) ? "null" : "berTag";
+    } else {
+      return isExplicit(component.tag) ? "true" : "false";
     }
   }
 
@@ -1591,8 +1598,8 @@ public class BerClassWriter {
     write(
         "vByteCount += "
             + component.variableName
-            + ".decode(is"
-            + component.decodeTagParameter
+            + ".decode(is, "
+            + getDecodeTagParameter(component)
             + ");");
 
     if (isExplicit(component.tag)) {
