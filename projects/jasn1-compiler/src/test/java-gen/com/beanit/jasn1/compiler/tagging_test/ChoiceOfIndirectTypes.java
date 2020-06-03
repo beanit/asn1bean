@@ -325,6 +325,8 @@ public class ChoiceOfIndirectTypes implements BerType, Serializable {
 			tlvByteCount += berTag.decode(is);
 		}
 
+		int numDecodedBytes;
+
 		if (berTag.equals(UntaggedInteger.tag)) {
 			untaggedInt = new UntaggedInteger();
 			tlvByteCount += untaggedInt.decode(is, false);
@@ -389,9 +391,9 @@ public class ChoiceOfIndirectTypes implements BerType, Serializable {
 		}
 
 		untaggedChoice = new UntaggedChoice();
-		int choiceDecodeLength = untaggedChoice.decode(is, berTag);
-		if (choiceDecodeLength != 0) {
-			return tlvByteCount + choiceDecodeLength;
+		numDecodedBytes = untaggedChoice.decode(is, berTag);
+		if (numDecodedBytes != 0) {
+			return tlvByteCount + numDecodedBytes;
 		}
 		else {
 			untaggedChoice = null;

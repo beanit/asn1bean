@@ -76,10 +76,12 @@ public class MyChoice implements BerType, Serializable {
 			tlvByteCount += berTag.decode(is);
 		}
 
+		int numDecodedBytes;
+
 		myChoice2 = new MyChoice2();
-		int choiceDecodeLength = myChoice2.decode(is, berTag);
-		if (choiceDecodeLength != 0) {
-			return tlvByteCount + choiceDecodeLength;
+		numDecodedBytes = myChoice2.decode(is, berTag);
+		if (numDecodedBytes != 0) {
+			return tlvByteCount + numDecodedBytes;
 		}
 		else {
 			myChoice2 = null;

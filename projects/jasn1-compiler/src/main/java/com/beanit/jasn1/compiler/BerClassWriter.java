@@ -607,7 +607,7 @@ public class BerClassWriter {
 
     writeChoiceEncodeFunction(componentTypes, tag != null);
 
-    writeChoiceDecodeFunction(componentTypes, tag != null);
+    writeChoiceDecodeMethod(convertToComponentInfos(componentTypes), tag != null);
 
     writeEncodeAndSaveFunction(tag == null);
 
@@ -830,7 +830,7 @@ public class BerClassWriter {
     writeSimpleDecodeFunction("true");
 
     if (asnSequenceSet.isSequence) {
-      writeSequenceDecodeFunction(convertToComponentInfos(componentTypes), hasExplicitTag);
+      writeSequenceDecodeMethod(convertToComponentInfos(componentTypes), hasExplicitTag);
     } else {
       writeSetDecodeFunction(componentTypes);
     }
@@ -1358,119 +1358,7 @@ public class BerClassWriter {
     }
   }
 
-  private void writeChoiceDecodeFunction(
-      List<AsnElementType> componentTypes, boolean hasExplicitTag) throws IOException {
-
-    if (hasExplicitTag) {
-      writeSimpleDecodeFunction("true");
-
-      write("public int decode(InputStream is, boolean withTag) throws IOException {");
-      write("int tlvByteCount = 0;");
-      write("BerLength length = new BerLength();");
-      write("BerTag berTag = new BerTag();\n");
-
-      write("if (withTag) {");
-      write("tlvByteCount += tag.decodeAndCheck(is);");
-      write("}\n");
-
-      write("tlvByteCount += length.decode(is);");
-      write("tlvByteCount += berTag.decode(is);\n");
-    } else {
-
-      writeSimpleDecodeFunction("null");
-
-      write("public int decode(InputStream is, BerTag berTag) throws IOException {\n");
-
-      write("int tlvByteCount = 0;");
-      write("boolean tagWasPassed = (berTag != null);\n");
-
-      write("if (berTag == null) {");
-      write("berTag = new BerTag();");
-      write("tlvByteCount += berTag.decode(is);");
-      write("}\n");
-    }
-
-    String initChoiceDecodeLength = "int ";
-
-    for (AsnElementType componentType : componentTypes) {
-      String explicitEncoding = getTagParameterString(componentType);
-
-      Tag componentTag = getTag(componentType);
-
-      if (componentTag != null) {
-
-        write("if (berTag.equals(" + getBerTagParametersString(componentTag) + ")) {");
-
-        if (isExplicit(componentTag)) {
-          write("BerLength explicitTagLength = new BerLength();");
-          write("tlvByteCount += explicitTagLength.decode(is);");
-        }
-
-        write(getVariableName(componentType) + " = new " + getClassName(componentType) + "();");
-
-        write(
-            "tlvByteCount += "
-                + getVariableName(componentType)
-                + ".decode(is"
-                + explicitEncoding
-                + ");");
-
-        if (isExplicit(componentTag)) {
-          write("tlvByteCount += explicitTagLength.readEocIfIndefinite(is);");
-        }
-
-        write("return tlvByteCount;");
-
-      } else {
-        if (isDirectAnyOrChoice(componentType)) {
-          write(getVariableName(componentType) + " = new " + getClassName(componentType) + "();");
-
-          write(
-              initChoiceDecodeLength
-                  + "choiceDecodeLength = "
-                  + getVariableName(componentType)
-                  + ".decode(is"
-                  + explicitEncoding
-                  + ");");
-          initChoiceDecodeLength = "";
-          write("if (choiceDecodeLength != 0) {");
-          write("return tlvByteCount + choiceDecodeLength;");
-          write("}");
-          write("else {");
-          write(getVariableName(componentType) + " = null;");
-
-        } else {
-
-          write("if (berTag.equals(" + getClassName(componentType) + ".tag)) {");
-
-          write(getVariableName(componentType) + " = new " + getClassName(componentType) + "();");
-
-          write(
-              "tlvByteCount += "
-                  + getVariableName(componentType)
-                  + ".decode(is"
-                  + explicitEncoding
-                  + ");");
-
-          write("return tlvByteCount;");
-        }
-      }
-      write("}\n");
-    }
-
-    if (!hasExplicitTag) {
-      write("if (tagWasPassed) {");
-      write("return 0;");
-      write("}\n");
-    }
-
-    write(
-        "throw new IOException(\"Error decoding CHOICE: Tag \" + berTag + \" matched to no item.\");");
-
-    write("}\n");
-  }
-
-  private void writeSequenceDecodeFunction(List<ComponentInfo> components, boolean hasExplicitTag)
+  private void writeSequenceDecodeMethod(List<ComponentInfo> components, boolean hasExplicitTag)
       throws IOException {
     write("public int decode(InputStream is, boolean withTag) throws IOException {");
     write("int tlByteCount = 0;");
@@ -1503,9 +1391,9 @@ public class BerClassWriter {
 
     for (ComponentInfo component : components) {
       if (component.isDirectChoiceOrAny && (component.tag == null)) {
-        writeDecodingUntaggedChoiceOrAnySequenceComponent(component);
+        writeSequenceComponentDecodeUntaggedChoiceOrAny(component);
       } else {
-        writeDecodingRegularSequenceComponent(component);
+        writeSequenceComponentDecodeRegular(component);
       }
       write("");
     }
@@ -1527,62 +1415,63 @@ public class BerClassWriter {
     write("}\n");
   }
 
-  private boolean containsUntaggedChoiceOrAny(List<ComponentInfo> components) {
+  private void writeChoiceDecodeMethod(List<ComponentInfo> components, boolean hasExplicitTag)
+      throws IOException {
+
+    if (hasExplicitTag) {
+      writeSimpleDecodeFunction("true");
+
+      write("public int decode(InputStream is, boolean withTag) throws IOException {");
+      write("int tlvByteCount = 0;");
+      write("BerLength length = new BerLength();");
+      write("BerTag berTag = new BerTag();\n");
+
+      write("if (withTag) {");
+      write("tlvByteCount += tag.decodeAndCheck(is);");
+      write("}\n");
+
+      write("tlvByteCount += length.decode(is);");
+      write("tlvByteCount += berTag.decode(is);\n");
+    } else {
+
+      writeSimpleDecodeFunction("null");
+
+      write("public int decode(InputStream is, BerTag berTag) throws IOException {\n");
+
+      write("int tlvByteCount = 0;");
+      write("boolean tagWasPassed = (berTag != null);\n");
+
+      write("if (berTag == null) {");
+      write("berTag = new BerTag();");
+      write("tlvByteCount += berTag.decode(is);");
+      write("}\n");
+    }
+
+    if (containsUntaggedChoiceOrAny(components)) {
+      write("int numDecodedBytes;\n");
+    }
+
     for (ComponentInfo component : components) {
       if (component.isDirectChoiceOrAny && (component.tag == null)) {
-        return true;
+        writeChoiceComponentDecodeUntaggedChoiceOrAny(component);
+      } else {
+        writeChoiceComponentDecodeRegular(component);
       }
     }
-    return false;
-  }
 
-  private void writeDecodingUntaggedChoiceOrAnySequenceComponent(ComponentInfo component)
-      throws IOException {
-    write(component.variableName + " = new " + component.className + "();");
+    if (!hasExplicitTag) {
+      write("if (tagWasPassed) {");
+      write("return 0;");
+      write("}\n");
+    }
+
     write(
-        "numDecodedBytes = "
-            + component.variableName
-            + ".decode(is, "
-            + getDecodeTagParameter(component)
-            + ");");
+        "throw new IOException(\"Error decoding CHOICE: Tag \" + berTag + \" matched to no item.\");");
 
-    write("if (numDecodedBytes != 0) {");
-    write("vByteCount += numDecodedBytes;");
-
-    if (component.mayBeLast) {
-      writeReturnIfDefiniteLengthMatchesDecodedBytes();
-    }
-    write("vByteCount += berTag.decode(is);");
-    write("}");
-    if (component.isOptionalOrDefault) {
-      write("else {");
-      write(component.variableName + " = null;");
-      write("}");
-    } else {
-      writeElseThrowTagMatchingException();
-    }
+    write("}\n");
   }
 
-  private String getDecodeTagParameter(ComponentInfo component) {
-    if (component.isDirectChoiceOrAny) {
-      return isExplicit(component.tag) ? "null" : "berTag";
-    } else {
-      return isExplicit(component.tag) ? "true" : "false";
-    }
-  }
-
-  private boolean allOptionalOrDefault(List<ComponentInfo> componentTypes) {
-    return componentTypes.size() == 0
-        || (componentTypes.get(0).mayBeLast && componentTypes.get(0).isOptionalOrDefault);
-  }
-
-  private void writeElseThrowTagMatchingException() throws IOException {
-    write("else {");
-    write("throw new IOException(\"Tag does not match mandatory sequence component.\");");
-    write("}");
-  }
-
-  private void writeDecodingRegularSequenceComponent(ComponentInfo component) throws IOException {
+  private void writeSequenceComponentDecodeRegular(ComponentInfo component) throws IOException {
 
     if (component.tag != null) {
       write("if (berTag.equals(" + getBerTagParametersString(component.tag) + ")) {");
@@ -1614,6 +1503,105 @@ public class BerClassWriter {
     if (!component.isOptionalOrDefault) {
       writeElseThrowTagMatchingException();
     }
+  }
+
+  private void writeChoiceComponentDecodeRegular(ComponentInfo component) throws IOException {
+    if (component.tag != null) {
+      write("if (berTag.equals(" + getBerTagParametersString(component.tag) + ")) {");
+    } else {
+      write("if (berTag.equals(" + component.className + ".tag)) {");
+    }
+
+    if (isExplicit(component.tag)) {
+      write("BerLength explicitTagLength = new BerLength();");
+      write("tlvByteCount += explicitTagLength.decode(is);");
+    }
+
+    write(component.variableName + " = new " + component.className + "();");
+    write(
+        "tlvByteCount += "
+            + component.variableName
+            + ".decode(is, "
+            + getDecodeTagParameter(component)
+            + ");");
+
+    if (isExplicit(component.tag)) {
+      write("tlvByteCount += explicitTagLength.readEocIfIndefinite(is);");
+    }
+    write("return tlvByteCount;");
+    write("}\n");
+  }
+
+  private void writeSequenceComponentDecodeUntaggedChoiceOrAny(ComponentInfo component)
+      throws IOException {
+    write(component.variableName + " = new " + component.className + "();");
+    write(
+        "numDecodedBytes = "
+            + component.variableName
+            + ".decode(is, "
+            + getDecodeTagParameter(component)
+            + ");");
+
+    write("if (numDecodedBytes != 0) {");
+    write("vByteCount += numDecodedBytes;");
+
+    if (component.mayBeLast) {
+      writeReturnIfDefiniteLengthMatchesDecodedBytes();
+    }
+    write("vByteCount += berTag.decode(is);");
+    write("}");
+    if (component.isOptionalOrDefault) {
+      write("else {");
+      write(component.variableName + " = null;");
+      write("}");
+    } else {
+      writeElseThrowTagMatchingException();
+    }
+  }
+
+  private void writeChoiceComponentDecodeUntaggedChoiceOrAny(ComponentInfo component)
+      throws IOException {
+    write(component.variableName + " = new " + component.className + "();");
+    write(
+        "numDecodedBytes = "
+            + component.variableName
+            + ".decode(is, "
+            + getDecodeTagParameter(component)
+            + ");");
+    write("if (numDecodedBytes != 0) {");
+    write("return tlvByteCount + numDecodedBytes;");
+    write("}");
+    write("else {");
+    write(component.variableName + " = null;");
+    write("}\n");
+  }
+
+  private boolean containsUntaggedChoiceOrAny(List<ComponentInfo> components) {
+    for (ComponentInfo component : components) {
+      if (component.isDirectChoiceOrAny && (component.tag == null)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private String getDecodeTagParameter(ComponentInfo component) {
+    if (component.isDirectChoiceOrAny) {
+      return isExplicit(component.tag) ? "null" : "berTag";
+    } else {
+      return isExplicit(component.tag) ? "true" : "false";
+    }
+  }
+
+  private boolean allOptionalOrDefault(List<ComponentInfo> componentTypes) {
+    return componentTypes.size() == 0
+        || (componentTypes.get(0).mayBeLast && componentTypes.get(0).isOptionalOrDefault);
+  }
+
+  private void writeElseThrowTagMatchingException() throws IOException {
+    write("else {");
+    write("throw new IOException(\"Tag does not match mandatory sequence component.\");");
+    write("}");
   }
 
   private int getLastRequiredComponentIndex(List<AsnElementType> componentTypes) {

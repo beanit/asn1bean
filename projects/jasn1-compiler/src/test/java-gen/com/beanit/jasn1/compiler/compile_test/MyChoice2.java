@@ -282,10 +282,12 @@ public class MyChoice2 implements BerType, Serializable {
 			tlvByteCount += berTag.decode(is);
 		}
 
+		int numDecodedBytes;
+
 		element1 = new Element1();
-		int choiceDecodeLength = element1.decode(is, berTag);
-		if (choiceDecodeLength != 0) {
-			return tlvByteCount + choiceDecodeLength;
+		numDecodedBytes = element1.decode(is, berTag);
+		if (numDecodedBytes != 0) {
+			return tlvByteCount + numDecodedBytes;
 		}
 		else {
 			element1 = null;
@@ -304,9 +306,9 @@ public class MyChoice2 implements BerType, Serializable {
 		}
 
 		element4 = new Element4();
-		choiceDecodeLength = element4.decode(is, berTag);
-		if (choiceDecodeLength != 0) {
-			return tlvByteCount + choiceDecodeLength;
+		numDecodedBytes = element4.decode(is, berTag);
+		if (numDecodedBytes != 0) {
+			return tlvByteCount + numDecodedBytes;
 		}
 		else {
 			element4 = null;

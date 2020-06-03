@@ -543,6 +543,8 @@ public class ChoiceOfDirectTypes implements BerType, Serializable {
 			tlvByteCount += berTag.decode(is);
 		}
 
+		int numDecodedBytes;
+
 		if (berTag.equals(BerInteger.tag)) {
 			untaggedInt = new BerInteger();
 			tlvByteCount += untaggedInt.decode(is, false);
@@ -565,9 +567,9 @@ public class ChoiceOfDirectTypes implements BerType, Serializable {
 		}
 
 		untaggedChoice = new UntaggedChoice();
-		int choiceDecodeLength = untaggedChoice.decode(is, berTag);
-		if (choiceDecodeLength != 0) {
-			return tlvByteCount + choiceDecodeLength;
+		numDecodedBytes = untaggedChoice.decode(is, berTag);
+		if (numDecodedBytes != 0) {
+			return tlvByteCount + numDecodedBytes;
 		}
 		else {
 			untaggedChoice = null;
@@ -592,9 +594,9 @@ public class ChoiceOfDirectTypes implements BerType, Serializable {
 		}
 
 		untaggedChoice2 = new UntaggedChoice2();
-		choiceDecodeLength = untaggedChoice2.decode(is, berTag);
-		if (choiceDecodeLength != 0) {
-			return tlvByteCount + choiceDecodeLength;
+		numDecodedBytes = untaggedChoice2.decode(is, berTag);
+		if (numDecodedBytes != 0) {
+			return tlvByteCount + numDecodedBytes;
 		}
 		else {
 			untaggedChoice2 = null;
