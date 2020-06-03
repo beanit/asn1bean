@@ -422,9 +422,8 @@ public class BerClassWriter {
    *
    * @param asnTaggedType the tagged type
    * @return the tag from the AsnTaggedType structure
-   * @throws IOException if an exception occurs
    */
-  private Tag getTag(AsnTaggedType asnTaggedType) throws IOException {
+  private Tag getTag(AsnTaggedType asnTaggedType) {
 
     AsnTag asnTag = asnTaggedType.tag;
 
@@ -831,7 +830,7 @@ public class BerClassWriter {
     writeSimpleDecodeFunction("true");
 
     if (asnSequenceSet.isSequence) {
-      writeSequenceDecodeFunction(componentTypes, hasExplicitTag);
+      writeSequenceDecodeFunction(convertToComponentInfos(componentTypes), hasExplicitTag);
     } else {
       writeSetDecodeFunction(componentTypes);
     }
@@ -841,6 +840,34 @@ public class BerClassWriter {
     writeSequenceOrSetToStringFunction(componentTypes);
 
     write("}\n");
+  }
+
+  private List<ComponentInfo> convertToComponentInfos(List<AsnElementType> asnElementTypes) {
+    int lastRequiredComponentIndex = getLastRequiredComponentIndex(asnElementTypes);
+
+    List<ComponentInfo> componentInfos = new ArrayList<>(asnElementTypes.size());
+    int i = 0;
+    for (AsnElementType asnElementType : asnElementTypes) {
+      String variableName = getVariableName(asnElementType);
+      String className = getClassName(asnElementType);
+      boolean mayBeLastComponent = lastRequiredComponentIndex <= i;
+      Tag componentTag = getTag(asnElementType);
+      boolean isOptional = isOptional(asnElementType);
+      boolean isUntaggedAnyOrChoice = isDirectAnyOrChoice(asnElementType) && (componentTag == null);
+      String decodeTagParameter = getTagParameterString(asnElementType);
+
+      componentInfos.add(
+          new ComponentInfo(
+              variableName,
+              className,
+              componentTag,
+              mayBeLastComponent,
+              isOptional,
+              isUntaggedAnyOrChoice,
+              decodeTagParameter));
+      i++;
+    }
+    return componentInfos;
   }
 
   private void replaceParametersByAnyTypes(
@@ -1319,7 +1346,7 @@ public class BerClassWriter {
     write("}\n");
   }
 
-  private String getExplicitEncodingParameter(AsnTaggedType componentType) throws IOException {
+  private String getExplicitEncodingParameter(AsnTaggedType componentType) {
     Tag tag = getTag(componentType);
 
     if (tag != null && tag.type == TagType.IMPLICIT) {
@@ -1446,11 +1473,14 @@ public class BerClassWriter {
     write("}\n");
   }
 
-  private void writeSequenceDecodeFunction(
-      List<AsnElementType> componentTypes, boolean hasExplicitTag) throws IOException {
+  private void writeSequenceDecodeFunction(List<ComponentInfo> components, boolean hasExplicitTag)
+      throws IOException {
     write("public int decode(InputStream is, boolean withTag) throws IOException {");
     write("int tlByteCount = 0;");
     write("int vByteCount = 0;");
+    if (containsUntaggedChoiceOrAny(components)) {
+      // write("int numDecodedBytes;");
+    }
     write("BerTag berTag = new BerTag();\n");
 
     write("if (withTag) {");
@@ -1467,83 +1497,22 @@ public class BerClassWriter {
     write("tlByteCount += length.decode(is);");
     write("int lengthVal = length.val;");
 
-    int lastRequiredComponentIndex = getLastRequiredComponentIndex(componentTypes);
-
-    // if all values are optional
-    if (lastRequiredComponentIndex == -1) {
+    if (allOptionalOrDefault(components)) {
       write("if (lengthVal == 0) {");
       write("return tlByteCount;");
       write("}");
     }
     write("vByteCount += berTag.decode(is);\n");
 
-    String initChoiceDecodeLength = "int ";
-    for (int j = 0; j < componentTypes.size(); j++) {
+    boolean initChoiceDecodeLength = true;
+    for (ComponentInfo component : components) {
 
-      boolean mayBeLastComponent = lastRequiredComponentIndex <= j;
-      AsnElementType componentType = componentTypes.get(j);
-      Tag componentTag = getTag(componentType);
-      String componentVariableName = getVariableName(componentType);
-      String componentClassName = getClassName(componentType);
-      String componentDecodeTagParameter = getTagParameterString(componentType);
-
-      if (componentTag != null) {
-        write("if (berTag.equals(" + getBerTagParametersString(componentTag) + ")) {");
-        writeDecodingRegularSequenceComponent(
-            mayBeLastComponent,
-            componentDecodeTagParameter,
-            componentVariableName,
-            componentClassName,
-            isExplicit(componentTag));
-        write("}");
-        if (!isOptional(componentType)) {
-          writeElseThrowTagMatchingException();
-        }
-
+      if (component.isUntaggedChoiceOrAny) {
+        writeDecodingUntaggedChoiceOrAnySequenceComponent(component, initChoiceDecodeLength);
+        initChoiceDecodeLength = false;
       } else {
-        // no tag
-        if (isDirectAnyOrChoice(componentType)) {
-          write(componentVariableName + " = new " + componentClassName + "();");
-          write(
-              initChoiceDecodeLength
-                  + "choiceDecodeLength = "
-                  + componentVariableName
-                  + ".decode(is"
-                  + componentDecodeTagParameter
-                  + ");");
-
-          initChoiceDecodeLength = "";
-
-          write("if (choiceDecodeLength != 0) {");
-          write("vByteCount += choiceDecodeLength;");
-
-          if (mayBeLastComponent) {
-            writeReturnIfDefiniteLengthMatchesDecodedBytes();
-          }
-          write("vByteCount += berTag.decode(is);");
-          write("}");
-          if (isOptional(componentType)) {
-            write("else {");
-            write(componentVariableName + " = null;");
-            write("}");
-          } else {
-            writeElseThrowTagMatchingException();
-          }
-        } else {
-          write("if (berTag.equals(" + componentClassName + ".tag)) {");
-          writeDecodingRegularSequenceComponent(
-              mayBeLastComponent,
-              componentDecodeTagParameter,
-              componentVariableName,
-              componentClassName,
-              false);
-          write("}");
-          if (!isOptional(componentType)) {
-            writeElseThrowTagMatchingException();
-          }
-        }
+        writeDecodingRegularSequenceComponent(component);
       }
-
       write("");
     }
 
@@ -1564,35 +1533,85 @@ public class BerClassWriter {
     write("}\n");
   }
 
+  private boolean containsUntaggedChoiceOrAny(List<ComponentInfo> components) {
+    for (ComponentInfo component : components) {
+      if (component.isUntaggedChoiceOrAny) return true;
+    }
+    return false;
+  }
+
+  private void writeDecodingUntaggedChoiceOrAnySequenceComponent(
+      ComponentInfo component, boolean firstInSequence) throws IOException {
+    write(component.variableName + " = new " + component.className + "();");
+    String initializer = firstInSequence ? "int " : "";
+    write(
+        initializer
+            + "choiceDecodeLength = "
+            + component.variableName
+            + ".decode(is"
+            + component.decodeTagParameter
+            + ");");
+
+    write("if (choiceDecodeLength != 0) {");
+    write("vByteCount += choiceDecodeLength;");
+
+    if (component.mayBeLast) {
+      writeReturnIfDefiniteLengthMatchesDecodedBytes();
+    }
+    write("vByteCount += berTag.decode(is);");
+    write("}");
+    if (component.isOptionalOrDefault) {
+      write("else {");
+      write(component.variableName + " = null;");
+      write("}");
+    } else {
+      writeElseThrowTagMatchingException();
+    }
+  }
+
+  private boolean allOptionalOrDefault(List<ComponentInfo> componentTypes) {
+    return componentTypes.size() == 0
+        || (componentTypes.get(0).mayBeLast && componentTypes.get(0).isOptionalOrDefault);
+  }
+
   private void writeElseThrowTagMatchingException() throws IOException {
     write("else {");
     write("throw new IOException(\"Tag does not match mandatory sequence component.\");");
     write("}");
   }
 
-  private void writeDecodingRegularSequenceComponent(
-      boolean mayBeLastComponent,
-      String decodeTagParameter,
-      String variableName,
-      String className,
-      boolean withSurroundingLength)
-      throws IOException {
+  private void writeDecodingRegularSequenceComponent(ComponentInfo component) throws IOException {
 
-    if (withSurroundingLength) {
+    if (component.tag != null) {
+      write("if (berTag.equals(" + getBerTagParametersString(component.tag) + ")) {");
+    } else {
+      write("if (berTag.equals(" + component.className + ".tag)) {");
+    }
+
+    if (isExplicit(component.tag)) {
       write("vByteCount += length.decode(is);");
     }
 
-    write(variableName + " = new " + className + "();");
-    write("vByteCount += " + variableName + ".decode(is" + decodeTagParameter + ");");
+    write(component.variableName + " = new " + component.className + "();");
+    write(
+        "vByteCount += "
+            + component.variableName
+            + ".decode(is"
+            + component.decodeTagParameter
+            + ");");
 
-    if (withSurroundingLength) {
+    if (isExplicit(component.tag)) {
       write("vByteCount += length.readEocIfIndefinite(is);");
     }
 
-    if (mayBeLastComponent) {
+    if (component.mayBeLast) {
       writeReturnIfDefiniteLengthMatchesDecodedBytes();
     }
     write("vByteCount += berTag.decode(is);");
+    write("}");
+    if (!component.isOptionalOrDefault) {
+      writeElseThrowTagMatchingException();
+    }
   }
 
   private int getLastRequiredComponentIndex(List<AsnElementType> componentTypes) {
@@ -1859,7 +1878,7 @@ public class BerClassWriter {
     write("}\n");
   }
 
-  private String getTagParameterString(AsnElementType componentType) throws IOException {
+  private String getTagParameterString(AsnElementType componentType) {
 
     Tag tag = getTag(componentType);
 
@@ -1912,7 +1931,7 @@ public class BerClassWriter {
     write("}");
   }
 
-  private void addAutomaticTagsIfNeeded(List<AsnElementType> componentTypes) throws IOException {
+  private void addAutomaticTagsIfNeeded(List<AsnElementType> componentTypes) {
     if (tagDefault != TagDefault.AUTOMATIC) {
       return;
     }
@@ -2505,7 +2524,7 @@ public class BerClassWriter {
     return (AsnUniversalType) asnType;
   }
 
-  private boolean isPrimitive(AsnTaggedType asnTaggedType) throws IOException {
+  private boolean isPrimitive(AsnTaggedType asnTaggedType) {
     AsnType asnType = asnTaggedType;
     while ((asnType = followAndGetNextTaggedOrUniversalType(asnType, module))
         instanceof AsnTaggedType) {
