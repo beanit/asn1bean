@@ -1479,7 +1479,7 @@ public class BerClassWriter {
     write("int tlByteCount = 0;");
     write("int vByteCount = 0;");
     if (containsUntaggedChoiceOrAny(components)) {
-      // write("int numDecodedBytes;");
+      write("int numDecodedBytes;");
     }
     write("BerTag berTag = new BerTag();\n");
 
@@ -1504,12 +1504,9 @@ public class BerClassWriter {
     }
     write("vByteCount += berTag.decode(is);\n");
 
-    boolean initChoiceDecodeLength = true;
     for (ComponentInfo component : components) {
-
       if (component.isUntaggedChoiceOrAny) {
-        writeDecodingUntaggedChoiceOrAnySequenceComponent(component, initChoiceDecodeLength);
-        initChoiceDecodeLength = false;
+        writeDecodingUntaggedChoiceOrAnySequenceComponent(component);
       } else {
         writeDecodingRegularSequenceComponent(component);
       }
@@ -1528,7 +1525,7 @@ public class BerClassWriter {
     write("}\n");
 
     write(
-        "throw new IOException(\"Unexpected end of sequence, length tag: \" + lengthVal + \", actual sequence length: \" + vByteCount);\n");
+        "throw new IOException(\"Unexpected end of sequence, length tag: \" + lengthVal + \", bytes decoded: \" + vByteCount);\n");
 
     write("}\n");
   }
@@ -1540,20 +1537,18 @@ public class BerClassWriter {
     return false;
   }
 
-  private void writeDecodingUntaggedChoiceOrAnySequenceComponent(
-      ComponentInfo component, boolean firstInSequence) throws IOException {
+  private void writeDecodingUntaggedChoiceOrAnySequenceComponent(ComponentInfo component)
+      throws IOException {
     write(component.variableName + " = new " + component.className + "();");
-    String initializer = firstInSequence ? "int " : "";
     write(
-        initializer
-            + "choiceDecodeLength = "
+        "numDecodedBytes = "
             + component.variableName
             + ".decode(is"
             + component.decodeTagParameter
             + ");");
 
-    write("if (choiceDecodeLength != 0) {");
-    write("vByteCount += choiceDecodeLength;");
+    write("if (numDecodedBytes != 0) {");
+    write("vByteCount += numDecodedBytes;");
 
     if (component.mayBeLast) {
       writeReturnIfDefiniteLengthMatchesDecodedBytes();

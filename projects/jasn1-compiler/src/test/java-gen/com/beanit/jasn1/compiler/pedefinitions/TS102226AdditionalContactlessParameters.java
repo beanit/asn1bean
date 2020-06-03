@@ -109,7 +109,7 @@ public class TS102226AdditionalContactlessParameters implements BerType, Seriali
 			return tlByteCount + vByteCount;
 		}
 
-		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", actual sequence length: " + vByteCount);
+		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", bytes decoded: " + vByteCount);
 
 	}
 

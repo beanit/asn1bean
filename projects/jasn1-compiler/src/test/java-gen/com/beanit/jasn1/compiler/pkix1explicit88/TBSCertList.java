@@ -93,6 +93,7 @@ public class TBSCertList implements BerType, Serializable {
 			public int decode(InputStream is, boolean withTag) throws IOException {
 				int tlByteCount = 0;
 				int vByteCount = 0;
+				int numDecodedBytes;
 				BerTag berTag = new BerTag();
 
 				if (withTag) {
@@ -114,9 +115,9 @@ public class TBSCertList implements BerType, Serializable {
 				}
 				
 				revocationDate = new Time();
-				int choiceDecodeLength = revocationDate.decode(is, berTag);
-				if (choiceDecodeLength != 0) {
-					vByteCount += choiceDecodeLength;
+				numDecodedBytes = revocationDate.decode(is, berTag);
+				if (numDecodedBytes != 0) {
+					vByteCount += numDecodedBytes;
 					if (lengthVal >= 0 && vByteCount == lengthVal) {
 						return tlByteCount + vByteCount;
 					}
@@ -143,7 +144,7 @@ public class TBSCertList implements BerType, Serializable {
 					return tlByteCount + vByteCount;
 				}
 
-				throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", actual sequence length: " + vByteCount);
+				throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", bytes decoded: " + vByteCount);
 
 			}
 
@@ -435,6 +436,7 @@ public class TBSCertList implements BerType, Serializable {
 	public int decode(InputStream is, boolean withTag) throws IOException {
 		int tlByteCount = 0;
 		int vByteCount = 0;
+		int numDecodedBytes;
 		BerTag berTag = new BerTag();
 
 		if (withTag) {
@@ -462,9 +464,9 @@ public class TBSCertList implements BerType, Serializable {
 		}
 		
 		issuer = new Name();
-		int choiceDecodeLength = issuer.decode(is, berTag);
-		if (choiceDecodeLength != 0) {
-			vByteCount += choiceDecodeLength;
+		numDecodedBytes = issuer.decode(is, berTag);
+		if (numDecodedBytes != 0) {
+			vByteCount += numDecodedBytes;
 			vByteCount += berTag.decode(is);
 		}
 		else {
@@ -472,9 +474,9 @@ public class TBSCertList implements BerType, Serializable {
 		}
 		
 		thisUpdate = new Time();
-		choiceDecodeLength = thisUpdate.decode(is, berTag);
-		if (choiceDecodeLength != 0) {
-			vByteCount += choiceDecodeLength;
+		numDecodedBytes = thisUpdate.decode(is, berTag);
+		if (numDecodedBytes != 0) {
+			vByteCount += numDecodedBytes;
 			if (lengthVal >= 0 && vByteCount == lengthVal) {
 				return tlByteCount + vByteCount;
 			}
@@ -485,9 +487,9 @@ public class TBSCertList implements BerType, Serializable {
 		}
 		
 		nextUpdate = new Time();
-		choiceDecodeLength = nextUpdate.decode(is, berTag);
-		if (choiceDecodeLength != 0) {
-			vByteCount += choiceDecodeLength;
+		numDecodedBytes = nextUpdate.decode(is, berTag);
+		if (numDecodedBytes != 0) {
+			vByteCount += numDecodedBytes;
 			if (lengthVal >= 0 && vByteCount == lengthVal) {
 				return tlByteCount + vByteCount;
 			}
@@ -525,7 +527,7 @@ public class TBSCertList implements BerType, Serializable {
 			return tlByteCount + vByteCount;
 		}
 
-		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", actual sequence length: " + vByteCount);
+		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", bytes decoded: " + vByteCount);
 
 	}
 

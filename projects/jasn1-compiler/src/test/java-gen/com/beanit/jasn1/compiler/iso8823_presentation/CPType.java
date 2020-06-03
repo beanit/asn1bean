@@ -144,6 +144,7 @@ public class CPType implements BerType, Serializable {
 		public int decode(InputStream is, boolean withTag) throws IOException {
 			int tlByteCount = 0;
 			int vByteCount = 0;
+			int numDecodedBytes;
 			BerTag berTag = new BerTag();
 
 			if (withTag) {
@@ -222,9 +223,9 @@ public class CPType implements BerType, Serializable {
 			}
 			
 			userData = new UserData();
-			int choiceDecodeLength = userData.decode(is, berTag);
-			if (choiceDecodeLength != 0) {
-				vByteCount += choiceDecodeLength;
+			numDecodedBytes = userData.decode(is, berTag);
+			if (numDecodedBytes != 0) {
+				vByteCount += numDecodedBytes;
 				if (lengthVal >= 0 && vByteCount == lengthVal) {
 					return tlByteCount + vByteCount;
 				}
@@ -242,7 +243,7 @@ public class CPType implements BerType, Serializable {
 				return tlByteCount + vByteCount;
 			}
 
-			throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", actual sequence length: " + vByteCount);
+			throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", bytes decoded: " + vByteCount);
 
 		}
 

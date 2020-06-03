@@ -89,6 +89,7 @@ public class UserNotice implements BerType, Serializable {
 	public int decode(InputStream is, boolean withTag) throws IOException {
 		int tlByteCount = 0;
 		int vByteCount = 0;
+		int numDecodedBytes;
 		BerTag berTag = new BerTag();
 
 		if (withTag) {
@@ -113,9 +114,9 @@ public class UserNotice implements BerType, Serializable {
 		}
 		
 		explicitText = new DisplayText();
-		int choiceDecodeLength = explicitText.decode(is, berTag);
-		if (choiceDecodeLength != 0) {
-			vByteCount += choiceDecodeLength;
+		numDecodedBytes = explicitText.decode(is, berTag);
+		if (numDecodedBytes != 0) {
+			vByteCount += numDecodedBytes;
 			if (lengthVal >= 0 && vByteCount == lengthVal) {
 				return tlByteCount + vByteCount;
 			}
@@ -133,7 +134,7 @@ public class UserNotice implements BerType, Serializable {
 			return tlByteCount + vByteCount;
 		}
 
-		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", actual sequence length: " + vByteCount);
+		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", bytes decoded: " + vByteCount);
 
 	}
 

@@ -535,7 +535,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 					return tlByteCount + vByteCount;
 				}
 
-				throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", actual sequence length: " + vByteCount);
+				throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", bytes decoded: " + vByteCount);
 
 			}
 
@@ -1019,7 +1019,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 				return tlByteCount + vByteCount;
 			}
 
-			throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", actual sequence length: " + vByteCount);
+			throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", bytes decoded: " + vByteCount);
 
 		}
 
@@ -1151,6 +1151,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 	public int decode(InputStream is, boolean withTag) throws IOException {
 		int tlByteCount = 0;
 		int vByteCount = 0;
+		int numDecodedBytes;
 		BerTag berTag = new BerTag();
 
 		if (withTag) {
@@ -1178,9 +1179,9 @@ public class SequenceNameClashTest implements BerType, Serializable {
 		}
 		
 		untaggedInteger = new UntaggedInteger();
-		int choiceDecodeLength = untaggedInteger.decode(is, berTag);
-		if (choiceDecodeLength != 0) {
-			vByteCount += choiceDecodeLength;
+		numDecodedBytes = untaggedInteger.decode(is, berTag);
+		if (numDecodedBytes != 0) {
+			vByteCount += numDecodedBytes;
 			vByteCount += berTag.decode(is);
 		}
 		else {
@@ -1188,9 +1189,9 @@ public class SequenceNameClashTest implements BerType, Serializable {
 		}
 		
 		myChoice = new MyChoice();
-		choiceDecodeLength = myChoice.decode(is, berTag);
-		if (choiceDecodeLength != 0) {
-			vByteCount += choiceDecodeLength;
+		numDecodedBytes = myChoice.decode(is, berTag);
+		if (numDecodedBytes != 0) {
+			vByteCount += numDecodedBytes;
 			vByteCount += berTag.decode(is);
 		}
 		else {
@@ -1220,7 +1221,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 			return tlByteCount + vByteCount;
 		}
 
-		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", actual sequence length: " + vByteCount);
+		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", bytes decoded: " + vByteCount);
 
 	}
 

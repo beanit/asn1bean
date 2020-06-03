@@ -230,6 +230,7 @@ public class NoticeReference implements BerType, Serializable {
 	public int decode(InputStream is, boolean withTag) throws IOException {
 		int tlByteCount = 0;
 		int vByteCount = 0;
+		int numDecodedBytes;
 		BerTag berTag = new BerTag();
 
 		if (withTag) {
@@ -242,9 +243,9 @@ public class NoticeReference implements BerType, Serializable {
 		vByteCount += berTag.decode(is);
 
 		organization = new DisplayText();
-		int choiceDecodeLength = organization.decode(is, berTag);
-		if (choiceDecodeLength != 0) {
-			vByteCount += choiceDecodeLength;
+		numDecodedBytes = organization.decode(is, berTag);
+		if (numDecodedBytes != 0) {
+			vByteCount += numDecodedBytes;
 			vByteCount += berTag.decode(is);
 		}
 		else {
@@ -271,7 +272,7 @@ public class NoticeReference implements BerType, Serializable {
 			return tlByteCount + vByteCount;
 		}
 
-		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", actual sequence length: " + vByteCount);
+		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", bytes decoded: " + vByteCount);
 
 	}
 

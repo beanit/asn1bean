@@ -215,6 +215,7 @@ public class SequenceOfAll implements BerType, Serializable {
 	public int decode(InputStream is, boolean withTag) throws IOException {
 		int tlByteCount = 0;
 		int vByteCount = 0;
+		int numDecodedBytes;
 		BerTag berTag = new BerTag();
 
 		if (withTag) {
@@ -505,9 +506,9 @@ public class SequenceOfAll implements BerType, Serializable {
 		}
 		
 		myChoice = new MyChoice();
-		int choiceDecodeLength = myChoice.decode(is, berTag);
-		if (choiceDecodeLength != 0) {
-			vByteCount += choiceDecodeLength;
+		numDecodedBytes = myChoice.decode(is, berTag);
+		if (numDecodedBytes != 0) {
+			vByteCount += numDecodedBytes;
 			if (lengthVal >= 0 && vByteCount == lengthVal) {
 				return tlByteCount + vByteCount;
 			}
@@ -525,7 +526,7 @@ public class SequenceOfAll implements BerType, Serializable {
 			return tlByteCount + vByteCount;
 		}
 
-		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", actual sequence length: " + vByteCount);
+		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", bytes decoded: " + vByteCount);
 
 	}
 

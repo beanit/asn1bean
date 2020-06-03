@@ -137,6 +137,7 @@ public class TBSCertificate implements BerType, Serializable {
 	public int decode(InputStream is, boolean withTag) throws IOException {
 		int tlByteCount = 0;
 		int vByteCount = 0;
+		int numDecodedBytes;
 		BerTag berTag = new BerTag();
 
 		if (withTag) {
@@ -175,9 +176,9 @@ public class TBSCertificate implements BerType, Serializable {
 		}
 		
 		issuer = new Name();
-		int choiceDecodeLength = issuer.decode(is, berTag);
-		if (choiceDecodeLength != 0) {
-			vByteCount += choiceDecodeLength;
+		numDecodedBytes = issuer.decode(is, berTag);
+		if (numDecodedBytes != 0) {
+			vByteCount += numDecodedBytes;
 			vByteCount += berTag.decode(is);
 		}
 		else {
@@ -194,9 +195,9 @@ public class TBSCertificate implements BerType, Serializable {
 		}
 		
 		subject = new Name();
-		choiceDecodeLength = subject.decode(is, berTag);
-		if (choiceDecodeLength != 0) {
-			vByteCount += choiceDecodeLength;
+		numDecodedBytes = subject.decode(is, berTag);
+		if (numDecodedBytes != 0) {
+			vByteCount += numDecodedBytes;
 			vByteCount += berTag.decode(is);
 		}
 		else {
@@ -252,7 +253,7 @@ public class TBSCertificate implements BerType, Serializable {
 			return tlByteCount + vByteCount;
 		}
 
-		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", actual sequence length: " + vByteCount);
+		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", bytes decoded: " + vByteCount);
 
 	}
 
