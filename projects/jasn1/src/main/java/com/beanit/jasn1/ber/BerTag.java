@@ -40,6 +40,7 @@ public class BerTag implements Serializable {
   public static final int UTF8_STRING_TAG = 12;
   public static final int TIME_TAG = 14;
   public static final int SEQUENCE_TAG = 16;
+  public static final int SET_TAG = 17;
   public static final int NUMERIC_STRING_TAG = 18;
   public static final int PRINTABLE_STRING_TAG = 19;
   public static final int TELETEX_STRING_TAG = 20;
@@ -63,6 +64,7 @@ public class BerTag implements Serializable {
   public int tagNumber;
 
   public static final BerTag SEQUENCE = new BerTag(UNIVERSAL_CLASS, CONSTRUCTED, SEQUENCE_TAG);
+  public static final BerTag SET = new BerTag(UNIVERSAL_CLASS, CONSTRUCTED, SET_TAG);
 
   public BerTag(int identifierClass, int primitive, int tagNumber) {
     this.tagClass = identifierClass;

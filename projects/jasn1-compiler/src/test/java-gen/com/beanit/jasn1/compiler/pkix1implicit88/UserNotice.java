@@ -125,7 +125,6 @@ public class UserNotice implements BerType, Serializable {
 		else {
 			explicitText = null;
 		}
-		
 		if (lengthVal < 0) {
 			if (!berTag.equals(0, 0, 0)) {
 				throw new IOException("Decoded sequence has wrong end of contents octets");

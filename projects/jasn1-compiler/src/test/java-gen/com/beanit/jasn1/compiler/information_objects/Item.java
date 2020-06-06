@@ -184,7 +184,6 @@ public class Item implements Serializable {
 		else {
 			throw new IOException("Tag does not match mandatory sequence component.");
 		}
-		
 		if (berTag.equals(BerInteger.tag)) {
 			quantity = new BerInteger();
 			vByteCount += quantity.decode(is, false);

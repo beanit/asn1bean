@@ -123,7 +123,6 @@ public class GeneralSubtree implements BerType, Serializable {
 		else {
 			throw new IOException("Tag does not match mandatory sequence component.");
 		}
-		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 0)) {
 			minimum = new BaseDistance();
 			vByteCount += minimum.decode(is, false);

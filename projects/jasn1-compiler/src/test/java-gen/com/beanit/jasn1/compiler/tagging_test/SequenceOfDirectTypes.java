@@ -583,7 +583,6 @@ public class SequenceOfDirectTypes implements BerType, Serializable {
 		else {
 			throw new IOException("Tag does not match mandatory sequence component.");
 		}
-		
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 5)) {
 			vByteCount += length.decode(is);
 			taggedChoice = new TaggedChoice();
@@ -621,7 +620,6 @@ public class SequenceOfDirectTypes implements BerType, Serializable {
 		else {
 			untaggedChoice2 = null;
 		}
-		
 		if (lengthVal < 0) {
 			if (!berTag.equals(0, 0, 0)) {
 				throw new IOException("Decoded sequence has wrong end of contents octets");

@@ -81,28 +81,28 @@ public class PersonnelRecord implements BerType, Serializable {
 		}
 
 		public int decode(InputStream is, boolean withTag) throws IOException {
-			int codeLength = 0;
-			int subCodeLength = 0;
+			int tlByteCount = 0;
+			int vByteCount = 0;
 			if (withTag) {
-				codeLength += tag.decodeAndCheck(is);
+				tlByteCount += tag.decodeAndCheck(is);
 			}
 
 			BerLength length = new BerLength();
-			codeLength += length.decode(is);
-			int totalLength = length.val;
+			tlByteCount += length.decode(is);
+			int lengthVal = length.val;
 
-			while (subCodeLength < totalLength) {
+			while (vByteCount < lengthVal) {
 				ChildInformation element = new ChildInformation();
-				subCodeLength += element.decode(is, true);
+				vByteCount += element.decode(is, true);
 				seqOf.add(element);
 			}
-			if (subCodeLength != totalLength) {
-				throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + totalLength + " but has " + subCodeLength);
+			if (vByteCount != lengthVal) {
+				throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + lengthVal + " but has " + vByteCount);
 
 			}
-			codeLength += subCodeLength;
+			tlByteCount += vByteCount;
 
-			return codeLength;
+			return tlByteCount;
 		}
 
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {
@@ -280,55 +280,62 @@ public class PersonnelRecord implements BerType, Serializable {
 	}
 
 	public int decode(InputStream is, boolean withTag) throws IOException {
-		int codeLength = 0;
-		int subCodeLength = 0;
+		int tlByteCount = 0;
+		int vByteCount = 0;
 		BerTag berTag = new BerTag();
 
 		if (withTag) {
-			codeLength += tag.decodeAndCheck(is);
+			tlByteCount += tag.decodeAndCheck(is);
 		}
 
 		BerLength length = new BerLength();
-		codeLength += length.decode(is);
+		tlByteCount += length.decode(is);
+		int lengthVal = length.val;
 
-		int totalLength = length.val;
-		while (subCodeLength < totalLength) {
-			subCodeLength += berTag.decode(is);
+		while (vByteCount < lengthVal || lengthVal < 0) {
+			vByteCount += berTag.decode(is);
 			if (berTag.equals(Name.tag)) {
 				name = new Name();
-				subCodeLength += name.decode(is, false);
+				vByteCount += name.decode(is, false);
 			}
 			else if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 0)) {
-				subCodeLength += new BerLength().decode(is);
+				vByteCount += length.decode(is);
 				title = new BerVisibleString();
-				subCodeLength += title.decode(is, true);
+				vByteCount += title.decode(is, true);
+				vByteCount += length.readEocIfIndefinite(is);
 			}
 			else if (berTag.equals(EmployeeNumber.tag)) {
 				number = new EmployeeNumber();
-				subCodeLength += number.decode(is, false);
+				vByteCount += number.decode(is, false);
 			}
 			else if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
-				subCodeLength += new BerLength().decode(is);
+				vByteCount += length.decode(is);
 				dateOfHire = new Date();
-				subCodeLength += dateOfHire.decode(is, true);
+				vByteCount += dateOfHire.decode(is, true);
+				vByteCount += length.readEocIfIndefinite(is);
 			}
 			else if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 2)) {
-				subCodeLength += new BerLength().decode(is);
+				vByteCount += length.decode(is);
 				nameOfSpouse = new Name();
-				subCodeLength += nameOfSpouse.decode(is, true);
+				vByteCount += nameOfSpouse.decode(is, true);
+				vByteCount += length.readEocIfIndefinite(is);
 			}
 			else if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 3)) {
 				children = new Children();
-				subCodeLength += children.decode(is, false);
+				vByteCount += children.decode(is, false);
+			}
+			else if (lengthVal < 0 && berTag.equals(0, 0, 0)) {
+				vByteCount += BerLength.readEocByte(is);
+				return tlByteCount + vByteCount;
+			}
+			else {
+				throw new IOException("Tag does not match any set component: " + berTag);
 			}
 		}
-		if (subCodeLength != totalLength) {
-			throw new IOException("Length of set does not match length tag, length tag: " + totalLength + ", actual set length: " + subCodeLength);
-
+		if (vByteCount != lengthVal) {
+			throw new IOException("Length of set does not match length tag, length tag: " + lengthVal + ", actual set length: " + vByteCount);
 		}
-		codeLength += subCodeLength;
-
-		return codeLength;
+		return tlByteCount + vByteCount;
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {

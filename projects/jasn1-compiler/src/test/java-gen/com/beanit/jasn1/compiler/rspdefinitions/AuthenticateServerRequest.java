@@ -159,7 +159,6 @@ public class AuthenticateServerRequest implements BerType, Serializable {
 		else {
 			throw new IOException("Tag does not match mandatory sequence component.");
 		}
-		
 		if (lengthVal < 0) {
 			if (!berTag.equals(0, 0, 0)) {
 				throw new IOException("Decoded sequence has wrong end of contents octets");

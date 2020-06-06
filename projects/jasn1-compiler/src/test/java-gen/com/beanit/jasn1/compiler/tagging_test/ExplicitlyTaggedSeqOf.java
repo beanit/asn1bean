@@ -81,15 +81,15 @@ public class ExplicitlyTaggedSeqOf implements BerType, Serializable {
 	}
 
 	public int decode(InputStream is, boolean withTag) throws IOException {
-		int codeLength = 0;
-		int subCodeLength = 0;
+		int tlByteCount = 0;
+		int vByteCount = 0;
 		if (withTag) {
-			codeLength += tag.decodeAndCheck(is);
+			tlByteCount += tag.decodeAndCheck(is);
 		}
 
 		BerLength length = new BerLength();
-		codeLength += length.decode(is);
-		int totalLength = length.val;
+		tlByteCount += length.decode(is);
+		int lengthVal = length.val;
 
 		int nextByte = is.read();
 		if (nextByte == -1) {
@@ -99,20 +99,20 @@ public class ExplicitlyTaggedSeqOf implements BerType, Serializable {
 			throw new IOException("Tag does not match!");
 		}
 		length.decode(is);
-		totalLength = length.val;
+		lengthVal = length.val;
 
-		while (subCodeLength < totalLength) {
+		while (vByteCount < lengthVal) {
 			BerInteger element = new BerInteger();
-			subCodeLength += element.decode(is, true);
+			vByteCount += element.decode(is, true);
 			seqOf.add(element);
 		}
-		if (subCodeLength != totalLength) {
-			throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + totalLength + " but has " + subCodeLength);
+		if (vByteCount != lengthVal) {
+			throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + lengthVal + " but has " + vByteCount);
 
 		}
-		codeLength += subCodeLength;
+		tlByteCount += vByteCount;
 
-		return codeLength;
+		return tlByteCount;
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {

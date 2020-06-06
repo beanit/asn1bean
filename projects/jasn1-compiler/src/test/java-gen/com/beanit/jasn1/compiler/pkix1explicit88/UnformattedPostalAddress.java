@@ -78,20 +78,20 @@ public class UnformattedPostalAddress implements BerType, Serializable {
 		}
 
 		public int decode(InputStream is, boolean withTag) throws IOException {
-			int codeLength = 0;
-			int subCodeLength = 0;
+			int tlByteCount = 0;
+			int vByteCount = 0;
 			BerTag berTag = new BerTag();
 			if (withTag) {
-				codeLength += tag.decodeAndCheck(is);
+				tlByteCount += tag.decodeAndCheck(is);
 			}
 
 			BerLength length = new BerLength();
-			codeLength += length.decode(is);
-			int totalLength = length.val;
+			tlByteCount += length.decode(is);
+			int lengthVal = length.val;
 
 			if (length.val == -1) {
 				while (true) {
-					subCodeLength += berTag.decode(is);
+					vByteCount += berTag.decode(is);
 
 					if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
 						int nextByte = is.read();
@@ -101,27 +101,27 @@ public class UnformattedPostalAddress implements BerType, Serializable {
 							}
 							throw new IOException("Decoded sequence has wrong end of contents octets");
 						}
-						codeLength += subCodeLength + 1;
-						return codeLength;
+						tlByteCount += vByteCount + 1;
+						return tlByteCount;
 					}
 
 					BerPrintableString element = new BerPrintableString();
-					subCodeLength += element.decode(is, false);
+					vByteCount += element.decode(is, false);
 					seqOf.add(element);
 				}
 			}
-			while (subCodeLength < totalLength) {
+			while (vByteCount < lengthVal) {
 				BerPrintableString element = new BerPrintableString();
-				subCodeLength += element.decode(is, true);
+				vByteCount += element.decode(is, true);
 				seqOf.add(element);
 			}
-			if (subCodeLength != totalLength) {
-				throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + totalLength + " but has " + subCodeLength);
+			if (vByteCount != lengthVal) {
+				throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + lengthVal + " but has " + vByteCount);
 
 			}
-			codeLength += subCodeLength;
+			tlByteCount += vByteCount;
 
-			return codeLength;
+			return tlByteCount;
 		}
 
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {
@@ -226,83 +226,44 @@ public class UnformattedPostalAddress implements BerType, Serializable {
 	}
 
 	public int decode(InputStream is, boolean withTag) throws IOException {
-		int codeLength = 0;
-		int subCodeLength = 0;
+		int tlByteCount = 0;
+		int vByteCount = 0;
 		BerTag berTag = new BerTag();
 
 		if (withTag) {
-			codeLength += tag.decodeAndCheck(is);
+			tlByteCount += tag.decodeAndCheck(is);
 		}
 
 		BerLength length = new BerLength();
-		codeLength += length.decode(is);
+		tlByteCount += length.decode(is);
+		int lengthVal = length.val;
 
-		int totalLength = length.val;
-		if (totalLength == -1) {
-			subCodeLength += berTag.decode(is);
-
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(PrintableAddress.tag)) {
-				printableAddress = new PrintableAddress();
-				subCodeLength += printableAddress.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-				int nextByte = is.read();
-				if (nextByte != 0) {
-					if (nextByte == -1) {
-						throw new EOFException("Unexpected end of input stream.");
-					}
-					throw new IOException("Decoded sequence has wrong end of contents octets");
-				}
-				codeLength += subCodeLength + 1;
-				return codeLength;
-			}
-			if (berTag.equals(BerTeletexString.tag)) {
-				teletexString = new BerTeletexString();
-				subCodeLength += teletexString.decode(is, false);
-				subCodeLength += berTag.decode(is);
-			}
-			int nextByte = is.read();
-			if (berTag.tagNumber != 0 || berTag.tagClass != 0 || berTag.primitive != 0
-			|| nextByte != 0) {
-				if (nextByte == -1) {
-					throw new EOFException("Unexpected end of input stream.");
-				}
-				throw new IOException("Decoded sequence has wrong end of contents octets");
-			}
-			codeLength += subCodeLength + 1;
-			return codeLength;
+		if (lengthVal == 0) {
+			return tlByteCount;
 		}
 
-		while (subCodeLength < totalLength) {
-			subCodeLength += berTag.decode(is);
+		while (vByteCount < lengthVal || lengthVal < 0) {
+			vByteCount += berTag.decode(is);
 			if (berTag.equals(PrintableAddress.tag)) {
 				printableAddress = new PrintableAddress();
-				subCodeLength += printableAddress.decode(is, false);
+				vByteCount += printableAddress.decode(is, false);
 			}
 			else if (berTag.equals(BerTeletexString.tag)) {
 				teletexString = new BerTeletexString();
-				subCodeLength += teletexString.decode(is, false);
+				vByteCount += teletexString.decode(is, false);
+			}
+			else if (lengthVal < 0 && berTag.equals(0, 0, 0)) {
+				vByteCount += BerLength.readEocByte(is);
+				return tlByteCount + vByteCount;
+			}
+			else {
+				throw new IOException("Tag does not match any set component: " + berTag);
 			}
 		}
-		if (subCodeLength != totalLength) {
-			throw new IOException("Length of set does not match length tag, length tag: " + totalLength + ", actual set length: " + subCodeLength);
-
+		if (vByteCount != lengthVal) {
+			throw new IOException("Length of set does not match length tag, length tag: " + lengthVal + ", actual set length: " + vByteCount);
 		}
-		codeLength += subCodeLength;
-
-		return codeLength;
+		return tlByteCount + vByteCount;
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {

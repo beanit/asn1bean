@@ -184,7 +184,6 @@ public class TBSCertificate implements BerType, Serializable {
 		else {
 			throw new IOException("Tag does not match mandatory sequence component.");
 		}
-		
 		if (berTag.equals(Validity.tag)) {
 			validity = new Validity();
 			vByteCount += validity.decode(is, false);
@@ -203,7 +202,6 @@ public class TBSCertificate implements BerType, Serializable {
 		else {
 			throw new IOException("Tag does not match mandatory sequence component.");
 		}
-		
 		if (berTag.equals(SubjectPublicKeyInfo.tag)) {
 			subjectPublicKeyInfo = new SubjectPublicKeyInfo();
 			vByteCount += subjectPublicKeyInfo.decode(is, false);

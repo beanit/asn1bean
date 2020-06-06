@@ -117,7 +117,6 @@ public class AlgorithmIdentifier implements BerType, Serializable {
 		else {
 			parameters = null;
 		}
-		
 		if (lengthVal < 0) {
 			if (!berTag.equals(0, 0, 0)) {
 				throw new IOException("Decoded sequence has wrong end of contents octets");

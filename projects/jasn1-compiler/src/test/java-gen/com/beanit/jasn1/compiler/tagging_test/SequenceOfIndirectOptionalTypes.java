@@ -432,7 +432,6 @@ public class SequenceOfIndirectOptionalTypes implements BerType, Serializable {
 		else {
 			untaggedChoice = null;
 		}
-		
 		if (berTag.equals(TaggedChoice.tag)) {
 			untaggedChoice2 = new TaggedChoice();
 			vByteCount += untaggedChoice2.decode(is, false);

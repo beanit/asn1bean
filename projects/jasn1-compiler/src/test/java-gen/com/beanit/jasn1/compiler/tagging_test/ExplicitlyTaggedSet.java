@@ -69,9 +69,16 @@ public class ExplicitlyTaggedSet implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
+		int sublength;
+
 		codeLength += myBoolean.encode(reverseOS, true);
 		
-		codeLength += myInteger.encode(reverseOS, true);
+		sublength = myInteger.encode(reverseOS, true);
+		codeLength += sublength;
+		codeLength += BerLength.encodeLength(reverseOS, sublength);
+		// write tag: CONTEXT_CLASS, CONSTRUCTED, 1
+		reverseOS.write(0xA1);
+		codeLength += 1;
 		
 		codeLength += BerLength.encodeLength(reverseOS, codeLength);
 		reverseOS.write(0x31);
@@ -92,36 +99,48 @@ public class ExplicitlyTaggedSet implements BerType, Serializable {
 	}
 
 	public int decode(InputStream is, boolean withTag) throws IOException {
-		int codeLength = 0;
-		int subCodeLength = 0;
+		int tlByteCount = 0;
+		int vByteCount = 0;
 		BerTag berTag = new BerTag();
 
 		if (withTag) {
-			codeLength += tag.decodeAndCheck(is);
+			tlByteCount += tag.decodeAndCheck(is);
 		}
 
-		BerLength length = new BerLength();
-		codeLength += length.decode(is);
+		BerLength explicitTagLength = new BerLength();
+		tlByteCount += explicitTagLength.decode(is);
+		tlByteCount += BerTag.SET.decodeAndCheck(is);
 
-		int totalLength = length.val;
-		while (subCodeLength < totalLength) {
-			subCodeLength += berTag.decode(is);
-			if (berTag.equals(BerInteger.tag)) {
+		BerLength length = new BerLength();
+		tlByteCount += length.decode(is);
+		int lengthVal = length.val;
+
+		while (vByteCount < lengthVal || lengthVal < 0) {
+			vByteCount += berTag.decode(is);
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
+				vByteCount += length.decode(is);
 				myInteger = new BerInteger();
-				subCodeLength += myInteger.decode(is, false);
+				vByteCount += myInteger.decode(is, true);
+				vByteCount += length.readEocIfIndefinite(is);
 			}
 			else if (berTag.equals(BerBoolean.tag)) {
 				myBoolean = new BerBoolean();
-				subCodeLength += myBoolean.decode(is, false);
+				vByteCount += myBoolean.decode(is, false);
+			}
+			else if (lengthVal < 0 && berTag.equals(0, 0, 0)) {
+				vByteCount += BerLength.readEocByte(is);
+				vByteCount += explicitTagLength.readEocIfIndefinite(is);
+				return tlByteCount + vByteCount;
+			}
+			else {
+				throw new IOException("Tag does not match any set component: " + berTag);
 			}
 		}
-		if (subCodeLength != totalLength) {
-			throw new IOException("Length of set does not match length tag, length tag: " + totalLength + ", actual set length: " + subCodeLength);
-
+		if (vByteCount != lengthVal) {
+			throw new IOException("Length of set does not match length tag, length tag: " + lengthVal + ", actual set length: " + vByteCount);
 		}
-		codeLength += subCodeLength;
-
-		return codeLength;
+		vByteCount += explicitTagLength.readEocIfIndefinite(is);
+		return tlByteCount + vByteCount;
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {

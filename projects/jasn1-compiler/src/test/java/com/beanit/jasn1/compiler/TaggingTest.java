@@ -120,13 +120,27 @@ public class TaggingTest {
     ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
     set.encode(os);
 
-    assertArrayEquals(HexConverter.fromShortHexString("BF210831060201010101FF"), os.getArray());
+    assertArrayEquals(HexConverter.fromShortHexString("BF210a3108a1030201010101FF"), os.getArray());
 
     set = new ExplicitlyTaggedSet();
     set.decode(new ByteArrayInputStream(os.getArray()));
 
     assertNotNull(set.getMyInteger());
     assertNotNull(set.getMyBoolean());
+  }
+
+  @Test
+  public void explicitlyTaggedSetIndefiniteTest() throws Exception {
+
+    byte[] code = HexConverter.fromShortHexString("BF21803180a18002010100000101FF00000000");
+    ExplicitlyTaggedSet set = new ExplicitlyTaggedSet();
+    InputStream is = new ByteArrayInputStream(code);
+    int numDecodedBytes = set.decode(is);
+
+    assertNotNull(set.getMyInteger());
+    assertNotNull(set.getMyBoolean());
+    assertEquals(-1, is.read());
+    assertEquals(code.length, numDecodedBytes);
   }
 
   @Test

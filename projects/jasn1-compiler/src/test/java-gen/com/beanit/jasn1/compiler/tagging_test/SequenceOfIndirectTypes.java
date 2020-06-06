@@ -394,7 +394,6 @@ public class SequenceOfIndirectTypes implements BerType, Serializable {
 		else {
 			throw new IOException("Tag does not match mandatory sequence component.");
 		}
-		
 		if (berTag.equals(TaggedChoice.tag)) {
 			untaggedChoice2 = new TaggedChoice();
 			vByteCount += untaggedChoice2.decode(is, false);
