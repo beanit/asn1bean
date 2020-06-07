@@ -87,6 +87,7 @@ public class RetrieveNotificationsListResponse implements BerType, Serializable 
 		public int decode(InputStream is, boolean withTag) throws IOException {
 			int tlByteCount = 0;
 			int vByteCount = 0;
+			int numDecodedBytes;
 			BerTag berTag = new BerTag();
 			if (withTag) {
 				tlByteCount += tag.decodeAndCheck(is);
@@ -96,39 +97,27 @@ public class RetrieveNotificationsListResponse implements BerType, Serializable 
 			tlByteCount += length.decode(is);
 			int lengthVal = length.val;
 
-			if (length.val == -1) {
-				while (true) {
-					vByteCount += berTag.decode(is);
+			while (vByteCount < lengthVal || lengthVal < 0) {
+				vByteCount += berTag.decode(is);
 
-					if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-						int nextByte = is.read();
-						if (nextByte != 0) {
-							if (nextByte == -1) {
-								throw new EOFException("Unexpected end of input stream.");
-							}
-							throw new IOException("Decoded sequence has wrong end of contents octets");
-						}
-						tlByteCount += vByteCount + 1;
-						return tlByteCount;
-					}
-
-					PendingNotification element = new PendingNotification();
-					vByteCount += element.decode(is, berTag);
-					seqOf.add(element);
+				if (lengthVal < 0 && berTag.equals(0, 0, 0)) {
+					vByteCount += BerLength.readEocByte(is);
+					break;
 				}
-			}
-			while (vByteCount < lengthVal) {
+
 				PendingNotification element = new PendingNotification();
-				vByteCount += element.decode(is, null);
+				numDecodedBytes = element.decode(is, berTag);
+				if (numDecodedBytes == 0) {
+					throw new IOException("Tag did not match");
+				}
+				vByteCount += numDecodedBytes;
 				seqOf.add(element);
 			}
-			if (vByteCount != lengthVal) {
+			if (lengthVal >= 0 && vByteCount != lengthVal) {
 				throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + lengthVal + " but has " + vByteCount);
 
 			}
-			tlByteCount += vByteCount;
-
-			return tlByteCount;
+			return tlByteCount + vByteCount;
 		}
 
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {

@@ -83,6 +83,7 @@ public class PersonnelRecord implements BerType, Serializable {
 		public int decode(InputStream is, boolean withTag) throws IOException {
 			int tlByteCount = 0;
 			int vByteCount = 0;
+			BerTag berTag = new BerTag();
 			if (withTag) {
 				tlByteCount += tag.decodeAndCheck(is);
 			}
@@ -91,18 +92,26 @@ public class PersonnelRecord implements BerType, Serializable {
 			tlByteCount += length.decode(is);
 			int lengthVal = length.val;
 
-			while (vByteCount < lengthVal) {
+			while (vByteCount < lengthVal || lengthVal < 0) {
+				vByteCount += berTag.decode(is);
+
+				if (lengthVal < 0 && berTag.equals(0, 0, 0)) {
+					vByteCount += BerLength.readEocByte(is);
+					break;
+				}
+
+				if (!berTag.equals(ChildInformation.tag)) {
+					throw new IOException("Tag does not match mandatory sequence of/set of component.");
+				}
 				ChildInformation element = new ChildInformation();
-				vByteCount += element.decode(is, true);
+				vByteCount += element.decode(is, false);
 				seqOf.add(element);
 			}
-			if (vByteCount != lengthVal) {
+			if (lengthVal >= 0 && vByteCount != lengthVal) {
 				throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + lengthVal + " but has " + vByteCount);
 
 			}
-			tlByteCount += vByteCount;
-
-			return tlByteCount;
+			return tlByteCount + vByteCount;
 		}
 
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {

@@ -356,6 +356,8 @@ public class MobileTest {
     System.out.println(HexConverter.toShortHexString(code));
     ProfileElement rereadProfileElement = new ProfileElement();
     rereadProfileElement.decode(new ByteArrayInputStream(code), null);
+
+    System.out.println("rereadProfileElement = " + rereadProfileElement);
     ReverseByteArrayOutputStream reverseOutputStream2 =
         new ReverseByteArrayOutputStream(2048, true);
     rereadProfileElement.encode(reverseOutputStream2);

@@ -93,39 +93,26 @@ public class ProfilePolicyAuthorisationRule implements BerType, Serializable {
 			tlByteCount += length.decode(is);
 			int lengthVal = length.val;
 
-			if (length.val == -1) {
-				while (true) {
-					vByteCount += berTag.decode(is);
+			while (vByteCount < lengthVal || lengthVal < 0) {
+				vByteCount += berTag.decode(is);
 
-					if (berTag.tagNumber == 0 && berTag.tagClass == 0 && berTag.primitive == 0) {
-						int nextByte = is.read();
-						if (nextByte != 0) {
-							if (nextByte == -1) {
-								throw new EOFException("Unexpected end of input stream.");
-							}
-							throw new IOException("Decoded sequence has wrong end of contents octets");
-						}
-						tlByteCount += vByteCount + 1;
-						return tlByteCount;
-					}
-
-					OperatorId element = new OperatorId();
-					vByteCount += element.decode(is, false);
-					seqOf.add(element);
+				if (lengthVal < 0 && berTag.equals(0, 0, 0)) {
+					vByteCount += BerLength.readEocByte(is);
+					break;
 				}
-			}
-			while (vByteCount < lengthVal) {
+
+				if (!berTag.equals(OperatorId.tag)) {
+					throw new IOException("Tag does not match mandatory sequence of/set of component.");
+				}
 				OperatorId element = new OperatorId();
-				vByteCount += element.decode(is, true);
+				vByteCount += element.decode(is, false);
 				seqOf.add(element);
 			}
-			if (vByteCount != lengthVal) {
+			if (lengthVal >= 0 && vByteCount != lengthVal) {
 				throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + lengthVal + " but has " + vByteCount);
 
 			}
-			tlByteCount += vByteCount;
-
-			return tlByteCount;
+			return tlByteCount + vByteCount;
 		}
 
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {

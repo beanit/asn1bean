@@ -93,20 +93,28 @@ public class SeqOfExplicitlyTaggedType implements BerType, Serializable {
 		tlByteCount += length.decode(is);
 		int lengthVal = length.val;
 
-		while (vByteCount < lengthVal) {
-			BerInteger element = new BerInteger();
+		while (vByteCount < lengthVal || lengthVal < 0) {
 			vByteCount += berTag.decode(is);
+
+			if (lengthVal < 0 && berTag.equals(0, 0, 0)) {
+				vByteCount += BerLength.readEocByte(is);
+				break;
+			}
+
+			if (!berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 3)) {
+				throw new IOException("Tag does not match mandatory sequence of/set of component.");
+			}
 			vByteCount += length.decode(is);
+			BerInteger element = new BerInteger();
 			vByteCount += element.decode(is, true);
 			seqOf.add(element);
+			vByteCount += length.readEocIfIndefinite(is);
 		}
-		if (vByteCount != lengthVal) {
+		if (lengthVal >= 0 && vByteCount != lengthVal) {
 			throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + lengthVal + " but has " + vByteCount);
 
 		}
-		tlByteCount += vByteCount;
-
-		return tlByteCount;
+		return tlByteCount + vByteCount;
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {

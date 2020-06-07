@@ -48,7 +48,6 @@ public class CompileTest {
 
     args =
         new String[] {
-          "-il",
           "-dv",
           "-o",
           generatedSrcDir,
@@ -65,7 +64,6 @@ public class CompileTest {
   public void testCompilingModules() throws Exception {
     args =
         new String[] {
-          "-il",
           "-dv",
           "-o",
           generatedSrcDir,
@@ -82,7 +80,6 @@ public class CompileTest {
   public void testCompilingIsoPresentationLayer() throws Exception {
     args =
         new String[] {
-          "-il",
           "-dv",
           "-o",
           generatedSrcDir,
@@ -114,7 +111,6 @@ public class CompileTest {
   public void testCompilingMobile() throws Exception {
     args =
         new String[] {
-          "-il",
           "-dv",
           "-o",
           generatedSrcDir,
@@ -133,7 +129,6 @@ public class CompileTest {
   public void testCompilingMobile2() throws Exception {
     args =
         new String[] {
-          "-il",
           "-dv",
           "-o",
           generatedSrcDir,
@@ -150,7 +145,6 @@ public class CompileTest {
   public void testCompilingVariousTests() throws Exception {
     args =
         new String[] {
-          "-il",
           "-dv",
           "-o",
           generatedSrcDir,
@@ -167,7 +161,6 @@ public class CompileTest {
   public void testCompilingInformationObjectClasses() throws Exception {
     args =
         new String[] {
-          "-il",
           "-dv",
           "-o",
           generatedSrcDir,

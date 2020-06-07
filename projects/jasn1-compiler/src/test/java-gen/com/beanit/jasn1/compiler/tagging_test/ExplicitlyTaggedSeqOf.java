@@ -83,36 +83,40 @@ public class ExplicitlyTaggedSeqOf implements BerType, Serializable {
 	public int decode(InputStream is, boolean withTag) throws IOException {
 		int tlByteCount = 0;
 		int vByteCount = 0;
+		BerTag berTag = new BerTag();
 		if (withTag) {
 			tlByteCount += tag.decodeAndCheck(is);
 		}
+
+		BerLength explicitTagLength = new BerLength();
+		tlByteCount += explicitTagLength.decode(is);
+		tlByteCount += BerTag.SEQUENCE.decodeAndCheck(is);
 
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
 		int lengthVal = length.val;
 
-		int nextByte = is.read();
-		if (nextByte == -1) {
-			throw new EOFException("Unexpected end of input stream.");
-		}
-		if (nextByte != (0x30)) {
-			throw new IOException("Tag does not match!");
-		}
-		length.decode(is);
-		lengthVal = length.val;
+		while (vByteCount < lengthVal || lengthVal < 0) {
+			vByteCount += berTag.decode(is);
 
-		while (vByteCount < lengthVal) {
+			if (lengthVal < 0 && berTag.equals(0, 0, 0)) {
+				vByteCount += BerLength.readEocByte(is);
+				break;
+			}
+
+			if (!berTag.equals(BerInteger.tag)) {
+				throw new IOException("Tag does not match mandatory sequence of/set of component.");
+			}
 			BerInteger element = new BerInteger();
-			vByteCount += element.decode(is, true);
+			vByteCount += element.decode(is, false);
 			seqOf.add(element);
 		}
-		if (vByteCount != lengthVal) {
+		if (lengthVal >= 0 && vByteCount != lengthVal) {
 			throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + lengthVal + " but has " + vByteCount);
 
 		}
-		tlByteCount += vByteCount;
-
-		return tlByteCount;
+		vByteCount += explicitTagLength.readEocIfIndefinite(is);
+		return tlByteCount + vByteCount;
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {

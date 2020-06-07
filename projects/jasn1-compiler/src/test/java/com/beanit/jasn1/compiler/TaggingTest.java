@@ -155,12 +155,22 @@ public class TaggingTest {
     ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
     seqOf.encode(os);
 
-    System.out.println("seqOf : " + HexConverter.toShortHexString(os.getArray()));
-
     assertArrayEquals(HexConverter.fromShortHexString("BF21083006020103020104"), os.getArray());
 
     seqOf = new ExplicitlyTaggedSeqOf();
     seqOf.decode(new ByteArrayInputStream(os.getArray()));
+  }
+
+  @Test
+  public void explicitlyTaggedSeqOfIndefiniteTest() throws Exception {
+    byte[] code = HexConverter.fromShortHexString("BF2180308002010302010400000000");
+    ExplicitlyTaggedSeqOf seqOf = new ExplicitlyTaggedSeqOf();
+    InputStream is = new ByteArrayInputStream(code);
+    int numDecodedBytes = seqOf.decode(is);
+
+    assertNotNull(seqOf.getBerInteger());
+    assertEquals(-1, is.read());
+    assertEquals(code.length, numDecodedBytes);
   }
 
   @Test

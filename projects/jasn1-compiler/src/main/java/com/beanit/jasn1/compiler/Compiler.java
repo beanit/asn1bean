@@ -48,12 +48,6 @@ public class Compiler {
                 "The base package name. Added to this will be a name generated from the module name.")
             .buildStringParameter("package_base_name", "");
 
-    FlagCliParameter supportIndefiniteLength =
-        new CliParameterBuilder("-il")
-            .setDescription(
-                "Add support for decoding indefinite length in generated classes. This feature is not yet fully implemented and should be used with caution.")
-            .buildFlagParameter();
-
     FlagCliParameter disableBerTypeInterface =
         new CliParameterBuilder("-di")
             .setDescription(
@@ -82,7 +76,6 @@ public class Compiler {
     cliParameters.add(asn1Files);
     cliParameters.add(outputBaseDir);
     cliParameters.add(basePackageName);
-    cliParameters.add(supportIndefiniteLength);
     cliParameters.add(disableBerTypeInterface);
     cliParameters.add(disableWritingVersion);
     cliParameters.add(legacyMode);
@@ -103,9 +96,6 @@ public class Compiler {
     }
 
     System.out.println("Generated code will be saved in " + outputBaseDir.getValue());
-    if (supportIndefiniteLength.isSelected()) {
-      System.out.println("Java classes will support decoding indefinite length.");
-    }
 
     HashMap<String, AsnModule> modulesByName = new HashMap<>();
 
@@ -121,7 +111,6 @@ public class Compiler {
             outputBaseDir.getValue(),
             basePackageName.getValue(),
             !legacyMode.isSelected(),
-            supportIndefiniteLength.isSelected(),
             disableBerTypeInterface.isSelected(),
             disableWritingVersion.isSelected());
 
