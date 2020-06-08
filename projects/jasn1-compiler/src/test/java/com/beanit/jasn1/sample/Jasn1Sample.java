@@ -1,5 +1,7 @@
 package com.beanit.jasn1.sample;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import com.beanit.jasn1.ber.ReverseByteArrayOutputStream;
 import com.beanit.jasn1.ber.types.string.BerVisibleString;
 import com.beanit.jasn1.compiler.x690_ber_example.ChildInformation;
@@ -48,9 +50,9 @@ public class Jasn1Sample {
           (byte) 0x68
         };
 
-    BerVisibleString title = new BerVisibleString("Director".getBytes());
+    BerVisibleString title = new BerVisibleString("Director".getBytes(UTF_8));
     EmployeeNumber number = new EmployeeNumber(51);
-    Date dateOfHire = new Date("19710917".getBytes());
+    Date dateOfHire = new Date("19710917".getBytes(UTF_8));
 
     Name nameOfSpouse = new Name();
     nameOfSpouse.setGivenName(new BerVisibleString("Mary"));
@@ -64,7 +66,7 @@ public class Jasn1Sample {
 
     ChildInformation child1 = new ChildInformation();
     child1.setName(child1Name);
-    child1.setDateOfBirth(new Date("19571111".getBytes()));
+    child1.setDateOfBirth(new Date("19571111".getBytes(UTF_8)));
 
     // encodeAndSave will start the encoding and save the result in
     // child1.code. This is useful if the same structure will have to be
@@ -79,7 +81,7 @@ public class Jasn1Sample {
 
     ChildInformation child2 = new ChildInformation();
     child2.setName(child2Name);
-    child2.setDateOfBirth(new Date("19590717".getBytes()));
+    child2.setDateOfBirth(new Date("19590717".getBytes(UTF_8)));
 
     PersonnelRecord.Children childrenSeq = new PersonnelRecord.Children();
     List<ChildInformation> childList = childrenSeq.getChildInformation();

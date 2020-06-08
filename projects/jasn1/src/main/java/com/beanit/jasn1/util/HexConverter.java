@@ -59,7 +59,7 @@ public class HexConverter {
    * @return the hex string
    */
   public static String toShortHexString(int i) {
-    byte[] bytes = new byte[] {(byte) (i >> 24), (byte) (i >> 16), (byte) (i >> 8), (byte) (i)};
+    byte[] bytes = new byte[] {(byte) (i >> 24), (byte) (i >> 16), (byte) (i >> 8), (byte) i};
     return toShortHexString(bytes);
   }
 
@@ -80,7 +80,7 @@ public class HexConverter {
           (byte) (l >> 24),
           (byte) (l >> 16),
           (byte) (l >> 8),
-          (byte) (l)
+          (byte) l
         };
     return toShortHexString(bytes);
   }

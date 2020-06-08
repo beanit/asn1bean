@@ -197,7 +197,7 @@ public class BerIntegerTest {
     assertEquals(-255, asn1Integer.value.intValue());
   }
 
-  public class IntegerUnivPrim extends BerInteger {
+  public static class IntegerUnivPrim extends BerInteger {
 
     // in the final version identifier needs to be static
     final BerTag identifier = new BerTag(BerTag.APPLICATION_CLASS, BerTag.PRIMITIVE, 2);

@@ -13,6 +13,8 @@
  */
 package com.beanit.jasn1.ber.types.string;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import com.beanit.jasn1.ber.BerLength;
 import com.beanit.jasn1.ber.BerTag;
 import com.beanit.jasn1.ber.internal.Util;
@@ -36,7 +38,7 @@ public class BerVisibleString implements Serializable, BerType {
   }
 
   public BerVisibleString(String valueAsString) {
-    value = valueAsString.getBytes();
+    value = valueAsString.getBytes(UTF_8);
   }
 
   @Override
@@ -86,6 +88,6 @@ public class BerVisibleString implements Serializable, BerType {
 
   @Override
   public String toString() {
-    return new String(value);
+    return new String(value, UTF_8);
   }
 }

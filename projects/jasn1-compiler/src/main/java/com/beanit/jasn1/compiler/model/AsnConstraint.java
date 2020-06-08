@@ -18,7 +18,7 @@ import java.util.List;
 
 public class AsnConstraint {
 
-  public List<String> tokens = new ArrayList();
+  public List<String> tokens = new ArrayList<>();
 
   public ElementSetSpec addElemSetSpec;
   public AsnDefinedValue definedValue;

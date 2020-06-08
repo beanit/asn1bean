@@ -13,6 +13,8 @@
  */
 package com.beanit.jasn1.compiler;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import com.beanit.jasn1.ber.BerTag;
 import com.beanit.jasn1.ber.types.BerObjectIdentifier;
 import com.beanit.jasn1.compiler.model.AsnAny;
@@ -46,8 +48,9 @@ import com.beanit.jasn1.compiler.model.SymbolsFromModule;
 import com.beanit.jasn1.util.HexConverter;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -391,7 +394,7 @@ public class BerClassWriter {
               oidComponents.add(4);
               return true;
           }
-
+          break;
         case 1:
           switch (token) {
             case "standard":
@@ -2417,7 +2420,8 @@ public class BerClassWriter {
     //noinspection ResultOfMethodCallIgnored
     outputDirectory.mkdirs();
 
-    FileWriter fileWriter = new FileWriter(new File(outputDirectory, typeName + ".java"));
+    Writer fileWriter =
+        Files.newBufferedWriter(new File(outputDirectory, typeName + ".java").toPath(), UTF_8);
     out = new BufferedWriter(fileWriter);
 
     String versionString = "";

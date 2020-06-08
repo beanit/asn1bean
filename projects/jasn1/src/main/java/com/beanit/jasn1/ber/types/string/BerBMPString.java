@@ -13,6 +13,8 @@
  */
 package com.beanit.jasn1.ber.types.string;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import com.beanit.jasn1.ber.BerTag;
 import com.beanit.jasn1.ber.types.BerOctetString;
 import java.io.IOException;
@@ -33,7 +35,7 @@ public class BerBMPString extends BerOctetString {
 
   @Override
   public String toString() {
-    return new String(value);
+    return new String(value, UTF_8);
   }
 
   @Override

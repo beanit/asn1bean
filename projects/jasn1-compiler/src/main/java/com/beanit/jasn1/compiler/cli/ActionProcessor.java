@@ -15,6 +15,7 @@ package com.beanit.jasn1.compiler.cli;
 
 import static java.lang.System.exit;
 import static java.lang.System.out;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,7 +36,7 @@ public class ActionProcessor {
   private volatile boolean closed = false;
 
   public ActionProcessor(ActionListener actionListener) {
-    reader = new BufferedReader(new InputStreamReader(System.in));
+    reader = new BufferedReader(new InputStreamReader(System.in, UTF_8));
     this.actionListener = actionListener;
   }
 

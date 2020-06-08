@@ -60,7 +60,7 @@ public class BerBitString implements Serializable, BerType {
     this.value = new byte[(numBits + 7) / 8];
     for (int i = 0; i < numBits; i++) {
       if (value[i]) {
-        this.value[i / 8] |= (1 << (7 - (i % 8)));
+        this.value[i / 8] = (byte) (this.value[i / 8] | (1 << (7 - (i % 8))));
       }
     }
   }

@@ -13,6 +13,7 @@
  */
 package com.beanit.jasn1.compiler;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.beanit.jasn1.ber.ReverseByteArrayOutputStream;
@@ -46,7 +47,7 @@ public class ModulesTest {
 
     MyDate1 dateOfHire = new MyDate1();
     // MyDate1 dateOfHire = new MyDate1("19710917");
-    dateOfHire.value = new String("19710917").getBytes();
+    dateOfHire.value = new String("19710917").getBytes(UTF_8);
 
     dateOfHire.encode(berOS, true);
 
@@ -63,22 +64,22 @@ public class ModulesTest {
     PersonnelRecord pr = new PersonnelRecord();
 
     Name name = new Name();
-    name.setGivenName(new BerVisibleString("givenName".getBytes()));
-    name.setFamilyName(new BerVisibleString("familyName".getBytes()));
-    name.setInitial(new BerVisibleString("initial".getBytes()));
+    name.setGivenName(new BerVisibleString("givenName".getBytes(UTF_8)));
+    name.setFamilyName(new BerVisibleString("familyName".getBytes(UTF_8)));
+    name.setInitial(new BerVisibleString("initial".getBytes(UTF_8)));
     pr.setName(name);
 
-    pr.setTitle(new BerVisibleString("title".getBytes()));
+    pr.setTitle(new BerVisibleString("title".getBytes(UTF_8)));
 
     pr.setNumber(new EmployeeNumberZ(1));
 
-    pr.setDateOfHire(new Date("23121981".getBytes()));
+    pr.setDateOfHire(new Date("23121981".getBytes(UTF_8)));
 
     pr.setNameOfSpouse(name);
 
     ChildInformation child = new ChildInformation();
-    child.setName(new Name("child name".getBytes()));
-    child.setDateOfBirth(new Date("12121912".getBytes()));
+    child.setName(new Name("child name".getBytes(UTF_8)));
+    child.setDateOfBirth(new Date("12121912".getBytes(UTF_8)));
 
     PersonnelRecord.Children children = new PersonnelRecord.Children();
     List<ChildInformation> childInformation = children.getChildInformation();
