@@ -52,7 +52,7 @@ public class TaggedChoice implements BerType, Serializable {
 		return myBoolean;
 	}
 
-	public int encode(OutputStream reverseOS) throws IOException {
+	@Override public int encode(OutputStream reverseOS) throws IOException {
 		return encode(reverseOS, true);
 	}
 
@@ -90,7 +90,7 @@ public class TaggedChoice implements BerType, Serializable {
 		throw new IOException("Error encoding CHOICE: No element of CHOICE was selected.");
 	}
 
-	public int decode(InputStream is) throws IOException {
+	@Override public int decode(InputStream is) throws IOException {
 		return decode(is, true);
 	}
 
@@ -127,7 +127,7 @@ public class TaggedChoice implements BerType, Serializable {
 		code = reverseOS.getArray();
 	}
 
-	public String toString() {
+	@Override public String toString() {
 		StringBuilder sb = new StringBuilder();
 		appendAsString(sb, 0);
 		return sb.toString();

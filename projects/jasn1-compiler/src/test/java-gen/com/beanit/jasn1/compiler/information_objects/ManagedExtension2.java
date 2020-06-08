@@ -19,7 +19,7 @@ import com.beanit.jasn1.ber.types.*;
 import com.beanit.jasn1.ber.types.string.*;
 
 
-public class ManagedExtension2 implements Serializable {
+public class ManagedExtension2 implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -61,7 +61,7 @@ public class ManagedExtension2 implements Serializable {
 		return information;
 	}
 
-	public int encode(OutputStream reverseOS) throws IOException {
+	@Override public int encode(OutputStream reverseOS) throws IOException {
 		return encode(reverseOS, true);
 	}
 
@@ -104,7 +104,7 @@ public class ManagedExtension2 implements Serializable {
 
 	}
 
-	public int decode(InputStream is) throws IOException {
+	@Override public int decode(InputStream is) throws IOException {
 		return decode(is, true);
 	}
 
@@ -172,7 +172,7 @@ public class ManagedExtension2 implements Serializable {
 		code = reverseOS.getArray();
 	}
 
-	public String toString() {
+	@Override public String toString() {
 		StringBuilder sb = new StringBuilder();
 		appendAsString(sb, 0);
 		return sb.toString();

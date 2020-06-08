@@ -34,7 +34,7 @@ public class TaggedAny extends BerAny {
 		super(value);
 	}
 
-	public int encode(OutputStream reverseOS) throws IOException {
+	@Override public int encode(OutputStream reverseOS) throws IOException {
 		return encode(reverseOS, true);
 	}
 
@@ -51,7 +51,7 @@ public class TaggedAny extends BerAny {
 		return codeLength;
 	}
 
-	public int decode(InputStream is) throws IOException {
+	@Override public int decode(InputStream is) throws IOException {
 		return decode(is, true);
 	}
 

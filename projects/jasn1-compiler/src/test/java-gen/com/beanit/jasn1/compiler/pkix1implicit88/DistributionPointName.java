@@ -45,7 +45,7 @@ public class DistributionPointName implements BerType, Serializable {
 		this.nameRelativeToCRLIssuer = nameRelativeToCRLIssuer;
 	}
 
-	public int encode(OutputStream reverseOS) throws IOException {
+	@Override public int encode(OutputStream reverseOS) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
@@ -74,7 +74,7 @@ public class DistributionPointName implements BerType, Serializable {
 		throw new IOException("Error encoding CHOICE: No element of CHOICE was selected.");
 	}
 
-	public int decode(InputStream is) throws IOException {
+	@Override public int decode(InputStream is) throws IOException {
 		return decode(is, null);
 	}
 
@@ -113,7 +113,7 @@ public class DistributionPointName implements BerType, Serializable {
 		code = reverseOS.getArray();
 	}
 
-	public String toString() {
+	@Override public String toString() {
 		StringBuilder sb = new StringBuilder();
 		appendAsString(sb, 0);
 		return sb.toString();

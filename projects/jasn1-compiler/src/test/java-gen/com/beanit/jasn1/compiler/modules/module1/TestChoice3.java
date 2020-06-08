@@ -37,7 +37,7 @@ public class TestChoice3 extends TestChoice2 {
 		super(code);
 	}
 
-	public int encode(OutputStream reverseOS) throws IOException {
+	@Override public int encode(OutputStream reverseOS) throws IOException {
 		return encode(reverseOS, true);
 	}
 
@@ -64,7 +64,7 @@ public class TestChoice3 extends TestChoice2 {
 		return codeLength;
 	}
 
-	public int decode(InputStream is) throws IOException {
+	@Override public int decode(InputStream is) throws IOException {
 		return decode(is, true);
 	}
 

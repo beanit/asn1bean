@@ -37,7 +37,7 @@ public class TestChoice4 extends TestChoice3 {
 		super(code);
 	}
 
-	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
+	@Override public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
@@ -60,7 +60,7 @@ public class TestChoice4 extends TestChoice3 {
 		return codeLength;
 	}
 
-	public int decode(InputStream is, boolean withTag) throws IOException {
+	@Override public int decode(InputStream is, boolean withTag) throws IOException {
 
 		int codeLength = 0;
 

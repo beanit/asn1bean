@@ -19,7 +19,7 @@ import com.beanit.jasn1.ber.types.*;
 import com.beanit.jasn1.ber.types.string.*;
 
 
-public class Item implements Serializable {
+public class Item implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -97,7 +97,7 @@ public class Item implements Serializable {
 		return isTaxable;
 	}
 
-	public int encode(OutputStream reverseOS) throws IOException {
+	@Override public int encode(OutputStream reverseOS) throws IOException {
 		return encode(reverseOS, true);
 	}
 
@@ -138,7 +138,7 @@ public class Item implements Serializable {
 
 	}
 
-	public int decode(InputStream is) throws IOException {
+	@Override public int decode(InputStream is) throws IOException {
 		return decode(is, true);
 	}
 
@@ -241,7 +241,7 @@ public class Item implements Serializable {
 		code = reverseOS.getArray();
 	}
 
-	public String toString() {
+	@Override public String toString() {
 		StringBuilder sb = new StringBuilder();
 		appendAsString(sb, 0);
 		return sb.toString();

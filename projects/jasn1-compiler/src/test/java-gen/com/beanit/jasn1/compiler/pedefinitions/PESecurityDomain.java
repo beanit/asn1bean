@@ -43,7 +43,7 @@ public class PESecurityDomain implements BerType, Serializable {
 			this.seqOf = seqOf;
 		}
 
-		public int encode(OutputStream reverseOS) throws IOException {
+		@Override public int encode(OutputStream reverseOS) throws IOException {
 			return encode(reverseOS, true);
 		}
 
@@ -73,7 +73,7 @@ public class PESecurityDomain implements BerType, Serializable {
 			return codeLength;
 		}
 
-		public int decode(InputStream is) throws IOException {
+		@Override public int decode(InputStream is) throws IOException {
 			return decode(is, true);
 		}
 
@@ -117,7 +117,7 @@ public class PESecurityDomain implements BerType, Serializable {
 			code = reverseOS.getArray();
 		}
 
-		public String toString() {
+		@Override public String toString() {
 			StringBuilder sb = new StringBuilder();
 			appendAsString(sb, 0);
 			return sb.toString();
@@ -175,7 +175,7 @@ public class PESecurityDomain implements BerType, Serializable {
 			this.seqOf = seqOf;
 		}
 
-		public int encode(OutputStream reverseOS) throws IOException {
+		@Override public int encode(OutputStream reverseOS) throws IOException {
 			return encode(reverseOS, true);
 		}
 
@@ -205,7 +205,7 @@ public class PESecurityDomain implements BerType, Serializable {
 			return codeLength;
 		}
 
-		public int decode(InputStream is) throws IOException {
+		@Override public int decode(InputStream is) throws IOException {
 			return decode(is, true);
 		}
 
@@ -249,7 +249,7 @@ public class PESecurityDomain implements BerType, Serializable {
 			code = reverseOS.getArray();
 		}
 
-		public String toString() {
+		@Override public String toString() {
 			StringBuilder sb = new StringBuilder();
 			appendAsString(sb, 0);
 			return sb.toString();
@@ -309,7 +309,7 @@ public class PESecurityDomain implements BerType, Serializable {
 			this.contactlessProtocolParameters = contactlessProtocolParameters;
 		}
 
-		public int encode(OutputStream reverseOS) throws IOException {
+		@Override public int encode(OutputStream reverseOS) throws IOException {
 			return encode(reverseOS, true);
 		}
 
@@ -347,7 +347,7 @@ public class PESecurityDomain implements BerType, Serializable {
 
 		}
 
-		public int decode(InputStream is) throws IOException {
+		@Override public int decode(InputStream is) throws IOException {
 			return decode(is, true);
 		}
 
@@ -404,7 +404,7 @@ public class PESecurityDomain implements BerType, Serializable {
 			code = reverseOS.getArray();
 		}
 
-		public String toString() {
+		@Override public String toString() {
 			StringBuilder sb = new StringBuilder();
 			appendAsString(sb, 0);
 			return sb.toString();
@@ -465,7 +465,7 @@ public class PESecurityDomain implements BerType, Serializable {
 			this.catTpMaxPduSize = catTpMaxPduSize;
 		}
 
-		public int encode(OutputStream reverseOS) throws IOException {
+		@Override public int encode(OutputStream reverseOS) throws IOException {
 			return encode(reverseOS, true);
 		}
 
@@ -502,7 +502,7 @@ public class PESecurityDomain implements BerType, Serializable {
 
 		}
 
-		public int decode(InputStream is) throws IOException {
+		@Override public int decode(InputStream is) throws IOException {
 			return decode(is, true);
 		}
 
@@ -559,7 +559,7 @@ public class PESecurityDomain implements BerType, Serializable {
 			code = reverseOS.getArray();
 		}
 
-		public String toString() {
+		@Override public String toString() {
 			StringBuilder sb = new StringBuilder();
 			appendAsString(sb, 0);
 			return sb.toString();
@@ -625,7 +625,7 @@ public class PESecurityDomain implements BerType, Serializable {
 		this.catTpParameters = catTpParameters;
 	}
 
-	public int encode(OutputStream reverseOS) throws IOException {
+	@Override public int encode(OutputStream reverseOS) throws IOException {
 		return encode(reverseOS, true);
 	}
 
@@ -690,7 +690,7 @@ public class PESecurityDomain implements BerType, Serializable {
 
 	}
 
-	public int decode(InputStream is) throws IOException {
+	@Override public int decode(InputStream is) throws IOException {
 		return decode(is, true);
 	}
 
@@ -783,7 +783,7 @@ public class PESecurityDomain implements BerType, Serializable {
 		code = reverseOS.getArray();
 	}
 
-	public String toString() {
+	@Override public String toString() {
 		StringBuilder sb = new StringBuilder();
 		appendAsString(sb, 0);
 		return sb.toString();

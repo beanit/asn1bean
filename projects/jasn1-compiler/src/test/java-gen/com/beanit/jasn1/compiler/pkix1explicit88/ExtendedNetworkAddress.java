@@ -46,7 +46,7 @@ public class ExtendedNetworkAddress implements BerType, Serializable {
 			this.subAddress = subAddress;
 		}
 
-		public int encode(OutputStream reverseOS) throws IOException {
+		@Override public int encode(OutputStream reverseOS) throws IOException {
 			return encode(reverseOS, true);
 		}
 
@@ -85,7 +85,7 @@ public class ExtendedNetworkAddress implements BerType, Serializable {
 
 		}
 
-		public int decode(InputStream is) throws IOException {
+		@Override public int decode(InputStream is) throws IOException {
 			return decode(is, true);
 		}
 
@@ -142,7 +142,7 @@ public class ExtendedNetworkAddress implements BerType, Serializable {
 			code = reverseOS.getArray();
 		}
 
-		public String toString() {
+		@Override public String toString() {
 			StringBuilder sb = new StringBuilder();
 			appendAsString(sb, 0);
 			return sb.toString();
@@ -194,7 +194,7 @@ public class ExtendedNetworkAddress implements BerType, Serializable {
 		this.psapAddress = psapAddress;
 	}
 
-	public int encode(OutputStream reverseOS) throws IOException {
+	@Override public int encode(OutputStream reverseOS) throws IOException {
 
 		if (code != null) {
 			for (int i = code.length - 1; i >= 0; i--) {
@@ -220,7 +220,7 @@ public class ExtendedNetworkAddress implements BerType, Serializable {
 		throw new IOException("Error encoding CHOICE: No element of CHOICE was selected.");
 	}
 
-	public int decode(InputStream is) throws IOException {
+	@Override public int decode(InputStream is) throws IOException {
 		return decode(is, null);
 	}
 
@@ -259,7 +259,7 @@ public class ExtendedNetworkAddress implements BerType, Serializable {
 		code = reverseOS.getArray();
 	}
 
-	public String toString() {
+	@Override public String toString() {
 		StringBuilder sb = new StringBuilder();
 		appendAsString(sb, 0);
 		return sb.toString();

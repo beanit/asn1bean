@@ -130,14 +130,9 @@ public class BerClassWriter {
       String outputBaseDir,
       String basePackageName,
       boolean jaxbMode,
-      boolean disableBerTypeInterface,
       boolean disableWritingVersion) {
     this.jaxbMode = jaxbMode;
     this.outputBaseDir = new File(outputBaseDir);
-
-    if (disableBerTypeInterface) {
-      berTypeInterfaceString = "";
-    }
 
     insertVersion = !disableWritingVersion;
 
@@ -895,13 +890,13 @@ public class BerClassWriter {
   }
 
   private void writeSimpleDecodeFunction(String param) throws IOException {
-    write("public int decode(InputStream is) throws IOException {");
+    write("@Override public int decode(InputStream is) throws IOException {");
     write("return decode(is, " + param + ");");
     write("}\n");
   }
 
   private void writeSimpleEncodeFunction() throws IOException {
-    write("public int encode(OutputStream reverseOS) throws IOException {");
+    write("@Override public int encode(OutputStream reverseOS) throws IOException {");
     write("return encode(reverseOS, true);");
     write("}\n");
   }
@@ -1056,11 +1051,15 @@ public class BerClassWriter {
 
     if (tag != null) {
 
+      String overrideAnnotationString = "@Override ";
       if (isDirectAnyOrChoice((AsnTaggedType) typeDefinition)) {
         writeSimpleEncodeFunction();
+        overrideAnnotationString = "";
       }
 
-      write("public int encode(OutputStream reverseOS, boolean withTag) throws IOException {\n");
+      write(
+          overrideAnnotationString
+              + "public int encode(OutputStream reverseOS, boolean withTag) throws IOException {\n");
 
       if (constructorParameters.length != 2 || !constructorParameters[0].equals("byte[]")) {
         write("if (code != null) {");
@@ -1098,7 +1097,9 @@ public class BerClassWriter {
         writeSimpleDecodeFunction("true");
       }
 
-      write("public int decode(InputStream is, boolean withTag) throws IOException {\n");
+      write(
+          overrideAnnotationString
+              + "public int decode(InputStream is, boolean withTag) throws IOException {\n");
 
       write("int codeLength = 0;\n");
 
@@ -1133,7 +1134,7 @@ public class BerClassWriter {
       writeSimpleEncodeFunction();
       write("public int encode(OutputStream reverseOS, boolean withTag) throws IOException {\n");
     } else {
-      write("public int encode(OutputStream reverseOS) throws IOException {\n");
+      write("@Override public int encode(OutputStream reverseOS) throws IOException {\n");
     }
 
     write("if (code != null) {");
@@ -1818,7 +1819,7 @@ public class BerClassWriter {
   }
 
   private void writeToStringFunction() throws IOException {
-    write("public String toString() {");
+    write("@Override public String toString() {");
     write("StringBuilder sb = new StringBuilder();");
     write("appendAsString(sb, 0);");
     write("return sb.toString();");

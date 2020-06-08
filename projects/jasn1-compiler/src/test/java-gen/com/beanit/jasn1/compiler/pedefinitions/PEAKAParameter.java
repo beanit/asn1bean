@@ -43,7 +43,7 @@ public class PEAKAParameter implements BerType, Serializable {
 			this.algoParameter = algoParameter;
 		}
 
-		public int encode(OutputStream reverseOS) throws IOException {
+		@Override public int encode(OutputStream reverseOS) throws IOException {
 
 			if (code != null) {
 				for (int i = code.length - 1; i >= 0; i--) {
@@ -72,7 +72,7 @@ public class PEAKAParameter implements BerType, Serializable {
 			throw new IOException("Error encoding CHOICE: No element of CHOICE was selected.");
 		}
 
-		public int decode(InputStream is) throws IOException {
+		@Override public int decode(InputStream is) throws IOException {
 			return decode(is, null);
 		}
 
@@ -111,7 +111,7 @@ public class PEAKAParameter implements BerType, Serializable {
 			code = reverseOS.getArray();
 		}
 
-		public String toString() {
+		@Override public String toString() {
 			StringBuilder sb = new StringBuilder();
 			appendAsString(sb, 0);
 			return sb.toString();
@@ -156,7 +156,7 @@ public class PEAKAParameter implements BerType, Serializable {
 			this.seqOf = seqOf;
 		}
 
-		public int encode(OutputStream reverseOS) throws IOException {
+		@Override public int encode(OutputStream reverseOS) throws IOException {
 			return encode(reverseOS, true);
 		}
 
@@ -186,7 +186,7 @@ public class PEAKAParameter implements BerType, Serializable {
 			return codeLength;
 		}
 
-		public int decode(InputStream is) throws IOException {
+		@Override public int decode(InputStream is) throws IOException {
 			return decode(is, true);
 		}
 
@@ -230,7 +230,7 @@ public class PEAKAParameter implements BerType, Serializable {
 			code = reverseOS.getArray();
 		}
 
-		public String toString() {
+		@Override public String toString() {
 			StringBuilder sb = new StringBuilder();
 			appendAsString(sb, 0);
 			return sb.toString();
@@ -294,7 +294,7 @@ public class PEAKAParameter implements BerType, Serializable {
 		this.sqnInit = sqnInit;
 	}
 
-	public int encode(OutputStream reverseOS) throws IOException {
+	@Override public int encode(OutputStream reverseOS) throws IOException {
 		return encode(reverseOS, true);
 	}
 
@@ -363,7 +363,7 @@ public class PEAKAParameter implements BerType, Serializable {
 
 	}
 
-	public int decode(InputStream is) throws IOException {
+	@Override public int decode(InputStream is) throws IOException {
 		return decode(is, true);
 	}
 
@@ -458,7 +458,7 @@ public class PEAKAParameter implements BerType, Serializable {
 		code = reverseOS.getArray();
 	}
 
-	public String toString() {
+	@Override public String toString() {
 		StringBuilder sb = new StringBuilder();
 		appendAsString(sb, 0);
 		return sb.toString();

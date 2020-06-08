@@ -45,7 +45,7 @@ public class PrepareDownloadResponseOk implements BerType, Serializable {
 		this.euiccSignature2 = euiccSignature2;
 	}
 
-	public int encode(OutputStream reverseOS) throws IOException {
+	@Override public int encode(OutputStream reverseOS) throws IOException {
 		return encode(reverseOS, true);
 	}
 
@@ -80,7 +80,7 @@ public class PrepareDownloadResponseOk implements BerType, Serializable {
 
 	}
 
-	public int decode(InputStream is) throws IOException {
+	@Override public int decode(InputStream is) throws IOException {
 		return decode(is, true);
 	}
 
@@ -137,7 +137,7 @@ public class PrepareDownloadResponseOk implements BerType, Serializable {
 		code = reverseOS.getArray();
 	}
 
-	public String toString() {
+	@Override public String toString() {
 		StringBuilder sb = new StringBuilder();
 		appendAsString(sb, 0);
 		return sb.toString();

@@ -32,7 +32,7 @@ public class ImplUTF8String extends BerUTF8String {
 		super(value);
 	}
 
-	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
+	@Override public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		int codeLength;
 
@@ -44,7 +44,7 @@ public class ImplUTF8String extends BerUTF8String {
 		return codeLength;
 	}
 
-	public int decode(InputStream is, boolean withTag) throws IOException {
+	@Override public int decode(InputStream is, boolean withTag) throws IOException {
 
 		int codeLength = 0;
 

@@ -48,12 +48,6 @@ public class Compiler {
                 "The base package name. Added to this will be a name generated from the module name.")
             .buildStringParameter("package_base_name", "");
 
-    FlagCliParameter disableBerTypeInterface =
-        new CliParameterBuilder("-di")
-            .setDescription(
-                "By default generated classes implement the BerType interface. Using this flag this behavior can be disabled.")
-            .buildFlagParameter();
-
     FlagCliParameter disableWritingVersion =
         new CliParameterBuilder("-dv")
             .setDescription(
@@ -76,7 +70,6 @@ public class Compiler {
     cliParameters.add(asn1Files);
     cliParameters.add(outputBaseDir);
     cliParameters.add(basePackageName);
-    cliParameters.add(disableBerTypeInterface);
     cliParameters.add(disableWritingVersion);
     cliParameters.add(legacyMode);
 
@@ -111,7 +104,6 @@ public class Compiler {
             outputBaseDir.getValue(),
             basePackageName.getValue(),
             !legacyMode.isSelected(),
-            disableBerTypeInterface.isSelected(),
             disableWritingVersion.isSelected());
 
     classWriter.translate();

@@ -167,8 +167,7 @@ public class CompileTest {
           "-p",
           rootPackageName,
           "-f",
-          "src/test/resources/information-object-class.asn",
-          "-di"
+          "src/test/resources/information-object-class.asn"
         };
     Compiler.main(args);
   }

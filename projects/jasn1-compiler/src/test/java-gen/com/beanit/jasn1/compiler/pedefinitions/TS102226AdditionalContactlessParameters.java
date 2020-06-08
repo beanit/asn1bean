@@ -39,7 +39,7 @@ public class TS102226AdditionalContactlessParameters implements BerType, Seriali
 		this.protocolParameterData = protocolParameterData;
 	}
 
-	public int encode(OutputStream reverseOS) throws IOException {
+	@Override public int encode(OutputStream reverseOS) throws IOException {
 		return encode(reverseOS, true);
 	}
 
@@ -71,7 +71,7 @@ public class TS102226AdditionalContactlessParameters implements BerType, Seriali
 
 	}
 
-	public int decode(InputStream is) throws IOException {
+	@Override public int decode(InputStream is) throws IOException {
 		return decode(is, true);
 	}
 
@@ -119,7 +119,7 @@ public class TS102226AdditionalContactlessParameters implements BerType, Seriali
 		code = reverseOS.getArray();
 	}
 
-	public String toString() {
+	@Override public String toString() {
 		StringBuilder sb = new StringBuilder();
 		appendAsString(sb, 0);
 		return sb.toString();

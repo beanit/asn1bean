@@ -34,7 +34,7 @@ public class RetaggedUntaggedChoice extends UntaggedChoice {
 		super(code);
 	}
 
-	public int encode(OutputStream reverseOS) throws IOException {
+	@Override public int encode(OutputStream reverseOS) throws IOException {
 		return encode(reverseOS, true);
 	}
 
@@ -61,7 +61,7 @@ public class RetaggedUntaggedChoice extends UntaggedChoice {
 		return codeLength;
 	}
 
-	public int decode(InputStream is) throws IOException {
+	@Override public int decode(InputStream is) throws IOException {
 		return decode(is, true);
 	}
 

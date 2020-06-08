@@ -32,7 +32,7 @@ public class Datez2 extends BerVisibleString {
 		super(value);
 	}
 
-	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
+	@Override public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		int codeLength;
 
@@ -44,7 +44,7 @@ public class Datez2 extends BerVisibleString {
 		return codeLength;
 	}
 
-	public int decode(InputStream is, boolean withTag) throws IOException {
+	@Override public int decode(InputStream is, boolean withTag) throws IOException {
 
 		int codeLength = 0;
 
