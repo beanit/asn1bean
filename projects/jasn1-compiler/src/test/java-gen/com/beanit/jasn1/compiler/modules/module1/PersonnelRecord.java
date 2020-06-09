@@ -56,9 +56,7 @@ public class PersonnelRecord implements BerType, Serializable {
 		public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 			if (code != null) {
-				for (int i = code.length - 1; i >= 0; i--) {
-					reverseOS.write(code[i]);
-				}
+				reverseOS.write(code);
 				if (withTag) {
 					return tag.encode(reverseOS) + code.length;
 				}
@@ -186,9 +184,7 @@ public class PersonnelRecord implements BerType, Serializable {
 		@Override public int encode(OutputStream reverseOS) throws IOException {
 
 			if (code != null) {
-				for (int i = code.length - 1; i >= 0; i--) {
-					reverseOS.write(code[i]);
-				}
+				reverseOS.write(code);
 				return code.length;
 			}
 
@@ -296,9 +292,7 @@ public class PersonnelRecord implements BerType, Serializable {
 			public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 				if (code != null) {
-					for (int i = code.length - 1; i >= 0; i--) {
-						reverseOS.write(code[i]);
-					}
+					reverseOS.write(code);
 					if (withTag) {
 						return tag.encode(reverseOS) + code.length;
 					}
@@ -443,9 +437,7 @@ public class PersonnelRecord implements BerType, Serializable {
 		public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 			if (code != null) {
-				for (int i = code.length - 1; i >= 0; i--) {
-					reverseOS.write(code[i]);
-				}
+				reverseOS.write(code);
 				if (withTag) {
 					return tag.encode(reverseOS) + code.length;
 				}
@@ -728,9 +720,7 @@ public class PersonnelRecord implements BerType, Serializable {
 	public int encode(OutputStream reverseOS, boolean withTag) throws IOException {
 
 		if (code != null) {
-			for (int i = code.length - 1; i >= 0; i--) {
-				reverseOS.write(code[i]);
-			}
+			reverseOS.write(code);
 			if (withTag) {
 				return tag.encode(reverseOS) + code.length;
 			}

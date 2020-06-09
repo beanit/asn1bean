@@ -58,9 +58,7 @@ public class ChoiceOfDirectTypes implements BerType, Serializable {
 		@Override public int encode(OutputStream reverseOS) throws IOException {
 
 			if (code != null) {
-				for (int i = code.length - 1; i >= 0; i--) {
-					reverseOS.write(code[i]);
-				}
+				reverseOS.write(code);
 				return code.length;
 			}
 
@@ -180,9 +178,7 @@ public class ChoiceOfDirectTypes implements BerType, Serializable {
 		@Override public int encode(OutputStream reverseOS) throws IOException {
 
 			if (code != null) {
-				for (int i = code.length - 1; i >= 0; i--) {
-					reverseOS.write(code[i]);
-				}
+				reverseOS.write(code);
 				return code.length;
 			}
 
@@ -302,9 +298,7 @@ public class ChoiceOfDirectTypes implements BerType, Serializable {
 		@Override public int encode(OutputStream reverseOS) throws IOException {
 
 			if (code != null) {
-				for (int i = code.length - 1; i >= 0; i--) {
-					reverseOS.write(code[i]);
-				}
+				reverseOS.write(code);
 				return code.length;
 			}
 
@@ -464,9 +458,7 @@ public class ChoiceOfDirectTypes implements BerType, Serializable {
 	@Override public int encode(OutputStream reverseOS) throws IOException {
 
 		if (code != null) {
-			for (int i = code.length - 1; i >= 0; i--) {
-				reverseOS.write(code[i]);
-			}
+			reverseOS.write(code);
 			return code.length;
 		}
 

@@ -1062,15 +1062,7 @@ public class BerClassWriter {
               + "public int encode(OutputStream reverseOS, boolean withTag) throws IOException {\n");
 
       if (constructorParameters.length != 2 || !constructorParameters[0].equals("byte[]")) {
-        write("if (code != null) {");
-        write("for (int i = code.length - 1; i >= 0; i--) {");
-        write("reverseOS.write(code[i]);");
-        write("}");
-        write("if (withTag) {");
-        write("return tag.encode(reverseOS) + code.length;");
-        write("}");
-        write("return code.length;");
-        write("}\n");
+        writeEncodingIfCodeIsNull();
       }
 
       write("int codeLength;\n");
@@ -1128,6 +1120,16 @@ public class BerClassWriter {
     write("}");
   }
 
+  private void writeEncodingIfCodeIsNull() throws IOException {
+    write("if (code != null) {");
+    write("reverseOS.write(code);");
+    write("if (withTag) {");
+    write("return tag.encode(reverseOS) + code.length;");
+    write("}");
+    write("return code.length;");
+    write("}\n");
+  }
+
   private void writeChoiceEncodeFunction(
       List<AsnElementType> componentTypes, boolean hasExplicitTag) throws IOException {
     if (hasExplicitTag) {
@@ -1138,9 +1140,7 @@ public class BerClassWriter {
     }
 
     write("if (code != null) {");
-    write("for (int i = code.length - 1; i >= 0; i--) {");
-    write("reverseOS.write(code[i]);");
-    write("}");
+    write("reverseOS.write(code);");
     if (hasExplicitTag) {
       write("if (withTag) {");
       write("return tag.encode(reverseOS) + code.length;");
@@ -1213,15 +1213,7 @@ public class BerClassWriter {
       throws IOException {
     write("public int encode(OutputStream reverseOS, boolean withTag) throws IOException {\n");
 
-    write("if (code != null) {");
-    write("for (int i = code.length - 1; i >= 0; i--) {");
-    write("reverseOS.write(code[i]);");
-    write("}");
-    write("if (withTag) {");
-    write("return tag.encode(reverseOS) + code.length;");
-    write("}");
-    write("return code.length;");
-    write("}\n");
+    writeEncodingIfCodeIsNull();
 
     write("int codeLength = 0;");
 
@@ -1297,15 +1289,7 @@ public class BerClassWriter {
       AsnElementType componentType, boolean hasExplicitTag, boolean isSequence) throws IOException {
     write("public int encode(OutputStream reverseOS, boolean withTag) throws IOException {\n");
 
-    write("if (code != null) {");
-    write("for (int i = code.length - 1; i >= 0; i--) {");
-    write("reverseOS.write(code[i]);");
-    write("}");
-    write("if (withTag) {");
-    write("return tag.encode(reverseOS) + code.length;");
-    write("}");
-    write("return code.length;");
-    write("}\n");
+    writeEncodingIfCodeIsNull();
 
     write("int codeLength = 0;");
 
