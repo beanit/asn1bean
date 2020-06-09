@@ -285,7 +285,7 @@ public class BerClassWriter {
   }
 
   private String moduleToPackageName(String moduleName) {
-    String[] moduleParts = moduleName.split("-");
+    String[] moduleParts = moduleName.split("-", -1);
     StringBuilder packageName = new StringBuilder();
     for (String part : moduleParts) {
       if (packageName.length() > 0) {

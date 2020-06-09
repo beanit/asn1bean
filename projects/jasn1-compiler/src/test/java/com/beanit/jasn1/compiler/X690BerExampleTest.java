@@ -13,6 +13,7 @@
  */
 package com.beanit.jasn1.compiler;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -81,11 +82,11 @@ public class X690BerExampleTest {
           (byte) 0x74,
           (byte) 0x68
         };
-    BerVisibleString title = new BerVisibleString("Director".getBytes("US-ASCII"));
+    BerVisibleString title = new BerVisibleString("Director".getBytes(UTF_8));
     // EmployeeNumber number = new EmployeeNumber(51);
     EmployeeNumber number = new EmployeeNumber();
     number.code = new byte[] {0x01, 0x33};
-    Date dateOfHire = new Date("19710917".getBytes());
+    Date dateOfHire = new Date("19710917".getBytes(UTF_8));
     Name nameOfSpouse = new Name();
     nameOfSpouse.setGivenName(new BerVisibleString("Mary"));
     nameOfSpouse.setInitial(new BerVisibleString("T"));
@@ -98,9 +99,9 @@ public class X690BerExampleTest {
 
     ChildInformation child1 = new ChildInformation();
     child1.setName(child1Name);
-    child1.setDateOfBirth(new Date("19571111".getBytes()));
+    child1.setDateOfBirth(new Date("19571111".getBytes(UTF_8)));
 
-    System.out.println("192: " + HexConverter.toShortHexString("19571111".getBytes()));
+    System.out.println("192: " + HexConverter.toShortHexString("19571111".getBytes(UTF_8)));
 
     child1.encodeAndSave(80);
 
@@ -187,7 +188,7 @@ public class X690BerExampleTest {
 
     ChildInformation child2 = new ChildInformation();
     child2.setName(child2Name);
-    child2.setDateOfBirth(new Date("19590717".getBytes()));
+    child2.setDateOfBirth(new Date("19590717".getBytes(UTF_8)));
 
     PersonnelRecord.Children childrenSeq = new PersonnelRecord.Children();
     List<ChildInformation> childList = childrenSeq.getChildInformation();
@@ -358,7 +359,7 @@ public class X690BerExampleTest {
     PersonnelRecord personnelRecord_decoded = new PersonnelRecord();
     personnelRecord_decoded.decode(bais, true);
 
-    assertEquals("John", new String(personnelRecord_decoded.getName().getGivenName().value));
+    assertEquals("John", new String(personnelRecord_decoded.getName().getGivenName().value, UTF_8));
 
     // System.out
     // .println("presentation_context_identifier= "
