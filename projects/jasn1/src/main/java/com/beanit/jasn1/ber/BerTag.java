@@ -37,7 +37,6 @@ public class BerTag implements Serializable {
   public static final int OBJECT_DESCRIPTOR_TAG = 7;
   public static final int REAL_TAG = 9;
   public static final int ENUMERATED_TAG = 10;
-  public static final int EMBEDDED_PDV_TAG = 11;
   public static final int UTF8_STRING_TAG = 12;
   public static final int TIME_TAG = 14;
   public static final int SEQUENCE_TAG = 16;

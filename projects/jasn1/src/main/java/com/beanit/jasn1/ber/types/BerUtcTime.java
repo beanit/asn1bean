@@ -83,14 +83,14 @@ public class BerUtcTime extends BerVisibleString {
     if (!matcher.find()) throw new ParseException("", 0);
 
     String mg;
-    int year = Integer.valueOf(matcher.group("year"));
-    int month = Integer.valueOf(matcher.group("month"));
+    int year = Integer.parseInt(matcher.group("year"));
+    int month = Integer.parseInt(matcher.group("month"));
     month -= 1; // java.util.Calendar's month goes from 0 to 11
-    int day = Integer.valueOf(matcher.group("day"));
-    int hour = Integer.valueOf(matcher.group("hour"));
-    int minute = Integer.valueOf(matcher.group("minute"));
+    int day = Integer.parseInt(matcher.group("day"));
+    int hour = Integer.parseInt(matcher.group("hour"));
+    int minute = Integer.parseInt(matcher.group("minute"));
     mg = matcher.group("second");
-    int second = mg == null ? 0 : Integer.valueOf(mg);
+    int second = mg == null ? 0 : Integer.parseInt(mg);
 
     mg = matcher.group("timezone");
     String timeZoneStr = mg.equals("Z") ? "UTC" : "GMT" + mg;

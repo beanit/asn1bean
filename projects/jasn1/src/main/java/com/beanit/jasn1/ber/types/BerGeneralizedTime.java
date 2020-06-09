@@ -87,16 +87,16 @@ public class BerGeneralizedTime extends BerVisibleString {
     }
 
     String mg, mgf;
-    int year = Integer.valueOf(matcher.group("year"));
-    int month = Integer.valueOf(matcher.group("month"));
+    int year = Integer.parseInt(matcher.group("year"));
+    int month = Integer.parseInt(matcher.group("month"));
     month -= 1; // java.util.Calendar's month goes from 0 to 11
-    int day = Integer.valueOf(matcher.group("day"));
-    int hour = Integer.valueOf(matcher.group("hour"));
+    int day = Integer.parseInt(matcher.group("day"));
+    int hour = Integer.parseInt(matcher.group("hour"));
 
     mg = matcher.group("minute");
     mgf = matcher.group("frac");
     int minute = 0, second = 0, millisec = 0;
-    double frac = mgf == null ? 0 : Double.valueOf("0." + mgf);
+    double frac = mgf == null ? 0 : Double.parseDouble("0." + mgf);
     if (mg == null) {
       // Missing minutes and seconds
       if (mgf != null) {
@@ -104,7 +104,7 @@ public class BerGeneralizedTime extends BerVisibleString {
         millisec = (int) Math.round(1000 * 60 * 60 * frac);
       }
     } else {
-      minute = Integer.valueOf(mg);
+      minute = Integer.parseInt(mg);
       mg = matcher.group("second");
       if (mg == null) {
         // Missing seconds
@@ -113,7 +113,7 @@ public class BerGeneralizedTime extends BerVisibleString {
           millisec = (int) Math.round(1000 * 60 * frac);
         }
       } else {
-        second = Integer.valueOf(mg);
+        second = Integer.parseInt(mg);
         if (mgf != null) {
           // frac is a fraction of a second
           millisec = (int) Math.round(1000 * frac);
