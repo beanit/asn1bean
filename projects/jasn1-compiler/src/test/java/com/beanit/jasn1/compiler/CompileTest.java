@@ -21,6 +21,7 @@ public class CompileTest {
   private static final String rootPackageName = "com.beanit.jasn1.compiler";
   String[] args;
 
+  // uncomment this test to regenerate BerEmbeddedPdv class:
   // @Test
   // public void testCompilingEmbeddedPdv() throws Exception {
   // args = new String[] { "-o", "../jasn1/src/main/java/", "-p", "com.beanit.jasn1.ber", "-f",
