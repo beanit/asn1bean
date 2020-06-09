@@ -46,8 +46,7 @@ public class ModulesTest {
     ReverseByteArrayOutputStream berOS = new ReverseByteArrayOutputStream(1000);
 
     MyDate1 dateOfHire = new MyDate1();
-    // MyDate1 dateOfHire = new MyDate1("19710917");
-    dateOfHire.value = new String("19710917").getBytes(UTF_8);
+    dateOfHire.value = "19710917".getBytes(UTF_8);
 
     dateOfHire.encode(berOS, true);
 
@@ -123,7 +122,5 @@ public class ModulesTest {
 
     BerEmbeddedPdv berEmbeddedPdv = new BerEmbeddedPdv();
     pr.setEmbeddedPdv(berEmbeddedPdv);
-
-    System.out.println("PersonnelRecord.toString():\n" + pr);
   }
 }

@@ -279,7 +279,6 @@ public class MobileTest {
     ReverseByteArrayOutputStream reverseOutputStream = new ReverseByteArrayOutputStream(2048, true);
     pukProfileElement.encode(reverseOutputStream);
     byte[] code = reverseOutputStream.getArray();
-    System.out.println(HexConverter.toShortHexString(code));
     ProfileElement rereadProfileElement = new ProfileElement();
     rereadProfileElement.decode(new ByteArrayInputStream(code), null);
     ReverseByteArrayOutputStream reverseOutputStream2 =
@@ -353,11 +352,9 @@ public class MobileTest {
     ReverseByteArrayOutputStream reverseOutputStream = new ReverseByteArrayOutputStream(2048, true);
     genericFileManagementProfileElement.encode(reverseOutputStream);
     byte[] code = reverseOutputStream.getArray();
-    System.out.println(HexConverter.toShortHexString(code));
     ProfileElement rereadProfileElement = new ProfileElement();
     rereadProfileElement.decode(new ByteArrayInputStream(code), null);
 
-    System.out.println("rereadProfileElement = " + rereadProfileElement);
     ReverseByteArrayOutputStream reverseOutputStream2 =
         new ReverseByteArrayOutputStream(2048, true);
     rereadProfileElement.encode(reverseOutputStream2);

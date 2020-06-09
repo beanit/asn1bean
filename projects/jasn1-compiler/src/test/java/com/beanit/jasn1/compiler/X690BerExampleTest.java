@@ -33,27 +33,6 @@ import org.junit.jupiter.api.Test;
 
 public class X690BerExampleTest {
 
-  public static String getByteArrayString(byte[] byteArray) {
-    StringBuilder builder = new StringBuilder();
-    int l = 1;
-    for (byte b : byteArray) {
-      if ((l != 1) && ((l - 1) % 8 == 0)) {
-        builder.append(' ');
-      }
-      if ((l != 1) && ((l - 1) % 16 == 0)) {
-        builder.append('\n');
-      }
-      l++;
-      builder.append("0x");
-      String hexString = Integer.toHexString(b & 0xff);
-      if (hexString.length() == 1) {
-        builder.append(0);
-      }
-      builder.append(hexString).append(" ");
-    }
-    return builder.toString();
-  }
-
   @Test
   public void encodingDecoding() throws IOException {
 
@@ -61,27 +40,7 @@ public class X690BerExampleTest {
 
     // Name name = new Name(new BerVisibleString("John"), new
     // BerVisibleString("P"), new BerVisibleString("Smith"));
-    Name name =
-        new Name(
-            new byte[] {
-              (byte) 0x10,
-              (byte) 0x1A,
-              (byte) 0x04,
-              (byte) 0x4a,
-              (byte) 0x6f,
-              (byte) 0x68,
-              (byte) 0x6e,
-              (byte) 0x1A,
-              (byte) 0x01,
-              (byte) 0x50,
-              (byte) 0x1A,
-              (byte) 0x05,
-              (byte) 0x53,
-              (byte) 0x6d,
-              (byte) 0x69,
-              (byte) 0x74,
-              (byte) 0x68
-            });
+    Name name = new Name(HexConverter.fromShortHexString("101A044a6f686e1A01501A05536d697468"));
     BerVisibleString title = new BerVisibleString("Director".getBytes(UTF_8));
     // EmployeeNumber number = new EmployeeNumber(51);
     EmployeeNumber number = new EmployeeNumber(new byte[] {0x01, 0x33});
@@ -99,8 +58,6 @@ public class X690BerExampleTest {
     ChildInformation child1 = new ChildInformation();
     child1.setName(child1Name);
     child1.setDateOfBirth(new Date("19571111".getBytes(UTF_8)));
-
-    System.out.println("192: " + HexConverter.toShortHexString("19571111".getBytes(UTF_8)));
 
     child1.encodeAndSave(80);
 
@@ -129,147 +86,8 @@ public class X690BerExampleTest {
     personnelRecord.encode(berOS, true);
 
     byte[] expectedBytes =
-        new byte[] {
-          (byte) 0x60,
-          (byte) 0x81,
-          (byte) 0x85,
-          (byte) 0x61,
-          (byte) 0x10,
-          (byte) 0x1A,
-          (byte) 0x04,
-          (byte) 0x4a,
-          (byte) 0x6f,
-          (byte) 0x68,
-          (byte) 0x6e,
-          (byte) 0x1A,
-          (byte) 0x01,
-          (byte) 0x50,
-          (byte) 0x1A,
-          (byte) 0x05,
-          (byte) 0x53,
-          (byte) 0x6d,
-          (byte) 0x69,
-          (byte) 0x74,
-          (byte) 0x68,
-          (byte) 0xa0,
-          (byte) 0x0a,
-          (byte) 0x1A,
-          (byte) 0x08,
-          (byte) 0x44,
-          (byte) 0x69,
-          (byte) 0x72,
-          (byte) 0x65,
-          (byte) 0x63,
-          (byte) 0x74,
-          (byte) 0x6f,
-          (byte) 0x72,
-          (byte) 0x42,
-          (byte) 0x01,
-          (byte) 0x33,
-          (byte) 0xa1,
-          (byte) 0x0a,
-          (byte) 0x43,
-          (byte) 0x08,
-          (byte) 0x31,
-          (byte) 0x39,
-          (byte) 0x37,
-          (byte) 0x31,
-          (byte) 0x30,
-          (byte) 0x39,
-          (byte) 0x31,
-          (byte) 0x37,
-          (byte) 0xa2,
-          (byte) 0x12,
-          (byte) 0x61,
-          (byte) 0x10,
-          (byte) 0x1A,
-          (byte) 0x04,
-          (byte) 0x4d,
-          (byte) 0x61,
-          (byte) 0x72,
-          (byte) 0x79,
-          (byte) 0x1A,
-          (byte) 0x01,
-          (byte) 0x54,
-          (byte) 0x1A,
-          (byte) 0x05,
-          (byte) 0x53,
-          (byte) 0x6d,
-          (byte) 0x69,
-          (byte) 0x74,
-          (byte) 0x68,
-          (byte) 0xa3,
-          (byte) 0x42,
-          (byte) 0x31,
-          (byte) 0x1f,
-          (byte) 0x61,
-          (byte) 0x11,
-          (byte) 0x1A,
-          (byte) 0x05,
-          (byte) 0x52,
-          (byte) 0x61,
-          (byte) 0x6c,
-          (byte) 0x70,
-          (byte) 0x68,
-          (byte) 0x1A,
-          (byte) 0x01,
-          (byte) 0x54,
-          (byte) 0x1A,
-          (byte) 0x05,
-          (byte) 0x53,
-          (byte) 0x6d,
-          (byte) 0x69,
-          (byte) 0x74,
-          (byte) 0x68,
-          (byte) 0xa0,
-          (byte) 0x0a,
-          (byte) 0x43,
-          (byte) 0x08,
-          (byte) 0x31,
-          (byte) 0x39,
-          (byte) 0x35,
-          (byte) 0x37,
-          (byte) 0x31,
-          (byte) 0x31,
-          (byte) 0x31,
-          (byte) 0x31,
-          (byte) 0x31,
-          (byte) 0x1f,
-          (byte) 0x61,
-          (byte) 0x11,
-          (byte) 0x1A,
-          (byte) 0x05,
-          (byte) 0x53,
-          (byte) 0x75,
-          (byte) 0x73,
-          (byte) 0x61,
-          (byte) 0x6e,
-          (byte) 0x1A,
-          (byte) 0x01,
-          (byte) 0x42,
-          (byte) 0x1A,
-          (byte) 0x05,
-          (byte) 0x4a,
-          (byte) 0x6f,
-          (byte) 0x6e,
-          (byte) 0x65,
-          (byte) 0x73,
-          (byte) 0xa0,
-          (byte) 0x0a,
-          (byte) 0x43,
-          (byte) 0x08,
-          (byte) 0x31,
-          (byte) 0x39,
-          (byte) 0x35,
-          (byte) 0x39,
-          (byte) 0x30,
-          (byte) 0x37,
-          (byte) 0x31,
-          (byte) 0x37
-        };
-
-    System.out.println("encoded structure:");
-    System.out.println(getByteArrayString(berOS.getArray()));
+        HexConverter.fromShortHexString(
+            "60818561101A044a6f686e1A01501A05536d697468a00a1A084469726563746f72420133a10a43083139373130393137a21261101A044d6172791A01541A05536d697468a342311f61111A0552616c70681A01541A05536d697468a00a43083139353731313131311f61111A05537573616e1A01421A054a6f6e6573a00a43083139353930373137");
 
     assertArrayEquals(expectedBytes, berOS.getArray());
 
@@ -283,11 +101,5 @@ public class X690BerExampleTest {
     personnelRecord_decoded.decode(bais, true);
 
     assertEquals("John", new String(personnelRecord_decoded.getName().getGivenName().value, UTF_8));
-
-    // System.out
-    // .println("presentation_context_identifier= "
-    // +
-    // cpType_decoded.normal_mode_parameters.presentation_context_definition_list.seqOf.get(0).abstract_syntax_name);
-
   }
 }

@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.beanit.jasn1.ber.ReverseByteArrayOutputStream;
 import com.beanit.jasn1.ber.types.BerAny;
@@ -185,8 +186,6 @@ public class TaggingTest {
     ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
     setOf.encode(os);
 
-    System.out.println("setOf : " + HexConverter.toShortHexString(os.getArray()));
-
     assertArrayEquals(HexConverter.fromShortHexString("BF21083106020103020104"), os.getArray());
 
     setOf = new ExplicitlyTaggedSetOf();
@@ -266,9 +265,8 @@ public class TaggingTest {
     assertEquals(1, sequence.getUntaggedInt().value.intValue());
     assertEquals(2, sequence.getExplicitlyTaggedInt().value.intValue());
     assertEquals(3, sequence.getImplicitlyTaggedInt().value.intValue());
-    assertEquals(true, untaggedChoice.getMyBoolean().value);
+    assertTrue(untaggedChoice.getMyBoolean().value);
     assertEquals(4, sequence.getTaggedChoice().getMyInteger().value.intValue());
-    System.out.println(HexConverter.toShortHexString(sequence.getTaggedAny().value));
     assertArrayEquals(HexConverter.fromShortHexString("020101"), sequence.getTaggedAny().value);
     assertNull(sequence.getUntaggedChoice2());
   }
@@ -286,9 +284,8 @@ public class TaggingTest {
     assertEquals(1, sequence.getUntaggedInt().value.intValue());
     assertEquals(2, sequence.getExplicitlyTaggedInt().value.intValue());
     assertEquals(3, sequence.getImplicitlyTaggedInt().value.intValue());
-    assertEquals(true, sequence.getUntaggedChoice().getMyBoolean().value);
+    assertTrue(sequence.getUntaggedChoice().getMyBoolean().value);
     assertEquals(4, sequence.getTaggedChoice().getMyInteger().value.intValue());
-    System.out.println(HexConverter.toShortHexString(sequence.getTaggedAny().value));
     assertArrayEquals(HexConverter.fromShortHexString("020101"), sequence.getTaggedAny().value);
     assertNull(sequence.getUntaggedChoice2());
   }
