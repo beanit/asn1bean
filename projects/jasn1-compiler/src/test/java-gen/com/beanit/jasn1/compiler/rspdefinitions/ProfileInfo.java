@@ -32,7 +32,7 @@ public class ProfileInfo implements BerType, Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		private byte[] code = null;
 		public List<NotificationConfigurationInformation> seqOf = null;
 
 		public NotificationConfigurationInfo() {
@@ -159,7 +159,7 @@ public class ProfileInfo implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.PRIVATE_CLASS, BerTag.CONSTRUCTED, 3);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public Iccid iccid = null;
 	public OctetTo16 isdpAid = null;
 	public ProfileState profileState = null;

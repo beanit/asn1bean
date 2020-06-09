@@ -25,8 +25,6 @@ public class TaggedAny extends BerAny {
 
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 7);
 
-	public byte[] code = null;
-
 	public TaggedAny() {
 	}
 

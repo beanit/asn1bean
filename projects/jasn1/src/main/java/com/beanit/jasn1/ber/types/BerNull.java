@@ -25,11 +25,8 @@ public class BerNull implements Serializable, BerType {
   public static final BerTag tag =
       new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.PRIMITIVE, BerTag.NULL_TAG);
   private static final long serialVersionUID = 1L;
-  public byte[] code = null;
 
   public BerNull() {}
-
-  public BerNull(byte[] code) {}
 
   @Override
   public int encode(OutputStream reverseOS) throws IOException {

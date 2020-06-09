@@ -31,7 +31,7 @@ public class DisableProfileRequest implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
-		public byte[] code = null;
+		private byte[] code = null;
 		public OctetTo16 isdpAid = null;
 		public Iccid iccid = null;
 		
@@ -135,7 +135,7 @@ public class DisableProfileRequest implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 50);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public ProfileIdentifier profileIdentifier = null;
 	public BerBoolean refreshFlag = null;
 	

@@ -27,7 +27,7 @@ public class PrepareDownloadResponse implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 33);
 
 	public PrepareDownloadResponseOk downloadResponseOk = null;

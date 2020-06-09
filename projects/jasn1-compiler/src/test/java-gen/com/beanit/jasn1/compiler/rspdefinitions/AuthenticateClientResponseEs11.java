@@ -27,7 +27,7 @@ public class AuthenticateClientResponseEs11 implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 64);
 
 	public AuthenticateClientOkEs11 authenticateClientOk = null;

@@ -29,7 +29,7 @@ public class DisplayText implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public BerIA5String ia5String = null;
 	public BerVisibleString visibleString = null;
 	public BerBMPString bmpString = null;

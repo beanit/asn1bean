@@ -25,7 +25,7 @@ public class PersonalName implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 17);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public BerPrintableString surname = null;
 	public BerPrintableString givenName = null;
 	public BerPrintableString initials = null;

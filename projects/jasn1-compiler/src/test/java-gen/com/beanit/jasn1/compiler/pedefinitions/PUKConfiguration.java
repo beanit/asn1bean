@@ -25,7 +25,7 @@ public class PUKConfiguration implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public PUKKeyReferenceValue keyReference = null;
 	public BerOctetString pukValue = null;
 	public UInt8 maxNumOfAttempsRetryNumLeft = null;

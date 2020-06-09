@@ -27,7 +27,7 @@ public class PEAKAParameter implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
-		public byte[] code = null;
+		private byte[] code = null;
 		public MappingParameter mappingParameter = null;
 		public AlgoParameter algoParameter = null;
 		
@@ -139,7 +139,7 @@ public class PEAKAParameter implements BerType, Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		private byte[] code = null;
 		public List<BerOctetString> seqOf = null;
 
 		public SqnInit() {
@@ -266,7 +266,7 @@ public class PEAKAParameter implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public PEHeader akaHeader = null;
 	public AlgoConfiguration algoConfiguration = null;
 	public BerOctetString sqnOptions = null;

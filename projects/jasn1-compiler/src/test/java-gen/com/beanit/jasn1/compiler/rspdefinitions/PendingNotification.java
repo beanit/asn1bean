@@ -27,7 +27,7 @@ public class PendingNotification implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public ProfileInstallationResult profileInstallationResult = null;
 	public OtherSignedNotification otherSignedNotification = null;
 	

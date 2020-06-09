@@ -33,7 +33,7 @@ public class TBSCertList implements BerType, Serializable {
 
 			public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-			public byte[] code = null;
+			private byte[] code = null;
 			public CertificateSerialNumber userCertificate = null;
 			public Time revocationDate = null;
 			public Extensions crlEntryExtensions = null;
@@ -202,7 +202,7 @@ public class TBSCertList implements BerType, Serializable {
 		}
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		private byte[] code = null;
 		public List<SEQUENCE> seqOf = null;
 
 		public RevokedCertificates() {
@@ -329,7 +329,7 @@ public class TBSCertList implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public Version version = null;
 	public AlgorithmIdentifier signature = null;
 	public Name issuer = null;

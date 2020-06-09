@@ -28,11 +28,13 @@ public class ChildInformation3 extends ChildInformation2 {
 
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 10);
 
+	private byte[] code = null;
+
 	public ChildInformation3() {
 	}
 
 	public ChildInformation3(byte[] code) {
-		super(code);
+		this.code = code;
 	}
 
 	@Override public int encode(OutputStream reverseOS, boolean withTag) throws IOException {

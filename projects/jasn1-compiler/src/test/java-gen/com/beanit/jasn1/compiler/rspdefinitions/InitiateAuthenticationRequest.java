@@ -29,7 +29,7 @@ public class InitiateAuthenticationRequest implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 57);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public Octet16 euiccChallenge = null;
 	public BerUTF8String smdpAddress = null;
 	public EUICCInfo1 euiccInfo1 = null;

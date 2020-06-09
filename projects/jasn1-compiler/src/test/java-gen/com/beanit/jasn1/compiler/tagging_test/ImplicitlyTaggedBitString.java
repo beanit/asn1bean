@@ -25,11 +25,13 @@ public class ImplicitlyTaggedBitString extends BerBitString {
 
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 33);
 
+	private byte[] code = null;
+
 	public ImplicitlyTaggedBitString() {
 	}
 
 	public ImplicitlyTaggedBitString(byte[] code) {
-		super(code);
+		this.code = code;
 	}
 
 	public ImplicitlyTaggedBitString(byte[] value, int numBits) {

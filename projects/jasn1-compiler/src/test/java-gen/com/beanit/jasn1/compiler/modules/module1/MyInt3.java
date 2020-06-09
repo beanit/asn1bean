@@ -28,11 +28,13 @@ public class MyInt3 extends MyInt2 {
 
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 4);
 
+	private byte[] code = null;
+
 	public MyInt3() {
 	}
 
 	public MyInt3(byte[] code) {
-		super(code);
+		this.code = code;
 	}
 
 	public MyInt3(BigInteger value) {

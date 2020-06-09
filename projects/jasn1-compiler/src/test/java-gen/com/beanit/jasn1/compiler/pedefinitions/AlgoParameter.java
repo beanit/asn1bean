@@ -25,7 +25,7 @@ public class AlgoParameter implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public BerInteger algorithmID = null;
 	public BerOctetString algorithmOptions = null;
 	public BerOctetString key = null;

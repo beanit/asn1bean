@@ -29,7 +29,7 @@ public class ISDRProprietaryApplicationTemplate implements BerType, Serializable
 
 	public static final BerTag tag = new BerTag(BerTag.PRIVATE_CLASS, BerTag.CONSTRUCTED, 0);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public VersionType svn = null;
 	public BerBitString lpaeSupport = null;
 	

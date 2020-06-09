@@ -25,7 +25,7 @@ public class Certificate implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public TBSCertificate tbsCertificate = null;
 	public AlgorithmIdentifier signatureAlgorithm = null;
 	public BerBitString signature = null;

@@ -26,7 +26,7 @@ public class Namezz implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.APPLICATION_CLASS, BerTag.CONSTRUCTED, 1);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	private BerVisibleString givenName = null;
 	private BerVisibleString initial = null;
 	private BerVisibleString familyName = null;

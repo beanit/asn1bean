@@ -29,7 +29,7 @@ public class HandleNotification implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 61);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public PendingNotification pendingNotification = null;
 	
 	public HandleNotification() {

@@ -28,7 +28,7 @@ public class PERFM implements BerType, Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		private byte[] code = null;
 		public List<BerOctetString> seqOf = null;
 
 		public TarList() {
@@ -155,7 +155,7 @@ public class PERFM implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public PEHeader rfmHeader = null;
 	public ApplicationIdentifier instanceAID = null;
 	public ApplicationIdentifier securityDomainAID = null;

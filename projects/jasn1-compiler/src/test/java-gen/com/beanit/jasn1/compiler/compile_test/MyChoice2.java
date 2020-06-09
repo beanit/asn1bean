@@ -23,12 +23,12 @@ public class MyChoice2 implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public static class Element1 implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
-		public byte[] code = null;
+		private byte[] code = null;
 		public BerInteger test = null;
 		
 		public Element1() {
@@ -113,7 +113,7 @@ public class MyChoice2 implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
-		public byte[] code = null;
+		private byte[] code = null;
 		public BerInteger test = null;
 		public BerBoolean test2 = null;
 		

@@ -29,7 +29,7 @@ public class EuiccConfiguredAddressesRequest implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 60);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	
 	public EuiccConfiguredAddressesRequest() {
 	}

@@ -29,7 +29,7 @@ public class UpdateMetadataRequest implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 42);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public BerUTF8String serviceProviderName = null;
 	public BerUTF8String profileName = null;
 	public IconType iconType = null;

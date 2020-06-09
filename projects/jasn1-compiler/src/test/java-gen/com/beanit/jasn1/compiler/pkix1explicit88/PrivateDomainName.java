@@ -23,7 +23,7 @@ public class PrivateDomainName implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public BerNumericString numeric = null;
 	public BerPrintableString printable = null;
 	

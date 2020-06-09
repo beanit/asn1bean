@@ -25,13 +25,13 @@ public class ExplicitlyTaggedInteger extends BerInteger {
 
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 33);
 
-	public byte[] code = null;
+	private byte[] code = null;
 
 	public ExplicitlyTaggedInteger() {
 	}
 
 	public ExplicitlyTaggedInteger(byte[] code) {
-		super(code);
+		this.code = code;
 	}
 
 	public ExplicitlyTaggedInteger(BigInteger value) {

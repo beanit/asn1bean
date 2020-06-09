@@ -28,7 +28,7 @@ public class PresentationAddress implements BerType, Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 17);
-		public byte[] code = null;
+		private byte[] code = null;
 		public List<BerOctetString> seqOf = null;
 
 		public NAddresses() {
@@ -155,7 +155,7 @@ public class PresentationAddress implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public BerOctetString pSelector = null;
 	public BerOctetString sSelector = null;
 	public BerOctetString tSelector = null;

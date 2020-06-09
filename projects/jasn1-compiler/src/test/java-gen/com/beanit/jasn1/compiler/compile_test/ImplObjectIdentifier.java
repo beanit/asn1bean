@@ -25,11 +25,13 @@ public class ImplObjectIdentifier extends BerObjectIdentifier {
 
 	public static final BerTag tag = new BerTag(BerTag.APPLICATION_CLASS, BerTag.PRIMITIVE, 3);
 
+	private byte[] code = null;
+
 	public ImplObjectIdentifier() {
 	}
 
 	public ImplObjectIdentifier(byte[] code) {
-		super(code);
+		this.code = code;
 	}
 
 	public ImplObjectIdentifier(int[] value) {

@@ -29,7 +29,7 @@ public class ReplaceSessionKeysRequest implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 38);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public BerOctetString initialMacChainingValue = null;
 	public BerOctetString ppkEnc = null;
 	public BerOctetString ppkCmac = null;

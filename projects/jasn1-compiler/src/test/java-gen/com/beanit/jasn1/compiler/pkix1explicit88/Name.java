@@ -23,7 +23,7 @@ public class Name implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public RDNSequence rdnSequence = null;
 	
 	public Name() {

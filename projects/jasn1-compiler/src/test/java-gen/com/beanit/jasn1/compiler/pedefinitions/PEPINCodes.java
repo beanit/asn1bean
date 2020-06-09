@@ -27,13 +27,13 @@ public class PEPINCodes implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
-		public byte[] code = null;
+		private byte[] code = null;
 		public static class Pinconfig implements BerType, Serializable {
 
 			private static final long serialVersionUID = 1L;
 
 			public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-			public byte[] code = null;
+			private byte[] code = null;
 			public List<PINConfiguration> seqOf = null;
 
 			public Pinconfig() {
@@ -265,7 +265,7 @@ public class PEPINCodes implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public PEHeader pinHeader = null;
 	public PinCodes pinCodes = null;
 	

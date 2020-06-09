@@ -26,7 +26,7 @@ public class BerEmbeddedPdv implements BerType, Serializable {
 
   public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 11);
   private static final long serialVersionUID = 1L;
-  public byte[] code = null;
+  private byte[] code = null;
   private Identification identification = null;
   private BerObjectDescriptor dataValueDescriptor = null;
   private BerOctetString dataValue = null;
@@ -213,7 +213,7 @@ public class BerEmbeddedPdv implements BerType, Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public byte[] code = null;
+    private byte[] code = null;
     private Syntaxes syntaxes = null;
     private BerObjectIdentifier syntax = null;
     private BerInteger presentationContextId = null;
@@ -447,7 +447,7 @@ public class BerEmbeddedPdv implements BerType, Serializable {
 
       public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
       private static final long serialVersionUID = 1L;
-      public byte[] code = null;
+      private byte[] code = null;
       private BerObjectIdentifier abstract_ = null;
       private BerObjectIdentifier transfer = null;
 
@@ -600,7 +600,7 @@ public class BerEmbeddedPdv implements BerType, Serializable {
 
       public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
       private static final long serialVersionUID = 1L;
-      public byte[] code = null;
+      private byte[] code = null;
       private BerInteger presentationContextId = null;
       private BerObjectIdentifier transferSyntax = null;
 

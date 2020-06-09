@@ -27,7 +27,7 @@ public class SequenceOfDirectTypes implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
-		public byte[] code = null;
+		private byte[] code = null;
 		private BerInteger myInteger = null;
 		private BerBoolean myBoolean = null;
 		
@@ -147,7 +147,7 @@ public class SequenceOfDirectTypes implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
-		public byte[] code = null;
+		private byte[] code = null;
 		private BerInteger myInteger = null;
 		private BerBoolean myBoolean = null;
 		
@@ -267,7 +267,7 @@ public class SequenceOfDirectTypes implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
-		public byte[] code = null;
+		private byte[] code = null;
 		private BerInteger myInteger = null;
 		private BerBoolean myBoolean = null;
 		
@@ -385,7 +385,7 @@ public class SequenceOfDirectTypes implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 43);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	private BerInteger untaggedInt = null;
 	private BerInteger explicitlyTaggedInt = null;
 	private BerInteger implicitlyTaggedInt = null;

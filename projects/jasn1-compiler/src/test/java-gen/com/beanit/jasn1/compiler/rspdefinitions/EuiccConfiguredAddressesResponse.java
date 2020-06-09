@@ -29,7 +29,7 @@ public class EuiccConfiguredAddressesResponse implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 60);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public BerUTF8String defaultDpAddress = null;
 	public BerUTF8String rootDsAddress = null;
 	

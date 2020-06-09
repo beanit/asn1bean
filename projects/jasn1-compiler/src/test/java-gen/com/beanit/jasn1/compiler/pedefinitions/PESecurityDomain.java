@@ -28,7 +28,7 @@ public class PESecurityDomain implements BerType, Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		private byte[] code = null;
 		public List<KeyObject> seqOf = null;
 
 		public KeyList() {
@@ -158,7 +158,7 @@ public class PESecurityDomain implements BerType, Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		private byte[] code = null;
 		public List<BerOctetString> seqOf = null;
 
 		public SdPersoData() {
@@ -289,7 +289,7 @@ public class PESecurityDomain implements BerType, Serializable {
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-		public byte[] code = null;
+		private byte[] code = null;
 		public BerOctetString restrictParameter = null;
 		public BerOctetString contactlessProtocolParameters = null;
 		
@@ -443,7 +443,7 @@ public class PESecurityDomain implements BerType, Serializable {
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-		public byte[] code = null;
+		private byte[] code = null;
 		public UInt16 catTpMaxSduSize = null;
 		public UInt16 catTpMaxPduSize = null;
 		
@@ -593,7 +593,7 @@ public class PESecurityDomain implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public PEHeader sdHeader = null;
 	public ApplicationInstance instance = null;
 	public KeyList keyList = null;

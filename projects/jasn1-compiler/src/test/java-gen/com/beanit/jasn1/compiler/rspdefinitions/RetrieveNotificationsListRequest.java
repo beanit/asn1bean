@@ -31,7 +31,7 @@ public class RetrieveNotificationsListRequest implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
-		public byte[] code = null;
+		private byte[] code = null;
 		public BerInteger seqNumber = null;
 		public NotificationEvent profileManagementOperation = null;
 		
@@ -138,7 +138,7 @@ public class RetrieveNotificationsListRequest implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 43);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public SearchCriteria searchCriteria = null;
 	
 	public RetrieveNotificationsListRequest() {

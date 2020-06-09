@@ -25,7 +25,7 @@ public class ManagedExtension2 implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	private BerObjectIdentifier identifier = null;
 	private BerBitString property = null;
 	private BerAny information = null;

@@ -23,7 +23,7 @@ public class MyChoice implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public MyChoice2 myChoice2 = null;
 	public BerBoolean myboolean = null;
 	

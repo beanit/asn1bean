@@ -33,7 +33,7 @@ public class KeyObject implements BerType, Serializable {
 
 			public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-			public byte[] code = null;
+			private byte[] code = null;
 			public BerOctetString keyType = null;
 			public BerOctetString keyData = null;
 			public UInt8 macLength = null;
@@ -208,7 +208,7 @@ public class KeyObject implements BerType, Serializable {
 		}
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		private byte[] code = null;
 		public List<SEQUENCE> seqOf = null;
 
 		public KeyCompontents() {
@@ -335,7 +335,7 @@ public class KeyObject implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public BerOctetString keyUsageQualifier = null;
 	public BerOctetString keyAccess = null;
 	public BerOctetString keyIdentifier = null;

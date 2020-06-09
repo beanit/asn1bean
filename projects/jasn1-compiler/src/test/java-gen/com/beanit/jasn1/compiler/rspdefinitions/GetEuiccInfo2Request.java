@@ -29,7 +29,7 @@ public class GetEuiccInfo2Request implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 34);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	
 	public GetEuiccInfo2Request() {
 	}

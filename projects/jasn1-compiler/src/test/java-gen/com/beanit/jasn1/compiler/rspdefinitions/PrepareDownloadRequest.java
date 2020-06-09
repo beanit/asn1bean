@@ -29,7 +29,7 @@ public class PrepareDownloadRequest implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 33);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public SmdpSigned2 smdpSigned2 = null;
 	public BerOctetString smdpSignature2 = null;
 	public Octet32 hashCc = null;

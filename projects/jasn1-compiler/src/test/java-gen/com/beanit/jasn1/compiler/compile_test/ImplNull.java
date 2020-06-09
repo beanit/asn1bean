@@ -25,11 +25,13 @@ public class ImplNull extends BerNull {
 
 	public static final BerTag tag = new BerTag(BerTag.APPLICATION_CLASS, BerTag.PRIMITIVE, 3);
 
+	private byte[] code = null;
+
 	public ImplNull() {
 	}
 
 	public ImplNull(byte[] code) {
-		super(code);
+		this.code = code;
 	}
 
 	@Override public int encode(OutputStream reverseOS, boolean withTag) throws IOException {

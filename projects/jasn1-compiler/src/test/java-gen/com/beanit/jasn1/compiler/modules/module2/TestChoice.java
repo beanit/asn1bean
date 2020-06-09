@@ -23,7 +23,7 @@ public class TestChoice implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public byte[] code = null;
+	private byte[] code = null;
 	private BerInteger element1 = null;
 	private BerInteger element2 = null;
 	

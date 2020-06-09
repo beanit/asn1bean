@@ -27,7 +27,7 @@ public class PDVList implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
-		public byte[] code = null;
+		private byte[] code = null;
 		public BerAny singleASN1Type = null;
 		public BerOctetString octetAligned = null;
 		public BerBitString arbitrary = null;
@@ -162,7 +162,7 @@ public class PDVList implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public TransferSyntaxName transferSyntaxName = null;
 	public PresentationContextIdentifier presentationContextIdentifier = null;
 	public PresentationDataValues presentationDataValues = null;

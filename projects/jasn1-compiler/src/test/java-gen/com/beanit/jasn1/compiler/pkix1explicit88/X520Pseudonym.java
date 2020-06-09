@@ -23,7 +23,7 @@ public class X520Pseudonym implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public BerTeletexString teletexString = null;
 	public BerPrintableString printableString = null;
 	public BerUniversalString universalString = null;

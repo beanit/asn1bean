@@ -32,7 +32,7 @@ public class BoundProfilePackage implements BerType, Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		private byte[] code = null;
 		public List<BerOctetString> seqOf = null;
 
 		public FirstSequenceOf87() {
@@ -165,7 +165,7 @@ public class BoundProfilePackage implements BerType, Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		private byte[] code = null;
 		public List<BerOctetString> seqOf = null;
 
 		public SequenceOf88() {
@@ -298,7 +298,7 @@ public class BoundProfilePackage implements BerType, Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		private byte[] code = null;
 		public List<BerOctetString> seqOf = null;
 
 		public SecondSequenceOf87() {
@@ -431,7 +431,7 @@ public class BoundProfilePackage implements BerType, Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		private byte[] code = null;
 		public List<BerOctetString> seqOf = null;
 
 		public SequenceOf86() {
@@ -561,7 +561,7 @@ public class BoundProfilePackage implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 54);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public InitialiseSecureChannelRequest initialiseSecureChannelRequest = null;
 	public FirstSequenceOf87 firstSequenceOf87 = null;
 	public SequenceOf88 sequenceOf88 = null;

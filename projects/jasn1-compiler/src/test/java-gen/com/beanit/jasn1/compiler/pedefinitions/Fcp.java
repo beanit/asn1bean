@@ -25,7 +25,7 @@ public class Fcp implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public BerOctetString fileDescriptor = null;
 	public BerOctetString fileID = null;
 	public ApplicationIdentifier dfName = null;

@@ -25,7 +25,7 @@ public class MySequence implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.APPLICATION_CLASS, BerTag.CONSTRUCTED, 3);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public ImplVisibleString implVisibleString = null;
 	
 	public MySequence() {

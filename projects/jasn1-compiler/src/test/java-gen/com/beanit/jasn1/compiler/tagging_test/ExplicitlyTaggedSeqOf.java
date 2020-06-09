@@ -24,7 +24,7 @@ public class ExplicitlyTaggedSeqOf implements BerType, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 33);
-	public byte[] code = null;
+	private byte[] code = null;
 	private List<BerInteger> seqOf = null;
 
 	public ExplicitlyTaggedSeqOf() {

@@ -26,11 +26,13 @@ public class EmployeeNumberzz extends BerInteger {
 
 	public static final BerTag tag = new BerTag(BerTag.APPLICATION_CLASS, BerTag.PRIMITIVE, 2);
 
+	private byte[] code = null;
+
 	public EmployeeNumberzz() {
 	}
 
 	public EmployeeNumberzz(byte[] code) {
-		super(code);
+		this.code = code;
 	}
 
 	public EmployeeNumberzz(BigInteger value) {

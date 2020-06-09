@@ -29,7 +29,7 @@ public class AuthenticateClientOk implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public TransactionId transactionId = null;
 	public StoreMetadataRequest profileMetaData = null;
 	public SmdpSigned2 smdpSigned2 = null;

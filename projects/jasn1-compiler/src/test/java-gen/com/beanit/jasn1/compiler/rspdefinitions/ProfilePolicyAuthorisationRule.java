@@ -32,7 +32,7 @@ public class ProfilePolicyAuthorisationRule implements BerType, Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		private byte[] code = null;
 		public List<OperatorId> seqOf = null;
 
 		public AllowedOperators() {
@@ -159,7 +159,7 @@ public class ProfilePolicyAuthorisationRule implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public PprIds pprIds = null;
 	public AllowedOperators allowedOperators = null;
 	public BerBitString pprFlags = null;

@@ -23,7 +23,7 @@ public class UserData implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public SimplyEncodedData simplyEncodedData = null;
 	public FullyEncodedData fullyEncodedData = null;
 	

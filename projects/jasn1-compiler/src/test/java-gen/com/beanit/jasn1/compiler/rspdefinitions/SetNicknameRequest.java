@@ -29,7 +29,7 @@ public class SetNicknameRequest implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 41);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public Iccid iccid = null;
 	public BerUTF8String profileNickname = null;
 	

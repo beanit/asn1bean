@@ -28,7 +28,7 @@ public class BerEnum extends BerInteger {
   public BerEnum() {}
 
   public BerEnum(byte[] code) {
-    this.code = code;
+    super(code);
   }
 
   public BerEnum(BigInteger val) {

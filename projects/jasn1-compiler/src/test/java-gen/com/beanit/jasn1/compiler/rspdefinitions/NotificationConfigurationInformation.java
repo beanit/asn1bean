@@ -29,7 +29,7 @@ public class NotificationConfigurationInformation implements BerType, Serializab
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public NotificationEvent profileManagementOperation = null;
 	public BerUTF8String notificationAddress = null;
 	

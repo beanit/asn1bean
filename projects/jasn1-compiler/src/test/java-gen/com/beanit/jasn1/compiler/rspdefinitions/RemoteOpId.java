@@ -29,11 +29,13 @@ public class RemoteOpId extends BerInteger {
 
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 2);
 
+	private byte[] code = null;
+
 	public RemoteOpId() {
 	}
 
 	public RemoteOpId(byte[] code) {
-		super(code);
+		this.code = code;
 	}
 
 	public RemoteOpId(BigInteger value) {

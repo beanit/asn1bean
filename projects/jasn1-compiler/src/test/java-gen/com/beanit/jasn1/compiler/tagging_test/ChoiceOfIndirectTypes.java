@@ -23,7 +23,7 @@ public class ChoiceOfIndirectTypes implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public byte[] code = null;
+	private byte[] code = null;
 	private UntaggedInteger untaggedInt = null;
 	private ExplicitlyTaggedInteger untaggedInt2 = null;
 	private ImplicitlyTaggedInteger untaggedInt3 = null;

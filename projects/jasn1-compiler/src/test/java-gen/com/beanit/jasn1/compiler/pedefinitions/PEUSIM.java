@@ -25,7 +25,7 @@ public class PEUSIM implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public PEHeader usimHeader = null;
 	public BerObjectIdentifier templateID = null;
 	public File adfUsim = null;

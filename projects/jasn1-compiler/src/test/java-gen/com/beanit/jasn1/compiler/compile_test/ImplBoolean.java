@@ -25,11 +25,13 @@ public class ImplBoolean extends BerBoolean {
 
 	public static final BerTag tag = new BerTag(BerTag.APPLICATION_CLASS, BerTag.PRIMITIVE, 3);
 
+	private byte[] code = null;
+
 	public ImplBoolean() {
 	}
 
 	public ImplBoolean(byte[] code) {
-		super(code);
+		this.code = code;
 	}
 
 	public ImplBoolean(boolean value) {

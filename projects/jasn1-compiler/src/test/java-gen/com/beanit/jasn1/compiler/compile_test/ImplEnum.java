@@ -25,11 +25,13 @@ public class ImplEnum extends BerEnum {
 
 	public static final BerTag tag = new BerTag(BerTag.APPLICATION_CLASS, BerTag.PRIMITIVE, 3);
 
+	private byte[] code = null;
+
 	public ImplEnum() {
 	}
 
 	public ImplEnum(byte[] code) {
-		super(code);
+		this.code = code;
 	}
 
 	public ImplEnum(BigInteger value) {

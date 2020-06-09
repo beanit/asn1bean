@@ -25,13 +25,13 @@ public class ExplicitlyRetaggedTaggedChoice extends TaggedChoice {
 
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 33);
 
-	public byte[] code = null;
+	private byte[] code = null;
 
 	public ExplicitlyRetaggedTaggedChoice() {
 	}
 
 	public ExplicitlyRetaggedTaggedChoice(byte[] code) {
-		super(code);
+		this.code = code;
 	}
 
 	@Override public int encode(OutputStream reverseOS, boolean withTag) throws IOException {

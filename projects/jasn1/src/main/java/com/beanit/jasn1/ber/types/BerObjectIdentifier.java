@@ -28,7 +28,7 @@ public class BerObjectIdentifier implements Serializable, BerType {
   public static final BerTag tag =
       new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.PRIMITIVE, BerTag.OBJECT_IDENTIFIER_TAG);
   private static final long serialVersionUID = 1L;
-  public byte[] code = null;
+  private byte[] code = null;
 
   public int[] value;
 

@@ -29,7 +29,7 @@ public class NotificationMetadata implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 47);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public BerInteger seqNumber = null;
 	public NotificationEvent profileManagementOperation = null;
 	public BerUTF8String notificationAddress = null;

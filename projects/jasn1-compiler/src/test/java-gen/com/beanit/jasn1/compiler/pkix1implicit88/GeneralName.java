@@ -29,7 +29,7 @@ public class GeneralName implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public AnotherName otherName = null;
 	public BerIA5String rfc822Name = null;
 	public BerIA5String dNSName = null;

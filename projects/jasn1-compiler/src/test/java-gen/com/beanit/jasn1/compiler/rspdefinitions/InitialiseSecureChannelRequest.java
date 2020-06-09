@@ -29,7 +29,7 @@ public class InitialiseSecureChannelRequest implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 35);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public RemoteOpId remoteOpId = null;
 	public TransactionId transactionId = null;
 	public ControlRefTemplate controlRefTemplate = null;

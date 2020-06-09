@@ -29,7 +29,7 @@ public class OperatorId implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public BerOctetString mccMnc = null;
 	public BerOctetString gid1 = null;
 	public BerOctetString gid2 = null;

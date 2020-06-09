@@ -34,7 +34,7 @@ public class NoticeReference implements BerType, Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		private byte[] code = null;
 		public List<BerInteger> seqOf = null;
 
 		public NoticeNumbers() {
@@ -161,7 +161,7 @@ public class NoticeReference implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public DisplayText organization = null;
 	public NoticeNumbers noticeNumbers = null;
 	

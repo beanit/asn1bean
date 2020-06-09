@@ -29,7 +29,7 @@ public class PrepareDownloadResponseOk implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public EUICCSigned2 euiccSigned2 = null;
 	public BerOctetString euiccSignature2 = null;
 	

@@ -26,29 +26,29 @@ public class Jasn1Sample {
     // instead of creating the Name object as in previous statement you can
     // assign the byte code directly as in the following statement. The
     // encode function of the name object will then simply insert this byte
-    // array in the BerOutputStream. This can speed up things if the code
+    // array in the OutputStream. This can speed up things if the code
     // for certain structures is known and does not change.
-    Name name = new Name();
-    name.code =
-        new byte[] {
-          (byte) 0x10,
-          (byte) 0x1A,
-          (byte) 0x04,
-          (byte) 0x4a,
-          (byte) 0x6f,
-          (byte) 0x68,
-          (byte) 0x6e,
-          (byte) 0x1A,
-          (byte) 0x01,
-          (byte) 0x50,
-          (byte) 0x1A,
-          (byte) 0x05,
-          (byte) 0x53,
-          (byte) 0x6d,
-          (byte) 0x69,
-          (byte) 0x74,
-          (byte) 0x68
-        };
+    Name name =
+        new Name(
+            new byte[] {
+              (byte) 0x10,
+              (byte) 0x1A,
+              (byte) 0x04,
+              (byte) 0x4a,
+              (byte) 0x6f,
+              (byte) 0x68,
+              (byte) 0x6e,
+              (byte) 0x1A,
+              (byte) 0x01,
+              (byte) 0x50,
+              (byte) 0x1A,
+              (byte) 0x05,
+              (byte) 0x53,
+              (byte) 0x6d,
+              (byte) 0x69,
+              (byte) 0x74,
+              (byte) 0x68
+            });
 
     BerVisibleString title = new BerVisibleString("Director".getBytes(UTF_8));
     EmployeeNumber number = new EmployeeNumber(51);

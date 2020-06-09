@@ -25,11 +25,13 @@ public class ImplBitString extends BerBitString {
 
 	public static final BerTag tag = new BerTag(BerTag.APPLICATION_CLASS, BerTag.PRIMITIVE, 3);
 
+	private byte[] code = null;
+
 	public ImplBitString() {
 	}
 
 	public ImplBitString(byte[] code) {
-		super(code);
+		this.code = code;
 	}
 
 	public ImplBitString(byte[] value, int numBits) {

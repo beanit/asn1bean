@@ -29,7 +29,7 @@ public class GetRatResponse implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 67);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public RulesAuthorisationTable rat = null;
 	
 	public GetRatResponse() {

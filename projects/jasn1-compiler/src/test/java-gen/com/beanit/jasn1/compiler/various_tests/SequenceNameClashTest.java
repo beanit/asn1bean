@@ -28,7 +28,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		private byte[] code = null;
 		public List<com.beanit.jasn1.compiler.various_tests.UntaggedInteger> seqOf = null;
 
 		public Myseqof() {
@@ -157,7 +157,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
-		public byte[] code = null;
+		private byte[] code = null;
 		public com.beanit.jasn1.compiler.various_tests.UntaggedInteger myInteger = null;
 		public BerBoolean myBoolean = null;
 		
@@ -278,12 +278,12 @@ public class SequenceNameClashTest implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
-		public byte[] code = null;
+		private byte[] code = null;
 		public static class MyChoice2 implements BerType, Serializable {
 
 			private static final long serialVersionUID = 1L;
 
-			public byte[] code = null;
+			private byte[] code = null;
 			public com.beanit.jasn1.compiler.various_tests.UntaggedInteger myInteger = null;
 			public BerBoolean myBoolean = null;
 			
@@ -406,7 +406,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 
 			public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-			public byte[] code = null;
+			private byte[] code = null;
 			public com.beanit.jasn1.compiler.various_tests.UntaggedInteger myInteger = null;
 			public BerBoolean myBoolean = null;
 			
@@ -569,7 +569,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 			private static final long serialVersionUID = 1L;
 
 			public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-			public byte[] code = null;
+			private byte[] code = null;
 			public List<com.beanit.jasn1.compiler.various_tests.UntaggedInteger> seqOf = null;
 
 			public Myseqof() {
@@ -871,7 +871,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-		public byte[] code = null;
+		private byte[] code = null;
 		public com.beanit.jasn1.compiler.various_tests.UntaggedInteger myInteger = null;
 		public BerBoolean myBoolean = null;
 		
@@ -1031,7 +1031,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 43);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public Myseqof myseqof = null;
 	public UntaggedInteger untaggedInteger = null;
 	public MyChoice myChoice = null;

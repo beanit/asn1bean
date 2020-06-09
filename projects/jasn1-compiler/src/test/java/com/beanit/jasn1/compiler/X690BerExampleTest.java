@@ -49,7 +49,7 @@ public class X690BerExampleTest {
       if (hexString.length() == 1) {
         builder.append(0);
       }
-      builder.append(hexString + " ");
+      builder.append(hexString).append(" ");
     }
     return builder.toString();
   }
@@ -61,31 +61,30 @@ public class X690BerExampleTest {
 
     // Name name = new Name(new BerVisibleString("John"), new
     // BerVisibleString("P"), new BerVisibleString("Smith"));
-    Name name = new Name();
-    name.code =
-        new byte[] {
-          (byte) 0x10,
-          (byte) 0x1A,
-          (byte) 0x04,
-          (byte) 0x4a,
-          (byte) 0x6f,
-          (byte) 0x68,
-          (byte) 0x6e,
-          (byte) 0x1A,
-          (byte) 0x01,
-          (byte) 0x50,
-          (byte) 0x1A,
-          (byte) 0x05,
-          (byte) 0x53,
-          (byte) 0x6d,
-          (byte) 0x69,
-          (byte) 0x74,
-          (byte) 0x68
-        };
+    Name name =
+        new Name(
+            new byte[] {
+              (byte) 0x10,
+              (byte) 0x1A,
+              (byte) 0x04,
+              (byte) 0x4a,
+              (byte) 0x6f,
+              (byte) 0x68,
+              (byte) 0x6e,
+              (byte) 0x1A,
+              (byte) 0x01,
+              (byte) 0x50,
+              (byte) 0x1A,
+              (byte) 0x05,
+              (byte) 0x53,
+              (byte) 0x6d,
+              (byte) 0x69,
+              (byte) 0x74,
+              (byte) 0x68
+            });
     BerVisibleString title = new BerVisibleString("Director".getBytes(UTF_8));
     // EmployeeNumber number = new EmployeeNumber(51);
-    EmployeeNumber number = new EmployeeNumber();
-    number.code = new byte[] {0x01, 0x33};
+    EmployeeNumber number = new EmployeeNumber(new byte[] {0x01, 0x33});
     Date dateOfHire = new Date("19710917".getBytes(UTF_8));
     Name nameOfSpouse = new Name();
     nameOfSpouse.setGivenName(new BerVisibleString("Mary"));
@@ -104,82 +103,6 @@ public class X690BerExampleTest {
     System.out.println("192: " + HexConverter.toShortHexString("19571111".getBytes(UTF_8)));
 
     child1.encodeAndSave(80);
-
-    System.out.println("geneCode: " + HexConverter.toShortHexString(child1.code));
-    System.out.println(
-        "realCode: "
-            + HexConverter.toShortHexString(
-                new byte[] {
-                  (byte) 0x1f,
-                  (byte) 0x61,
-                  (byte) 0x11,
-                  (byte) 0x1A,
-                  (byte) 0x05,
-                  (byte) 0x52,
-                  (byte) 0x61,
-                  (byte) 0x6c,
-                  (byte) 0x70,
-                  (byte) 0x68,
-                  (byte) 0x1A,
-                  (byte) 0x01,
-                  (byte) 0x54,
-                  (byte) 0x1A,
-                  (byte) 0x05,
-                  (byte) 0x53,
-                  (byte) 0x6d,
-                  (byte) 0x69,
-                  (byte) 0x74,
-                  (byte) 0x68,
-                  (byte) 0xa0,
-                  (byte) 0x0a,
-                  (byte) 0x43,
-                  (byte) 0x08,
-                  (byte) 0x31,
-                  (byte) 0x39,
-                  (byte) 0x35,
-                  (byte) 0x37,
-                  (byte) 0x31,
-                  (byte) 0x31,
-                  (byte) 0x31,
-                  (byte) 0x31
-                }));
-
-    assertArrayEquals(
-        new byte[] {
-          (byte) 0x1f,
-          (byte) 0x61,
-          (byte) 0x11,
-          (byte) 0x1A,
-          (byte) 0x05,
-          (byte) 0x52,
-          (byte) 0x61,
-          (byte) 0x6c,
-          (byte) 0x70,
-          (byte) 0x68,
-          (byte) 0x1A,
-          (byte) 0x01,
-          (byte) 0x54,
-          (byte) 0x1A,
-          (byte) 0x05,
-          (byte) 0x53,
-          (byte) 0x6d,
-          (byte) 0x69,
-          (byte) 0x74,
-          (byte) 0x68,
-          (byte) 0xa0,
-          (byte) 0x0a,
-          (byte) 0x43,
-          (byte) 0x08,
-          (byte) 0x31,
-          (byte) 0x39,
-          (byte) 0x35,
-          (byte) 0x37,
-          (byte) 0x31,
-          (byte) 0x31,
-          (byte) 0x31,
-          (byte) 0x31
-        },
-        child1.code);
 
     Name child2Name = new Name();
     child2Name.setGivenName(new BerVisibleString("Susan"));

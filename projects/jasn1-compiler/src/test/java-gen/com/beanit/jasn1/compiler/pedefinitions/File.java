@@ -27,7 +27,7 @@ public class File implements BerType, Serializable {
 
 		private static final long serialVersionUID = 1L;
 
-		public byte[] code = null;
+		private byte[] code = null;
 		public BerNull doNotCreate = null;
 		public Fcp fileDescriptor = null;
 		public UInt16 fillFileOffset = null;
@@ -176,7 +176,7 @@ public class File implements BerType, Serializable {
 	}
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-	public byte[] code = null;
+	private byte[] code = null;
 	public List<CHOICE> seqOf = null;
 
 	public File() {

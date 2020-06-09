@@ -25,11 +25,13 @@ public class ImplReal extends BerReal {
 
 	public static final BerTag tag = new BerTag(BerTag.APPLICATION_CLASS, BerTag.PRIMITIVE, 3);
 
+	private byte[] code = null;
+
 	public ImplReal() {
 	}
 
 	public ImplReal(byte[] code) {
-		super(code);
+		this.code = code;
 	}
 
 	public ImplReal(double value) {

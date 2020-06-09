@@ -29,7 +29,7 @@ public class ListNotificationRequest implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 40);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public NotificationEvent profileManagementOperation = null;
 	
 	public ListNotificationRequest() {

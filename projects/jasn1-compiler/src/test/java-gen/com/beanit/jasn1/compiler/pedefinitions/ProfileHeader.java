@@ -28,7 +28,7 @@ public class ProfileHeader implements BerType, Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		private byte[] code = null;
 		public List<BerObjectIdentifier> seqOf = null;
 
 		public EUICCMandatoryGFSTEList() {
@@ -163,7 +163,7 @@ public class ProfileHeader implements BerType, Serializable {
 
 			public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-			public byte[] code = null;
+			private byte[] code = null;
 			public ApplicationIdentifier aid = null;
 			public BerOctetString version = null;
 			
@@ -312,7 +312,7 @@ public class ProfileHeader implements BerType, Serializable {
 		}
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		private byte[] code = null;
 		public List<SEQUENCE> seqOf = null;
 
 		public EUICCMandatoryAIDs() {
@@ -439,7 +439,7 @@ public class ProfileHeader implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public UInt8 majorVersion = null;
 	public UInt8 minorVersion = null;
 	public BerUTF8String profileType = null;

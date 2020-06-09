@@ -29,7 +29,7 @@ public class SetNicknameResponse implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 41);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public BerInteger setNicknameResult = null;
 	
 	public SetNicknameResponse() {

@@ -25,11 +25,13 @@ public class ImplInteger extends BerInteger {
 
 	public static final BerTag tag = new BerTag(BerTag.APPLICATION_CLASS, BerTag.PRIMITIVE, 3);
 
+	private byte[] code = null;
+
 	public ImplInteger() {
 	}
 
 	public ImplInteger(byte[] code) {
-		super(code);
+		this.code = code;
 	}
 
 	public ImplInteger(BigInteger value) {

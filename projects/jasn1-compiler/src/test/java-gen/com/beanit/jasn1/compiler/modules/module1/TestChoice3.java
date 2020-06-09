@@ -28,13 +28,13 @@ public class TestChoice3 extends TestChoice2 {
 
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 11);
 
-	public byte[] code = null;
+	private byte[] code = null;
 
 	public TestChoice3() {
 	}
 
 	public TestChoice3(byte[] code) {
-		super(code);
+		this.code = code;
 	}
 
 	@Override public int encode(OutputStream reverseOS) throws IOException {

@@ -29,7 +29,7 @@ public class EuiccMemoryResetResponse implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 52);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public BerInteger resetResult = null;
 	
 	public EuiccMemoryResetResponse() {

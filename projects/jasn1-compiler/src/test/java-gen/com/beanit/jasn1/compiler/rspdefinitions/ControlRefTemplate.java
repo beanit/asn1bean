@@ -29,7 +29,7 @@ public class ControlRefTemplate implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public Octet1 keyType = null;
 	public Octet1 keyLen = null;
 	public OctetTo16 hostId = null;

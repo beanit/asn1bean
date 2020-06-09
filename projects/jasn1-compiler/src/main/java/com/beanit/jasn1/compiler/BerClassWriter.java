@@ -557,7 +557,7 @@ public class BerClassWriter {
 
     write("private static final long serialVersionUID = 1L;\n");
 
-    write("public byte[] code = null;");
+    write("private byte[] code = null;");
 
     if (tag != null) {
       write(
@@ -800,7 +800,7 @@ public class BerClassWriter {
             + getBerTagParametersString(mainTag)
             + ");\n");
 
-    write("public byte[] code = null;");
+    write("private byte[] code = null;");
 
     setClassNamesOfComponents(listOfSubClassNames, componentTypes, className);
 
@@ -943,7 +943,7 @@ public class BerClassWriter {
     write(
         "public static final BerTag tag = new BerTag(" + getBerTagParametersString(mainTag) + ");");
 
-    write("public byte[] code = null;");
+    write("private byte[] code = null;");
 
     if (jaxbMode) {
       write("private List<" + referencedTypeName + "> seqOf = null;\n");
@@ -997,24 +997,28 @@ public class BerClassWriter {
 
     write("private static final long serialVersionUID = 1L;\n");
 
-    if (tag != null) {
+    String[] constructorParameters = getConstructorParameters(getUniversalType(typeDefinition));
 
+    if (tag != null) {
       write(
           "public static final BerTag tag = new BerTag(" + getBerTagParametersString(tag) + ");\n");
-
-      if (tag.type == TagType.EXPLICIT) {
-        write("public byte[] code = null;\n");
+    }
+    if (constructorParameters.length != 2 || !constructorParameters[0].equals("byte[]")) {
+      if (tag != null) {
+        write("private byte[] code = null;\n");
       }
     }
 
     write("public " + typeName + "() {");
     write("}\n");
 
-    String[] constructorParameters = getConstructorParameters(getUniversalType(typeDefinition));
-
     if (constructorParameters.length != 2 || !constructorParameters[0].equals("byte[]")) {
       write("public " + typeName + "(byte[] code) {");
-      write("super(code);");
+      if (tag != null) {
+        write("this.code = code;");
+      } else {
+        write("super(code);");
+      }
       write("}\n");
     }
 

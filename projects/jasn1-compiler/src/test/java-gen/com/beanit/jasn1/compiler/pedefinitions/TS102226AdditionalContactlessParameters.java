@@ -25,7 +25,7 @@ public class TS102226AdditionalContactlessParameters implements BerType, Seriali
 
 	public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public BerOctetString protocolParameterData = null;
 	
 	public TS102226AdditionalContactlessParameters() {

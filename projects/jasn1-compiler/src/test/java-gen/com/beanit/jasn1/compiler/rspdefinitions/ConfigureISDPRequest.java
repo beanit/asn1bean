@@ -29,7 +29,7 @@ public class ConfigureISDPRequest implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 36);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public DpProprietaryData dpProprietaryData = null;
 	
 	public ConfigureISDPRequest() {

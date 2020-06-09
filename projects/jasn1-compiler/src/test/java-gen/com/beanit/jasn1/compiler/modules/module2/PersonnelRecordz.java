@@ -28,7 +28,7 @@ public class PersonnelRecordz implements BerType, Serializable {
 		private static final long serialVersionUID = 1L;
 
 		public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 16);
-		public byte[] code = null;
+		private byte[] code = null;
 		private List<ChildInformationz> seqOf = null;
 
 		public Children() {
@@ -158,7 +158,7 @@ public class PersonnelRecordz implements BerType, Serializable {
 
 	public static final BerTag tag = new BerTag(BerTag.APPLICATION_CLASS, BerTag.CONSTRUCTED, 0);
 
-	public byte[] code = null;
+	private byte[] code = null;
 	private Namez name = null;
 	private BerVisibleString title = null;
 	private EmployeeNumberZ number = null;

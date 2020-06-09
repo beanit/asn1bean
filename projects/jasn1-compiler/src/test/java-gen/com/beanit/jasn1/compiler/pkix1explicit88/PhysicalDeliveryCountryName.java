@@ -23,7 +23,7 @@ public class PhysicalDeliveryCountryName implements BerType, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public byte[] code = null;
+	private byte[] code = null;
 	public BerNumericString x121DccCode = null;
 	public BerPrintableString iso3166Alpha2Code = null;
 	
