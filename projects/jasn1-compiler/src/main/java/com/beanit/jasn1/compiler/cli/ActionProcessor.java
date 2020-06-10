@@ -124,7 +124,7 @@ public class ActionProcessor {
     closed = true;
     try {
       reader.close();
-    } catch (IOException e) {
+    } catch (IOException ignored) {
     }
   }
 }
