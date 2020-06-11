@@ -13,7 +13,7 @@
  */
 package com.beanit.jasn1.ber;
 
-import com.beanit.jasn1.util.HexConverter;
+import com.beanit.jasn1.util.HexString;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -160,9 +160,9 @@ public class BerTag implements Serializable {
       if (nextByte != (identifierByte & 0xff)) {
         throw new IOException(
             "Identifier does not match, expected: "
-                + HexConverter.toShortHexString(identifierByte)
+                + HexString.fromByte(identifierByte)
                 + ", received: "
-                + HexConverter.toShortHexString((byte) nextByte));
+                + HexString.fromByte((byte) nextByte));
       }
     }
     return tagBytes.length;

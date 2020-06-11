@@ -24,7 +24,7 @@ import com.beanit.jasn1.compiler.x690_ber_example.Date;
 import com.beanit.jasn1.compiler.x690_ber_example.EmployeeNumber;
 import com.beanit.jasn1.compiler.x690_ber_example.Name;
 import com.beanit.jasn1.compiler.x690_ber_example.PersonnelRecord;
-import com.beanit.jasn1.util.HexConverter;
+import com.beanit.jasn1.util.HexString;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -40,7 +40,7 @@ public class X690BerExampleTest {
 
     // Name name = new Name(new BerVisibleString("John"), new
     // BerVisibleString("P"), new BerVisibleString("Smith"));
-    Name name = new Name(HexConverter.fromShortHexString("101A044a6f686e1A01501A05536d697468"));
+    Name name = new Name(HexString.toBytes("101A044a6f686e1A01501A05536d697468"));
     BerVisibleString title = new BerVisibleString("Director".getBytes(UTF_8));
     // EmployeeNumber number = new EmployeeNumber(51);
     EmployeeNumber number = new EmployeeNumber(new byte[] {0x01, 0x33});
@@ -86,7 +86,7 @@ public class X690BerExampleTest {
     personnelRecord.encode(berOS, true);
 
     byte[] expectedBytes =
-        HexConverter.fromShortHexString(
+        HexString.toBytes(
             "60818561101A044a6f686e1A01501A05536d697468a00a1A084469726563746f72420133a10a43083139373130393137a21261101A044d6172791A01541A05536d697468a342311f61111A0552616c70681A01541A05536d697468a00a43083139353731313131311f61111A05537573616e1A01421A054a6f6e6573a00a43083139353930373137");
 
     assertArrayEquals(expectedBytes, berOS.getArray());

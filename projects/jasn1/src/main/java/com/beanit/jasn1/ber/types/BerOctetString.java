@@ -16,7 +16,7 @@ package com.beanit.jasn1.ber.types;
 import com.beanit.jasn1.ber.BerLength;
 import com.beanit.jasn1.ber.BerTag;
 import com.beanit.jasn1.ber.internal.Util;
-import com.beanit.jasn1.util.HexConverter;
+import com.beanit.jasn1.util.HexString;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -82,6 +82,6 @@ public class BerOctetString implements Serializable, BerType {
 
   @Override
   public String toString() {
-    return HexConverter.toShortHexString(value);
+    return HexString.fromBytes(value);
   }
 }

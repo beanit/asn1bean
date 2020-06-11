@@ -13,7 +13,7 @@
  */
 package com.beanit.jasn1.ber;
 
-import com.beanit.jasn1.util.HexConverter;
+import com.beanit.jasn1.util.HexString;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -128,9 +128,7 @@ public class BerLength implements Serializable {
         throw new EOFException("Unexpected end of input stream.");
       }
       throw new IOException(
-          "Byte "
-              + HexConverter.toHexString((byte) b)
-              + " does not match end of contents octet of zero.");
+          "Byte " + HexString.fromByte(b) + " does not match end of contents octet of zero.");
     }
     return 1;
   }

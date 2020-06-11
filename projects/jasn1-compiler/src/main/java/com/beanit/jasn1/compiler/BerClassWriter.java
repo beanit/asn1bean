@@ -45,7 +45,7 @@ import com.beanit.jasn1.compiler.model.AsnType;
 import com.beanit.jasn1.compiler.model.AsnUniversalType;
 import com.beanit.jasn1.compiler.model.AsnValueAssignment;
 import com.beanit.jasn1.compiler.model.SymbolsFromModule;
-import com.beanit.jasn1.util.HexConverter;
+import com.beanit.jasn1.util.HexString;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -2022,7 +2022,7 @@ public class BerClassWriter {
 
     write("// write tag: " + tag.tagClass + "_CLASS, " + tag.typeStructure + ", " + tag.value);
     for (int i = (berTag.tagBytes.length - 1); i >= 0; i--) {
-      write("reverseOS.write(" + HexConverter.toHexString(berTag.tagBytes[i]) + ");");
+      write("reverseOS.write(0x" + HexString.fromByte(berTag.tagBytes[i]) + ");");
     }
 
     write("codeLength += " + berTag.tagBytes.length + ";");

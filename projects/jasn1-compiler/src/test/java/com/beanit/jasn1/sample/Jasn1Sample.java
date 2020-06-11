@@ -9,7 +9,7 @@ import com.beanit.jasn1.compiler.x690_ber_example.Date;
 import com.beanit.jasn1.compiler.x690_ber_example.EmployeeNumber;
 import com.beanit.jasn1.compiler.x690_ber_example.Name;
 import com.beanit.jasn1.compiler.x690_ber_example.PersonnelRecord;
-import com.beanit.jasn1.util.HexConverter;
+import com.beanit.jasn1.util.HexString;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,27 +28,7 @@ public class Jasn1Sample {
     // encode function of the name object will then simply insert this byte
     // array in the OutputStream. This can speed up things if the code
     // for certain structures is known and does not change.
-    Name name =
-        new Name(
-            new byte[] {
-              (byte) 0x10,
-              (byte) 0x1A,
-              (byte) 0x04,
-              (byte) 0x4a,
-              (byte) 0x6f,
-              (byte) 0x68,
-              (byte) 0x6e,
-              (byte) 0x1A,
-              (byte) 0x01,
-              (byte) 0x50,
-              (byte) 0x1A,
-              (byte) 0x05,
-              (byte) 0x53,
-              (byte) 0x6d,
-              (byte) 0x69,
-              (byte) 0x74,
-              (byte) 0x68
-            });
+    Name name = new Name(HexString.toBytes("101A044a6f686e1A01501A05536d697468"));
 
     BerVisibleString title = new BerVisibleString("Director".getBytes(UTF_8));
     EmployeeNumber number = new EmployeeNumber(51);
@@ -99,9 +79,10 @@ public class Jasn1Sample {
     personnelRecord.encode(os);
 
     System.out.println("Encoded bytes:");
-    System.out.println(HexConverter.toHexString(os.getArray()));
+    System.out.println(HexString.fromBytes(os.getArray()));
+    byte[] encodedBytes = os.getArray();
 
-    InputStream is = new ByteArrayInputStream(os.getArray());
+    InputStream is = new ByteArrayInputStream(encodedBytes);
 
     PersonnelRecord personnelRecord_decoded = new PersonnelRecord();
     personnelRecord_decoded.decode(is);
