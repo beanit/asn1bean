@@ -1,7 +1,7 @@
-rootProject.name = "jasn1"
+rootProject.name = "asn1bean"
 
-include("jasn1-compiler")
-include("jasn1")
+include("asn1bean-compiler")
+include("asn1bean")
 
-project(":jasn1-compiler").projectDir = file("projects/jasn1-compiler")
-project(":jasn1").projectDir = file("projects/jasn1")
+project(":asn1bean-compiler").projectDir = file("projects/asn1bean-compiler")
+project(":asn1bean").projectDir = file("projects/asn1bean")

@@ -29,9 +29,9 @@ val cfgRepositoryPass: String? = sonatypePass
 val cfgStagingProfileId: String? = sonatypeStagingProfileId
 val javaProjects: Set<Project> = subprojects
 val distributionProjects = javaProjects
-val docProjects = distributionProjects.filter { it.path == ":jasn1" }
+val docProjects = distributionProjects.filter { it.path == ":asn1bean" }
 val repositoryProjects = javaProjects
-val cfgModuleName = "com.beanit.jasn1"
+val cfgModuleName = "com.beanit.asn1bean"
 
 tasks.register<Tar>("tar") {
     into(project.name) {
@@ -48,18 +48,18 @@ tasks.register<Tar>("tar") {
             include("build/libs-all/**")
             include("src/**")
 
-            include("projects/jasn1/src/**")
-            include("projects/jasn1/build.gradle.kts")
+            include("projects/asn1bean/src/**")
+            include("projects/asn1bean/build.gradle.kts")
 
-            include("projects/jasn1-compiler/src/**")
-            include("projects/jasn1-compiler/build.gradle.kts")
-            include("projects/jasn1-compiler/antlr/**")
-            include("projects/jasn1-compiler/dependencies/**")
+            include("projects/asn1bean-compiler/src/**")
+            include("projects/asn1bean-compiler/build.gradle.kts")
+            include("projects/asn1bean-compiler/antlr/**")
+            include("projects/asn1bean-compiler/dependencies/**")
         }
     }
 
     into(project.name + "/doc/") {
-        from("projects/jasn1/build/docs/") {
+        from("projects/asn1bean/build/docs/") {
             include("javadoc/**")
         }
     }
