@@ -78,6 +78,8 @@ My-Choice2 ::= CHOICE {
 	}
 }
 
+MyNull ::= NULL
+
 --not supported yet
 --MyBoxedSequence ::= [APPLICATION 2] IMPLICIT MySequence
 

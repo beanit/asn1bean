@@ -28,6 +28,8 @@ public class BerNull implements Serializable, BerType {
 
   public BerNull() {}
 
+  public BerNull(byte[] code) {}
+
   @Override
   public int encode(OutputStream reverseOS) throws IOException {
     return encode(reverseOS, true);
