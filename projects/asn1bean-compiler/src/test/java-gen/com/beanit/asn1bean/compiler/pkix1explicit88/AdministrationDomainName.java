@@ -83,25 +83,27 @@ public class AdministrationDomainName implements BerType, Serializable {
 
 	public int decode(InputStream is, boolean withTag) throws IOException {
 		int tlvByteCount = 0;
-		BerLength length = new BerLength();
 		BerTag berTag = new BerTag();
 
 		if (withTag) {
 			tlvByteCount += tag.decodeAndCheck(is);
 		}
 
-		tlvByteCount += length.decode(is);
+		BerLength explicitTagLength = new BerLength();
+		tlvByteCount += explicitTagLength.decode(is);
 		tlvByteCount += berTag.decode(is);
 
 		if (berTag.equals(BerNumericString.tag)) {
 			numeric = new BerNumericString();
 			tlvByteCount += numeric.decode(is, false);
+			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
 			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerPrintableString.tag)) {
 			printable = new BerPrintableString();
 			tlvByteCount += printable.decode(is, false);
+			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
 			return tlvByteCount;
 		}
 

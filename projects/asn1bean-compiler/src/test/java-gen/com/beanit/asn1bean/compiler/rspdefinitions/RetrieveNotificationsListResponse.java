@@ -225,25 +225,27 @@ public class RetrieveNotificationsListResponse implements BerType, Serializable 
 
 	public int decode(InputStream is, boolean withTag) throws IOException {
 		int tlvByteCount = 0;
-		BerLength length = new BerLength();
 		BerTag berTag = new BerTag();
 
 		if (withTag) {
 			tlvByteCount += tag.decodeAndCheck(is);
 		}
 
-		tlvByteCount += length.decode(is);
+		BerLength explicitTagLength = new BerLength();
+		tlvByteCount += explicitTagLength.decode(is);
 		tlvByteCount += berTag.decode(is);
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 0)) {
 			notificationList = new NotificationList();
 			tlvByteCount += notificationList.decode(is, false);
+			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
 			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 1)) {
 			notificationsListResultError = new BerInteger();
 			tlvByteCount += notificationsListResultError.decode(is, false);
+			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
 			return tlvByteCount;
 		}
 

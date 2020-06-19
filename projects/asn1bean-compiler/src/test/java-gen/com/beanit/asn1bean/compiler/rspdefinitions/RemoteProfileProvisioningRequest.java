@@ -140,43 +140,48 @@ public class RemoteProfileProvisioningRequest implements BerType, Serializable {
 
 	public int decode(InputStream is, boolean withTag) throws IOException {
 		int tlvByteCount = 0;
-		BerLength length = new BerLength();
 		BerTag berTag = new BerTag();
 
 		if (withTag) {
 			tlvByteCount += tag.decodeAndCheck(is);
 		}
 
-		tlvByteCount += length.decode(is);
+		BerLength explicitTagLength = new BerLength();
+		tlvByteCount += explicitTagLength.decode(is);
 		tlvByteCount += berTag.decode(is);
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 57)) {
 			initiateAuthenticationRequest = new InitiateAuthenticationRequest();
 			tlvByteCount += initiateAuthenticationRequest.decode(is, false);
+			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
 			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 59)) {
 			authenticateClientRequest = new AuthenticateClientRequest();
 			tlvByteCount += authenticateClientRequest.decode(is, false);
+			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
 			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 58)) {
 			getBoundProfilePackageRequest = new GetBoundProfilePackageRequest();
 			tlvByteCount += getBoundProfilePackageRequest.decode(is, false);
+			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
 			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 65)) {
 			cancelSessionRequestEs9 = new CancelSessionRequestEs9();
 			tlvByteCount += cancelSessionRequestEs9.decode(is, false);
+			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
 			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 61)) {
 			handleNotification = new HandleNotification();
 			tlvByteCount += handleNotification.decode(is, false);
+			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
 			return tlvByteCount;
 		}
 

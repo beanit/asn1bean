@@ -90,25 +90,27 @@ public class DeleteProfileRequest implements BerType, Serializable {
 
 	public int decode(InputStream is, boolean withTag) throws IOException {
 		int tlvByteCount = 0;
-		BerLength length = new BerLength();
 		BerTag berTag = new BerTag();
 
 		if (withTag) {
 			tlvByteCount += tag.decodeAndCheck(is);
 		}
 
-		tlvByteCount += length.decode(is);
+		BerLength explicitTagLength = new BerLength();
+		tlvByteCount += explicitTagLength.decode(is);
 		tlvByteCount += berTag.decode(is);
 
 		if (berTag.equals(BerTag.APPLICATION_CLASS, BerTag.PRIMITIVE, 15)) {
 			isdpAid = new OctetTo16();
 			tlvByteCount += isdpAid.decode(is, false);
+			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
 			return tlvByteCount;
 		}
 
 		if (berTag.equals(Iccid.tag)) {
 			iccid = new Iccid();
 			tlvByteCount += iccid.decode(is, false);
+			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
 			return tlvByteCount;
 		}
 

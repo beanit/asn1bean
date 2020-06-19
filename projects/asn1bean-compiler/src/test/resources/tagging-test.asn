@@ -10,7 +10,7 @@ UntaggedChoice ::= CHOICE {
 }
 
 TaggedChoice ::= [34] CHOICE {
-	myInteger INTEGER,
+	myInteger [4] EXPLICIT INTEGER,
 	myBoolean BOOLEAN
 }
 

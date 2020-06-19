@@ -223,25 +223,27 @@ public class ProfileInfoListResponse implements BerType, Serializable {
 
 	public int decode(InputStream is, boolean withTag) throws IOException {
 		int tlvByteCount = 0;
-		BerLength length = new BerLength();
 		BerTag berTag = new BerTag();
 
 		if (withTag) {
 			tlvByteCount += tag.decodeAndCheck(is);
 		}
 
-		tlvByteCount += length.decode(is);
+		BerLength explicitTagLength = new BerLength();
+		tlvByteCount += explicitTagLength.decode(is);
 		tlvByteCount += berTag.decode(is);
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 0)) {
 			profileInfoListOk = new ProfileInfoListOk();
 			tlvByteCount += profileInfoListOk.decode(is, false);
+			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
 			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 1)) {
 			profileInfoListError = new ProfileInfoListError();
 			tlvByteCount += profileInfoListError.decode(is, false);
+			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
 			return tlvByteCount;
 		}
 

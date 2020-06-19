@@ -221,20 +221,20 @@ public class SequenceNameClashTest implements BerType, Serializable {
 			}
 
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 2)) {
-				BerLength explicitTagLength = new BerLength();
-				tlvByteCount += explicitTagLength.decode(is);
+				BerLength length = new BerLength();
+				tlvByteCount += length.decode(is);
 				myInteger = new com.beanit.asn1bean.compiler.various_tests.UntaggedInteger();
 				tlvByteCount += myInteger.decode(is, true);
-				tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+				tlvByteCount += length.readEocIfIndefinite(is);
 				return tlvByteCount;
 			}
 
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 3)) {
-				BerLength explicitTagLength = new BerLength();
-				tlvByteCount += explicitTagLength.decode(is);
+				BerLength length = new BerLength();
+				tlvByteCount += length.decode(is);
 				myBoolean = new BerBoolean();
 				tlvByteCount += myBoolean.decode(is, true);
-				tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+				tlvByteCount += length.readEocIfIndefinite(is);
 				return tlvByteCount;
 			}
 
@@ -347,20 +347,20 @@ public class SequenceNameClashTest implements BerType, Serializable {
 				}
 
 				if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 6)) {
-					BerLength explicitTagLength = new BerLength();
-					tlvByteCount += explicitTagLength.decode(is);
+					BerLength length = new BerLength();
+					tlvByteCount += length.decode(is);
 					myInteger = new com.beanit.asn1bean.compiler.various_tests.UntaggedInteger();
 					tlvByteCount += myInteger.decode(is, true);
-					tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+					tlvByteCount += length.readEocIfIndefinite(is);
 					return tlvByteCount;
 				}
 
 				if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 7)) {
-					BerLength explicitTagLength = new BerLength();
-					tlvByteCount += explicitTagLength.decode(is);
+					BerLength length = new BerLength();
+					tlvByteCount += length.decode(is);
 					myBoolean = new BerBoolean();
 					tlvByteCount += myBoolean.decode(is, true);
-					tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+					tlvByteCount += length.readEocIfIndefinite(is);
 					return tlvByteCount;
 				}
 
@@ -781,38 +781,38 @@ public class SequenceNameClashTest implements BerType, Serializable {
 			}
 
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 4)) {
-				BerLength explicitTagLength = new BerLength();
-				tlvByteCount += explicitTagLength.decode(is);
+				BerLength length = new BerLength();
+				tlvByteCount += length.decode(is);
 				myInteger = new com.beanit.asn1bean.compiler.various_tests.UntaggedInteger();
 				tlvByteCount += myInteger.decode(is, true);
-				tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+				tlvByteCount += length.readEocIfIndefinite(is);
 				return tlvByteCount;
 			}
 
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 5)) {
-				BerLength explicitTagLength = new BerLength();
-				tlvByteCount += explicitTagLength.decode(is);
+				BerLength length = new BerLength();
+				tlvByteCount += length.decode(is);
 				myChoice2 = new MyChoice2();
 				tlvByteCount += myChoice2.decode(is, null);
-				tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+				tlvByteCount += length.readEocIfIndefinite(is);
 				return tlvByteCount;
 			}
 
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 8)) {
-				BerLength explicitTagLength = new BerLength();
-				tlvByteCount += explicitTagLength.decode(is);
+				BerLength length = new BerLength();
+				tlvByteCount += length.decode(is);
 				mySequence = new MySequence();
 				tlvByteCount += mySequence.decode(is, true);
-				tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+				tlvByteCount += length.readEocIfIndefinite(is);
 				return tlvByteCount;
 			}
 
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
-				BerLength explicitTagLength = new BerLength();
-				tlvByteCount += explicitTagLength.decode(is);
+				BerLength length = new BerLength();
+				tlvByteCount += length.decode(is);
 				myseqof = new Myseqof();
 				tlvByteCount += myseqof.decode(is, true);
-				tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+				tlvByteCount += length.readEocIfIndefinite(is);
 				return tlvByteCount;
 			}
 

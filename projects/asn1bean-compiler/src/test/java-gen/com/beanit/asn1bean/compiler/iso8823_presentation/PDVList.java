@@ -99,11 +99,11 @@ public class PDVList implements BerType, Serializable {
 			}
 
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 0)) {
-				BerLength explicitTagLength = new BerLength();
-				tlvByteCount += explicitTagLength.decode(is);
+				BerLength length = new BerLength();
+				tlvByteCount += length.decode(is);
 				singleASN1Type = new BerAny();
 				tlvByteCount += singleASN1Type.decode(is, null);
-				tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+				tlvByteCount += length.readEocIfIndefinite(is);
 				return tlvByteCount;
 			}
 

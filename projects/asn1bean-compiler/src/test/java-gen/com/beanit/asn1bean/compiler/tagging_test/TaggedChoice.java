@@ -67,6 +67,8 @@ public class TaggedChoice implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
+		int sublength;
+
 		if (myBoolean != null) {
 			codeLength += myBoolean.encode(reverseOS, true);
 			codeLength += BerLength.encodeLength(reverseOS, codeLength);
@@ -77,7 +79,12 @@ public class TaggedChoice implements BerType, Serializable {
 		}
 		
 		if (myInteger != null) {
-			codeLength += myInteger.encode(reverseOS, true);
+			sublength = myInteger.encode(reverseOS, true);
+			codeLength += sublength;
+			codeLength += BerLength.encodeLength(reverseOS, sublength);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 4
+			reverseOS.write(0xA4);
+			codeLength += 1;
 			codeLength += BerLength.encodeLength(reverseOS, codeLength);
 			if (withTag) {
 				codeLength += tag.encode(reverseOS);
@@ -94,25 +101,30 @@ public class TaggedChoice implements BerType, Serializable {
 
 	public int decode(InputStream is, boolean withTag) throws IOException {
 		int tlvByteCount = 0;
-		BerLength length = new BerLength();
 		BerTag berTag = new BerTag();
 
 		if (withTag) {
 			tlvByteCount += tag.decodeAndCheck(is);
 		}
 
-		tlvByteCount += length.decode(is);
+		BerLength explicitTagLength = new BerLength();
+		tlvByteCount += explicitTagLength.decode(is);
 		tlvByteCount += berTag.decode(is);
 
-		if (berTag.equals(BerInteger.tag)) {
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 4)) {
+			BerLength length = new BerLength();
+			tlvByteCount += length.decode(is);
 			myInteger = new BerInteger();
-			tlvByteCount += myInteger.decode(is, false);
+			tlvByteCount += myInteger.decode(is, true);
+			tlvByteCount += length.readEocIfIndefinite(is);
+			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
 			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerBoolean.tag)) {
 			myBoolean = new BerBoolean();
 			tlvByteCount += myBoolean.decode(is, false);
+			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
 			return tlvByteCount;
 		}
 

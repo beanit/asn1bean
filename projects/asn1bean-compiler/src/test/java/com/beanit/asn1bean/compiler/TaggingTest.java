@@ -201,13 +201,25 @@ public class TaggingTest {
     ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
     choice.encode(os);
 
-    assertArrayEquals(HexString.toBytes("BF2203020101"), os.getArray());
+    assertArrayEquals(HexString.toBytes("BF2205A403020101"), os.getArray());
 
     choice = new TaggedChoice();
     choice.decode(new ByteArrayInputStream(os.getArray()));
 
     assertNotNull(choice.getMyInteger());
     assertNull(choice.getMyBoolean());
+  }
+
+  @Test
+  public void taggedChoiceIndefiniteTest() throws Exception {
+    byte[] code = HexString.toBytes("BF2280A48002010100000000");
+    TaggedChoice taggedChoice = new TaggedChoice();
+    InputStream is = new ByteArrayInputStream(code);
+    int numDecodedBytes = taggedChoice.decode(is);
+
+    assertNotNull(taggedChoice.getMyInteger());
+    assertEquals(-1, is.read());
+    assertEquals(code.length, numDecodedBytes);
   }
 
   @Test
@@ -230,7 +242,7 @@ public class TaggingTest {
     ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
     choice.encode(os);
 
-    assertArrayEquals(HexString.toBytes("A303020101"), os.getArray());
+    assertArrayEquals(HexString.toBytes("A305A403020101"), os.getArray());
   }
 
   @Test

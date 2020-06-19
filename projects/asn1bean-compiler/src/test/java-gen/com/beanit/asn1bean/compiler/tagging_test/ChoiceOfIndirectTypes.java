@@ -344,29 +344,29 @@ public class ChoiceOfIndirectTypes implements BerType, Serializable {
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
-			BerLength explicitTagLength = new BerLength();
-			tlvByteCount += explicitTagLength.decode(is);
+			BerLength length = new BerLength();
+			tlvByteCount += length.decode(is);
 			explicitlyTaggedInt = new UntaggedInteger();
 			tlvByteCount += explicitlyTaggedInt.decode(is, true);
-			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+			tlvByteCount += length.readEocIfIndefinite(is);
 			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 11)) {
-			BerLength explicitTagLength = new BerLength();
-			tlvByteCount += explicitTagLength.decode(is);
+			BerLength length = new BerLength();
+			tlvByteCount += length.decode(is);
 			explicitlyTaggedInt2 = new ExplicitlyTaggedInteger();
 			tlvByteCount += explicitlyTaggedInt2.decode(is, true);
-			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+			tlvByteCount += length.readEocIfIndefinite(is);
 			return tlvByteCount;
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 21)) {
-			BerLength explicitTagLength = new BerLength();
-			tlvByteCount += explicitTagLength.decode(is);
+			BerLength length = new BerLength();
+			tlvByteCount += length.decode(is);
 			explicitlyTaggedInt3 = new ImplicitlyTaggedInteger();
 			tlvByteCount += explicitlyTaggedInt3.decode(is, true);
-			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+			tlvByteCount += length.readEocIfIndefinite(is);
 			return tlvByteCount;
 		}
 
@@ -404,11 +404,11 @@ public class ChoiceOfIndirectTypes implements BerType, Serializable {
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 5)) {
-			BerLength explicitTagLength = new BerLength();
-			tlvByteCount += explicitTagLength.decode(is);
+			BerLength length = new BerLength();
+			tlvByteCount += length.decode(is);
 			taggedChoice = new UntaggedChoice();
 			tlvByteCount += taggedChoice.decode(is, null);
-			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+			tlvByteCount += length.readEocIfIndefinite(is);
 			return tlvByteCount;
 		}
 
@@ -425,11 +425,11 @@ public class ChoiceOfIndirectTypes implements BerType, Serializable {
 		}
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 8)) {
-			BerLength explicitTagLength = new BerLength();
-			tlvByteCount += explicitTagLength.decode(is);
+			BerLength length = new BerLength();
+			tlvByteCount += length.decode(is);
 			taggedAny = new UntaggedAny();
 			tlvByteCount += taggedAny.decode(is, null);
-			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+			tlvByteCount += length.readEocIfIndefinite(is);
 			return tlvByteCount;
 		}
 

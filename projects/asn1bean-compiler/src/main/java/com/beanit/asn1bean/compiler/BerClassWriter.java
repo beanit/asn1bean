@@ -1423,14 +1423,14 @@ public class BerClassWriter {
 
       write("public int decode(InputStream is, boolean withTag) throws IOException {");
       write("int tlvByteCount = 0;");
-      write("BerLength length = new BerLength();");
       write("BerTag berTag = new BerTag();\n");
 
       write("if (withTag) {");
       write("tlvByteCount += tag.decodeAndCheck(is);");
       write("}\n");
 
-      write("tlvByteCount += length.decode(is);");
+      write("BerLength explicitTagLength = new BerLength();");
+      write("tlvByteCount += explicitTagLength.decode(is);");
       write("tlvByteCount += berTag.decode(is);\n");
     } else {
 
@@ -1453,9 +1453,9 @@ public class BerClassWriter {
 
     for (ComponentInfo component : components) {
       if (component.isDirectChoiceOrAny && (component.tag == null)) {
-        writeChoiceComponentDecodeUntaggedChoiceOrAny(component);
+        writeChoiceComponentDecodeUntaggedChoiceOrAny(component, hasExplicitTag);
       } else {
-        writeChoiceComponentDecodeRegular(component);
+        writeChoiceComponentDecodeRegular(component, hasExplicitTag);
       }
     }
 
@@ -1678,7 +1678,8 @@ public class BerClassWriter {
     write("}");
   }
 
-  private void writeChoiceComponentDecodeRegular(ComponentInfo component) throws IOException {
+  private void writeChoiceComponentDecodeRegular(ComponentInfo component, boolean taggedChoice)
+      throws IOException {
     if (component.tag != null) {
       write("if (berTag.equals(" + getBerTagParametersString(component.tag) + ")) {");
     } else {
@@ -1686,8 +1687,8 @@ public class BerClassWriter {
     }
 
     if (isExplicit(component.tag)) {
-      write("BerLength explicitTagLength = new BerLength();");
-      write("tlvByteCount += explicitTagLength.decode(is);");
+      write("BerLength length = new BerLength();");
+      write("tlvByteCount += length.decode(is);");
     }
 
     write(component.variableName + " = new " + component.className + "();");
@@ -1699,6 +1700,9 @@ public class BerClassWriter {
             + ");");
 
     if (isExplicit(component.tag)) {
+      write("tlvByteCount += length.readEocIfIndefinite(is);");
+    }
+    if (taggedChoice) {
       write("tlvByteCount += explicitTagLength.readEocIfIndefinite(is);");
     }
     write("return tlvByteCount;");
@@ -1743,8 +1747,8 @@ public class BerClassWriter {
     write("seqOf.add(element);");
   }
 
-  private void writeChoiceComponentDecodeUntaggedChoiceOrAny(ComponentInfo component)
-      throws IOException {
+  private void writeChoiceComponentDecodeUntaggedChoiceOrAny(
+      ComponentInfo component, boolean taggedChoice) throws IOException {
     write(component.variableName + " = new " + component.className + "();");
     write(
         "numDecodedBytes = "
@@ -1753,6 +1757,9 @@ public class BerClassWriter {
             + getDecodeTagParameter(component)
             + ");");
     write("if (numDecodedBytes != 0) {");
+    if (taggedChoice) {
+      write("tlvByteCount += explicitTagLength.readEocIfIndefinite(is);");
+    }
     write("return tlvByteCount + numDecodedBytes;");
     write("}");
     write("else {");
