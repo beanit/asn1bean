@@ -13,6 +13,7 @@
  */
 package com.beanit.asn1bean.compiler;
 
+import static com.beanit.asn1bean.util.HexString.toBytes;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -34,7 +35,6 @@ import com.beanit.asn1bean.compiler.tagging_test.RetaggedUntaggedChoice;
 import com.beanit.asn1bean.compiler.tagging_test.SeqOfExplicitlyTaggedType;
 import com.beanit.asn1bean.compiler.tagging_test.SequenceOfDirectTypes;
 import com.beanit.asn1bean.compiler.tagging_test.TaggedChoice;
-import com.beanit.asn1bean.util.HexString;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
@@ -54,7 +54,7 @@ public class TaggingTest {
     ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
     seqOf.encode(os);
 
-    assertArrayEquals(HexString.toBytes("300AA303020103A303020104"), os.getArray());
+    assertArrayEquals(toBytes("300AA303020103A303020104"), os.getArray());
 
     seqOf = new SeqOfExplicitlyTaggedType();
     seqOf.decode(new ByteArrayInputStream(os.getArray()));
@@ -69,7 +69,7 @@ public class TaggingTest {
     ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
     choice.encode(os);
 
-    assertArrayEquals(HexString.toBytes("BF2103830101"), os.getArray());
+    assertArrayEquals(toBytes("BF2103830101"), os.getArray());
 
     choice = new RetaggedUntaggedChoice();
     choice.decode(new ByteArrayInputStream(os.getArray()));
@@ -88,7 +88,7 @@ public class TaggingTest {
     ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
     sequence.encode(os);
 
-    byte[] code = HexString.toBytes("BF210830060201010101FF");
+    byte[] code = toBytes("BF210830060201010101FF");
     assertArrayEquals(code, os.getArray());
 
     sequence = new ExplicitlyTaggedSequence();
@@ -101,7 +101,7 @@ public class TaggingTest {
 
   @Test
   public void explicitlyTaggedSequenceIndefiniteTest() throws Exception {
-    byte[] code = HexString.toBytes("BF218030800201010101FF00000000");
+    byte[] code = toBytes("BF218030800201010101FF00000000");
     ExplicitlyTaggedSequence sequence = new ExplicitlyTaggedSequence();
     InputStream is = new ByteArrayInputStream(code);
     int numDecodedBytes = sequence.decode(is);
@@ -122,7 +122,7 @@ public class TaggingTest {
     ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
     set.encode(os);
 
-    assertArrayEquals(HexString.toBytes("BF210a3108a1030201010101FF"), os.getArray());
+    assertArrayEquals(toBytes("BF210a3108a1030201010101FF"), os.getArray());
 
     set = new ExplicitlyTaggedSet();
     set.decode(new ByteArrayInputStream(os.getArray()));
@@ -134,7 +134,7 @@ public class TaggingTest {
   @Test
   public void explicitlyTaggedSetIndefiniteTest() throws Exception {
 
-    byte[] code = HexString.toBytes("BF21803180a18002010100000101FF00000000");
+    byte[] code = toBytes("BF21803180a18002010100000101FF00000000");
     ExplicitlyTaggedSet set = new ExplicitlyTaggedSet();
     InputStream is = new ByteArrayInputStream(code);
     int numDecodedBytes = set.decode(is);
@@ -157,7 +157,7 @@ public class TaggingTest {
     ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
     seqOf.encode(os);
 
-    assertArrayEquals(HexString.toBytes("BF21083006020103020104"), os.getArray());
+    assertArrayEquals(toBytes("BF21083006020103020104"), os.getArray());
 
     seqOf = new ExplicitlyTaggedSeqOf();
     seqOf.decode(new ByteArrayInputStream(os.getArray()));
@@ -165,7 +165,7 @@ public class TaggingTest {
 
   @Test
   public void explicitlyTaggedSeqOfIndefiniteTest() throws Exception {
-    byte[] code = HexString.toBytes("BF2180308002010302010400000000");
+    byte[] code = toBytes("BF2180308002010302010400000000");
     ExplicitlyTaggedSeqOf seqOf = new ExplicitlyTaggedSeqOf();
     InputStream is = new ByteArrayInputStream(code);
     int numDecodedBytes = seqOf.decode(is);
@@ -187,7 +187,7 @@ public class TaggingTest {
     ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
     setOf.encode(os);
 
-    assertArrayEquals(HexString.toBytes("BF21083106020103020104"), os.getArray());
+    assertArrayEquals(toBytes("BF21083106020103020104"), os.getArray());
 
     setOf = new ExplicitlyTaggedSetOf();
     setOf.decode(new ByteArrayInputStream(os.getArray()));
@@ -202,7 +202,7 @@ public class TaggingTest {
     ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
     choice.encode(os);
 
-    assertArrayEquals(HexString.toBytes("BF2205A403020101"), os.getArray());
+    assertArrayEquals(toBytes("BF2205A403020101"), os.getArray());
 
     choice = new TaggedChoice();
     choice.decode(new ByteArrayInputStream(os.getArray()));
@@ -213,7 +213,7 @@ public class TaggingTest {
 
   @Test
   public void taggedChoiceIndefiniteTest() throws Exception {
-    byte[] code = HexString.toBytes("BF2280A48002010100000000");
+    byte[] code = toBytes("BF2280A48002010100000000");
     TaggedChoice taggedChoice = new TaggedChoice();
     InputStream is = new ByteArrayInputStream(code);
     int numDecodedBytes = taggedChoice.decode(is);
@@ -231,7 +231,7 @@ public class TaggingTest {
     ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
     implicitlyTaggedInteger.encode(os);
 
-    assertArrayEquals(HexString.toBytes("9F210101"), os.getArray());
+    assertArrayEquals(toBytes("9F210101"), os.getArray());
   }
 
   @Test
@@ -242,12 +242,12 @@ public class TaggingTest {
     ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
     explicitlyTaggedInteger.encode(os);
 
-    assertArrayEquals(HexString.toBytes("BF2103020101"), os.getArray());
+    assertArrayEquals(toBytes("BF2103020101"), os.getArray());
   }
 
   @Test
   public void explicitlyRetaggedIntegerIndefiniteTest() throws Exception {
-    byte[] code = HexString.toBytes("BF21800201010000");
+    byte[] code = toBytes("BF21800201010000");
     ExplicitlyTaggedInteger explicitlyTaggedInteger = new ExplicitlyTaggedInteger();
     InputStream is = new ByteArrayInputStream(code);
     int numDecodedBytes = explicitlyTaggedInteger.decode(is);
@@ -266,7 +266,7 @@ public class TaggingTest {
     ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
     choice.encode(os);
 
-    assertArrayEquals(HexString.toBytes("A305A403020101"), os.getArray());
+    assertArrayEquals(toBytes("A305A403020101"), os.getArray());
   }
 
   @Test
@@ -292,7 +292,7 @@ public class TaggingTest {
     sequence.encode(os);
 
     assertArrayEquals(
-        HexString.toBytes("BF2B18020101A1030201028201038401FFA503830104A603020101"), os.getArray());
+        toBytes("BF2B18020101A1030201028201038401FFA503830104A603020101"), os.getArray());
 
     sequence = new SequenceOfDirectTypes();
     sequence.decode(new ByteArrayInputStream(os.getArray()));
@@ -302,15 +302,14 @@ public class TaggingTest {
     assertEquals(3, sequence.getImplicitlyTaggedInt().value.intValue());
     assertTrue(untaggedChoice.getMyBoolean().value);
     assertEquals(4, sequence.getTaggedChoice().getMyInteger().value.intValue());
-    assertArrayEquals(HexString.toBytes("020101"), sequence.getTaggedAny().value);
+    assertArrayEquals(toBytes("020101"), sequence.getTaggedAny().value);
     assertNull(sequence.getUntaggedChoice2());
   }
 
   @Test
   public void sequenceOfDirectTypesIndefiniteTest() throws Exception {
 
-    byte[] encodedBytes =
-        HexString.toBytes("BF2B80020101A18002010200008201038401FFA503830104A6030201010000");
+    byte[] encodedBytes = toBytes("BF2B80020101A18002010200008201038401FFA503830104A6030201010000");
 
     SequenceOfDirectTypes sequence = new SequenceOfDirectTypes();
     sequence.decode(new ByteArrayInputStream(encodedBytes));
@@ -320,7 +319,7 @@ public class TaggingTest {
     assertEquals(3, sequence.getImplicitlyTaggedInt().value.intValue());
     assertTrue(sequence.getUntaggedChoice().getMyBoolean().value);
     assertEquals(4, sequence.getTaggedChoice().getMyInteger().value.intValue());
-    assertArrayEquals(HexString.toBytes("020101"), sequence.getTaggedAny().value);
+    assertArrayEquals(toBytes("020101"), sequence.getTaggedAny().value);
     assertNull(sequence.getUntaggedChoice2());
   }
 }
