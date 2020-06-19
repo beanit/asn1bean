@@ -23,6 +23,7 @@ import com.beanit.asn1bean.ber.ReverseByteArrayOutputStream;
 import com.beanit.asn1bean.ber.types.BerAny;
 import com.beanit.asn1bean.ber.types.BerBoolean;
 import com.beanit.asn1bean.ber.types.BerInteger;
+import com.beanit.asn1bean.compiler.tagging_test.ExplicitlyTaggedInteger;
 import com.beanit.asn1bean.compiler.tagging_test.ExplicitlyTaggedSeqOf;
 import com.beanit.asn1bean.compiler.tagging_test.ExplicitlyTaggedSequence;
 import com.beanit.asn1bean.compiler.tagging_test.ExplicitlyTaggedSet;
@@ -231,6 +232,29 @@ public class TaggingTest {
     implicitlyTaggedInteger.encode(os);
 
     assertArrayEquals(HexString.toBytes("9F210101"), os.getArray());
+  }
+
+  @Test
+  public void explicitlyRetaggedIntegerTest() throws Exception {
+
+    ExplicitlyTaggedInteger explicitlyTaggedInteger = new ExplicitlyTaggedInteger(1);
+
+    ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(1000);
+    explicitlyTaggedInteger.encode(os);
+
+    assertArrayEquals(HexString.toBytes("BF2103020101"), os.getArray());
+  }
+
+  @Test
+  public void explicitlyRetaggedIntegerIndefiniteTest() throws Exception {
+    byte[] code = HexString.toBytes("BF21800201010000");
+    ExplicitlyTaggedInteger explicitlyTaggedInteger = new ExplicitlyTaggedInteger();
+    InputStream is = new ByteArrayInputStream(code);
+    int numDecodedBytes = explicitlyTaggedInteger.decode(is);
+
+    assertNotNull(explicitlyTaggedInteger.value);
+    assertEquals(-1, is.read());
+    assertEquals(code.length, numDecodedBytes);
   }
 
   @Test

@@ -75,6 +75,7 @@ public class ExplicitlyTaggedInteger extends BerInteger {
 		codeLength += length.decode(is);
 
 		codeLength += super.decode(is, true);
+		codeLength += length.readEocIfIndefinite(is);
 
 		return codeLength;
 	}

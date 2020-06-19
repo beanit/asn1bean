@@ -75,6 +75,7 @@ public class RetaggedUntaggedChoice extends UntaggedChoice {
 		codeLength += length.decode(is);
 
 		codeLength += super.decode(is, null);
+		codeLength += length.readEocIfIndefinite(is);
 
 		return codeLength;
 	}

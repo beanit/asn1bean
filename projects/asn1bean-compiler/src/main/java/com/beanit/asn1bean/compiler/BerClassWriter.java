@@ -1109,10 +1109,11 @@ public class BerClassWriter {
         write("codeLength += length.decode(is);\n");
 
         if (isDirectAnyOrChoice((AsnTaggedType) typeDefinition)) {
-          write("codeLength += super.decode(is, null);\n");
+          write("codeLength += super.decode(is, null);");
         } else {
-          write("codeLength += super.decode(is, true);\n");
+          write("codeLength += super.decode(is, true);");
         }
+        write("codeLength += length.readEocIfIndefinite(is);\n");
       } else {
         write("codeLength += super.decode(is, false);\n");
       }

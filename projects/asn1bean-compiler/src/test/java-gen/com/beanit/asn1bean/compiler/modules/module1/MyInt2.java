@@ -78,6 +78,7 @@ public class MyInt2 extends MyInt {
 		codeLength += length.decode(is);
 
 		codeLength += super.decode(is, true);
+		codeLength += length.readEocIfIndefinite(is);
 
 		return codeLength;
 	}

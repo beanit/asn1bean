@@ -65,6 +65,7 @@ public class TaggedAny extends BerAny {
 		codeLength += length.decode(is);
 
 		codeLength += super.decode(is, null);
+		codeLength += length.readEocIfIndefinite(is);
 
 		return codeLength;
 	}

@@ -78,6 +78,7 @@ public class TestChoice3 extends TestChoice2 {
 		codeLength += length.decode(is);
 
 		codeLength += super.decode(is, null);
+		codeLength += length.readEocIfIndefinite(is);
 
 		return codeLength;
 	}
