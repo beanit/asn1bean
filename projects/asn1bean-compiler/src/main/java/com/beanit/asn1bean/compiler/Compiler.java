@@ -39,7 +39,7 @@ public class Compiler {
     StringCliParameter outputBaseDir =
         new CliParameterBuilder("-o")
             .setDescription(
-                "The base directory for the generated Java classes. The class files will be saved in subfolders of the base directory corresponding to the name of the defined modules.")
+                "The base directory for the generated Java classes. Often this is the root folder for Java classes (e.g. src/main/java). The class files will be saved in subfolders of the base directory corresponding to the base package name and the name of the defined modules.")
             .buildStringParameter("output_base_dir", "./");
 
     StringCliParameter basePackageName =
