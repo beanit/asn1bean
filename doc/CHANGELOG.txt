@@ -1,3 +1,16 @@
+- renamed jASN1 to ASN1bean
+
+- Added full support for indefinite length decoding. The compiler's
+  -il flag to enable indefinite length decoding was removed because it
+  is now always enabled.
+
+- added support for white space in compiler's path parameters
+
+- added support for ASN1 modules that start with a digit
+
+- multiple minor clean ups in generated code
+
+
 v1.11.3 14-Mar-2020
 --------------------
 
@@ -10,6 +23,7 @@ v1.11.3 14-Mar-2020
 
 - minor fix in run script to allow for spaces in parent directories
 
+
 v1.11.2 06-Jun-2019
 --------------------
 
@@ -21,6 +35,7 @@ v1.11.2 06-Jun-2019
   BerLength.encodeLength
 
 Thanks to the European Space Agency for these contributions.
+
 
 v1.11.1 03-May-2019
 --------------------
@@ -37,6 +52,7 @@ v1.11.1 03-May-2019
   with the same name as the sequence, set or choice
 
 - fixed several minor inefficiencies such as unnecessary autoboxing
+
 
 v1.11.0 15-Mar-2019
 --------------------
@@ -75,6 +91,7 @@ v1.9.0 13-Dec-2017
 
 - the BerBitString value can now be set and retrieved as array of
   booleans
+
 
 v1.8.2 28-Aug-2017
 ------------------
@@ -138,6 +155,7 @@ v1.8.0 20-Apr-2017
 - added asCalendar() and asDate() functions to BerUtcTime and
   BerGeneralizedTime thanks to Andrea Lo Pumo
 
+
 v1.7.1 05-Feb-2017
 ------------------
 
@@ -178,6 +196,7 @@ v1.7.0 27-Jan-2017
 - added encode and decode functions to all generated classes that take
   only a stream as parameter
 
+
 v1.6.0 03-Oct-2016
 ------------------
 
@@ -209,6 +228,7 @@ v1.6.0 03-Oct-2016
 
 - fixed support for SEQUENCE OFs of tagged types such as SEQUENCE OF [3]
   INTEGER
+
 
 v1.5.0 10-Dec-2015
 ------------------
