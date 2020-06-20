@@ -28,9 +28,8 @@ public class BerInteger implements Serializable, BerType {
   public static final BerTag tag =
       new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.PRIMITIVE, BerTag.INTEGER_TAG);
   private static final long serialVersionUID = 1L;
-  private byte[] code = null;
-
   public BigInteger value;
+  private byte[] code = null;
 
   public BerInteger() {}
 

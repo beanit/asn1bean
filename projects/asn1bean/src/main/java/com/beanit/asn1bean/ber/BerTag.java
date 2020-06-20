@@ -57,14 +57,13 @@ public class BerTag implements Serializable {
   public static final int TIME_OF_DAY_TAG = 32;
   public static final int DATE_TIME_TAG = 33;
   public static final int DURATION_TAG = 34;
+  public static final BerTag SEQUENCE = new BerTag(UNIVERSAL_CLASS, CONSTRUCTED, SEQUENCE_TAG);
+  public static final BerTag SET = new BerTag(UNIVERSAL_CLASS, CONSTRUCTED, SET_TAG);
   private static final long serialVersionUID = 1L;
   public byte[] tagBytes = null;
   public int tagClass;
   public int primitive;
   public int tagNumber;
-
-  public static final BerTag SEQUENCE = new BerTag(UNIVERSAL_CLASS, CONSTRUCTED, SEQUENCE_TAG);
-  public static final BerTag SET = new BerTag(UNIVERSAL_CLASS, CONSTRUCTED, SET_TAG);
 
   public BerTag(int identifierClass, int primitive, int tagNumber) {
     this.tagClass = identifierClass;

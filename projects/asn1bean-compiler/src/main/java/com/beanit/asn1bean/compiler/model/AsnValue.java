@@ -45,8 +45,8 @@ public class AsnValue {
   public List<String> valueInBracesTokens;
   public String bStr;
   public String hStr, enumIntVal;
-  boolean isBStrOrOstrValue;
-  boolean isEnumIntValue;
   public AsnNamedValue namedval;
   public AsnScientificNumber scientificNumber;
+  boolean isBStrOrOstrValue;
+  boolean isEnumIntValue;
 }

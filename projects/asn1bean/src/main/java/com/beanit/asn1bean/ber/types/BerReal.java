@@ -29,9 +29,8 @@ public class BerReal implements Serializable, BerType {
   public static final BerTag tag =
       new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.PRIMITIVE, BerTag.REAL_TAG);
   private static final long serialVersionUID = 1L;
-  private byte[] code = null;
-
   public double value;
+  private byte[] code = null;
 
   public BerReal() {}
 

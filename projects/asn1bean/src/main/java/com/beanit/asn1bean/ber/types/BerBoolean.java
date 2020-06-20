@@ -27,9 +27,8 @@ public class BerBoolean implements Serializable, BerType {
   public static final BerTag tag =
       new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.PRIMITIVE, BerTag.BOOLEAN_TAG);
   private static final long serialVersionUID = 1L;
-  private byte[] code = null;
-
   public boolean value;
+  private byte[] code = null;
 
   public BerBoolean() {}
 

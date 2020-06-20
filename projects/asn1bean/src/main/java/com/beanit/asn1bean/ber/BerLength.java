@@ -70,6 +70,18 @@ public class BerLength implements Serializable {
     return 1 + numLengthBytes;
   }
 
+  public static int readEocByte(InputStream is) throws IOException {
+    int b = is.read();
+    if (b != 0) {
+      if (b == -1) {
+        throw new EOFException("Unexpected end of input stream.");
+      }
+      throw new IOException(
+          "Byte " + HexString.fromByte(b) + " does not match end of contents octet of zero.");
+    }
+    return 1;
+  }
+
   public int decode(InputStream is) throws IOException {
 
     val = is.read();
@@ -119,17 +131,5 @@ public class BerLength implements Serializable {
     readEocByte(is);
     readEocByte(is);
     return 2;
-  }
-
-  public static int readEocByte(InputStream is) throws IOException {
-    int b = is.read();
-    if (b != 0) {
-      if (b == -1) {
-        throw new EOFException("Unexpected end of input stream.");
-      }
-      throw new IOException(
-          "Byte " + HexString.fromByte(b) + " does not match end of contents octet of zero.");
-    }
-    return 1;
   }
 }
