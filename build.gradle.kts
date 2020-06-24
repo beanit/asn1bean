@@ -3,8 +3,8 @@ plugins {
     `maven-publish`
     signing
     eclipse
-    id("biz.aQute.bnd.builder") version "5.0.0"
-    id("com.diffplug.gradle.spotless") version "3.27.2"
+    id("biz.aQute.bnd.builder") version "5.1.1"
+    id("com.diffplug.gradle.spotless") version "4.4.0"
     id("io.codearte.nexus-staging") version "0.21.2"
 }
 
@@ -106,8 +106,8 @@ configure(javaProjects) {
     }
 
     dependencies {
-        testImplementation("org.junit.jupiter:junit-jupiter:5.5.1")
-        testImplementation("com.tngtech.archunit:archunit-junit5:0.13.1")
+        testImplementation("org.junit.jupiter:junit-jupiter:5.6.2")
+        testImplementation("com.tngtech.archunit:archunit-junit5:0.14.1")
     }
 
     tasks.test {
