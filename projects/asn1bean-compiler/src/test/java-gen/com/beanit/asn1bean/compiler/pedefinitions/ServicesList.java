@@ -47,6 +47,9 @@ public class ServicesList implements BerType, Serializable {
 	public BerNull berTlv = null;
 	public BerNull dfLink = null;
 	public BerNull catTp = null;
+	public BerNull getIdentity = null;
+	public BerNull profileAX25519 = null;
+	public BerNull profileBP256 = null;
 	
 	public ServicesList() {
 	}
@@ -55,7 +58,7 @@ public class ServicesList implements BerType, Serializable {
 		this.code = code;
 	}
 
-	public ServicesList(BerNull contactless, BerNull usim, BerNull isim, BerNull csim, BerNull milenage, BerNull tuak128, BerNull cave, BerNull gbaUsim, BerNull gbaIsim, BerNull mbms, BerNull eap, BerNull javacard, BerNull multos, BerNull multipleUsim, BerNull multipleIsim, BerNull multipleCsim, BerNull tuak256, BerNull usimTestAlgorithm, BerNull berTlv, BerNull dfLink, BerNull catTp) {
+	public ServicesList(BerNull contactless, BerNull usim, BerNull isim, BerNull csim, BerNull milenage, BerNull tuak128, BerNull cave, BerNull gbaUsim, BerNull gbaIsim, BerNull mbms, BerNull eap, BerNull javacard, BerNull multos, BerNull multipleUsim, BerNull multipleIsim, BerNull multipleCsim, BerNull tuak256, BerNull usimTestAlgorithm, BerNull berTlv, BerNull dfLink, BerNull catTp, BerNull getIdentity, BerNull profileAX25519, BerNull profileBP256) {
 		this.contactless = contactless;
 		this.usim = usim;
 		this.isim = isim;
@@ -77,6 +80,9 @@ public class ServicesList implements BerType, Serializable {
 		this.berTlv = berTlv;
 		this.dfLink = dfLink;
 		this.catTp = catTp;
+		this.getIdentity = getIdentity;
+		this.profileAX25519 = profileAX25519;
+		this.profileBP256 = profileBP256;
 	}
 
 	@Override public int encode(OutputStream reverseOS) throws IOException {
@@ -94,6 +100,27 @@ public class ServicesList implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
+		if (profileBP256 != null) {
+			codeLength += profileBP256.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 23
+			reverseOS.write(0x97);
+			codeLength += 1;
+		}
+		
+		if (profileAX25519 != null) {
+			codeLength += profileAX25519.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 22
+			reverseOS.write(0x96);
+			codeLength += 1;
+		}
+		
+		if (getIdentity != null) {
+			codeLength += getIdentity.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, PRIMITIVE, 21
+			reverseOS.write(0x95);
+			codeLength += 1;
+		}
+		
 		if (catTp != null) {
 			codeLength += catTp.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, PRIMITIVE, 20
@@ -461,6 +488,33 @@ public class ServicesList implements BerType, Serializable {
 			vByteCount += berTag.decode(is);
 		}
 		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 21)) {
+			getIdentity = new BerNull();
+			vByteCount += getIdentity.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 22)) {
+			profileAX25519 = new BerNull();
+			vByteCount += profileAX25519.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 23)) {
+			profileBP256 = new BerNull();
+			vByteCount += profileBP256.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
 		if (lengthVal < 0) {
 			if (!berTag.equals(0, 0, 0)) {
 				throw new IOException("Decoded sequence has wrong end of contents octets");
@@ -715,6 +769,39 @@ public class ServicesList implements BerType, Serializable {
 				sb.append("\t");
 			}
 			sb.append("catTp: ").append(catTp);
+			firstSelectedElement = false;
+		}
+		
+		if (getIdentity != null) {
+			if (!firstSelectedElement) {
+				sb.append(",\n");
+			}
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("getIdentity: ").append(getIdentity);
+			firstSelectedElement = false;
+		}
+		
+		if (profileAX25519 != null) {
+			if (!firstSelectedElement) {
+				sb.append(",\n");
+			}
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("profileAX25519: ").append(profileAX25519);
+			firstSelectedElement = false;
+		}
+		
+		if (profileBP256 != null) {
+			if (!firstSelectedElement) {
+				sb.append(",\n");
+			}
+			for (int i = 0; i < indentLevel + 1; i++) {
+				sb.append("\t");
+			}
+			sb.append("profileBP256: ").append(profileBP256);
 			firstSelectedElement = false;
 		}
 		

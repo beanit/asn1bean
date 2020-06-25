@@ -52,6 +52,8 @@ public class ProfileElement implements BerType, Serializable {
 	public PECSIM csim = null;
 	public PEOPTCSIM optCsim = null;
 	public PEEAP eap = null;
+	public PEDF5GS df5gs = null;
+	public PEDFSAIP dfSaip = null;
 	
 	public ProfileElement() {
 	}
@@ -60,7 +62,7 @@ public class ProfileElement implements BerType, Serializable {
 		this.code = code;
 	}
 
-	public ProfileElement(ProfileHeader header, PEGenericFileManagement genericFileManagement, PEPINCodes pinCodes, PEPUKCodes pukCodes, PEAKAParameter akaParameter, PECDMAParameter cdmaParameter, PESecurityDomain securityDomain, PERFM rfm, PEApplication application, PENonStandard nonStandard, PEEnd end, PEDummy rfu1, PEDummy rfu2, PEDummy rfu3, PEDummy rfu4, PEDummy rfu5, PEMF mf, PECD cd, PETELECOM telecom, PEUSIM usim, PEOPTUSIM optUsim, PEISIM isim, PEOPTISIM optIsim, PEPHONEBOOK phonebook, PEGSMACCESS gsmAccess, PECSIM csim, PEOPTCSIM optCsim, PEEAP eap) {
+	public ProfileElement(ProfileHeader header, PEGenericFileManagement genericFileManagement, PEPINCodes pinCodes, PEPUKCodes pukCodes, PEAKAParameter akaParameter, PECDMAParameter cdmaParameter, PESecurityDomain securityDomain, PERFM rfm, PEApplication application, PENonStandard nonStandard, PEEnd end, PEDummy rfu1, PEDummy rfu2, PEDummy rfu3, PEDummy rfu4, PEDummy rfu5, PEMF mf, PECD cd, PETELECOM telecom, PEUSIM usim, PEOPTUSIM optUsim, PEISIM isim, PEOPTISIM optIsim, PEPHONEBOOK phonebook, PEGSMACCESS gsmAccess, PECSIM csim, PEOPTCSIM optCsim, PEEAP eap, PEDF5GS df5gs, PEDFSAIP dfSaip) {
 		this.header = header;
 		this.genericFileManagement = genericFileManagement;
 		this.pinCodes = pinCodes;
@@ -89,6 +91,8 @@ public class ProfileElement implements BerType, Serializable {
 		this.csim = csim;
 		this.optCsim = optCsim;
 		this.eap = eap;
+		this.df5gs = df5gs;
+		this.dfSaip = dfSaip;
 	}
 
 	@Override public int encode(OutputStream reverseOS) throws IOException {
@@ -99,6 +103,22 @@ public class ProfileElement implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
+		if (dfSaip != null) {
+			codeLength += dfSaip.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 29
+			reverseOS.write(0xBD);
+			codeLength += 1;
+			return codeLength;
+		}
+		
+		if (df5gs != null) {
+			codeLength += df5gs.encode(reverseOS, false);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 28
+			reverseOS.write(0xBC);
+			codeLength += 1;
+			return codeLength;
+		}
+		
 		if (eap != null) {
 			codeLength += eap.encode(reverseOS, false);
 			// write tag: CONTEXT_CLASS, CONSTRUCTED, 27
@@ -508,6 +528,18 @@ public class ProfileElement implements BerType, Serializable {
 			return tlvByteCount;
 		}
 
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 28)) {
+			df5gs = new PEDF5GS();
+			tlvByteCount += df5gs.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 29)) {
+			dfSaip = new PEDFSAIP();
+			tlvByteCount += dfSaip.decode(is, false);
+			return tlvByteCount;
+		}
+
 		if (tagWasPassed) {
 			return 0;
 		}
@@ -694,6 +726,18 @@ public class ProfileElement implements BerType, Serializable {
 		if (eap != null) {
 			sb.append("eap: ");
 			eap.appendAsString(sb, indentLevel + 1);
+			return;
+		}
+
+		if (df5gs != null) {
+			sb.append("df5gs: ");
+			df5gs.appendAsString(sb, indentLevel + 1);
+			return;
+		}
+
+		if (dfSaip != null) {
+			sb.append("dfSaip: ");
+			dfSaip.appendAsString(sb, indentLevel + 1);
 			return;
 		}
 

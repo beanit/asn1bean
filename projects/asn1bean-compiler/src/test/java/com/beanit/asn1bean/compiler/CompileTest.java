@@ -137,7 +137,7 @@ public class CompileTest {
           "-p",
           rootPackageName,
           "-f",
-          "src/test/resources/mobile/PEDefinitionsV2.2.asn",
+          "src/test/resources/mobile/PEDefinitionsV2.3.1.asn",
           "-l"
         };
     Compiler.main(args);
