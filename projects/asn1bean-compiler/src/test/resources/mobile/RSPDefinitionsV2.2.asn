@@ -525,7 +525,7 @@ AuthenticateServerRequest ::= [56] SEQUENCE { -- Tag 'BF38'
 
  serverSigned1 ServerSigned1, -- Signed information 
 
- serverSignature1 [APPLICATION 55] OCTET STRING, -- tag ‘5F37’ 
+ serverSignature1 [APPLICATION 55] OCTET STRING, -- tag '5F37'
 
  euiccCiPKIdToBeUsed SubjectKeyIdentifier, -- CI Public Key Identifier to be used
 
@@ -744,7 +744,7 @@ ProfileInstallationResultData ::= [39] SEQUENCE { -- Tag 'BF27'
 
  
 
-EuiccSignPIR ::= [APPLICATION 55] OCTET STRING -- Tag '5F37', eUICC’s signature 
+EuiccSignPIR ::= [APPLICATION 55] OCTET STRING -- Tag '5F37', eUICC's signature
 
  
 
