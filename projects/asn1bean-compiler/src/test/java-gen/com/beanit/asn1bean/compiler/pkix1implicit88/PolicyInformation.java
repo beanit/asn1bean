@@ -38,7 +38,7 @@ public class PolicyInformation implements BerType, Serializable {
 		public List<PolicyQualifierInfo> seqOf = null;
 
 		public PolicyQualifiers() {
-			seqOf = new ArrayList<PolicyQualifierInfo>();
+			seqOf = new ArrayList<>();
 		}
 
 		public PolicyQualifiers(byte[] code) {

@@ -32,7 +32,7 @@ public class PersonnelRecordz implements BerType, Serializable {
 		private List<ChildInformationz> seqOf = null;
 
 		public Children() {
-			seqOf = new ArrayList<ChildInformationz>();
+			seqOf = new ArrayList<>();
 		}
 
 		public Children(byte[] code) {
@@ -41,7 +41,7 @@ public class PersonnelRecordz implements BerType, Serializable {
 
 		public List<ChildInformationz> getChildInformationz() {
 			if (seqOf == null) {
-				seqOf = new ArrayList<ChildInformationz>();
+				seqOf = new ArrayList<>();
 			}
 			return seqOf;
 		}

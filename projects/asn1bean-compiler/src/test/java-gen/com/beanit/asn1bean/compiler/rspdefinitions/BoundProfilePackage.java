@@ -36,7 +36,7 @@ public class BoundProfilePackage implements BerType, Serializable {
 		public List<BerOctetString> seqOf = null;
 
 		public FirstSequenceOf87() {
-			seqOf = new ArrayList<BerOctetString>();
+			seqOf = new ArrayList<>();
 		}
 
 		public FirstSequenceOf87(byte[] code) {
@@ -169,7 +169,7 @@ public class BoundProfilePackage implements BerType, Serializable {
 		public List<BerOctetString> seqOf = null;
 
 		public SequenceOf88() {
-			seqOf = new ArrayList<BerOctetString>();
+			seqOf = new ArrayList<>();
 		}
 
 		public SequenceOf88(byte[] code) {
@@ -302,7 +302,7 @@ public class BoundProfilePackage implements BerType, Serializable {
 		public List<BerOctetString> seqOf = null;
 
 		public SecondSequenceOf87() {
-			seqOf = new ArrayList<BerOctetString>();
+			seqOf = new ArrayList<>();
 		}
 
 		public SecondSequenceOf87(byte[] code) {
@@ -435,7 +435,7 @@ public class BoundProfilePackage implements BerType, Serializable {
 		public List<BerOctetString> seqOf = null;
 
 		public SequenceOf86() {
-			seqOf = new ArrayList<BerOctetString>();
+			seqOf = new ArrayList<>();
 		}
 
 		public SequenceOf86(byte[] code) {

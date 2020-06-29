@@ -34,7 +34,7 @@ public class GeneralSubtrees implements BerType, Serializable {
 	public List<GeneralSubtree> seqOf = null;
 
 	public GeneralSubtrees() {
-		seqOf = new ArrayList<GeneralSubtree>();
+		seqOf = new ArrayList<>();
 	}
 
 	public GeneralSubtrees(byte[] code) {

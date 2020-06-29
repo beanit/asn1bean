@@ -13,6 +13,4 @@
  */
 package com.beanit.asn1bean.compiler.model;
 
-public class AsnBoolean extends AsnUniversalType {
-  public final String BUILTINTYPE = "BOOLEAN";
-}
+public class AsnBoolean extends AsnUniversalType {}

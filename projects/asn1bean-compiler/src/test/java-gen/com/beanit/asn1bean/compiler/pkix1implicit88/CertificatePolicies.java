@@ -34,7 +34,7 @@ public class CertificatePolicies implements BerType, Serializable {
 	public List<PolicyInformation> seqOf = null;
 
 	public CertificatePolicies() {
-		seqOf = new ArrayList<PolicyInformation>();
+		seqOf = new ArrayList<>();
 	}
 
 	public CertificatePolicies(byte[] code) {

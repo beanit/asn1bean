@@ -28,7 +28,7 @@ public class RDNSequence implements BerType, Serializable {
 	public List<RelativeDistinguishedName> seqOf = null;
 
 	public RDNSequence() {
-		seqOf = new ArrayList<RelativeDistinguishedName>();
+		seqOf = new ArrayList<>();
 	}
 
 	public RDNSequence(byte[] code) {

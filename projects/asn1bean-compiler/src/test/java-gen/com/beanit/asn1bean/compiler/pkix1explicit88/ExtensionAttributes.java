@@ -28,7 +28,7 @@ public class ExtensionAttributes implements BerType, Serializable {
 	public List<ExtensionAttribute> seqOf = null;
 
 	public ExtensionAttributes() {
-		seqOf = new ArrayList<ExtensionAttribute>();
+		seqOf = new ArrayList<>();
 	}
 
 	public ExtensionAttributes(byte[] code) {

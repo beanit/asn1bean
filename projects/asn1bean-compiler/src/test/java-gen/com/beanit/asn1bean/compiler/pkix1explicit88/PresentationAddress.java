@@ -32,7 +32,7 @@ public class PresentationAddress implements BerType, Serializable {
 		public List<BerOctetString> seqOf = null;
 
 		public NAddresses() {
-			seqOf = new ArrayList<BerOctetString>();
+			seqOf = new ArrayList<>();
 		}
 
 		public NAddresses(byte[] code) {

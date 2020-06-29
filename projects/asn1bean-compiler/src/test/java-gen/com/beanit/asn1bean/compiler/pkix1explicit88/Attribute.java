@@ -32,7 +32,7 @@ public class Attribute implements BerType, Serializable {
 		public List<AttributeValue> seqOf = null;
 
 		public Values() {
-			seqOf = new ArrayList<AttributeValue>();
+			seqOf = new ArrayList<>();
 		}
 
 		public Values(byte[] code) {

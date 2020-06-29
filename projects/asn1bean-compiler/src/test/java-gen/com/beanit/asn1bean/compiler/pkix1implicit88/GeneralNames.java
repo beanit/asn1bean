@@ -34,7 +34,7 @@ public class GeneralNames implements BerType, Serializable {
 	public List<GeneralName> seqOf = null;
 
 	public GeneralNames() {
-		seqOf = new ArrayList<GeneralName>();
+		seqOf = new ArrayList<>();
 	}
 
 	public GeneralNames(byte[] code) {

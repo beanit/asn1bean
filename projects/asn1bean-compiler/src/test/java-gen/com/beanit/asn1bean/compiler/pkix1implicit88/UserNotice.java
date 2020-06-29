@@ -170,7 +170,6 @@ public class UserNotice implements BerType, Serializable {
 			}
 			sb.append("explicitText: ");
 			explicitText.appendAsString(sb, indentLevel + 1);
-			firstSelectedElement = false;
 		}
 		
 		sb.append("\n");

@@ -14,7 +14,5 @@
 package com.beanit.asn1bean.compiler.model;
 
 public class AsnNull extends AsnUniversalType {
-  final String BUILTINTYPE = "NULL";
-
   public boolean isNull = true;
 }

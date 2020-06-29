@@ -952,7 +952,7 @@ public class BerClassWriter {
     }
 
     write("public " + className + "() {");
-    write("seqOf = new ArrayList<" + referencedTypeName + ">();");
+    write("seqOf = new ArrayList<>();");
     write("}\n");
 
     write("public " + className + "(byte[] code) {");
@@ -1910,7 +1910,7 @@ public class BerClassWriter {
       }
 
       if (isOptional(componentType)) {
-        if (checkIfFirstSelectedElement) {
+        if (checkIfFirstSelectedElement && j != (componentTypes.size() - 1)) {
           write("firstSelectedElement = false;");
         }
         write("}");
@@ -2143,7 +2143,7 @@ public class BerClassWriter {
             + referencedTypeName.substring(referencedTypeName.lastIndexOf('.') + 1)
             + "() {");
     write("if (seqOf == null) {");
-    write("seqOf = new ArrayList<" + referencedTypeName + ">();");
+    write("seqOf = new ArrayList<>();");
     write("}");
     write("return seqOf;");
     write("}\n");

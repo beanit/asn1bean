@@ -28,7 +28,7 @@ public class BuiltInDomainDefinedAttributes implements BerType, Serializable {
 	public List<BuiltInDomainDefinedAttribute> seqOf = null;
 
 	public BuiltInDomainDefinedAttributes() {
-		seqOf = new ArrayList<BuiltInDomainDefinedAttribute>();
+		seqOf = new ArrayList<>();
 	}
 
 	public BuiltInDomainDefinedAttributes(byte[] code) {

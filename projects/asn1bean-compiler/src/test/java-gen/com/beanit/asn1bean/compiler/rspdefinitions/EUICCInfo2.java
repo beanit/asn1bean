@@ -36,7 +36,7 @@ public class EUICCInfo2 implements BerType, Serializable {
 		public List<SubjectKeyIdentifier> seqOf = null;
 
 		public EuiccCiPKIdListForVerification() {
-			seqOf = new ArrayList<SubjectKeyIdentifier>();
+			seqOf = new ArrayList<>();
 		}
 
 		public EuiccCiPKIdListForVerification(byte[] code) {
@@ -166,7 +166,7 @@ public class EUICCInfo2 implements BerType, Serializable {
 		public List<SubjectKeyIdentifier> seqOf = null;
 
 		public EuiccCiPKIdListForSigning() {
-			seqOf = new ArrayList<SubjectKeyIdentifier>();
+			seqOf = new ArrayList<>();
 		}
 
 		public EuiccCiPKIdListForSigning(byte[] code) {

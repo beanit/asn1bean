@@ -32,7 +32,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 		public List<com.beanit.asn1bean.compiler.various_tests.UntaggedInteger> seqOf = null;
 
 		public Myseqof() {
-			seqOf = new ArrayList<com.beanit.asn1bean.compiler.various_tests.UntaggedInteger>();
+			seqOf = new ArrayList<>();
 		}
 
 		public Myseqof(byte[] code) {
@@ -573,7 +573,7 @@ public class SequenceNameClashTest implements BerType, Serializable {
 			public List<com.beanit.asn1bean.compiler.various_tests.UntaggedInteger> seqOf = null;
 
 			public Myseqof() {
-				seqOf = new ArrayList<com.beanit.asn1bean.compiler.various_tests.UntaggedInteger>();
+				seqOf = new ArrayList<>();
 			}
 
 			public Myseqof(byte[] code) {

@@ -14,20 +14,18 @@
 package com.beanit.asn1bean.compiler.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AsnCharacterStringValue {
-  public ArrayList charDefsList;
+  public final List<CharDef> charDefsList;
   public boolean isCharDefList;
   public boolean isTuple;
-  public ArrayList tupleQuad;
+  public final List<AsnSignedNumber> tupleQuad;
   String cStr;
   boolean isQuadruple;
 
-  // ~--- constructors -------------------------------------------------------
-
-  // Default Constructor
   public AsnCharacterStringValue() {
-    charDefsList = new ArrayList();
-    tupleQuad = new ArrayList();
+    charDefsList = new ArrayList<>();
+    tupleQuad = new ArrayList<>();
   }
 }

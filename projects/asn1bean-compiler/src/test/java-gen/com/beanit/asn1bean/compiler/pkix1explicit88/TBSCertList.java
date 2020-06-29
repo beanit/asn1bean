@@ -206,7 +206,7 @@ public class TBSCertList implements BerType, Serializable {
 		public List<SEQUENCE> seqOf = null;
 
 		public RevokedCertificates() {
-			seqOf = new ArrayList<SEQUENCE>();
+			seqOf = new ArrayList<>();
 		}
 
 		public RevokedCertificates(byte[] code) {

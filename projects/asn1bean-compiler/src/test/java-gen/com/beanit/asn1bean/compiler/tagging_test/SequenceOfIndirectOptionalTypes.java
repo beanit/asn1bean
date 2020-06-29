@@ -691,7 +691,6 @@ public class SequenceOfIndirectOptionalTypes implements BerType, Serializable {
 				sb.append("\t");
 			}
 			sb.append("taggedAny2: ").append(taggedAny2);
-			firstSelectedElement = false;
 		}
 		
 		sb.append("\n");

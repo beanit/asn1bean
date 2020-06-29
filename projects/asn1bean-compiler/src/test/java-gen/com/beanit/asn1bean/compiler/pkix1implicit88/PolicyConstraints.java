@@ -170,7 +170,6 @@ public class PolicyConstraints implements BerType, Serializable {
 				sb.append("\t");
 			}
 			sb.append("inhibitPolicyMapping: ").append(inhibitPolicyMapping);
-			firstSelectedElement = false;
 		}
 		
 		sb.append("\n");

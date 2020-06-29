@@ -34,7 +34,7 @@ public class ExtKeyUsageSyntax implements BerType, Serializable {
 	public List<KeyPurposeId> seqOf = null;
 
 	public ExtKeyUsageSyntax() {
-		seqOf = new ArrayList<KeyPurposeId>();
+		seqOf = new ArrayList<>();
 	}
 
 	public ExtKeyUsageSyntax(byte[] code) {

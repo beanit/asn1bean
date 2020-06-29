@@ -14,6 +14,7 @@
 package com.beanit.asn1bean.compiler.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ConstraintElements {
   public AsnConstraint constraint;
@@ -34,6 +35,6 @@ public class ConstraintElements {
   public boolean isWithComponents;
   public AsnValue lEndValue, uEndValue;
   public Object type;
-  public ArrayList typeConstraintList = new ArrayList();
-  public ArrayList<AsnValue> values = new ArrayList<AsnValue>();
+  public List<NamedConstraint> typeConstraintList = new ArrayList<>();
+  public List<AsnValue> values = new ArrayList<>();
 }

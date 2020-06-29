@@ -34,7 +34,7 @@ public class CRLDistributionPoints implements BerType, Serializable {
 	public List<DistributionPoint> seqOf = null;
 
 	public CRLDistributionPoints() {
-		seqOf = new ArrayList<DistributionPoint>();
+		seqOf = new ArrayList<>();
 	}
 
 	public CRLDistributionPoints(byte[] code) {

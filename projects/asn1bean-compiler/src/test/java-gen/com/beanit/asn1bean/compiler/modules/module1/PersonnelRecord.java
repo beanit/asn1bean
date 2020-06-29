@@ -35,7 +35,7 @@ public class PersonnelRecord implements BerType, Serializable {
 		private List<ChildInformation> seqOf = null;
 
 		public Children() {
-			seqOf = new ArrayList<ChildInformation>();
+			seqOf = new ArrayList<>();
 		}
 
 		public Children(byte[] code) {
@@ -44,7 +44,7 @@ public class PersonnelRecord implements BerType, Serializable {
 
 		public List<ChildInformation> getChildInformation() {
 			if (seqOf == null) {
-				seqOf = new ArrayList<ChildInformation>();
+				seqOf = new ArrayList<>();
 			}
 			return seqOf;
 		}
@@ -416,7 +416,7 @@ public class PersonnelRecord implements BerType, Serializable {
 		private List<SEQUENCE> seqOf = null;
 
 		public TestSequenceOf2() {
-			seqOf = new ArrayList<SEQUENCE>();
+			seqOf = new ArrayList<>();
 		}
 
 		public TestSequenceOf2(byte[] code) {
@@ -425,7 +425,7 @@ public class PersonnelRecord implements BerType, Serializable {
 
 		public List<SEQUENCE> getSEQUENCE() {
 			if (seqOf == null) {
-				seqOf = new ArrayList<SEQUENCE>();
+				seqOf = new ArrayList<>();
 			}
 			return seqOf;
 		}

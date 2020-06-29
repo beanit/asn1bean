@@ -32,7 +32,7 @@ public class PESecurityDomain implements BerType, Serializable {
 		public List<KeyObject> seqOf = null;
 
 		public KeyList() {
-			seqOf = new ArrayList<KeyObject>();
+			seqOf = new ArrayList<>();
 		}
 
 		public KeyList(byte[] code) {
@@ -162,7 +162,7 @@ public class PESecurityDomain implements BerType, Serializable {
 		public List<BerOctetString> seqOf = null;
 
 		public SdPersoData() {
-			seqOf = new ArrayList<BerOctetString>();
+			seqOf = new ArrayList<>();
 		}
 
 		public SdPersoData(byte[] code) {
@@ -425,7 +425,6 @@ public class PESecurityDomain implements BerType, Serializable {
 					sb.append("\t");
 				}
 				sb.append("contactlessProtocolParameters: ").append(contactlessProtocolParameters);
-				firstSelectedElement = false;
 			}
 			
 			sb.append("\n");

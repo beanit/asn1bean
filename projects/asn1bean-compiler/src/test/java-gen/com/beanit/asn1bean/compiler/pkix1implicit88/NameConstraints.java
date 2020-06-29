@@ -172,7 +172,6 @@ public class NameConstraints implements BerType, Serializable {
 			}
 			sb.append("excludedSubtrees: ");
 			excludedSubtrees.appendAsString(sb, indentLevel + 1);
-			firstSelectedElement = false;
 		}
 		
 		sb.append("\n");

@@ -293,7 +293,6 @@ public class IssuingDistributionPoint implements BerType, Serializable {
 				sb.append("\t");
 			}
 			sb.append("onlyContainsAttributeCerts: ").append(onlyContainsAttributeCerts);
-			firstSelectedElement = false;
 		}
 		
 		sb.append("\n");

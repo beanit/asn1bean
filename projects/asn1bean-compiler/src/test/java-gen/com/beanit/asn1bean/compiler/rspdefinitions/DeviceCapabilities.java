@@ -342,7 +342,6 @@ public class DeviceCapabilities implements BerType, Serializable {
 				sb.append("\t");
 			}
 			sb.append("rspCrlSupportedVersion: ").append(rspCrlSupportedVersion);
-			firstSelectedElement = false;
 		}
 		
 		sb.append("\n");

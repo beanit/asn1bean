@@ -28,7 +28,7 @@ public class RelativeDistinguishedName implements BerType, Serializable {
 	public List<AttributeTypeAndValue> seqOf = null;
 
 	public RelativeDistinguishedName() {
-		seqOf = new ArrayList<AttributeTypeAndValue>();
+		seqOf = new ArrayList<>();
 	}
 
 	public RelativeDistinguishedName(byte[] code) {

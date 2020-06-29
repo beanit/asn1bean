@@ -36,7 +36,7 @@ public class StoreMetadataRequest implements BerType, Serializable {
 		public List<NotificationConfigurationInformation> seqOf = null;
 
 		public NotificationConfigurationInfo() {
-			seqOf = new ArrayList<NotificationConfigurationInformation>();
+			seqOf = new ArrayList<>();
 		}
 
 		public NotificationConfigurationInfo(byte[] code) {

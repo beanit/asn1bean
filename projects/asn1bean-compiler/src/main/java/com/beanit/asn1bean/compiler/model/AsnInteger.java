@@ -14,7 +14,6 @@
 package com.beanit.asn1bean.compiler.model;
 
 public class AsnInteger extends AsnUniversalType {
-  public final String BUILTINTYPE = "INTEGER";
   public AsnConstraint constraint;
   public AsnNamedNumberList namedNumberList;
 }

@@ -16,25 +16,24 @@ package com.beanit.asn1bean.compiler.model;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AsnModule {
 
-  public final HashMap<String, AsnType> typesByName = new HashMap<>();
-  public final HashMap<String, AsnValueAssignment> asnValueAssignmentsByName = new HashMap<>();
-  public final HashMap<String, AsnInformationObjectClass> objectClassesByName = new HashMap<>();
-  public ArrayList exportSymbolList;
+  public final Map<String, AsnType> typesByName = new HashMap<>();
+  public final Map<String, AsnValueAssignment> asnValueAssignmentsByName = new HashMap<>();
+  public final Map<String, AsnInformationObjectClass> objectClassesByName = new HashMap<>();
+  public List<List<String>> exportSymbolList;
   public boolean exported;
   public boolean extensible;
-  public List<SymbolsFromModule> importSymbolFromModuleList = new ArrayList<>();
+  public final List<SymbolsFromModule> importSymbolFromModuleList = new ArrayList<>();
   public boolean imported;
   public AsnModuleIdentifier moduleIdentifier;
   public boolean tag;
   public TagDefault tagDefault = TagDefault.EXPLICIT;
-  ArrayList importSymbolList;
 
   public AsnModule() {
     exportSymbolList = new ArrayList<>();
-    importSymbolList = new ArrayList<>();
 
     AsnElementType idElement = new AsnElementType();
     idElement.name = "id";

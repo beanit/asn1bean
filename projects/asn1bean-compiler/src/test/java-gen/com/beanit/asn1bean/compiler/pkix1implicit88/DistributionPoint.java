@@ -207,7 +207,6 @@ public class DistributionPoint implements BerType, Serializable {
 			}
 			sb.append("cRLIssuer: ");
 			cRLIssuer.appendAsString(sb, indentLevel + 1);
-			firstSelectedElement = false;
 		}
 		
 		sb.append("\n");

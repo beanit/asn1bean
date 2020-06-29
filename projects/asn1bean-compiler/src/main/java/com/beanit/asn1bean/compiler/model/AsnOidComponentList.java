@@ -14,9 +14,10 @@
 package com.beanit.asn1bean.compiler.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AsnOidComponentList {
-  public ArrayList components = new ArrayList();
+  public List<AsnOidComponent> components = new ArrayList<>();
   public AsnDefinedValue defval;
   public boolean isDefinitive;
 }

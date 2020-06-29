@@ -193,7 +193,6 @@ public class ProprietaryInfo implements BerType, Serializable {
 				sb.append("\t");
 			}
 			sb.append("repeatPattern: ").append(repeatPattern);
-			firstSelectedElement = false;
 		}
 		
 		sb.append("\n");

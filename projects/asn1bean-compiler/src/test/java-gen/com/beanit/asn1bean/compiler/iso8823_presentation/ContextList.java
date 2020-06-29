@@ -36,7 +36,7 @@ public class ContextList implements BerType, Serializable {
 			public List<TransferSyntaxName> seqOf = null;
 
 			public TransferSyntaxNameList() {
-				seqOf = new ArrayList<TransferSyntaxName>();
+				seqOf = new ArrayList<>();
 			}
 
 			public TransferSyntaxNameList(byte[] code) {
@@ -331,7 +331,7 @@ public class ContextList implements BerType, Serializable {
 	public List<SEQUENCE> seqOf = null;
 
 	public ContextList() {
-		seqOf = new ArrayList<SEQUENCE>();
+		seqOf = new ArrayList<>();
 	}
 
 	public ContextList(byte[] code) {

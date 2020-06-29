@@ -13,6 +13,4 @@
  */
 package com.beanit.asn1bean.compiler.model;
 
-public class AsnEmbeddedPdv extends AsnUniversalType {
-  final String BUILTINTYPE = "EMBEDDED PDV";
-}
+public class AsnEmbeddedPdv extends AsnUniversalType {}

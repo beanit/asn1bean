@@ -28,7 +28,7 @@ public class ExplicitlyTaggedSetOf implements BerType, Serializable {
 	private List<BerInteger> seqOf = null;
 
 	public ExplicitlyTaggedSetOf() {
-		seqOf = new ArrayList<BerInteger>();
+		seqOf = new ArrayList<>();
 	}
 
 	public ExplicitlyTaggedSetOf(byte[] code) {
@@ -37,7 +37,7 @@ public class ExplicitlyTaggedSetOf implements BerType, Serializable {
 
 	public List<BerInteger> getBerInteger() {
 		if (seqOf == null) {
-			seqOf = new ArrayList<BerInteger>();
+			seqOf = new ArrayList<>();
 		}
 		return seqOf;
 	}

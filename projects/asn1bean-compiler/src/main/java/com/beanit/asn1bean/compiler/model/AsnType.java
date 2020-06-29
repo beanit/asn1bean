@@ -16,7 +16,6 @@ package com.beanit.asn1bean.compiler.model;
 import java.util.List;
 
 public abstract class AsnType {
-
   public String name = "";
   public List<AsnParameter> parameters = null;
 }

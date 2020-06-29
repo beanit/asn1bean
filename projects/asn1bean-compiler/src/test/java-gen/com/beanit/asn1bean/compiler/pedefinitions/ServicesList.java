@@ -802,7 +802,6 @@ public class ServicesList implements BerType, Serializable {
 				sb.append("\t");
 			}
 			sb.append("profileBP256: ").append(profileBP256);
-			firstSelectedElement = false;
 		}
 		
 		sb.append("\n");

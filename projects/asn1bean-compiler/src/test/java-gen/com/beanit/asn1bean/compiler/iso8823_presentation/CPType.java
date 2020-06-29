@@ -346,7 +346,6 @@ public class CPType implements BerType, Serializable {
 				}
 				sb.append("userData: ");
 				userData.appendAsString(sb, indentLevel + 1);
-				firstSelectedElement = false;
 			}
 			
 			sb.append("\n");

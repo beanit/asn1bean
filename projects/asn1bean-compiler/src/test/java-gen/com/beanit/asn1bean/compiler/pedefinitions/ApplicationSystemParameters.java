@@ -455,7 +455,6 @@ public class ApplicationSystemParameters implements BerType, Serializable {
 				sb.append("\t");
 			}
 			sb.append("cumulativeGrantedNonVolatileMemory: ").append(cumulativeGrantedNonVolatileMemory);
-			firstSelectedElement = false;
 		}
 		
 		sb.append("\n");

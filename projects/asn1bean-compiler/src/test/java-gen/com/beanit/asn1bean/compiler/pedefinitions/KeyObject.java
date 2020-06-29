@@ -212,7 +212,7 @@ public class KeyObject implements BerType, Serializable {
 		public List<SEQUENCE> seqOf = null;
 
 		public KeyCompontents() {
-			seqOf = new ArrayList<SEQUENCE>();
+			seqOf = new ArrayList<>();
 		}
 
 		public KeyCompontents(byte[] code) {

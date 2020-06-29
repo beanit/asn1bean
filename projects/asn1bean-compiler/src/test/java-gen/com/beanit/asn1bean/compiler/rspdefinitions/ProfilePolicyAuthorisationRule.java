@@ -36,7 +36,7 @@ public class ProfilePolicyAuthorisationRule implements BerType, Serializable {
 		public List<OperatorId> seqOf = null;
 
 		public AllowedOperators() {
-			seqOf = new ArrayList<OperatorId>();
+			seqOf = new ArrayList<>();
 		}
 
 		public AllowedOperators(byte[] code) {

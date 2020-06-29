@@ -182,7 +182,7 @@ public class PolicyMappings implements BerType, Serializable {
 	public List<SEQUENCE> seqOf = null;
 
 	public PolicyMappings() {
-		seqOf = new ArrayList<SEQUENCE>();
+		seqOf = new ArrayList<>();
 	}
 
 	public PolicyMappings(byte[] code) {

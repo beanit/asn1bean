@@ -36,7 +36,7 @@ public class LoadCRLResponseOk implements BerType, Serializable {
 		public List<BerInteger> seqOf = null;
 
 		public MissingParts() {
-			seqOf = new ArrayList<BerInteger>();
+			seqOf = new ArrayList<>();
 		}
 
 		public MissingParts(byte[] code) {

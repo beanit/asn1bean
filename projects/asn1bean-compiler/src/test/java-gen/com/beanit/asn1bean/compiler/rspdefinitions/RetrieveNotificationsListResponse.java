@@ -39,7 +39,7 @@ public class RetrieveNotificationsListResponse implements BerType, Serializable 
 		public List<PendingNotification> seqOf = null;
 
 		public NotificationList() {
-			seqOf = new ArrayList<PendingNotification>();
+			seqOf = new ArrayList<>();
 		}
 
 		public NotificationList(byte[] code) {

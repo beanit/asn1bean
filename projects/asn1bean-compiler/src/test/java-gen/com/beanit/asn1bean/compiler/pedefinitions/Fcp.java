@@ -397,7 +397,6 @@ public class Fcp implements BerType, Serializable {
 				sb.append("\t");
 			}
 			sb.append("linkPath: ").append(linkPath);
-			firstSelectedElement = false;
 		}
 		
 		sb.append("\n");

@@ -32,7 +32,7 @@ public class RulesAuthorisationTable implements BerType, Serializable {
 	public List<ProfilePolicyAuthorisationRule> seqOf = null;
 
 	public RulesAuthorisationTable() {
-		seqOf = new ArrayList<ProfilePolicyAuthorisationRule>();
+		seqOf = new ArrayList<>();
 	}
 
 	public RulesAuthorisationTable(byte[] code) {

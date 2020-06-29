@@ -32,7 +32,7 @@ public class UnformattedPostalAddress implements BerType, Serializable {
 		public List<BerPrintableString> seqOf = null;
 
 		public PrintableAddress() {
-			seqOf = new ArrayList<BerPrintableString>();
+			seqOf = new ArrayList<>();
 		}
 
 		public PrintableAddress(byte[] code) {
@@ -283,7 +283,6 @@ public class UnformattedPostalAddress implements BerType, Serializable {
 				sb.append("\t");
 			}
 			sb.append("teletexString: ").append(teletexString);
-			firstSelectedElement = false;
 		}
 		
 		sb.append("\n");

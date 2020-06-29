@@ -38,7 +38,7 @@ public class NoticeReference implements BerType, Serializable {
 		public List<BerInteger> seqOf = null;
 
 		public NoticeNumbers() {
-			seqOf = new ArrayList<BerInteger>();
+			seqOf = new ArrayList<>();
 		}
 
 		public NoticeNumbers(byte[] code) {

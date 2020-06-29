@@ -37,7 +37,7 @@ public class PEPINCodes implements BerType, Serializable {
 			public List<PINConfiguration> seqOf = null;
 
 			public Pinconfig() {
-				seqOf = new ArrayList<PINConfiguration>();
+				seqOf = new ArrayList<>();
 			}
 
 			public Pinconfig(byte[] code) {

@@ -28,7 +28,7 @@ public class OrganizationalUnitNames implements BerType, Serializable {
 	public List<OrganizationalUnitName> seqOf = null;
 
 	public OrganizationalUnitNames() {
-		seqOf = new ArrayList<OrganizationalUnitName>();
+		seqOf = new ArrayList<>();
 	}
 
 	public OrganizationalUnitNames(byte[] code) {

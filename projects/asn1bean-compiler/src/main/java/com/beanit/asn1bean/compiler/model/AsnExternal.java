@@ -13,6 +13,4 @@
  */
 package com.beanit.asn1bean.compiler.model;
 
-public class AsnExternal extends AsnType {
-  final String BUILTINTYPE = "EXTERNAL";
-}
+public class AsnExternal extends AsnType {}

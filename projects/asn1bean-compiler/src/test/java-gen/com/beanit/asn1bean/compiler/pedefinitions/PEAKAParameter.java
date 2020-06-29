@@ -143,7 +143,7 @@ public class PEAKAParameter implements BerType, Serializable {
 		public List<BerOctetString> seqOf = null;
 
 		public SqnInit() {
-			seqOf = new ArrayList<BerOctetString>();
+			seqOf = new ArrayList<>();
 		}
 
 		public SqnInit(byte[] code) {

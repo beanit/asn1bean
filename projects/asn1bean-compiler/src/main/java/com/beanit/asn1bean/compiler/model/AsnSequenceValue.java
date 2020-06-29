@@ -14,8 +14,9 @@
 package com.beanit.asn1bean.compiler.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AsnSequenceValue {
   public boolean isValPresent;
-  public ArrayList namedValueList = new ArrayList();
+  public List<AsnNamedValue> namedValueList = new ArrayList<>();
 }

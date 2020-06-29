@@ -18,11 +18,11 @@ import java.util.List;
 
 public class AsnBitOrOctetStringValue {
   public String bhStr;
-  public List<String> idlist;
+  public final List<String> idlist;
   public boolean isBString;
   public boolean isHString;
 
   public AsnBitOrOctetStringValue() {
-    idlist = new ArrayList();
+    idlist = new ArrayList<>();
   }
 }

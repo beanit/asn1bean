@@ -32,7 +32,7 @@ public class PEPUKCodes implements BerType, Serializable {
 		public List<PUKConfiguration> seqOf = null;
 
 		public PukCodes() {
-			seqOf = new ArrayList<PUKConfiguration>();
+			seqOf = new ArrayList<>();
 		}
 
 		public PukCodes(byte[] code) {

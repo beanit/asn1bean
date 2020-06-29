@@ -14,8 +14,6 @@
 package com.beanit.asn1bean.compiler.model;
 
 public class AsnAny extends AsnUniversalType {
-
-  final String BUILTIN_TYPE = "ANY";
   public String definedByType;
   public boolean isDefinedBy;
 

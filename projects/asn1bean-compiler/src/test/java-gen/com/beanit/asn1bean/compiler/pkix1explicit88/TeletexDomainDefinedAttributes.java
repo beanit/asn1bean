@@ -28,7 +28,7 @@ public class TeletexDomainDefinedAttributes implements BerType, Serializable {
 	public List<TeletexDomainDefinedAttribute> seqOf = null;
 
 	public TeletexDomainDefinedAttributes() {
-		seqOf = new ArrayList<TeletexDomainDefinedAttribute>();
+		seqOf = new ArrayList<>();
 	}
 
 	public TeletexDomainDefinedAttributes(byte[] code) {

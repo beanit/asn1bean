@@ -170,7 +170,6 @@ public class PrivateKeyUsagePeriod implements BerType, Serializable {
 				sb.append("\t");
 			}
 			sb.append("notAfter: ").append(notAfter);
-			firstSelectedElement = false;
 		}
 		
 		sb.append("\n");

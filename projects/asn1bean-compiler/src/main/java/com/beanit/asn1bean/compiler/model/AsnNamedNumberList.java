@@ -14,15 +14,12 @@
 package com.beanit.asn1bean.compiler.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AsnNamedNumberList {
-  public ArrayList namedNumbers;
+  public final List<AsnNamedNumber> namedNumbers;
 
   public AsnNamedNumberList() {
-    namedNumbers = new ArrayList();
-  }
-
-  public int count() {
-    return namedNumbers.size();
+    namedNumbers = new ArrayList<>();
   }
 }

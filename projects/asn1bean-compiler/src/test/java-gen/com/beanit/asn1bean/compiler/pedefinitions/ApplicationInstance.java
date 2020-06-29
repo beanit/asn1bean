@@ -32,7 +32,7 @@ public class ApplicationInstance implements BerType, Serializable {
 		public List<BerOctetString> seqOf = null;
 
 		public ProcessData() {
-			seqOf = new ArrayList<BerOctetString>();
+			seqOf = new ArrayList<>();
 		}
 
 		public ProcessData(byte[] code) {

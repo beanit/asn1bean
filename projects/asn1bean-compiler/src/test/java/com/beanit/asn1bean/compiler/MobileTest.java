@@ -365,9 +365,9 @@ public class MobileTest {
 
   private static class FileRecordContent {
 
-    public Integer fillFileOffset;
+    public final Integer fillFileOffset;
 
-    public String fillFileContent;
+    public final String fillFileContent;
 
     public FileRecordContent(Integer fillFileOffset, String fillFileContent) {
       this.fillFileOffset = fillFileOffset;

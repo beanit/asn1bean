@@ -255,7 +255,6 @@ public class UpdateMetadataRequest implements BerType, Serializable {
 				sb.append("\t");
 			}
 			sb.append("profilePolicyRules: ").append(profilePolicyRules);
-			firstSelectedElement = false;
 		}
 		
 		sb.append("\n");

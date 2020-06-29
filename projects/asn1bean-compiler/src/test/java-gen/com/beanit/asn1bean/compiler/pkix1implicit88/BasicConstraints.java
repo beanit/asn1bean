@@ -164,7 +164,6 @@ public class BasicConstraints implements BerType, Serializable {
 				sb.append("\t");
 			}
 			sb.append("pathLenConstraint: ").append(pathLenConstraint);
-			firstSelectedElement = false;
 		}
 		
 		sb.append("\n");

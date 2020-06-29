@@ -34,7 +34,7 @@ public class AuthorityInfoAccessSyntax implements BerType, Serializable {
 	public List<AccessDescription> seqOf = null;
 
 	public AuthorityInfoAccessSyntax() {
-		seqOf = new ArrayList<AccessDescription>();
+		seqOf = new ArrayList<>();
 	}
 
 	public AuthorityInfoAccessSyntax(byte[] code) {

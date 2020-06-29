@@ -32,7 +32,7 @@ public class EUICCResponse implements BerType, Serializable {
 		public List<PEStatus> seqOf = null;
 
 		public PeStatus() {
-			seqOf = new ArrayList<PEStatus>();
+			seqOf = new ArrayList<>();
 		}
 
 		public PeStatus(byte[] code) {

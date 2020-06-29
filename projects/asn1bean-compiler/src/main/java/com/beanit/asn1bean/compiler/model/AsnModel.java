@@ -14,8 +14,8 @@
 package com.beanit.asn1bean.compiler.model;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class AsnModel {
-
-  public final HashMap<String, AsnModule> modulesByName = new HashMap<>();
+  public final Map<String, AsnModule> modulesByName = new HashMap<>();
 }

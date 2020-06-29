@@ -200,7 +200,6 @@ public class AuthorityKeyIdentifier implements BerType, Serializable {
 				sb.append("\t");
 			}
 			sb.append("authorityCertSerialNumber: ").append(authorityCertSerialNumber);
-			firstSelectedElement = false;
 		}
 		
 		sb.append("\n");

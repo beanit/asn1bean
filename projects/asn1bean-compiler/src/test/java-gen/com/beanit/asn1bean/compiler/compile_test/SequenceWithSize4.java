@@ -28,7 +28,7 @@ public class SequenceWithSize4 implements BerType, Serializable {
 	public List<ImplVisibleString> seqOf = null;
 
 	public SequenceWithSize4() {
-		seqOf = new ArrayList<ImplVisibleString>();
+		seqOf = new ArrayList<>();
 	}
 
 	public SequenceWithSize4(byte[] code) {

@@ -39,7 +39,7 @@ public class ListNotificationResponse implements BerType, Serializable {
 		public List<NotificationMetadata> seqOf = null;
 
 		public NotificationMetadataList() {
-			seqOf = new ArrayList<NotificationMetadata>();
+			seqOf = new ArrayList<>();
 		}
 
 		public NotificationMetadataList(byte[] code) {

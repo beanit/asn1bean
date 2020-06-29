@@ -28,7 +28,7 @@ public class Extensions implements BerType, Serializable {
 	public List<Extension> seqOf = null;
 
 	public Extensions() {
-		seqOf = new ArrayList<Extension>();
+		seqOf = new ArrayList<>();
 	}
 
 	public Extensions(byte[] code) {

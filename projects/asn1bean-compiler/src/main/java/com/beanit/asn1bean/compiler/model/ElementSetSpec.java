@@ -13,44 +13,31 @@
  */
 package com.beanit.asn1bean.compiler.model;
 
-// ~--- JDK imports ------------------------------------------------------------
-
 import java.util.ArrayList;
-import java.util.Iterator;
-
-// ~--- classes ----------------------------------------------------------------
+import java.util.List;
 
 public class ElementSetSpec {
   public ConstraintElements allExceptCnselem;
-  public ArrayList intersectionList;
+  public final List<Intersection> intersectionList;
   public boolean isAllExcept;
 
-  // ~--- constructors -------------------------------------------------------
-
-  // Default Constructor
   public ElementSetSpec() {
-    intersectionList = new ArrayList();
+    intersectionList = new ArrayList<>();
   }
 
-  // ~--- methods ------------------------------------------------------------
-
-  // toString Method
   @Override
   public String toString() {
-    String ts = "";
-    Iterator e = intersectionList.iterator();
+    StringBuilder ts = new StringBuilder();
 
-    if (e != null) {
-      while (e.hasNext()) {
-        ts += e.next();
-        ts += "|";
-      }
+    for (Intersection intersection : intersectionList) {
+      ts.append(intersection);
+      ts.append("|");
     }
 
     if (isAllExcept) {
-      ts += "ALL EXCEPT  " + allExceptCnselem;
+      ts.append("ALL EXCEPT  ").append(allExceptCnselem);
     }
 
-    return ts;
+    return ts.toString();
   }
 }

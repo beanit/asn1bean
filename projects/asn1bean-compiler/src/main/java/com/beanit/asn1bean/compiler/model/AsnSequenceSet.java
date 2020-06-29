@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AsnSequenceSet extends AsnConstructedType {
-
   public List<AsnElementType> componentTypes = new ArrayList<>();
   public AsnConstraint constraint;
   public boolean isSequence = false;

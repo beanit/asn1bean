@@ -152,7 +152,6 @@ public class PDSParameter implements BerType, Serializable {
 				sb.append("\t");
 			}
 			sb.append("teletexString: ").append(teletexString);
-			firstSelectedElement = false;
 		}
 		
 		sb.append("\n");

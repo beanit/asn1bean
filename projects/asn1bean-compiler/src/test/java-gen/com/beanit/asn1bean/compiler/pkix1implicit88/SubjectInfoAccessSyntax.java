@@ -34,7 +34,7 @@ public class SubjectInfoAccessSyntax implements BerType, Serializable {
 	public List<AccessDescription> seqOf = null;
 
 	public SubjectInfoAccessSyntax() {
-		seqOf = new ArrayList<AccessDescription>();
+		seqOf = new ArrayList<>();
 	}
 
 	public SubjectInfoAccessSyntax(byte[] code) {

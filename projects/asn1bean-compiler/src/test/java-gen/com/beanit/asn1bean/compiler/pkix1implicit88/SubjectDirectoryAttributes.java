@@ -34,7 +34,7 @@ public class SubjectDirectoryAttributes implements BerType, Serializable {
 	public List<Attribute> seqOf = null;
 
 	public SubjectDirectoryAttributes() {
-		seqOf = new ArrayList<Attribute>();
+		seqOf = new ArrayList<>();
 	}
 
 	public SubjectDirectoryAttributes(byte[] code) {

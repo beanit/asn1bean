@@ -39,7 +39,7 @@ public class ProfileInfoListResponse implements BerType, Serializable {
 		public List<ProfileInfo> seqOf = null;
 
 		public ProfileInfoListOk() {
-			seqOf = new ArrayList<ProfileInfo>();
+			seqOf = new ArrayList<>();
 		}
 
 		public ProfileInfoListOk(byte[] code) {

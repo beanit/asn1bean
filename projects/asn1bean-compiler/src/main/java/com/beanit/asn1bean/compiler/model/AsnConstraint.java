@@ -57,7 +57,7 @@ public class AsnConstraint {
 
   // Return the required additional intersection element
   public Intersection get_addElemSS_IntsectElem(int i) {
-    return (Intersection) addElemSetSpec.intersectionList.get(i);
+    return addElemSetSpec.intersectionList.get(i);
   }
 
   // Returns first additional constraint Element in the first Intersection
@@ -65,24 +65,24 @@ public class AsnConstraint {
   public ConstraintElements get_addElemSS_firstConstraintElem() {
     Intersection intersect = get_addElemSS_firstIntsectElem();
 
-    return (ConstraintElements) intersect.cnsElemList.get(0);
+    return intersect.cnsElemList.get(0);
   }
 
   // Return the first additional intersection element
   public Intersection get_addElemSS_firstIntsectElem() {
-    return (Intersection) addElemSetSpec.intersectionList.get(0);
+    return addElemSetSpec.intersectionList.get(0);
   }
 
   public ConstraintElements get_addElemSS_intersectionConstraintElems(
       int intersectElem, int constraintElem) {
     Intersection intersect = get_addElemSS_IntsectElem(intersectElem);
 
-    return (ConstraintElements) intersect.cnsElemList.get(constraintElem);
+    return intersect.cnsElemList.get(constraintElem);
   }
 
   // Return the required intersection element
   public Intersection get_elemSS_IntsectElem(int i) {
-    return (Intersection) elemSetSpec.intersectionList.get(i);
+    return elemSetSpec.intersectionList.get(i);
   }
 
   // Returns first constraint Element in the first Intersection
@@ -90,19 +90,19 @@ public class AsnConstraint {
   public ConstraintElements get_elemSS_firstConstraintElem() {
     Intersection intersect = get_elemSS_firstIntsectElem();
 
-    return (ConstraintElements) intersect.cnsElemList.get(0);
+    return intersect.cnsElemList.get(0);
   }
 
   // Return the first intersection element
   public Intersection get_elemSS_firstIntsectElem() {
-    return (Intersection) elemSetSpec.intersectionList.get(0);
+    return elemSetSpec.intersectionList.get(0);
   }
 
   public ConstraintElements get_elemSS_intersectionConstraintElems(
       int intersectElem, int constraintElem) {
     Intersection intersect = get_elemSS_IntsectElem(intersectElem);
 
-    return (ConstraintElements) intersect.cnsElemList.get(constraintElem);
+    return intersect.cnsElemList.get(constraintElem);
   }
 
   // ---------For additionalElementSetSpecs

@@ -14,6 +14,7 @@
 package com.beanit.asn1bean.compiler.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CharDef {
   public String cStr;
@@ -21,6 +22,6 @@ public class CharDef {
   public boolean isCString;
   public boolean isQuadruple;
   public boolean isTuple;
-  public ArrayList tupleQuad = new ArrayList();
+  public List<AsnSignedNumber> tupleQuad = new ArrayList<>();
   boolean isDefinedValue;
 }

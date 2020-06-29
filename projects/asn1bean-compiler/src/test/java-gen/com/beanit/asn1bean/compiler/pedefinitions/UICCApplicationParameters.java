@@ -193,7 +193,6 @@ public class UICCApplicationParameters implements BerType, Serializable {
 				sb.append("\t");
 			}
 			sb.append("uiccAdministrativeAccessApplicationSpecificParametersField: ").append(uiccAdministrativeAccessApplicationSpecificParametersField);
-			firstSelectedElement = false;
 		}
 		
 		sb.append("\n");

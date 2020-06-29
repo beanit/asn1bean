@@ -36,7 +36,7 @@ public class ProfileInfo implements BerType, Serializable {
 		public List<NotificationConfigurationInformation> seqOf = null;
 
 		public NotificationConfigurationInfo() {
-			seqOf = new ArrayList<NotificationConfigurationInformation>();
+			seqOf = new ArrayList<>();
 		}
 
 		public NotificationConfigurationInfo(byte[] code) {
@@ -618,7 +618,6 @@ public class ProfileInfo implements BerType, Serializable {
 				sb.append("\t");
 			}
 			sb.append("profilePolicyRules: ").append(profilePolicyRules);
-			firstSelectedElement = false;
 		}
 		
 		sb.append("\n");

@@ -15,6 +15,5 @@ package com.beanit.asn1bean.compiler.model;
 
 public class AsnModuleIdentifier {
   public AsnOidComponentList componentList = new AsnOidComponentList();
-
   public String name;
 }

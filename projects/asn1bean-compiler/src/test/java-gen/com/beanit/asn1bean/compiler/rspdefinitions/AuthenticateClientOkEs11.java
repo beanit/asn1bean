@@ -36,7 +36,7 @@ public class AuthenticateClientOkEs11 implements BerType, Serializable {
 		public List<com.beanit.asn1bean.compiler.rspdefinitions.EventEntries> seqOf = null;
 
 		public EventEntries() {
-			seqOf = new ArrayList<com.beanit.asn1bean.compiler.rspdefinitions.EventEntries>();
+			seqOf = new ArrayList<>();
 		}
 
 		public EventEntries(byte[] code) {

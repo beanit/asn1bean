@@ -14,10 +14,11 @@
 package com.beanit.asn1bean.compiler.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Intersection {
-  public ArrayList cnsElemList = new ArrayList();
-  public ArrayList exceptCnsElem = new ArrayList();
+  public final List<ConstraintElements> cnsElemList = new ArrayList<>();
+  public final List<ConstraintElements> exceptCnsElem = new ArrayList<>();
   public boolean isExcept;
   public boolean isInterSection;
 }

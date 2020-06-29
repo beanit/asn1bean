@@ -31,7 +31,7 @@ public class TestSequenceOf implements BerType, Serializable {
 	private List<BerInteger> seqOf = null;
 
 	public TestSequenceOf() {
-		seqOf = new ArrayList<BerInteger>();
+		seqOf = new ArrayList<>();
 	}
 
 	public TestSequenceOf(byte[] code) {
@@ -40,7 +40,7 @@ public class TestSequenceOf implements BerType, Serializable {
 
 	public List<BerInteger> getBerInteger() {
 		if (seqOf == null) {
-			seqOf = new ArrayList<BerInteger>();
+			seqOf = new ArrayList<>();
 		}
 		return seqOf;
 	}

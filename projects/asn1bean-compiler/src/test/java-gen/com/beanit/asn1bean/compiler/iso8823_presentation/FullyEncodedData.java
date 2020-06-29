@@ -28,7 +28,7 @@ public class FullyEncodedData implements BerType, Serializable {
 	public List<PDVList> seqOf = null;
 
 	public FullyEncodedData() {
-		seqOf = new ArrayList<PDVList>();
+		seqOf = new ArrayList<>();
 	}
 
 	public FullyEncodedData(byte[] code) {

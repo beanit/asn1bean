@@ -32,7 +32,7 @@ public class PEApplication implements BerType, Serializable {
 		public List<ApplicationInstance> seqOf = null;
 
 		public InstanceList() {
-			seqOf = new ArrayList<ApplicationInstance>();
+			seqOf = new ArrayList<>();
 		}
 
 		public InstanceList(byte[] code) {

@@ -32,7 +32,7 @@ public class PEGenericFileManagement implements BerType, Serializable {
 		public List<FileManagement> seqOf = null;
 
 		public FileManagementCMD() {
-			seqOf = new ArrayList<FileManagement>();
+			seqOf = new ArrayList<>();
 		}
 
 		public FileManagementCMD(byte[] code) {

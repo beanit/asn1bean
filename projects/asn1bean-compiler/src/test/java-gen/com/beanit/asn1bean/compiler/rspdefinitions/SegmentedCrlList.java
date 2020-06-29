@@ -32,7 +32,7 @@ public class SegmentedCrlList implements BerType, Serializable {
 	public List<CertificateList> seqOf = null;
 
 	public SegmentedCrlList() {
-		seqOf = new ArrayList<CertificateList>();
+		seqOf = new ArrayList<>();
 	}
 
 	public SegmentedCrlList(byte[] code) {

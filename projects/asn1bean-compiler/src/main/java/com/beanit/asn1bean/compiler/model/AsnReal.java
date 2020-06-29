@@ -14,6 +14,5 @@
 package com.beanit.asn1bean.compiler.model;
 
 public class AsnReal extends AsnUniversalType {
-  public final String BUILTINTYPE = "REAL";
   public AsnConstraint constraint;
 }

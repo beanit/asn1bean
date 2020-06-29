@@ -32,7 +32,7 @@ public class ProfileHeader implements BerType, Serializable {
 		public List<BerObjectIdentifier> seqOf = null;
 
 		public EUICCMandatoryGFSTEList() {
-			seqOf = new ArrayList<BerObjectIdentifier>();
+			seqOf = new ArrayList<>();
 		}
 
 		public EUICCMandatoryGFSTEList(byte[] code) {
@@ -316,7 +316,7 @@ public class ProfileHeader implements BerType, Serializable {
 		public List<SEQUENCE> seqOf = null;
 
 		public EUICCMandatoryAIDs() {
-			seqOf = new ArrayList<SEQUENCE>();
+			seqOf = new ArrayList<>();
 		}
 
 		public EUICCMandatoryAIDs(byte[] code) {

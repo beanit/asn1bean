@@ -177,7 +177,7 @@ public class FileManagement implements BerType, Serializable {
 	public List<CHOICE> seqOf = null;
 
 	public FileManagement() {
-		seqOf = new ArrayList<CHOICE>();
+		seqOf = new ArrayList<>();
 	}
 
 	public FileManagement(byte[] code) {

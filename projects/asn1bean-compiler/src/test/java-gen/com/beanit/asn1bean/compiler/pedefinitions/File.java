@@ -180,7 +180,7 @@ public class File implements BerType, Serializable {
 	public List<CHOICE> seqOf = null;
 
 	public File() {
-		seqOf = new ArrayList<CHOICE>();
+		seqOf = new ArrayList<>();
 	}
 
 	public File(byte[] code) {

@@ -32,7 +32,7 @@ public class PERFM implements BerType, Serializable {
 		public List<BerOctetString> seqOf = null;
 
 		public TarList() {
-			seqOf = new ArrayList<BerOctetString>();
+			seqOf = new ArrayList<>();
 		}
 
 		public TarList(byte[] code) {

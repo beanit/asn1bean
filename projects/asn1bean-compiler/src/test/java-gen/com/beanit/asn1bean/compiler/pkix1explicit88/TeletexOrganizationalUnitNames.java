@@ -28,7 +28,7 @@ public class TeletexOrganizationalUnitNames implements BerType, Serializable {
 	public List<TeletexOrganizationalUnitName> seqOf = null;
 
 	public TeletexOrganizationalUnitNames() {
-		seqOf = new ArrayList<TeletexOrganizationalUnitName>();
+		seqOf = new ArrayList<>();
 	}
 
 	public TeletexOrganizationalUnitNames(byte[] code) {

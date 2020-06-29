@@ -14,6 +14,5 @@
 package com.beanit.asn1bean.compiler.model;
 
 public class AsnOctetString extends AsnUniversalType {
-  public final String BUILTINTYPE = "OCTET STRING";
   public AsnConstraint constraint;
 }

@@ -372,7 +372,6 @@ public class BuiltInStandardAttributes implements BerType, Serializable {
 			}
 			sb.append("organizationalUnitNames: ");
 			organizationalUnitNames.appendAsString(sb, indentLevel + 1);
-			firstSelectedElement = false;
 		}
 		
 		sb.append("\n");
