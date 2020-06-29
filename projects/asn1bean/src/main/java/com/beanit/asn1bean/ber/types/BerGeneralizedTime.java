@@ -30,16 +30,20 @@ public class BerGeneralizedTime extends BerVisibleString {
   public static final BerTag tag =
       new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.PRIMITIVE, BerTag.GENERALIZED_TIME_TAG);
   private static final long serialVersionUID = 1L;
-  /*
-   * Generalized time is one of the following (ITU-T X.680 08/2015): YYYYMMDDHH[MM[SS]][.fff] LocalTime
-   * YYYYMMDDHH[MM[SS]][.fff]Z UTC YYYYMMDDHH[MM[SS]][.fff]+-HH[MM] local time with time zone
+
+  /**
+   * Generalized time is one of the following (ITU-T X.680 08/2015): YYYYMMDDHH[MM[SS]][.fff]
+   * LocalTime YYYYMMDDHH[MM[SS]][.fff]Z UTC YYYYMMDDHH[MM[SS]][.fff]+-HH[MM] local time with time
+   * zone
    *
-   * Regexp: ^ (?<year>\\d{4}) YYYY (?<month>\\d{2}) MM (?<day>\\d{2}) DD (?<hour>\\d{2}) HH ( [MM[SS]]
-   * (?<minute>\\d{2}) MM (?<second>\\d{2})? [SS] )? ([.,](?<frac>\\d+))? [.fff] (or [,fff]) (?<timezone> "" or "Z" or
-   * "+-HH[MM]" Z | ( "+-HH[MM]" [+-] "+-" \\d{2}(?<tzmin>\\d{2})? HH[MM] ) )? $
+   * <p>Regexp: ^ (?<year>\\d{4}) YYYY (?<month>\\d{2}) MM (?<day>\\d{2}) DD (?<hour>\\d{2}) HH (
+   * [MM[SS]] (?<minute>\\d{2}) MM (?<second>\\d{2})? [SS] )? ([.,](?<frac>\\d+))? [.fff] (or
+   * [,fff]) (?<timezone> "" or "Z" or "+-HH[MM]" Z | ( "+-HH[MM]" [+-] "+-" \\d{2}(?<tzmin>\\d{2})?
+   * HH[MM] ) )? $
    */
   private static final String GENERALIZED_TIME_PATTERN =
       "^(?<year>\\d{4})(?<month>\\d{2})(?<day>\\d{2})(?<hour>\\d{2})((?<minute>\\d{2})(?<second>\\d{2})?)?([.,](?<frac>\\d+))?(?<timezone>Z|([+-]\\d{2}(?<tzmin>\\d{2})?))?$";
+
   private static final Pattern generalizedTimePattern = Pattern.compile(GENERALIZED_TIME_PATTERN);
 
   public BerGeneralizedTime() {}

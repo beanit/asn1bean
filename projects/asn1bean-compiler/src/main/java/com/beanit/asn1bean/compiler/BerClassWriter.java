@@ -100,8 +100,8 @@ public class BerClassWriter {
                   "code",
                   "getClass",
                   "setClass")));
-  private static Tag stdSeqTag = new Tag();
-  private static Tag stdSetTag = new Tag();
+  private static final Tag stdSeqTag = new Tag();
+  private static final Tag stdSetTag = new Tag();
 
   static {
     stdSeqTag.tagClass = TagClass.UNIVERSAL;
@@ -120,10 +120,10 @@ public class BerClassWriter {
   private TagDefault tagDefault;
   private File outputBaseDir;
   private int indentNum = 0;
-  private boolean insertVersion;
+  private final boolean insertVersion;
   private AsnModule module;
   private File outputDirectory;
-  private String berTypeInterfaceString = "BerType, ";
+  private final String berTypeInterfaceString = "BerType, ";
 
   BerClassWriter(
       HashMap<String, AsnModule> modulesByName,

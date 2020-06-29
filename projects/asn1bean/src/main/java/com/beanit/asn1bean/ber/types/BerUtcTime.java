@@ -30,13 +30,16 @@ public class BerUtcTime extends BerVisibleString {
   public static final BerTag tag =
       new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.PRIMITIVE, BerTag.UTC_TIME_TAG);
   private static final long serialVersionUID = 1L;
-  /*
-   * UTC time is one of the following (ITU-T X.680 08/2015): YYMMDDhhmm[ss]Z YYMMDDhhmm[ss](+|-)hhmm Regexp: ^
-   * (?<year>\\d{2}) YY (?<month>\\d{2}) MM (?<day>\\d{2}) DD (?<hour>\\d{2}) hh (?<minute>\\d{2}) mm
-   * (?<second>\\d{2})? ss (?<timezone> Z | Z or (+|-)hhmm ( [+-]\\d{4} (+|-)hhmm ) ) $
+
+  /**
+   * UTC time is one of the following (ITU-T X.680 08/2015): YYMMDDhhmm[ss]Z YYMMDDhhmm[ss](+|-)hhmm
+   * Regexp: ^ (?<year>\\d{2}) YY (?<month>\\d{2}) MM (?<day>\\d{2}) DD (?<hour>\\d{2}) hh
+   * (?<minute>\\d{2}) mm (?<second>\\d{2})? ss (?<timezone> Z | Z or (+|-)hhmm ( [+-]\\d{4}
+   * (+|-)hhmm ) ) $
    */
   private static final String UTC_TIME_PATTERN =
       "^(?<year>\\d{2})(?<month>\\d{2})(?<day>\\d{2})(?<hour>\\d{2})(?<minute>\\d{2})(?<second>\\d{2})?(?<timezone>Z|([+-]\\d{4}))$";
+
   private static final Pattern utcTimePattern = Pattern.compile(UTC_TIME_PATTERN);
 
   public BerUtcTime() {}

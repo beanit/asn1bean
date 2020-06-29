@@ -38,6 +38,7 @@ import com.beanit.asn1bean.util.HexString;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -268,9 +269,8 @@ public class MobileTest {
                 createPUK((byte) 2, "3132333435363738"),
                 createPUK((byte) 0x81, "3132333435363738", (byte) 8, (byte) 8)));
 
-    PEPUKCodes pepukCodes = new PEPUKCodes(new PEHeader(new BerNull(), new UInt15(2)), pukCodes);
-
-    pukProfileElement.pukCodes = pepukCodes;
+    pukProfileElement.pukCodes =
+        new PEPUKCodes(new PEHeader(new BerNull(), new UInt15(2)), pukCodes);
 
     ReverseByteArrayOutputStream reverseOutputStream = new ReverseByteArrayOutputStream(2048, true);
     pukProfileElement.encode(reverseOutputStream);
@@ -343,7 +343,7 @@ public class MobileTest {
         new PEGenericFileManagement(
             new PEHeader(new BerNull(), new UInt15(1)),
             new PEGenericFileManagement.FileManagementCMD(
-                Arrays.asList(new FileManagement(choices))));
+                Collections.singletonList(new FileManagement(choices))));
 
     ReverseByteArrayOutputStream reverseOutputStream = new ReverseByteArrayOutputStream(2048, true);
     genericFileManagementProfileElement.encode(reverseOutputStream);

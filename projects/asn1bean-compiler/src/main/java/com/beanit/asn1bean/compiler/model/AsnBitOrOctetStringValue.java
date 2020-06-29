@@ -14,10 +14,11 @@
 package com.beanit.asn1bean.compiler.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AsnBitOrOctetStringValue {
   public String bhStr;
-  public ArrayList idlist;
+  public List<String> idlist;
   public boolean isBString;
   public boolean isHString;
 

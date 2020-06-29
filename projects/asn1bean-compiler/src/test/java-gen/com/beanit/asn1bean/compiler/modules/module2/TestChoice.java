@@ -58,8 +58,15 @@ public class TestChoice implements BerType, Serializable {
 		}
 
 		int codeLength = 0;
+		int sublength;
+
 		if (element2 != null) {
-			codeLength += element2.encode(reverseOS, true);
+			sublength = element2.encode(reverseOS, true);
+			codeLength += sublength;
+			codeLength += BerLength.encodeLength(reverseOS, sublength);
+			// write tag: CONTEXT_CLASS, CONSTRUCTED, 2
+			reverseOS.write(0xA2);
+			codeLength += 1;
 			return codeLength;
 		}
 		
@@ -91,9 +98,12 @@ public class TestChoice implements BerType, Serializable {
 			return tlvByteCount;
 		}
 
-		if (berTag.equals(BerInteger.tag)) {
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 2)) {
+			BerLength length = new BerLength();
+			tlvByteCount += length.decode(is);
 			element2 = new BerInteger();
-			tlvByteCount += element2.decode(is, false);
+			tlvByteCount += element2.decode(is, true);
+			tlvByteCount += length.readEocIfIndefinite(is);
 			return tlvByteCount;
 		}
 

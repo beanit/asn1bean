@@ -117,7 +117,7 @@ PersonnelRecordz ::= [APPLICATION 0] IMPLICIT SET {
 
 TestChoice ::= CHOICE {
 	element1 INTEGER,
-	element2 INTEGER
+	element2 [2] INTEGER
 }
 
 ChildInformationz ::= SET {
