@@ -17,8 +17,8 @@ import org.junit.jupiter.api.Test;
 
 public class CompileTest {
 
-  private static final String generatedSrcDir = "src/test/java-gen";
-  private static final String rootPackageName = "com.beanit.asn1bean.compiler";
+  private static final String GENERATED_SRC_DIR = "src/test/java-gen";
+  private static final String ROOT_PACKAGE_NAME = "com.beanit.asn1bean.compiler";
   String[] args;
 
   // uncomment this test to regenerate BerEmbeddedPdv class:
@@ -35,9 +35,9 @@ public class CompileTest {
     args =
         new String[] {
           "-o",
-          generatedSrcDir,
+          GENERATED_SRC_DIR,
           "-p",
-          rootPackageName,
+          ROOT_PACKAGE_NAME,
           "-f",
           "src/test/resources/tagging-test.asn",
           "-dv"
@@ -52,9 +52,9 @@ public class CompileTest {
         new String[] {
           "-dv",
           "-o",
-          generatedSrcDir,
+          GENERATED_SRC_DIR,
           "-p",
-          rootPackageName,
+          ROOT_PACKAGE_NAME,
           "-f",
           "src/test/resources/compile-test.asn",
           "-l"
@@ -68,9 +68,9 @@ public class CompileTest {
         new String[] {
           "-dv",
           "-o",
-          generatedSrcDir,
+          GENERATED_SRC_DIR,
           "-p",
-          rootPackageName,
+          ROOT_PACKAGE_NAME,
           "-f",
           "src/test/resources/modules1.asn",
           "src/test/resources/modules2.asn"
@@ -84,9 +84,9 @@ public class CompileTest {
         new String[] {
           "-dv",
           "-o",
-          generatedSrcDir,
+          GENERATED_SRC_DIR,
           "-p",
-          rootPackageName,
+          ROOT_PACKAGE_NAME,
           "-f",
           "src/test/resources/iso-presentation-layer.asn",
           "-l"
@@ -99,9 +99,9 @@ public class CompileTest {
     args =
         new String[] {
           "-o",
-          generatedSrcDir,
+          GENERATED_SRC_DIR,
           "-p",
-          rootPackageName,
+          ROOT_PACKAGE_NAME,
           "-f",
           "src/test/resources/x690-ber-example.asn",
           "-dv"
@@ -115,9 +115,9 @@ public class CompileTest {
         new String[] {
           "-dv",
           "-o",
-          generatedSrcDir,
+          GENERATED_SRC_DIR,
           "-p",
-          rootPackageName,
+          ROOT_PACKAGE_NAME,
           "-f",
           "src/test/resources/mobile/PKIXExplicit88.asn",
           "src/test/resources/mobile/PKIXImplicit88.asn",
@@ -133,9 +133,9 @@ public class CompileTest {
         new String[] {
           "-dv",
           "-o",
-          generatedSrcDir,
+          GENERATED_SRC_DIR,
           "-p",
-          rootPackageName,
+          ROOT_PACKAGE_NAME,
           "-f",
           "src/test/resources/mobile/PEDefinitionsV2.3.1.asn",
           "-l"
@@ -149,9 +149,9 @@ public class CompileTest {
         new String[] {
           "-dv",
           "-o",
-          generatedSrcDir,
+          GENERATED_SRC_DIR,
           "-p",
-          rootPackageName,
+          ROOT_PACKAGE_NAME,
           "-f",
           "src/test/resources/various-tests.asn",
           "-l"
@@ -165,9 +165,9 @@ public class CompileTest {
         new String[] {
           "-dv",
           "-o",
-          generatedSrcDir,
+          GENERATED_SRC_DIR,
           "-p",
-          rootPackageName,
+          ROOT_PACKAGE_NAME,
           "-f",
           "src/test/resources/information-object-class.asn"
         };

@@ -24,8 +24,10 @@ import com.beanit.asn1bean.compiler.model.AsnModel;
 import com.beanit.asn1bean.compiler.model.AsnModule;
 import com.beanit.asn1bean.compiler.parser.ASNLexer;
 import com.beanit.asn1bean.compiler.parser.ASNParser;
-import java.io.FileInputStream;
+import java.io.BufferedInputStream;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -111,13 +113,14 @@ public class Compiler {
   }
 
   private static AsnModel getJavaModelFromAsn1File(String inputFileName) throws Exception {
-    InputStream stream = new FileInputStream(inputFileName);
-    ASNLexer lexer = new ASNLexer(stream);
-    ASNParser parser = new ASNParser(lexer);
 
     AsnModel model = new AsnModel();
-    parser.module_definitions(model);
-
+    try (InputStream stream =
+        new BufferedInputStream(Files.newInputStream(Paths.get(inputFileName)))) {
+      ASNLexer lexer = new ASNLexer(stream);
+      ASNParser parser = new ASNParser(lexer);
+      parser.module_definitions(model);
+    }
     return model;
   }
 }
