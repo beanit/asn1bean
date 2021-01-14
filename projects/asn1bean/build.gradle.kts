@@ -3,7 +3,7 @@ apply(plugin = "maven-publish")
 apply(plugin = "signing")
 apply(plugin = "eclipse")
 apply(plugin = "biz.aQute.bnd.builder")
-apply(plugin = "com.diffplug.gradle.spotless")
+apply(plugin = "com.diffplug.spotless")
 
 
 project.extra["cfgModuleName"] = "com.beanit.asn1bean"
