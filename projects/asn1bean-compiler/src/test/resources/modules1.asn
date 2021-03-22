@@ -97,10 +97,29 @@ MyInt ::= INTEGER
 
 MyBitString ::= BIT STRING { context_management (0), restoration (1) }
 
+NonExtensibleSequence ::= SEQUENCE {
+  age INTEGER
+}
+
+NonExtensibleSequenceAndMore ::= SEQUENCE {
+  nonExtensibleSequence NonExtensibleSequence,
+  more VisibleString
+}
+
+ExtendedSequence ::= SEQUENCE {
+  age INTEGER,
+  name VisibleString,
+  subAge [10] NonExtensibleSequence
+}
+
+ExtendedSequenceAndMore ::= SEQUENCE {
+  extendedSequence ExtendedSequence,
+  more VisibleString
+}
 
 END
 
-MODULES-MODULE2 DEFINITIONS::=
+MODULES-MODULE2 DEFINITIONS EXTENSIBILITY IMPLIED ::=
 BEGIN
 
 EXPORTS EmployeeNumber-z
@@ -134,6 +153,15 @@ Namez ::= [APPLICATION 1] IMPLICIT SEQUENCE {
 EmployeeNumber-z ::= [APPLICATION 2] IMPLICIT INTEGER
 Datez ::= [APPLICATION 3] IMPLICIT T61String -- YYYYMMDD
 Datez2 ::= [APPLICATION 3] IMPLICIT ISO646String -- YYYYMMDD
+
+ExtensibleSequence ::= SEQUENCE {
+  age INTEGER
+}
+
+ExtensibleSequenceAndMore ::= SEQUENCE {
+  extensibleSequence ExtensibleSequence,
+  more VisibleString
+}
 
 END
 

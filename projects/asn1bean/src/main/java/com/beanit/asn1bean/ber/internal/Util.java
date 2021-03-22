@@ -27,11 +27,14 @@ public class Util {
     do {
       int bytesRead = is.read(buffer, off, len);
       if (bytesRead == -1) {
-        throw new EOFException("Unexpected end of input stream.");
+        throw new EOFException("End of input stream reached.");
       }
-
       len -= bytesRead;
       off += bytesRead;
     } while (len > 0);
+  }
+
+  public static void readFullyAndDiscard(InputStream is, int lengthVal) throws IOException {
+    readFully(is, new byte[lengthVal]);
   }
 }

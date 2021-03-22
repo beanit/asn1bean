@@ -104,15 +104,22 @@ public class NotificationSentRequest implements BerType, Serializable {
 		}
 		
 		if (lengthVal < 0) {
-			if (!berTag.equals(0, 0, 0)) {
-				throw new IOException("Decoded sequence has wrong end of contents octets");
+			while (!berTag.equals(0, 0, 0)) {
+				vByteCount += DecodeUtil.decodeUnknownComponent(is);
+				vByteCount += berTag.decode(is);
 			}
 			vByteCount += BerLength.readEocByte(is);
 			return tlByteCount + vByteCount;
+		} else {
+			while (vByteCount < lengthVal) {
+				vByteCount += DecodeUtil.decodeUnknownComponent(is);
+				if (vByteCount == lengthVal) {
+					return tlByteCount + vByteCount;
+				}
+				vByteCount += berTag.decode(is);
+			}
 		}
-
 		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", bytes decoded: " + vByteCount);
-
 	}
 
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {

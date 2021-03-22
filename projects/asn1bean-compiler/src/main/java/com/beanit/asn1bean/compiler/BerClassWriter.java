@@ -116,14 +116,15 @@ public class BerClassWriter {
   private final String basePackageName;
   private final boolean jaxbMode;
   private final HashMap<String, AsnModule> modulesByName;
+  private final boolean insertVersion;
+  private final String berTypeInterfaceString = "BerType, ";
   BufferedWriter out;
   private TagDefault tagDefault;
+  private boolean extensibilityImplied;
   private File outputBaseDir;
   private int indentNum = 0;
-  private final boolean insertVersion;
   private AsnModule module;
   private File outputDirectory;
-  private final String berTypeInterfaceString = "BerType, ";
 
   BerClassWriter(
       HashMap<String, AsnModule> modulesByName,
@@ -191,6 +192,7 @@ public class BerClassWriter {
 
     this.module = module;
     tagDefault = module.tagDefault;
+    extensibilityImplied = module.extensible;
 
     for (AsnType typeDefinition : module.typesByName.values()) {
 
@@ -1399,6 +1401,38 @@ public class BerClassWriter {
       }
     }
 
+    if (extensibilityImplied) writeSequenceDecodeMethodExtensibleEnd(hasExplicitTag);
+    else writeSequenceDecodeMethodNonExtensibleEnd(hasExplicitTag);
+
+    write("}\n");
+  }
+
+  private void writeSequenceDecodeMethodExtensibleEnd(boolean hasExplicitTag) throws IOException {
+    write("if (lengthVal < 0) {");
+    write("while (!berTag.equals(0, 0, 0)) {");
+    write("vByteCount += DecodeUtil.decodeUnknownComponent(is);");
+    write("vByteCount += berTag.decode(is);");
+    write("}");
+    write("vByteCount += BerLength.readEocByte(is);");
+    if (hasExplicitTag) {
+      write("vByteCount += explicitTagLength.readEocIfIndefinite(is);");
+    }
+    write("return tlByteCount + vByteCount;");
+    write("} else {");
+    write("while (vByteCount < lengthVal) {");
+    write("vByteCount += DecodeUtil.decodeUnknownComponent(is);");
+    write("if (vByteCount == lengthVal) {");
+    write("return tlByteCount + vByteCount;");
+    write("}");
+    write("vByteCount += berTag.decode(is);");
+    write("}");
+    write("}");
+    write(
+        "throw new IOException(\"Unexpected end of sequence, length tag: \" + lengthVal + \", bytes decoded: \" + vByteCount);");
+  }
+
+  private void writeSequenceDecodeMethodNonExtensibleEnd(boolean hasExplicitTag)
+      throws IOException {
     write("if (lengthVal < 0) {");
     write("if (!berTag.equals(0, 0, 0)) {");
     write("throw new IOException(\"Decoded sequence has wrong end of contents octets\");");
@@ -1412,8 +1446,6 @@ public class BerClassWriter {
 
     write(
         "throw new IOException(\"Unexpected end of sequence, length tag: \" + lengthVal + \", bytes decoded: \" + vByteCount);\n");
-
-    write("}\n");
   }
 
   private void writeChoiceDecodeMethod(List<ComponentInfo> components, boolean hasExplicitTag)
