@@ -67,7 +67,9 @@ public class BerAny implements Serializable, BerType {
 
     value = new byte[tagLength + lengthLength + lengthField.val];
 
-    Util.readFully(is, value, tagLength + lengthLength, lengthField.val);
+    if (lengthFiled.val != 0) {
+      Util.readFully(is, value, tagLength + lengthLength, lengthField.val);
+    }
     ReverseByteArrayOutputStream os =
         new ReverseByteArrayOutputStream(value, tagLength + lengthLength - 1);
     BerLength.encodeLength(os, lengthField.val);
