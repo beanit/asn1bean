@@ -24,14 +24,14 @@ public class Util {
   }
 
   public static void readFully(InputStream is, byte[] buffer, int off, int len) throws IOException {
-    do {
+    while (len > 0) {
       int bytesRead = is.read(buffer, off, len);
       if (bytesRead == -1) {
         throw new EOFException("End of input stream reached.");
       }
       len -= bytesRead;
       off += bytesRead;
-    } while (len > 0);
+    }
   }
 
   public static void readFullyAndDiscard(InputStream is, int lengthVal) throws IOException {
