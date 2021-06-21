@@ -82,6 +82,20 @@ public class BerLength implements Serializable {
     return 1;
   }
 
+  public static int readEocByte(InputStream is, OutputStream os) throws IOException {
+    int b = is.read();
+    if (b != 0) {
+      if (b == -1) {
+        throw new EOFException("Unexpected end of input stream.");
+      }
+      os.write(b);
+      throw new IOException(
+          "Byte " + HexString.fromByte(b) + " does not match end of contents octet of zero.");
+    }
+    os.write(b);
+    return 1;
+  }
+
   public int decode(InputStream is) throws IOException {
 
     val = is.read();
@@ -110,6 +124,43 @@ public class BerLength implements Serializable {
       if (nextByte == -1) {
         throw new EOFException("Unexpected end of input stream.");
       }
+      val |= nextByte << (8 * (lengthLength - i - 1));
+    }
+
+    return lengthLength + 1;
+  }
+
+  public int decode(InputStream is, OutputStream os) throws IOException {
+
+    val = is.read();
+    if (val == -1) {
+      throw new EOFException("Unexpected end of input stream.");
+    }
+    os.write(val);
+
+    // check for short form
+    if (val < 128) {
+      return 1;
+    }
+
+    int lengthLength = val & 0x7f;
+    // check for indefinite length
+    if (lengthLength == 0) {
+      val = -1;
+      return 1;
+    }
+
+    if (lengthLength > 4) {
+      throw new IOException("Length is out of bounds: " + lengthLength);
+    }
+
+    val = 0;
+    for (int i = 0; i < lengthLength; i++) {
+      int nextByte = is.read();
+      if (nextByte == -1) {
+        throw new EOFException("Unexpected end of input stream.");
+      }
+      os.write(nextByte);
       val |= nextByte << (8 * (lengthLength - i - 1));
     }
 

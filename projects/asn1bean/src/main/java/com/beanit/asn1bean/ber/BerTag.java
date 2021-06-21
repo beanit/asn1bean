@@ -99,9 +99,7 @@ public class BerTag implements Serializable {
     if (tagBytes == null) {
       code();
     }
-    for (int i = (tagBytes.length - 1); i >= 0; i--) {
-      reverseOS.write(tagBytes[i]);
-    }
+    reverseOS.write(tagBytes);
     return tagBytes.length;
   }
 
@@ -126,6 +124,43 @@ public class BerTag implements Serializable {
         if (nextByte == -1) {
           throw new EOFException("Unexpected end of input stream.");
         }
+
+        codeLength++;
+        if (numTagBytes >= 6) {
+          throw new IOException("Tag is too large.");
+        }
+        tagNumber = tagNumber << 7;
+        tagNumber |= (nextByte & 0x7f);
+        numTagBytes++;
+      } while ((nextByte & 0x80) != 0);
+    }
+
+    return codeLength;
+  }
+
+  public int decode(InputStream is, OutputStream os) throws IOException {
+    int nextByte = is.read();
+    if (nextByte == -1) {
+      throw new EOFException("Unexpected end of input stream.");
+    }
+    os.write(nextByte);
+
+    tagClass = nextByte & 0xC0;
+    primitive = nextByte & 0x20;
+    tagNumber = nextByte & 0x1f;
+
+    int codeLength = 1;
+
+    if (tagNumber == 0x1f) {
+      tagNumber = 0;
+      int numTagBytes = 0;
+
+      do {
+        nextByte = is.read();
+        if (nextByte == -1) {
+          throw new EOFException("Unexpected end of input stream.");
+        }
+        os.write(nextByte);
 
         codeLength++;
         if (numTagBytes >= 6) {

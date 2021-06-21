@@ -13,11 +13,10 @@
  */
 package com.beanit.asn1bean.ber.types;
 
-import com.beanit.asn1bean.ber.BerLength;
 import com.beanit.asn1bean.ber.BerTag;
-import com.beanit.asn1bean.ber.ReverseByteArrayOutputStream;
-import com.beanit.asn1bean.ber.internal.Util;
+import com.beanit.asn1bean.ber.DecodeUtil;
 import com.beanit.asn1bean.util.HexString;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -49,31 +48,19 @@ public class BerAny implements Serializable, BerType {
 
   public int decode(InputStream is, BerTag tag) throws IOException {
 
-    int decodedLength = 0;
+    int byteCount = 0;
 
-    int tagLength;
+    ByteArrayOutputStream os = new ByteArrayOutputStream();
 
     if (tag == null) {
       tag = new BerTag();
-      tagLength = tag.decode(is);
-      decodedLength += tagLength;
+      byteCount = tag.decode(is, os);
     } else {
-      tagLength = tag.encode(new ReverseByteArrayOutputStream(10));
+      tag.encode(os);
     }
-
-    BerLength lengthField = new BerLength();
-    int lengthLength = lengthField.decode(is);
-    decodedLength += lengthLength + lengthField.val;
-
-    value = new byte[tagLength + lengthLength + lengthField.val];
-
-    Util.readFully(is, value, tagLength + lengthLength, lengthField.val);
-    ReverseByteArrayOutputStream os =
-        new ReverseByteArrayOutputStream(value, tagLength + lengthLength - 1);
-    BerLength.encodeLength(os, lengthField.val);
-    tag.encode(os);
-
-    return decodedLength;
+    byteCount += DecodeUtil.decodeUnknownComponent(is, os);
+    value = os.toByteArray();
+    return byteCount;
   }
 
   @Override

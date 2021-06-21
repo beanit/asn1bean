@@ -59,4 +59,12 @@ OctetStringConstraint1 ::=  OCTET STRING (SIZE( 1))  ('55'H)
 
 OctetStringConstraint2 ::=  OCTET STRING (SIZE( 1))  ('10'B)
 
+SeqContainingAnyDefinedBy ::= SEQUENCE {
+  myAny [0] ANY DEFINED BY ignored
+}
+
+SimpleSeq ::= SEQUENCE {
+  myElement [0] IMPLICIT INTEGER
+}
+
 END
