@@ -17,8 +17,10 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.beanit.asn1bean.ber.ReverseByteArrayOutputStream;
+import com.beanit.asn1bean.util.HexString;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import org.junit.jupiter.api.Test;
 
 public class BerOctetStringTest {
@@ -49,5 +51,14 @@ public class BerOctetStringTest {
   public void toStringTest() {
     BerOctetString octetString = new BerOctetString(new byte[] {1, 2, (byte) 0xa0});
     assertEquals("0102A0", octetString.toString());
+  }
+
+  @Test
+  public void constructedOctetStringDecoding() throws IOException {
+    InputStream is =
+        new ByteArrayInputStream(HexString.toBytes("2480040C48656C6C6F20576F726C64210401550000"));
+    BerOctetString octetString = new BerOctetString();
+    octetString.decode(is);
+    assertEquals("48656C6C6F20576F726C642155", octetString.toString());
   }
 }

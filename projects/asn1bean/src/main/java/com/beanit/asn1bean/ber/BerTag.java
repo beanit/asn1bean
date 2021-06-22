@@ -99,7 +99,9 @@ public class BerTag implements Serializable {
     if (tagBytes == null) {
       code();
     }
-    reverseOS.write(tagBytes);
+    for (int i = (tagBytes.length - 1); i >= 0; i--) {
+      reverseOS.write(tagBytes[i]);
+    }
     return tagBytes.length;
   }
 
@@ -186,7 +188,9 @@ public class BerTag implements Serializable {
    * @throws IOException if an exception occurs reading the identifier from the stream.
    */
   public int decodeAndCheck(InputStream is) throws IOException {
-
+    if (tagBytes == null) {
+      code();
+    }
     for (byte identifierByte : tagBytes) {
       int nextByte = is.read();
       if (nextByte == -1) {
@@ -195,9 +199,9 @@ public class BerTag implements Serializable {
 
       if (nextByte != (identifierByte & 0xff)) {
         throw new IOException(
-            "Identifier does not match, expected: "
+            "Identifier does not match, expected: 0x"
                 + HexString.fromByte(identifierByte)
-                + ", received: "
+                + ", received: 0x"
                 + HexString.fromByte((byte) nextByte));
       }
     }

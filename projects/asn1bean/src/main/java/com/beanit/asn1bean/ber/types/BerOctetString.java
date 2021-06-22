@@ -17,6 +17,7 @@ import com.beanit.asn1bean.ber.BerLength;
 import com.beanit.asn1bean.ber.BerTag;
 import com.beanit.asn1bean.ber.internal.Util;
 import com.beanit.asn1bean.util.HexString;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -61,11 +62,65 @@ public class BerOctetString implements Serializable, BerType {
 
   public int decode(InputStream is, boolean withTag) throws IOException {
 
-    int codeLength = 0;
-
     if (withTag) {
-      codeLength += tag.decodeAndCheck(is);
+      int nextByte = is.read();
+      switch (nextByte) {
+        case -1:
+          throw new EOFException("Unexpected end of input stream.");
+        case 0x04:
+          return 1 + decodePrimitiveOctetString(is);
+        case 0x24:
+          return 1 + decodeConstructedOctetString(is);
+        default:
+          throw new IOException(
+              "Octet String identifier does not match, expected: 0x04 or 0x24, received: 0x"
+                  + HexString.fromByte((byte) nextByte));
+      }
     }
+    return decodePrimitiveOctetString(is);
+  }
+
+  private int decodeConstructedOctetString(InputStream is) throws IOException {
+
+    BerLength length = new BerLength();
+    int lengthLength = length.decode(is);
+
+    value = new byte[0];
+    int vLength = 0;
+
+    if (length.val < 0) {
+      BerTag berTag = new BerTag();
+      vLength += berTag.decode(is);
+      while (!berTag.equals(0, 0, 0)) {
+        BerOctetString subOctetString = new BerOctetString();
+        vLength += subOctetString.decode(is, false);
+        value = concatenate(value, subOctetString.value);
+        vLength += berTag.decode(is);
+      }
+      vLength += BerLength.readEocByte(is);
+    } else {
+      while (vLength < length.val) {
+        BerOctetString subOctetString = new BerOctetString();
+        vLength += subOctetString.decode(is);
+        value = concatenate(value, subOctetString.value);
+      }
+    }
+    return lengthLength + vLength;
+  }
+
+  private byte[] concatenate(byte[] a, byte[] b) {
+    int aLen = a.length;
+    int bLen = b.length;
+
+    byte[] c = new byte[aLen + bLen];
+    System.arraycopy(a, 0, c, 0, aLen);
+    System.arraycopy(b, 0, c, aLen, bLen);
+
+    return c;
+  }
+
+  private int decodePrimitiveOctetString(InputStream is) throws IOException {
+    int codeLength = 0;
 
     BerLength length = new BerLength();
     codeLength += length.decode(is);
