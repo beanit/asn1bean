@@ -172,6 +172,7 @@ public class BerTag implements Serializable {
         numTagBytes++;
       } while ((nextByte & 0x80) != 0);
     }
+    tagBytes = null;
 
     return codeLength;
   }

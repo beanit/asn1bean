@@ -115,6 +115,7 @@ public class BerClassWriter {
 
   private final String basePackageName;
   private final boolean jaxbMode;
+  private final boolean accessExtended;
   private final HashMap<String, AsnModule> modulesByName;
   private final boolean insertVersion;
   private final String berTypeInterfaceString = "BerType, ";
@@ -131,8 +132,10 @@ public class BerClassWriter {
       String outputBaseDir,
       String basePackageName,
       boolean jaxbMode,
-      boolean disableWritingVersion) {
+      boolean disableWritingVersion,
+      boolean accessExtended) {
     this.jaxbMode = jaxbMode;
+    this.accessExtended = accessExtended;
     this.outputBaseDir = new File(outputBaseDir);
 
     insertVersion = !disableWritingVersion;
@@ -593,7 +596,7 @@ public class BerClassWriter {
 
     setClassNamesOfComponents(listOfSubClassNames, componentTypes, className);
 
-    writePublicMembers(componentTypes);
+    writeMembers(componentTypes);
 
     writeEmptyConstructor(className);
 
@@ -806,16 +809,27 @@ public class BerClassWriter {
 
     setClassNamesOfComponents(listOfSubClassNames, componentTypes, className);
 
-    writePublicMembers(componentTypes);
+    writeMembers(componentTypes);
+
+    if (asnSequenceSet.isSequence && accessExtended && extensibilityImplied) {
+      String accessModifierString = jaxbMode ? "private" : "public";
+      write(accessModifierString + " byte[] extensionBytes = null;");
+    }
 
     writeEmptyConstructor(className);
 
-    if (!jaxbMode) {
-      writeEncodeConstructor(className, componentTypes);
-    }
-
     if (jaxbMode) {
       writeGetterAndSetter(componentTypes);
+      if (asnSequenceSet.isSequence && accessExtended && extensibilityImplied) {
+        write("public byte[] getExtensionBytes() {");
+        write("return extensionBytes;");
+        write("}\n");
+        write("public void setExtensionBytes(byte[] bytes) {");
+        write("this.extensionBytes = bytes;");
+        write("}\n");
+      }
+    } else {
+      writeEncodeConstructor(className, componentTypes);
     }
 
     boolean hasExplicitTag = (tag != null) && (tag.type == TagType.EXPLICIT);
@@ -1231,6 +1245,13 @@ public class BerClassWriter {
       }
     }
 
+    if (isSequence && accessExtended && extensibilityImplied) {
+      write("if (extensionBytes != null) {");
+      write("reverseOS.write(extensionBytes);");
+      write("codeLength += extensionBytes.length;");
+      write("}\n");
+    }
+
     for (int j = componentTypes.size() - 1; j >= 0; j--) {
 
       AsnElementType componentType = componentTypes.get(j);
@@ -1401,10 +1422,54 @@ public class BerClassWriter {
       }
     }
 
-    if (extensibilityImplied) writeSequenceDecodeMethodExtensibleEnd(hasExplicitTag);
-    else writeSequenceDecodeMethodNonExtensibleEnd(hasExplicitTag);
+    if (extensibilityImplied) {
+      if (accessExtended) {
+        writeSequenceDecodeMethodAccessibleExtensionEnd(hasExplicitTag);
+      } else {
+        writeSequenceDecodeMethodExtensibleEnd(hasExplicitTag);
+      }
+    } else {
+      writeSequenceDecodeMethodNonExtensibleEnd(hasExplicitTag);
+    }
 
     write("}\n");
+  }
+
+  private void writeSequenceDecodeMethodAccessibleExtensionEnd(boolean hasExplicitTag)
+      throws IOException {
+    write("if (lengthVal < 0) {");
+
+    write("if (!berTag.equals(0, 0, 0)) {");
+    write("ByteArrayOutputStream os = new ByteArrayOutputStream();");
+
+    write("while (!berTag.equals(0, 0, 0)) {");
+    write("berTag.encode(os);");
+    write("vByteCount += DecodeUtil.decodeUnknownComponent(is,os);");
+    write("vByteCount += berTag.decode(is);");
+    write("}");
+
+    write("extensionBytes = os.toByteArray();");
+    write("}");
+
+    write("vByteCount += BerLength.readEocByte(is);");
+    if (hasExplicitTag) {
+      write("vByteCount += explicitTagLength.readEocIfIndefinite(is);");
+    }
+    write("return tlByteCount + vByteCount;");
+    write("} else {");
+    write("ByteArrayOutputStream os = new ByteArrayOutputStream();");
+    write("while (vByteCount < lengthVal) {");
+    write("berTag.encode(os);");
+    write("vByteCount += DecodeUtil.decodeUnknownComponent(is, os);");
+    write("if (vByteCount == lengthVal) {");
+    write("extensionBytes = os.toByteArray();");
+    write("return tlByteCount + vByteCount;");
+    write("}");
+    write("vByteCount += berTag.decode(is);");
+    write("}");
+    write("}");
+    write(
+        "throw new IOException(\"Unexpected end of sequence, length tag: \" + lengthVal + \", bytes decoded: \" + vByteCount);");
   }
 
   private void writeSequenceDecodeMethodExtensibleEnd(boolean hasExplicitTag) throws IOException {
@@ -2137,13 +2202,16 @@ public class BerClassWriter {
     write("}\n");
   }
 
-  private void writePublicMembers(List<AsnElementType> componentTypes) throws IOException {
+  private void writeMembers(List<AsnElementType> componentTypes) throws IOException {
+    String accessModifierString = jaxbMode ? "private" : "public";
     for (AsnElementType element : componentTypes) {
-      if (jaxbMode) {
-        write("private " + element.className + " " + cleanUpName(element.name) + " = null;");
-      } else {
-        write("public " + element.className + " " + cleanUpName(element.name) + " = null;");
-      }
+      write(
+          accessModifierString
+              + " "
+              + element.className
+              + " "
+              + cleanUpName(element.name)
+              + " = null;");
     }
     write("");
   }
@@ -2469,6 +2537,7 @@ public class BerClassWriter {
     write("import java.io.EOFException;");
     write("import java.io.InputStream;");
     write("import java.io.OutputStream;");
+    write("import java.io.ByteArrayOutputStream;");
     write("import java.util.List;");
     write("import java.util.ArrayList;");
     write("import java.util.Iterator;");

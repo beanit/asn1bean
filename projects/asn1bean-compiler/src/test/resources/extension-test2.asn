@@ -1,0 +1,16 @@
+
+EXTENSION_TEST-EXTENSIBLE_WITH_ACCESS DEFINITIONS IMPLICIT TAGS EXTENSIBILITY IMPLIED ::=
+BEGIN
+
+ExtensibleAccessSequence ::= SEQUENCE {
+  age INTEGER
+}
+
+ExtensibleAccessSequenceAndMore ::= SEQUENCE {
+  extensibleSequence ExtensibleAccessSequence,
+  more VisibleString
+}
+
+END
+
+

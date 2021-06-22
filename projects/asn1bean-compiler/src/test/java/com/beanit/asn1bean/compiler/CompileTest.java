@@ -184,7 +184,23 @@ public class CompileTest {
           "-p",
           ROOT_PACKAGE_NAME,
           "-f",
-          "src/test/resources/extension-test.asn"
+          "src/test/resources/extension-test1.asn"
+        };
+    Compiler.main(args);
+  }
+
+  @Test
+  public void testCompilingExtensionTest2() throws Exception {
+    args =
+        new String[] {
+          "-dv",
+          "-e",
+          "-o",
+          GENERATED_SRC_DIR,
+          "-p",
+          ROOT_PACKAGE_NAME,
+          "-f",
+          "src/test/resources/extension-test2.asn"
         };
     Compiler.main(args);
   }

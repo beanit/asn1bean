@@ -3,35 +3,56 @@ package com.beanit.asn1bean.compiler;
 import com.beanit.asn1bean.ber.ReverseByteArrayOutputStream;
 import com.beanit.asn1bean.ber.types.BerInteger;
 import com.beanit.asn1bean.ber.types.string.BerVisibleString;
-import com.beanit.asn1bean.compiler.extension_test.mod1.ExtendedSequence;
-import com.beanit.asn1bean.compiler.extension_test.mod1.ExtendedSequenceAndMore;
-import com.beanit.asn1bean.compiler.extension_test.mod1.NonExtensibleSequence;
-import com.beanit.asn1bean.compiler.extension_test.mod1.NonExtensibleSequenceAndMore;
-import com.beanit.asn1bean.compiler.extension_test.mod2.ExtensibleSequenceAndMore;
+import com.beanit.asn1bean.compiler.extension_test.extensible.ExtensibleSequenceAndMore;
+import com.beanit.asn1bean.compiler.extension_test.extensible_with_access.ExtensibleAccessSequence;
+import com.beanit.asn1bean.compiler.extension_test.extensible_with_access.ExtensibleAccessSequenceAndMore;
+import com.beanit.asn1bean.compiler.extension_test.non_extensible.ExtendedSequence;
+import com.beanit.asn1bean.compiler.extension_test.non_extensible.ExtendedSequenceAndMore;
+import com.beanit.asn1bean.compiler.extension_test.non_extensible.NonExtensibleSequence;
+import com.beanit.asn1bean.compiler.extension_test.non_extensible.NonExtensibleSequenceAndMore;
 import com.beanit.asn1bean.util.HexString;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class ExtensibilityImpliedTest {
 
-  private byte[] getExtendedSequenceCode() throws IOException {
+  private static byte[] extendedSequenceAndMoreCode;
+  private static byte[] extensionCode;
+
+  @BeforeAll
+  static void computeCode() throws IOException {
+    ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(100, true);
+
+    NonExtensibleSequence nonExtensibleSequence = new NonExtensibleSequence();
+    nonExtensibleSequence.setAge(new BerInteger(5));
+
+    os.reset();
+    nonExtensibleSequence.encode(os);
+    byte[] nonExtensibleSequenceCode = os.getArray();
+
     ExtendedSequence extendedSequence = new ExtendedSequence();
     extendedSequence.setAge(new BerInteger(5));
     extendedSequence.setName(new BerVisibleString("name"));
-    NonExtensibleSequence subAge = new NonExtensibleSequence();
-    subAge.setAge(new BerInteger(4));
-    extendedSequence.setSubAge(subAge);
+    extendedSequence.setSubAge(nonExtensibleSequence);
+
+    os.reset();
+    extendedSequence.encode(os);
+    byte[] extendedSequenceCode = os.getArray();
+    extensionCode =
+        Arrays.copyOfRange(
+            extendedSequenceCode, nonExtensibleSequenceCode.length, extendedSequenceCode.length);
 
     ExtendedSequenceAndMore extendedSequenceAndMore = new ExtendedSequenceAndMore();
     extendedSequenceAndMore.setExtendedSequence(extendedSequence);
     extendedSequenceAndMore.setMore(new BerVisibleString("more"));
 
-    ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(100);
+    os.reset();
     extendedSequenceAndMore.encode(os);
-    System.out.println(HexString.fromBytes(os.getArray()));
-    return os.getArray();
+    extendedSequenceAndMoreCode = os.getArray();
   }
 
   @Test
@@ -41,13 +62,13 @@ public class ExtensibilityImpliedTest {
         IOException.class,
         () ->
             nonExtensibleSequenceAndMore.decode(
-                new ByteArrayInputStream(getExtendedSequenceCode())));
+                new ByteArrayInputStream(extendedSequenceAndMoreCode)));
   }
 
   @Test
   void testThatDecodingExtensibleSequenceSucceeds() throws IOException {
     ExtensibleSequenceAndMore extensibleSequenceAndMore = new ExtensibleSequenceAndMore();
-    extensibleSequenceAndMore.decode(new ByteArrayInputStream(getExtendedSequenceCode()));
+    extensibleSequenceAndMore.decode(new ByteArrayInputStream(extendedSequenceAndMoreCode));
     Assertions.assertEquals(
         5, extensibleSequenceAndMore.getExtensibleSequence().getAge().value.intValue());
     Assertions.assertEquals("more", extensibleSequenceAndMore.getMore().toString());
@@ -55,11 +76,43 @@ public class ExtensibilityImpliedTest {
 
   @Test
   void testThatDecodingExtensibleSequenceIndefLengthSucceeds() throws IOException {
-    String code = "308030800201051A046E616D65AA80020104000000001A046D6F72650000";
+    String code = "308030800201051A046E616D65AA80020105000000001A046D6F72650000";
     ExtensibleSequenceAndMore extensibleSequenceAndMore = new ExtensibleSequenceAndMore();
     extensibleSequenceAndMore.decode(new ByteArrayInputStream(HexString.toBytes(code)));
     Assertions.assertEquals(
         5, extensibleSequenceAndMore.getExtensibleSequence().getAge().value.intValue());
     Assertions.assertEquals("more", extensibleSequenceAndMore.getMore().toString());
+  }
+
+  @Test
+  void accessExtensionBytes() throws IOException {
+    ExtensibleAccessSequenceAndMore extensibleSequenceAndMore =
+        new ExtensibleAccessSequenceAndMore();
+    extensibleSequenceAndMore.decode(new ByteArrayInputStream(extendedSequenceAndMoreCode));
+    Assertions.assertEquals(
+        5, extensibleSequenceAndMore.getExtensibleSequence().getAge().value.intValue());
+    Assertions.assertEquals("more", extensibleSequenceAndMore.getMore().toString());
+    Assertions.assertArrayEquals(
+        extensionCode, extensibleSequenceAndMore.getExtensibleSequence().getExtensionBytes());
+  }
+
+  @Test
+  void setExtensionBytes() throws IOException {
+
+    NonExtensibleSequence nonExtensibleSequence = new NonExtensibleSequence();
+    nonExtensibleSequence.setAge(new BerInteger(5));
+
+    ExtensibleAccessSequence extensibleSequence = new ExtensibleAccessSequence();
+    extensibleSequence.setAge(new BerInteger(5));
+    extensibleSequence.setExtensionBytes(extensionCode);
+
+    ExtensibleAccessSequenceAndMore extensibleSequenceAndMore =
+        new ExtensibleAccessSequenceAndMore();
+    extensibleSequenceAndMore.setExtensibleSequence(extensibleSequence);
+    extensibleSequenceAndMore.setMore(new BerVisibleString("more"));
+
+    ReverseByteArrayOutputStream os = new ReverseByteArrayOutputStream(100, true);
+    extensibleSequenceAndMore.encode(os);
+    Assertions.assertArrayEquals(extendedSequenceAndMoreCode, os.getArray());
   }
 }

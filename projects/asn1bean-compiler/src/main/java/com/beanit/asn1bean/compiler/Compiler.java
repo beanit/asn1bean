@@ -56,6 +56,12 @@ public class Compiler {
                 "By default the ASN1bean version is written in the header of the generated classes. Using this flag this behavior can be disabled.")
             .buildFlagParameter();
 
+    FlagCliParameter accessExtended =
+        new CliParameterBuilder("-e")
+            .setDescription(
+                "Enable access to extensions. This flag enables accessing and setting extension bytes of sequences of extensible modules.")
+            .buildFlagParameter();
+
     FlagCliParameter legacyMode =
         new CliParameterBuilder("-l")
             .setDescription(
@@ -73,6 +79,7 @@ public class Compiler {
     cliParameters.add(outputBaseDir);
     cliParameters.add(basePackageName);
     cliParameters.add(disableWritingVersion);
+    cliParameters.add(accessExtended);
     cliParameters.add(legacyMode);
 
     CliParser cliParser =
@@ -106,14 +113,14 @@ public class Compiler {
             outputBaseDir.getValue(),
             basePackageName.getValue(),
             !legacyMode.isSelected(),
-            disableWritingVersion.isSelected());
+            disableWritingVersion.isSelected(),
+            accessExtended.isSelected());
 
     classWriter.translate();
     System.out.println("done");
   }
 
   private static AsnModel getJavaModelFromAsn1File(String inputFileName) throws Exception {
-
     AsnModel model = new AsnModel();
     try (InputStream stream =
         new BufferedInputStream(Files.newInputStream(Paths.get(inputFileName)))) {
