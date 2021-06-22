@@ -1,0 +1,40 @@
+EXTENSION_TEST-MOD1 DEFINITIONS IMPLICIT TAGS ::=
+BEGIN
+
+NonExtensibleSequence ::= SEQUENCE {
+  age INTEGER
+}
+
+NonExtensibleSequenceAndMore ::= SEQUENCE {
+  nonExtensibleSequence NonExtensibleSequence,
+  more VisibleString
+}
+
+ExtendedSequence ::= SEQUENCE {
+  age INTEGER,
+  name VisibleString,
+  subAge [10] NonExtensibleSequence
+}
+
+ExtendedSequenceAndMore ::= SEQUENCE {
+  extendedSequence ExtendedSequence,
+  more VisibleString
+}
+
+END
+
+EXTENSION_TEST-MOD2 DEFINITIONS IMPLICIT TAGS EXTENSIBILITY IMPLIED ::=
+BEGIN
+
+ExtensibleSequence ::= SEQUENCE {
+  age INTEGER
+}
+
+ExtensibleSequenceAndMore ::= SEQUENCE {
+  extensibleSequence ExtensibleSequence,
+  more VisibleString
+}
+
+END
+
+

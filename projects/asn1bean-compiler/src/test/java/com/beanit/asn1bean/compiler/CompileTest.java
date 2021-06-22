@@ -173,4 +173,19 @@ public class CompileTest {
         };
     Compiler.main(args);
   }
+
+  @Test
+  public void testCompilingExtensionTest() throws Exception {
+    args =
+        new String[] {
+          "-dv",
+          "-o",
+          GENERATED_SRC_DIR,
+          "-p",
+          ROOT_PACKAGE_NAME,
+          "-f",
+          "src/test/resources/extension-test.asn"
+        };
+    Compiler.main(args);
+  }
 }
