@@ -116,6 +116,8 @@ configure(javaProjects) {
 
     tasks.test {
         useJUnitPlatform()
+        systemProperty("junit.jupiter.execution.parallel.enabled", "true")
+        systemProperty("junit.jupiter.execution.parallel.mode.default", "concurrent")
     }
 
     tasks.withType<JavaCompile>().configureEach {
