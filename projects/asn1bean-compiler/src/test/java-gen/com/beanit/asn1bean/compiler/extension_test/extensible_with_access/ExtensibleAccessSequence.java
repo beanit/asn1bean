@@ -119,7 +119,7 @@ public class ExtensibleAccessSequence implements BerType, Serializable {
 			if (!berTag.equals(0, 0, 0)) {
 				ByteArrayOutputStream os = new ByteArrayOutputStream();
 				while (!berTag.equals(0, 0, 0)) {
-					berTag.encode(os);
+					berTag.encodeForwards(os);
 					vByteCount += DecodeUtil.decodeUnknownComponent(is,os);
 					vByteCount += berTag.decode(is);
 				}
@@ -130,7 +130,7 @@ public class ExtensibleAccessSequence implements BerType, Serializable {
 		} else {
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
 			while (vByteCount < lengthVal) {
-				berTag.encode(os);
+				berTag.encodeForwards(os);
 				vByteCount += DecodeUtil.decodeUnknownComponent(is, os);
 				if (vByteCount == lengthVal) {
 					extensionBytes = os.toByteArray();

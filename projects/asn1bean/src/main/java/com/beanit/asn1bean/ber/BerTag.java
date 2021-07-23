@@ -105,6 +105,16 @@ public class BerTag implements Serializable {
     return tagBytes.length;
   }
 
+  public int encodeForwards(OutputStream os) throws IOException {
+    if (tagBytes == null) {
+      code();
+    }
+    for (int i = 0; i < tagBytes.length; i++) {
+      os.write(tagBytes[i]);
+    }
+    return tagBytes.length;
+  }
+
   public int decode(InputStream is) throws IOException {
     int nextByte = is.read();
     if (nextByte == -1) {

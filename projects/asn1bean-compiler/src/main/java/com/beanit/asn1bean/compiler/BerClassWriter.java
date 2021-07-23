@@ -1443,7 +1443,7 @@ public class BerClassWriter {
     write("ByteArrayOutputStream os = new ByteArrayOutputStream();");
 
     write("while (!berTag.equals(0, 0, 0)) {");
-    write("berTag.encode(os);");
+    write("berTag.encodeForwards(os);");
     write("vByteCount += DecodeUtil.decodeUnknownComponent(is,os);");
     write("vByteCount += berTag.decode(is);");
     write("}");
@@ -1459,7 +1459,7 @@ public class BerClassWriter {
     write("} else {");
     write("ByteArrayOutputStream os = new ByteArrayOutputStream();");
     write("while (vByteCount < lengthVal) {");
-    write("berTag.encode(os);");
+    write("berTag.encodeForwards(os);");
     write("vByteCount += DecodeUtil.decodeUnknownComponent(is, os);");
     write("if (vByteCount == lengthVal) {");
     write("extensionBytes = os.toByteArray();");
