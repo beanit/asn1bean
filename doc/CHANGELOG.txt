@@ -1,3 +1,6 @@
+v1.13.0 30-Jul-2021
+--------------------
+
 - added support for EXTENSIBILITY APPLIED when decoding sequences:
   accessing and setting extension bytes is possible using "-e" flag
   when compiling ASN1 files, thanks for testing to Calum MacLean
