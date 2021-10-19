@@ -23,6 +23,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 public class BerReal implements Serializable, BerType {
 
@@ -192,11 +194,25 @@ public class BerReal implements Serializable, BerType {
     byte[] byteCode = new byte[length.val];
     Util.readFully(is, byteCode);
 
-    if ((byteCode[0] & 0x80) != 0x80) {
-      throw new IOException("Only binary REAL encoding is supported");
+    codeLength += length.val;
+
+    byte formatOсtet = byteCode[0];
+    if ((formatOсtet & 0x80) != 0x80) {
+      if (formatOсtet == 0 || (formatOсtet | 0x03) != 0x03) {
+        throw new IOException("Only binary and decimal REAL encoding is supported");
+      }
+
+      byte[] valueBytes = Arrays.copyOfRange(byteCode, 1, byteCode.length);
+      String str = new String(valueBytes, StandardCharsets.US_ASCII);
+      try {
+        value = Double.parseDouble(str.replace(',','.'));
+      } catch(NumberFormatException e) {
+        throw new IOException("Invalid decimal REAL encoding");
+      }
+
+      return codeLength;
     }
 
-    codeLength += length.val;
     int tempLength = 1;
 
     int sign = 1;
