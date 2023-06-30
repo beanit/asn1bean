@@ -21,7 +21,7 @@ val sonatypeStagingProfileId: String? by project
 
 //----------- project specific configuration start --------------------
 
-val cfgVersion = "1.13.1-SNAPSHOT"
+val cfgVersion = "1.14.0"
 val cfgGroup = "com.beanit"
 val cfgCopyToRoot = true
 val cfgSignPom = true
