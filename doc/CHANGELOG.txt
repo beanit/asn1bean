@@ -1,3 +1,8 @@
+- add support for decimal REAL decoding, thanks to bibmaster and karim
+
+- fix Windows run scripts for newer Java versions
+
+
 v1.13.0 30-Jul-2021
 --------------------
 
