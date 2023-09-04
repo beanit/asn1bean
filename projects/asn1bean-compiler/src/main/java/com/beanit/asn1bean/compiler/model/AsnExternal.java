@@ -13,4 +13,4 @@
  */
 package com.beanit.asn1bean.compiler.model;
 
-public class AsnExternal extends AsnType {}
+public class AsnExternal extends AsnUniversalType {}
