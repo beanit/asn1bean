@@ -180,7 +180,6 @@ public class BerExternal implements BerType, Serializable {
 
       sb.append("<none>");
     }
-
   }
 
   public static final BerTag tag = new BerTag(BerTag.UNIVERSAL_CLASS, BerTag.CONSTRUCTED, 8);
@@ -191,8 +190,7 @@ public class BerExternal implements BerType, Serializable {
   private BerObjectDescriptor dataValueDescriptor = null;
   private Encoding encoding = null;
 
-  public BerExternal() {
-  }
+  public BerExternal() {}
 
   public BerExternal(byte[] code) {
     this.code = code;
@@ -230,7 +228,8 @@ public class BerExternal implements BerType, Serializable {
     return encoding;
   }
 
-  @Override public int encode(OutputStream reverseOS) throws IOException {
+  @Override
+  public int encode(OutputStream reverseOS) throws IOException {
     return encode(reverseOS, true);
   }
 
@@ -266,10 +265,10 @@ public class BerExternal implements BerType, Serializable {
     }
 
     return codeLength;
-
   }
 
-  @Override public int decode(InputStream is) throws IOException {
+  @Override
+  public int decode(InputStream is) throws IOException {
     return decode(is, true);
   }
 
@@ -325,8 +324,8 @@ public class BerExternal implements BerType, Serializable {
       return tlByteCount + vByteCount;
     }
 
-    throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", bytes decoded: " + vByteCount);
-
+    throw new IOException(
+        "Unexpected end of sequence, length tag: " + lengthVal + ", bytes decoded: " + vByteCount);
   }
 
   public void encodeAndSave(int encodingSizeGuess) throws IOException {
@@ -335,7 +334,8 @@ public class BerExternal implements BerType, Serializable {
     code = reverseOS.getArray();
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
     StringBuilder sb = new StringBuilder();
     appendAsString(sb, 0);
     return sb.toString();
@@ -395,5 +395,4 @@ public class BerExternal implements BerType, Serializable {
     }
     sb.append("}");
   }
-
 }
