@@ -17,7 +17,6 @@ import com.beanit.asn1bean.ber.BerLength;
 import com.beanit.asn1bean.ber.BerTag;
 import com.beanit.asn1bean.ber.ReverseByteArrayOutputStream;
 import com.beanit.asn1bean.ber.types.string.BerObjectDescriptor;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -36,8 +35,7 @@ public class BerExternal implements BerType, Serializable {
     private BerOctetString octetAligned = null;
     private BerBitString arbitrary = null;
 
-    public Encoding() {
-    }
+    public Encoding() {}
 
     public Encoding(byte[] code) {
       this.code = code;
@@ -67,7 +65,8 @@ public class BerExternal implements BerType, Serializable {
       return arbitrary;
     }
 
-    @Override public int encode(OutputStream reverseOS) throws IOException {
+    @Override
+    public int encode(OutputStream reverseOS) throws IOException {
 
       if (code != null) {
         reverseOS.write(code);
@@ -106,7 +105,8 @@ public class BerExternal implements BerType, Serializable {
       throw new IOException("Error encoding CHOICE: No element of CHOICE was selected.");
     }
 
-    @Override public int decode(InputStream is) throws IOException {
+    @Override
+    public int decode(InputStream is) throws IOException {
       return decode(is, null);
     }
 
@@ -154,7 +154,8 @@ public class BerExternal implements BerType, Serializable {
       code = reverseOS.getArray();
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       StringBuilder sb = new StringBuilder();
       appendAsString(sb, 0);
       return sb.toString();
