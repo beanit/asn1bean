@@ -1705,9 +1705,9 @@ public class BerClassWriter {
       write("vByteCount += length.decode(is);");
     }
 
-    write(component.variableName + " = new " + component.className + "();");
+    write("this." + component.variableName + " = new " + component.className + "();");
     write(
-        "vByteCount += "
+        "vByteCount += this."
             + component.variableName
             + ".decode(is, "
             + getDecodeTagParameter(component)
@@ -1762,9 +1762,9 @@ public class BerClassWriter {
       write("vByteCount += length.decode(is);");
     }
 
-    write(component.variableName + " = new " + component.className + "();");
+    write("this." + component.variableName + " = new " + component.className + "();");
     write(
-        "vByteCount += "
+        "vByteCount += this."
             + component.variableName
             + ".decode(is, "
             + getDecodeTagParameter(component)
@@ -1789,9 +1789,9 @@ public class BerClassWriter {
       write("tlvByteCount += length.decode(is);");
     }
 
-    write(component.variableName + " = new " + component.className + "();");
+    write("this." + component.variableName + " = new " + component.className + "();");
     write(
-        "tlvByteCount += "
+        "tlvByteCount += this."
             + component.variableName
             + ".decode(is, "
             + getDecodeTagParameter(component)
@@ -1809,9 +1809,9 @@ public class BerClassWriter {
 
   private void writeSequenceComponentDecodeUntaggedChoiceOrAny(ComponentInfo component)
       throws IOException {
-    write(component.variableName + " = new " + component.className + "();");
+    write("this." + component.variableName + " = new " + component.className + "();");
     write(
-        "numDecodedBytes = "
+        "numDecodedBytes = this."
             + component.variableName
             + ".decode(is, "
             + getDecodeTagParameter(component)
@@ -1827,7 +1827,7 @@ public class BerClassWriter {
     write("}");
     if (component.isOptionalOrDefault) {
       write("else {");
-      write(component.variableName + " = null;");
+      write("this." + component.variableName + " = null;");
       write("}");
     } else {
       writeElseThrowTagMatchingException();
@@ -1847,9 +1847,9 @@ public class BerClassWriter {
 
   private void writeChoiceComponentDecodeUntaggedChoiceOrAny(
       ComponentInfo component, boolean taggedChoice) throws IOException {
-    write(component.variableName + " = new " + component.className + "();");
+    write("this." + component.variableName + " = new " + component.className + "();");
     write(
-        "numDecodedBytes = "
+        "numDecodedBytes = this."
             + component.variableName
             + ".decode(is, "
             + getDecodeTagParameter(component)
@@ -1861,7 +1861,7 @@ public class BerClassWriter {
     write("return tlvByteCount + numDecodedBytes;");
     write("}");
     write("else {");
-    write(component.variableName + " = null;");
+    write("this." + component.variableName + " = null;");
     write("}\n");
   }
 
