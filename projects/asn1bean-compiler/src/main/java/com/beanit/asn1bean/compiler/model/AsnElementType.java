@@ -17,5 +17,6 @@ public class AsnElementType extends AsnTaggedType {
   public boolean isComponentsOf;
   public boolean isDefault;
   public boolean isOptional = false;
+  public boolean isDBracket = false;
   public AsnValue value;
 }

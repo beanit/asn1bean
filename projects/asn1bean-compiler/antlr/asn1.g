@@ -43,6 +43,7 @@ CLASS_KW				=	"CLASS"				;
 COMPONENTS_KW			=	"COMPONENTS"		;
 COMPONENT_KW			=	"COMPONENT"			;
 CONSTRAINED_KW			=	"CONSTRAINED"		;
+CONTAINING_KW			=	"CONTAINING"		;
 DEFAULT_KW				=	"DEFAULT"			;
 DEFINED_KW				=	"DEFINED"			;
 DEFINITIONS_KW			=	"DEFINITIONS"		;
@@ -133,11 +134,13 @@ INTERSECTION		:	'^'		;
 LESS				:	'<'		;
 L_BRACE				:	'{'		;
 L_BRACKET			:	'['		;
+L_DBRACKET			:	"[["	;
 L_PAREN				:	'('		;
 protected MINUS				:	'-'		;
 PLUS				:	'+'		;
 R_BRACE				:	'}'		;
 R_BRACKET			:	']'		;
+R_DBRACKET			:	"]]"	;
 R_PAREN				:	')'		;
 SEMI				:	';'		;
 SINGLE_QUOTE		:	"'"		;
@@ -765,12 +768,12 @@ elementType_list returns [List<AsnElementType> elelist]
 elementType	returns [AsnElementType eletyp]
 {eletyp = new AsnElementType();AsnValue val; 
 AsnType obj; AsnTag tg; String s;}
-	: (	((lid:LOWER {eletyp.name = lid.getText();})? 
+	: (	((L_DBRACKET {eletyp.isDBracket = true;})? (lid:LOWER {eletyp.name = lid.getText();})?
 		(tg = tag { eletyp.tag = tg ;})? 
 		(s = tag_default {eletyp.tagType = s ;})? 
 		(obj = type) ( (OPTIONAL_KW {eletyp.isOptional=true;}) 
 		| (DEFAULT_KW { eletyp.isDefault = true;} 
-		 val = value {eletyp.value = val;} ))? )
+		 val = value {eletyp.value = val;} ))? (R_DBRACKET)?)
 	|	COMPONENTS_KW OF_KW {eletyp.isComponentsOf = true;}(obj = type ))
 		{
 			if((AsnDefinedType.class).isInstance(obj)){
@@ -896,7 +899,7 @@ AsnConstraint cns; ElementSetSpec elespec;Object typ; }
 		|	
 		(COMPONENTS_KW {cnsElem.isWithComponents=true;}
 		L_BRACE (ELLIPSIS COMMA)? type_constraint_list[cnsElem] R_BRACE )))
-
+	|	(CONTAINING_KW typ=type {cnsElem.isTypeConstraint=true;cnsElem.type=typ;})
 	;
 
 value_range[ConstraintElements cnsElem]
