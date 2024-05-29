@@ -886,8 +886,8 @@ intersections returns [Intersection intersect]
 constraint_elements	returns [ConstraintElements cnsElem]
 { cnsElem = new ConstraintElements(); AsnValue val;
 AsnConstraint cns; ElementSetSpec elespec;Object typ; }
-	:   (val = value2 {cnsElem.isValue=true;cnsElem.values.add(val);} ((BAR)? (value2) {cnsElem.values.add(val);} )*  ) 
-    |   (((value_range[cnsElem])=>(value_range[cnsElem] {cnsElem.isValueRange=true;})) (COMMA ELLIPSIS)?)
+	:   (val = value2 {cnsElem.isValue=true;cnsElem.values.add(val);} ((BAR)? (value2) {cnsElem.values.add(val);} )*  (COMMA ELLIPSIS)?)
+    |   (((value_range[cnsElem])=>(value_range[cnsElem] {cnsElem.isValueRange=true;})) ((BAR)? (val = value2) {cnsElem.values.add(val);} )* (COMMA ELLIPSIS)?)
 	|	(SIZE_KW cns=constraint {cnsElem.isSizeConstraint=true;cnsElem.constraint=cns;})
 //	|	(FROM_KW cns=constraint {cnsElem.isAlphabetConstraint=true;cnsElem.constraint=cns;})
 	|	(FROM_KW L_PAREN elespec=element_set_spec {cnsElem.isElementSetSpec=true;cnsElem.elespec=elespec;} R_PAREN)
