@@ -60,6 +60,14 @@ public class BerOctetString implements Serializable, BerType {
     return decode(is, true);
   }
 
+  public int decodeString(InputStream is, BerTag tag) throws IOException {
+    if (tag.primitive == BerTag.CONSTRUCTED) {
+      return decodeConstructedOctetString(is);
+    }
+
+    return decodePrimitiveOctetString(is);
+  }
+
   public int decode(InputStream is, boolean withTag) throws IOException {
 
     if (withTag) {
