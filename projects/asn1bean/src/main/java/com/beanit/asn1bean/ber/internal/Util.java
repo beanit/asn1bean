@@ -24,6 +24,9 @@ public class Util {
   }
 
   public static void readFully(InputStream is, byte[] buffer, int off, int len) throws IOException {
+    if (len == 0) {
+      return;
+    }
     while (len > 0) {
       int bytesRead = is.read(buffer, off, len);
       if (bytesRead == -1) {
