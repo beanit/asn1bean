@@ -1,3 +1,6 @@
+v1.15.0 23-Mar-2026
+--------------------
+
 - add support for EXTERNAL, thanks to R Systems
 
 - fix decoding ANY contents which contains single NULL element
