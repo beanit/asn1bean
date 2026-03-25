@@ -24,14 +24,6 @@ sourceSets {
 
 project.extra["cfgModuleName"] = "com.beanit.asn1bean-compiler"
 
-tasks["jar"].withConvention(aQute.bnd.gradle.BundleTaskConvention::class) {
-    bnd("""
-        Bundle-Name: ASN1bean Compiler
-        Bundle-SymbolicName: ${project.extra["cfgModuleName"]}
-        -exportcontents: !*.internal.*,*
-    """)
-}
-
 publishing {
     publications {
         maybeCreate<MavenPublication>("mavenJava").pom {

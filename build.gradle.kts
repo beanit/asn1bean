@@ -5,10 +5,9 @@ plugins {
     `maven-publish`
     signing
     eclipse
-    id("biz.aQute.bnd.builder") version "5.1.1"
-    id("com.diffplug.spotless") version "5.9.0"
-    id("io.codearte.nexus-staging") version "0.22.0"
-    id("net.ltgt.errorprone") version "1.3.0"
+    id("net.ltgt.errorprone") version "5.1.0"
+    id("com.diffplug.spotless") version "8.4.0"
+    id("io.codearte.nexus-staging") version "0.30.0"
 }
 
 var cfgJavaVersion = JavaVersion.VERSION_1_8
@@ -89,7 +88,6 @@ configure(javaProjects) {
     apply(plugin = "maven-publish")
     apply(plugin = "signing")
     apply(plugin = "eclipse")
-    apply(plugin = "biz.aQute.bnd.builder")
     apply(plugin = "com.diffplug.spotless")
     apply(plugin = "net.ltgt.errorprone")
 
@@ -111,7 +109,7 @@ configure(javaProjects) {
     dependencies {
         testImplementation("org.junit.jupiter:junit-jupiter:5.7.0")
         testImplementation("com.tngtech.archunit:archunit-junit5:0.15.0")
-        errorprone("com.google.errorprone:error_prone_core:2.5.1")
+        errorprone("com.google.errorprone:error_prone_core:2.48.0")
     }
 
     tasks.test {
@@ -122,9 +120,6 @@ configure(javaProjects) {
 
     tasks.withType<JavaCompile>().configureEach {
         options.errorprone.excludedPaths.set(".*java-gen.*")
-        if (!JavaVersion.current().isJava9Compatible) {
-            options.errorprone.isEnabled.set(false)
-        }
     }
 
     afterEvaluate {
@@ -242,7 +237,7 @@ tasks.register<Javadoc>("javadocAll") {
     exclude("**/java-gen/**")
     exclude("**/app/**")
 
-    setDestinationDir(File(buildDir, "docs/javadoc-all"))
+    setDestinationDir(layout.buildDirectory.dir("docs/javadoc-all").get().asFile)
 
     classpath = files(distributionProjects.map { project ->
         project.sourceSets["main"].compileClasspath
