@@ -22,19 +22,24 @@ sourceSets {
     }
 }
 
-project.extra["cfgModuleName"] = "com.beanit.asn1bean-compiler"
+project.extra["cfgModuleName"] = "com.beanit.asn1bean.compiler"
 
-publishing {
-    publications {
-        maybeCreate<MavenPublication>("mavenJava").pom {
-            name.set("ASN1bean Compiler")
-            description.set("ASN1bean Compiler generates Java classes out of ASN.1 code that can be used to encode/decode BER data.")
+mavenPublishing {
 
-            licenses {
-                license {
-                    name.set("The Apache License, Version 2.0")
-                    url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
-                }
+    coordinates(
+        project.group.toString(),
+        project.name,
+        project.version.toString()
+    )
+
+    pom {
+        name.set("ASN1bean Compiler")
+        description.set("ASN1bean Compiler generates Java classes out of ASN.1 code that can be used to encode/decode BER data.")
+        licenses {
+            license {
+                name.set("The Apache License, Version 2.0")
+                url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                distribution.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
             }
         }
     }

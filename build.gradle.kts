@@ -7,10 +7,10 @@ plugins {
     eclipse
     id("net.ltgt.errorprone") version "5.1.0"
     id("com.diffplug.spotless") version "8.4.0"
-    id("io.codearte.nexus-staging") version "0.30.0"
+    id("com.vanniktech.maven.publish") version "0.36.0"
 }
 
-var cfgJavaVersion = JavaVersion.VERSION_1_8
+var cfgJavaVersion = JavaVersion.VERSION_21
 
 val sonatypeRepository: String? by project
 val sonatypeSnapshotRepository: String? by project
@@ -24,11 +24,6 @@ val cfgVersion = "1.15.0"
 val cfgGroup = "com.beanit"
 val cfgCopyToRoot = true
 val cfgSignPom = true
-val cfgRepository: String? = sonatypeRepository
-val cfgSnapshotRepository: String? = sonatypeSnapshotRepository
-val cfgRepositoryUser: String? = sonatypeUser
-val cfgRepositoryPass: String? = sonatypePass
-val cfgStagingProfileId: String? = sonatypeStagingProfileId
 val javaProjects: Set<Project> = subprojects
 val distributionProjects = javaProjects
 val docProjects = distributionProjects.filter { it.path == ":asn1bean" }
@@ -75,12 +70,7 @@ configure(allprojects) {
     group = cfgGroup
 }
 
-nexusStaging {
-    packageGroup = cfgGroup
-    username = cfgRepositoryUser
-    password = cfgRepositoryPass
-    stagingProfileId = cfgStagingProfileId
-}
+
 
 configure(javaProjects) {
 
@@ -89,6 +79,7 @@ configure(javaProjects) {
     apply(plugin = "signing")
     apply(plugin = "eclipse")
     apply(plugin = "com.diffplug.spotless")
+    apply(plugin = "com.vanniktech.maven.publish")
     apply(plugin = "net.ltgt.errorprone")
 
     tasks.publish {
@@ -107,8 +98,8 @@ configure(javaProjects) {
     }
 
     dependencies {
-        testImplementation("org.junit.jupiter:junit-jupiter:5.7.0")
-        testImplementation("com.tngtech.archunit:archunit-junit5:0.15.0")
+        testImplementation("org.junit.jupiter:junit-jupiter:6.0.1")
+        testRuntimeOnly("org.junit.platform:junit-platform-launcher:6.0.1")
         errorprone("com.google.errorprone:error_prone_core:2.48.0")
     }
 
@@ -176,55 +167,26 @@ configure(repositoryProjects) {
 }
 
 configure(repositoryProjects) {
+    mavenPublishing {
+        publishToMavenCentral()
+        signAllPublications()
 
-    publishing {
-        publications {
-            val mvnPublication: MavenPublication = maybeCreate<MavenPublication>("mavenJava")
-            mvnPublication.from(components["java"])
-            mvnPublication.versionMapping {
-                usage("java-api") {
-                    fromResolutionOf("runtimeClasspath")
-                }
-                usage("java-runtime") {
-                    fromResolutionResult()
+        pom {
+            inceptionYear.set("2011")
+            url.set("https://www.beanit.com/asn1/")
+            developers {
+                developer {
+                    id.set("beanit")
+                    name.set("Beanit GmbH")
                 }
             }
-            mvnPublication.pom {
-                url.set("http://www.beanit.com/")
-
-                developers {
-                    developer {
-                        id.set("beanit")
-                        name.set("Beanit GmbH")
-                    }
-                }
-                scm {
-                    connection.set("none")
-                    url.set("none")
-                }
+            scm {
+                url.set("https://github.com/beanit/asn1bean")
+                connection.set("scm:git:git://github.com/beanit/asn1bean")
             }
-        }
-        repositories {
-            maven {
-                val releasesRepoUrl = uri(cfgRepository ?: "")
-                val snapshotsRepoUrl = uri(cfgSnapshotRepository ?: "")
-//                val releasesRepoUrl = uri("$buildDir/repos/releases")
-//                val snapshotsRepoUrl = uri("$buildDir/repos/snapshots")
-                url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
-                credentials {
-                    username = cfgRepositoryUser
-                    password = cfgRepositoryPass
-                }
-            }
-        }
-    }
-    if (cfgSignPom) {
-        signing {
-            sign(publishing.publications["mavenJava"])
         }
     }
 }
-
 
 
 tasks.register<Javadoc>("javadocAll") {
