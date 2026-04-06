@@ -93,8 +93,6 @@ configure(javaProjects) {
     java {
         sourceCompatibility = cfgJavaVersion
         targetCompatibility = cfgJavaVersion
-        withSourcesJar()
-        withJavadocJar()
     }
 
     dependencies {
