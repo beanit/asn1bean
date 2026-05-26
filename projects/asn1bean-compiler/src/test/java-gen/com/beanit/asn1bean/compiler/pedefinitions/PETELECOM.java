@@ -826,6 +826,422 @@ public class PETELECOM implements BerType, Serializable {
 		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", bytes decoded: " + vByteCount);
 	}
 
+	public int decodeAndSave(InputStream is, boolean withTag) throws IOException {
+		int tlByteCount = 0;
+		int vByteCount = 0;
+		BerTag berTag = new BerTag();
+
+		if (withTag) {
+			tlByteCount += tag.decodeAndCheck(is);
+		}
+
+		final int bytesReadForTag = tlByteCount;
+		if (is.markSupported()) {
+			is.mark(Integer.MAX_VALUE);
+		}
+
+		BerLength length = new BerLength();
+		tlByteCount += length.decode(is);
+		int lengthVal = length.val;
+		
+
+		if (is.markSupported()) {
+			is.reset();
+			byte[] lvPayload = new byte[bytesReadForTag + lengthVal];
+			int bytesRead = is.read(lvPayload, 0, lvPayload.length);
+			if (bytesRead != lvPayload.length) {
+				throw new IOException("Reached the end of the stream when trying to read " + lvPayload.length + " bytes.");
+			}
+			this.code = lvPayload;
+			is.reset();
+			final int bytesReadForLength = tlByteCount - bytesReadForTag;
+			com.beanit.asn1bean.ber.internal.Util.readFullyAndDiscard(is, bytesReadForLength);
+		}
+
+		vByteCount += berTag.decode(is);
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 0)) {
+			telecomHeader = new PEHeader();
+			vByteCount += telecomHeader.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 1)) {
+			templateID = new BerObjectIdentifier();
+			vByteCount += templateID.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 2)) {
+			dfTelecom = new File();
+			vByteCount += dfTelecom.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 3)) {
+			efArr = new File();
+			vByteCount += efArr.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 4)) {
+			efRma = new File();
+			vByteCount += efRma.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 5)) {
+			efSume = new File();
+			vByteCount += efSume.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 6)) {
+			efIceDn = new File();
+			vByteCount += efIceDn.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 7)) {
+			efIceFf = new File();
+			vByteCount += efIceFf.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 8)) {
+			efPsismsc = new File();
+			vByteCount += efPsismsc.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 9)) {
+			dfGraphics = new File();
+			vByteCount += dfGraphics.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 10)) {
+			efImg = new File();
+			vByteCount += efImg.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 11)) {
+			efIidf = new File();
+			vByteCount += efIidf.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 12)) {
+			efIceGraphics = new File();
+			vByteCount += efIceGraphics.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 13)) {
+			efLaunchScws = new File();
+			vByteCount += efLaunchScws.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 14)) {
+			efIcon = new File();
+			vByteCount += efIcon.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 15)) {
+			dfPhonebook = new File();
+			vByteCount += dfPhonebook.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 16)) {
+			efPbr = new File();
+			vByteCount += efPbr.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 17)) {
+			efExt1 = new File();
+			vByteCount += efExt1.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 18)) {
+			efAas = new File();
+			vByteCount += efAas.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 19)) {
+			efGas = new File();
+			vByteCount += efGas.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 20)) {
+			efPsc = new File();
+			vByteCount += efPsc.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 21)) {
+			efCc = new File();
+			vByteCount += efCc.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 22)) {
+			efPuid = new File();
+			vByteCount += efPuid.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 23)) {
+			efIap = new File();
+			vByteCount += efIap.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 24)) {
+			efAdn = new File();
+			vByteCount += efAdn.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 25)) {
+			efPbc = new File();
+			vByteCount += efPbc.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 26)) {
+			efAnr = new File();
+			vByteCount += efAnr.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 27)) {
+			efPuri = new File();
+			vByteCount += efPuri.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 28)) {
+			efEmail = new File();
+			vByteCount += efEmail.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 29)) {
+			efSne = new File();
+			vByteCount += efSne.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 30)) {
+			efUid = new File();
+			vByteCount += efUid.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 31)) {
+			efGrp = new File();
+			vByteCount += efGrp.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 32)) {
+			efCcp1 = new File();
+			vByteCount += efCcp1.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 33)) {
+			dfMultimedia = new File();
+			vByteCount += dfMultimedia.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 34)) {
+			efMml = new File();
+			vByteCount += efMml.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 35)) {
+			efMmdf = new File();
+			vByteCount += efMmdf.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 36)) {
+			dfMmss = new File();
+			vByteCount += dfMmss.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 37)) {
+			efMlpl = new File();
+			vByteCount += efMlpl.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 38)) {
+			efMspl = new File();
+			vByteCount += efMspl.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 39)) {
+			efMmssmode = new File();
+			vByteCount += efMmssmode.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (lengthVal < 0) {
+			while (!berTag.equals(0, 0, 0)) {
+				vByteCount += DecodeUtil.decodeUnknownComponent(is);
+				vByteCount += berTag.decode(is);
+			}
+			vByteCount += BerLength.readEocByte(is);
+			return tlByteCount + vByteCount;
+		} else {
+			while (vByteCount < lengthVal) {
+				vByteCount += DecodeUtil.decodeUnknownComponent(is);
+				if (vByteCount == lengthVal) {
+					return tlByteCount + vByteCount;
+				}
+				vByteCount += berTag.decode(is);
+			}
+		}
+		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", bytes decoded: " + vByteCount);
+	}
+
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
 		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
 		encode(reverseOS, false);

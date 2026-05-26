@@ -126,6 +126,69 @@ public class DisplayText implements BerType, Serializable {
 		throw new IOException("Error decoding CHOICE: Tag " + berTag + " matched to no item.");
 	}
 
+	public int decodeAndSave(InputStream is, BerTag berTag) throws IOException {
+
+		int tlvByteCount = 0;
+		boolean tagWasPassed = (berTag != null);
+
+		if (berTag == null) {
+			berTag = new BerTag();
+			tlvByteCount += berTag.decode(is);
+		}
+
+		final int bytesReadForTag = tlvByteCount;
+		if (is.markSupported()) {
+			is.mark(Integer.MAX_VALUE);
+		}
+
+		BerLength tagLength = new BerLength();
+		tlvByteCount += tagLength.decode(is);
+		tlvByteCount += berTag.decode(is);
+
+		if (is.markSupported()) {
+			is.reset();
+			byte[] lvPayload = new byte[bytesReadForTag + tagLength.val];
+			int bytesRead = is.read(lvPayload, 0, lvPayload.length);
+			if (bytesRead != lvPayload.length) {
+				throw new IOException("Reached the end of the stream when trying to read " + lvPayload.length + " bytes.");
+			}
+			this.code = lvPayload;
+			is.reset();
+			final int bytesReadForLength = tlvByteCount - bytesReadForTag;
+			com.beanit.asn1bean.ber.internal.Util.readFullyAndDiscard(is, bytesReadForLength);
+		}
+
+		if (berTag.equals(BerIA5String.tag)) {
+			ia5String = new BerIA5String();
+			tlvByteCount += ia5String.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerVisibleString.tag)) {
+			visibleString = new BerVisibleString();
+			tlvByteCount += visibleString.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerBMPString.tag)) {
+			bmpString = new BerBMPString();
+			tlvByteCount += bmpString.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerUTF8String.tag)) {
+			utf8String = new BerUTF8String();
+			tlvByteCount += utf8String.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (tagWasPassed) {
+			return 0;
+		}
+
+		throw new IOException("Error decoding CHOICE: Tag " + berTag + " matched to no item.");
+	}
+
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
 		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
 		encode(reverseOS);

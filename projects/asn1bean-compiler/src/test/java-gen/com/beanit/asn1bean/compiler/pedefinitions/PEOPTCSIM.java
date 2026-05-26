@@ -1379,6 +1379,683 @@ public class PEOPTCSIM implements BerType, Serializable {
 		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", bytes decoded: " + vByteCount);
 	}
 
+	public int decodeAndSave(InputStream is, boolean withTag) throws IOException {
+		int tlByteCount = 0;
+		int vByteCount = 0;
+		BerTag berTag = new BerTag();
+
+		if (withTag) {
+			tlByteCount += tag.decodeAndCheck(is);
+		}
+
+		final int bytesReadForTag = tlByteCount;
+		if (is.markSupported()) {
+			is.mark(Integer.MAX_VALUE);
+		}
+
+		BerLength length = new BerLength();
+		tlByteCount += length.decode(is);
+		int lengthVal = length.val;
+		
+
+		if (is.markSupported()) {
+			is.reset();
+			byte[] lvPayload = new byte[bytesReadForTag + lengthVal];
+			int bytesRead = is.read(lvPayload, 0, lvPayload.length);
+			if (bytesRead != lvPayload.length) {
+				throw new IOException("Reached the end of the stream when trying to read " + lvPayload.length + " bytes.");
+			}
+			this.code = lvPayload;
+			is.reset();
+			final int bytesReadForLength = tlByteCount - bytesReadForTag;
+			com.beanit.asn1bean.ber.internal.Util.readFullyAndDiscard(is, bytesReadForLength);
+		}
+
+		vByteCount += berTag.decode(is);
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 0)) {
+			optcsimHeader = new PEHeader();
+			vByteCount += optcsimHeader.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 1)) {
+			templateID = new BerObjectIdentifier();
+			vByteCount += templateID.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 2)) {
+			efSsci = new File();
+			vByteCount += efSsci.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 3)) {
+			efFdn = new File();
+			vByteCount += efFdn.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 4)) {
+			efSms = new File();
+			vByteCount += efSms.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 5)) {
+			efSmsp = new File();
+			vByteCount += efSmsp.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 6)) {
+			efSmss = new File();
+			vByteCount += efSmss.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 7)) {
+			efSsfc = new File();
+			vByteCount += efSsfc.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 8)) {
+			efSpn = new File();
+			vByteCount += efSpn.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 9)) {
+			efMdn = new File();
+			vByteCount += efMdn.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 10)) {
+			efEcc = new File();
+			vByteCount += efEcc.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 11)) {
+			efMe3gpdopc = new File();
+			vByteCount += efMe3gpdopc.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 12)) {
+			ef3gpdopm = new File();
+			vByteCount += ef3gpdopm.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 13)) {
+			efSipcap = new File();
+			vByteCount += efSipcap.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 14)) {
+			efMipcap = new File();
+			vByteCount += efMipcap.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 15)) {
+			efSipupp = new File();
+			vByteCount += efSipupp.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 16)) {
+			efMipupp = new File();
+			vByteCount += efMipupp.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 17)) {
+			efSipsp = new File();
+			vByteCount += efSipsp.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 18)) {
+			efMipsp = new File();
+			vByteCount += efMipsp.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 19)) {
+			efSippapss = new File();
+			vByteCount += efSippapss.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 20)) {
+			efPuzl = new File();
+			vByteCount += efPuzl.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 21)) {
+			efMaxpuzl = new File();
+			vByteCount += efMaxpuzl.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 22)) {
+			efHrpdcap = new File();
+			vByteCount += efHrpdcap.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 23)) {
+			efHrpdupp = new File();
+			vByteCount += efHrpdupp.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 24)) {
+			efCsspr = new File();
+			vByteCount += efCsspr.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 25)) {
+			efAtc = new File();
+			vByteCount += efAtc.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 26)) {
+			efEprl = new File();
+			vByteCount += efEprl.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 27)) {
+			efBcsmscfg = new File();
+			vByteCount += efBcsmscfg.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 28)) {
+			efBcsmspref = new File();
+			vByteCount += efBcsmspref.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 29)) {
+			efBcsmstable = new File();
+			vByteCount += efBcsmstable.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 30)) {
+			efBcsmsp = new File();
+			vByteCount += efBcsmsp.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 31)) {
+			efBakpara = new File();
+			vByteCount += efBakpara.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 32)) {
+			efUpbakpara = new File();
+			vByteCount += efUpbakpara.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 33)) {
+			efMmsn = new File();
+			vByteCount += efMmsn.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 34)) {
+			efExt8 = new File();
+			vByteCount += efExt8.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 35)) {
+			efMmsicp = new File();
+			vByteCount += efMmsicp.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 36)) {
+			efMmsup = new File();
+			vByteCount += efMmsup.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 37)) {
+			efMmsucp = new File();
+			vByteCount += efMmsucp.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 38)) {
+			efAuthCapability = new File();
+			vByteCount += efAuthCapability.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 39)) {
+			ef3gcik = new File();
+			vByteCount += ef3gcik.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 40)) {
+			efDck = new File();
+			vByteCount += efDck.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 41)) {
+			efGid1 = new File();
+			vByteCount += efGid1.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 42)) {
+			efGid2 = new File();
+			vByteCount += efGid2.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 43)) {
+			efCdmacnl = new File();
+			vByteCount += efCdmacnl.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 44)) {
+			efSfEuimid = new File();
+			vByteCount += efSfEuimid.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 45)) {
+			efEst = new File();
+			vByteCount += efEst.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 46)) {
+			efHiddenKey = new File();
+			vByteCount += efHiddenKey.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 47)) {
+			efLcsver = new File();
+			vByteCount += efLcsver.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 48)) {
+			efLcscp = new File();
+			vByteCount += efLcscp.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 49)) {
+			efSdn = new File();
+			vByteCount += efSdn.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 50)) {
+			efExt2 = new File();
+			vByteCount += efExt2.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 51)) {
+			efExt3 = new File();
+			vByteCount += efExt3.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 52)) {
+			efIci = new File();
+			vByteCount += efIci.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 53)) {
+			efOci = new File();
+			vByteCount += efOci.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 54)) {
+			efExt5 = new File();
+			vByteCount += efExt5.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 55)) {
+			efCcp2 = new File();
+			vByteCount += efCcp2.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 56)) {
+			efApplabels = new File();
+			vByteCount += efApplabels.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 57)) {
+			efModel = new File();
+			vByteCount += efModel.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 58)) {
+			efRc = new File();
+			vByteCount += efRc.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 59)) {
+			efSmscap = new File();
+			vByteCount += efSmscap.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 60)) {
+			efMipflags = new File();
+			vByteCount += efMipflags.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 61)) {
+			ef3gpduppext = new File();
+			vByteCount += ef3gpduppext.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 62)) {
+			efIpv6cap = new File();
+			vByteCount += efIpv6cap.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 63)) {
+			efTcpconfig = new File();
+			vByteCount += efTcpconfig.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 64)) {
+			efDgc = new File();
+			vByteCount += efDgc.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 65)) {
+			efWapbrowsercp = new File();
+			vByteCount += efWapbrowsercp.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 66)) {
+			efWapbrowserbm = new File();
+			vByteCount += efWapbrowserbm.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 67)) {
+			efMmsconfig = new File();
+			vByteCount += efMmsconfig.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 68)) {
+			efJdl = new File();
+			vByteCount += efJdl.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (lengthVal < 0) {
+			while (!berTag.equals(0, 0, 0)) {
+				vByteCount += DecodeUtil.decodeUnknownComponent(is);
+				vByteCount += berTag.decode(is);
+			}
+			vByteCount += BerLength.readEocByte(is);
+			return tlByteCount + vByteCount;
+		} else {
+			while (vByteCount < lengthVal) {
+				vByteCount += DecodeUtil.decodeUnknownComponent(is);
+				if (vByteCount == lengthVal) {
+					return tlByteCount + vByteCount;
+				}
+				vByteCount += berTag.decode(is);
+			}
+		}
+		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", bytes decoded: " + vByteCount);
+	}
+
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
 		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
 		encode(reverseOS, false);

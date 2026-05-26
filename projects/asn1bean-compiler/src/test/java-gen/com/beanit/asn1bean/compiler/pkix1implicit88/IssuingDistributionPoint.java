@@ -216,6 +216,111 @@ public class IssuingDistributionPoint implements BerType, Serializable {
 
 	}
 
+	public int decodeAndSave(InputStream is, boolean withTag) throws IOException {
+		int tlByteCount = 0;
+		int vByteCount = 0;
+		BerTag berTag = new BerTag();
+
+		if (withTag) {
+			tlByteCount += tag.decodeAndCheck(is);
+		}
+
+		final int bytesReadForTag = tlByteCount;
+		if (is.markSupported()) {
+			is.mark(Integer.MAX_VALUE);
+		}
+
+		BerLength length = new BerLength();
+		tlByteCount += length.decode(is);
+		int lengthVal = length.val;
+		
+
+		if (is.markSupported()) {
+			is.reset();
+			byte[] lvPayload = new byte[bytesReadForTag + lengthVal];
+			int bytesRead = is.read(lvPayload, 0, lvPayload.length);
+			if (bytesRead != lvPayload.length) {
+				throw new IOException("Reached the end of the stream when trying to read " + lvPayload.length + " bytes.");
+			}
+			this.code = lvPayload;
+			is.reset();
+			final int bytesReadForLength = tlByteCount - bytesReadForTag;
+			com.beanit.asn1bean.ber.internal.Util.readFullyAndDiscard(is, bytesReadForLength);
+		}
+
+		if (lengthVal == 0) {
+			return tlByteCount;
+		}
+		vByteCount += berTag.decode(is);
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 0)) {
+			vByteCount += length.decode(is);
+			distributionPoint = new DistributionPointName();
+			vByteCount += distributionPoint.decode(is, null);
+			vByteCount += length.readEocIfIndefinite(is);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 1)) {
+			onlyContainsUserCerts = new BerBoolean();
+			vByteCount += onlyContainsUserCerts.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 2)) {
+			onlyContainsCACerts = new BerBoolean();
+			vByteCount += onlyContainsCACerts.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 3)) {
+			onlySomeReasons = new ReasonFlags();
+			vByteCount += onlySomeReasons.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 4)) {
+			indirectCRL = new BerBoolean();
+			vByteCount += indirectCRL.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 5)) {
+			onlyContainsAttributeCerts = new BerBoolean();
+			vByteCount += onlyContainsAttributeCerts.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		
+		if (lengthVal < 0) {
+			if (!berTag.equals(0, 0, 0)) {
+				throw new IOException("Decoded sequence has wrong end of contents octets");
+			}
+			vByteCount += BerLength.readEocByte(is);
+			return tlByteCount + vByteCount;
+		}
+
+		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", bytes decoded: " + vByteCount);
+
+	}
+
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
 		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
 		encode(reverseOS, false);

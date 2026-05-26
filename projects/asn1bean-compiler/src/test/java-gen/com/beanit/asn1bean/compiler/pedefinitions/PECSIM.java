@@ -701,6 +701,395 @@ public class PECSIM implements BerType, Serializable {
 		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", bytes decoded: " + vByteCount);
 	}
 
+	public int decodeAndSave(InputStream is, boolean withTag) throws IOException {
+		int tlByteCount = 0;
+		int vByteCount = 0;
+		BerTag berTag = new BerTag();
+
+		if (withTag) {
+			tlByteCount += tag.decodeAndCheck(is);
+		}
+
+		final int bytesReadForTag = tlByteCount;
+		if (is.markSupported()) {
+			is.mark(Integer.MAX_VALUE);
+		}
+
+		BerLength length = new BerLength();
+		tlByteCount += length.decode(is);
+		int lengthVal = length.val;
+		
+
+		if (is.markSupported()) {
+			is.reset();
+			byte[] lvPayload = new byte[bytesReadForTag + lengthVal];
+			int bytesRead = is.read(lvPayload, 0, lvPayload.length);
+			if (bytesRead != lvPayload.length) {
+				throw new IOException("Reached the end of the stream when trying to read " + lvPayload.length + " bytes.");
+			}
+			this.code = lvPayload;
+			is.reset();
+			final int bytesReadForLength = tlByteCount - bytesReadForTag;
+			com.beanit.asn1bean.ber.internal.Util.readFullyAndDiscard(is, bytesReadForLength);
+		}
+
+		vByteCount += berTag.decode(is);
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 0)) {
+			csimHeader = new PEHeader();
+			vByteCount += csimHeader.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 1)) {
+			templateID = new BerObjectIdentifier();
+			vByteCount += templateID.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 2)) {
+			adfCsim = new File();
+			vByteCount += adfCsim.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 3)) {
+			efArr = new File();
+			vByteCount += efArr.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 4)) {
+			efCallCount = new File();
+			vByteCount += efCallCount.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 5)) {
+			efImsiM = new File();
+			vByteCount += efImsiM.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 6)) {
+			efImsiT = new File();
+			vByteCount += efImsiT.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 7)) {
+			efTmsi = new File();
+			vByteCount += efTmsi.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 8)) {
+			efAh = new File();
+			vByteCount += efAh.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 9)) {
+			efAop = new File();
+			vByteCount += efAop.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 10)) {
+			efAloc = new File();
+			vByteCount += efAloc.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 11)) {
+			efCdmahome = new File();
+			vByteCount += efCdmahome.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 12)) {
+			efZnregi = new File();
+			vByteCount += efZnregi.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 13)) {
+			efSnregi = new File();
+			vByteCount += efSnregi.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 14)) {
+			efDistregi = new File();
+			vByteCount += efDistregi.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 15)) {
+			efAccolc = new File();
+			vByteCount += efAccolc.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 16)) {
+			efTerm = new File();
+			vByteCount += efTerm.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 17)) {
+			efAcp = new File();
+			vByteCount += efAcp.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 18)) {
+			efPrl = new File();
+			vByteCount += efPrl.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 19)) {
+			efRuimid = new File();
+			vByteCount += efRuimid.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 20)) {
+			efCsimSt = new File();
+			vByteCount += efCsimSt.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 21)) {
+			efSpc = new File();
+			vByteCount += efSpc.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 22)) {
+			efOtapaspc = new File();
+			vByteCount += efOtapaspc.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 23)) {
+			efNamlock = new File();
+			vByteCount += efNamlock.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 24)) {
+			efOta = new File();
+			vByteCount += efOta.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 25)) {
+			efSp = new File();
+			vByteCount += efSp.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 26)) {
+			efEsnMeidMe = new File();
+			vByteCount += efEsnMeidMe.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 27)) {
+			efLi = new File();
+			vByteCount += efLi.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 28)) {
+			efUsgind = new File();
+			vByteCount += efUsgind.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 29)) {
+			efAd = new File();
+			vByteCount += efAd.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 30)) {
+			efMaxPrl = new File();
+			vByteCount += efMaxPrl.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 31)) {
+			efSpcs = new File();
+			vByteCount += efSpcs.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 32)) {
+			efMecrp = new File();
+			vByteCount += efMecrp.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 33)) {
+			efHomeTag = new File();
+			vByteCount += efHomeTag.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 34)) {
+			efGroupTag = new File();
+			vByteCount += efGroupTag.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 35)) {
+			efSpecificTag = new File();
+			vByteCount += efSpecificTag.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 36)) {
+			efCallPrompt = new File();
+			vByteCount += efCallPrompt.decode(is, false);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (lengthVal < 0) {
+			while (!berTag.equals(0, 0, 0)) {
+				vByteCount += DecodeUtil.decodeUnknownComponent(is);
+				vByteCount += berTag.decode(is);
+			}
+			vByteCount += BerLength.readEocByte(is);
+			return tlByteCount + vByteCount;
+		} else {
+			while (vByteCount < lengthVal) {
+				vByteCount += DecodeUtil.decodeUnknownComponent(is);
+				if (vByteCount == lengthVal) {
+					return tlByteCount + vByteCount;
+				}
+				vByteCount += berTag.decode(is);
+			}
+		}
+		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", bytes decoded: " + vByteCount);
+	}
+
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
 		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
 		encode(reverseOS, false);

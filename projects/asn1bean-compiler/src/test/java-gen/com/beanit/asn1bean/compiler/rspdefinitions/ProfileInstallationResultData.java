@@ -108,6 +108,57 @@ public class ProfileInstallationResultData implements BerType, Serializable {
 			throw new IOException("Error decoding CHOICE: Tag " + berTag + " matched to no item.");
 		}
 
+		public int decodeAndSave(InputStream is, BerTag berTag) throws IOException {
+
+			int tlvByteCount = 0;
+			boolean tagWasPassed = (berTag != null);
+
+			if (berTag == null) {
+				berTag = new BerTag();
+				tlvByteCount += berTag.decode(is);
+			}
+
+			final int bytesReadForTag = tlvByteCount;
+			if (is.markSupported()) {
+				is.mark(Integer.MAX_VALUE);
+			}
+
+			BerLength tagLength = new BerLength();
+			tlvByteCount += tagLength.decode(is);
+			tlvByteCount += berTag.decode(is);
+
+			if (is.markSupported()) {
+				is.reset();
+				byte[] lvPayload = new byte[bytesReadForTag + tagLength.val];
+				int bytesRead = is.read(lvPayload, 0, lvPayload.length);
+				if (bytesRead != lvPayload.length) {
+					throw new IOException("Reached the end of the stream when trying to read " + lvPayload.length + " bytes.");
+				}
+				this.code = lvPayload;
+				is.reset();
+				final int bytesReadForLength = tlvByteCount - bytesReadForTag;
+				com.beanit.asn1bean.ber.internal.Util.readFullyAndDiscard(is, bytesReadForLength);
+			}
+
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 0)) {
+				successResult = new SuccessResult();
+				tlvByteCount += successResult.decode(is, false);
+				return tlvByteCount;
+			}
+
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
+				errorResult = new ErrorResult();
+				tlvByteCount += errorResult.decode(is, false);
+				return tlvByteCount;
+			}
+
+			if (tagWasPassed) {
+				return 0;
+			}
+
+			throw new IOException("Error decoding CHOICE: Tag " + berTag + " matched to no item.");
+		}
+
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {
 			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
 			encode(reverseOS);
@@ -224,6 +275,100 @@ public class ProfileInstallationResultData implements BerType, Serializable {
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
 		int lengthVal = length.val;
+		vByteCount += berTag.decode(is);
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 0)) {
+			transactionId = new TransactionId();
+			vByteCount += transactionId.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 47)) {
+			notificationMetadata = new NotificationMetadata();
+			vByteCount += notificationMetadata.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerObjectIdentifier.tag)) {
+			smdpOid = new BerObjectIdentifier();
+			vByteCount += smdpOid.decode(is, false);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 2)) {
+			vByteCount += length.decode(is);
+			finalResult = new FinalResult();
+			vByteCount += finalResult.decode(is, null);
+			vByteCount += length.readEocIfIndefinite(is);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (lengthVal < 0) {
+			while (!berTag.equals(0, 0, 0)) {
+				vByteCount += DecodeUtil.decodeUnknownComponent(is);
+				vByteCount += berTag.decode(is);
+			}
+			vByteCount += BerLength.readEocByte(is);
+			return tlByteCount + vByteCount;
+		} else {
+			while (vByteCount < lengthVal) {
+				vByteCount += DecodeUtil.decodeUnknownComponent(is);
+				if (vByteCount == lengthVal) {
+					return tlByteCount + vByteCount;
+				}
+				vByteCount += berTag.decode(is);
+			}
+		}
+		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", bytes decoded: " + vByteCount);
+	}
+
+	public int decodeAndSave(InputStream is, boolean withTag) throws IOException {
+		int tlByteCount = 0;
+		int vByteCount = 0;
+		BerTag berTag = new BerTag();
+
+		if (withTag) {
+			tlByteCount += tag.decodeAndCheck(is);
+		}
+
+		final int bytesReadForTag = tlByteCount;
+		if (is.markSupported()) {
+			is.mark(Integer.MAX_VALUE);
+		}
+
+		BerLength length = new BerLength();
+		tlByteCount += length.decode(is);
+		int lengthVal = length.val;
+		
+
+		if (is.markSupported()) {
+			is.reset();
+			byte[] lvPayload = new byte[bytesReadForTag + lengthVal];
+			int bytesRead = is.read(lvPayload, 0, lvPayload.length);
+			if (bytesRead != lvPayload.length) {
+				throw new IOException("Reached the end of the stream when trying to read " + lvPayload.length + " bytes.");
+			}
+			this.code = lvPayload;
+			is.reset();
+			final int bytesReadForLength = tlByteCount - bytesReadForTag;
+			com.beanit.asn1bean.ber.internal.Util.readFullyAndDiscard(is, bytesReadForLength);
+		}
+
 		vByteCount += berTag.decode(is);
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 0)) {

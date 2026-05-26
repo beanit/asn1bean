@@ -548,6 +548,225 @@ public class ProfileElement implements BerType, Serializable {
 		throw new IOException("Error decoding CHOICE: Tag " + berTag + " matched to no item.");
 	}
 
+	public int decodeAndSave(InputStream is, BerTag berTag) throws IOException {
+
+		int tlvByteCount = 0;
+		boolean tagWasPassed = (berTag != null);
+
+		if (berTag == null) {
+			berTag = new BerTag();
+			tlvByteCount += berTag.decode(is);
+		}
+
+		final int bytesReadForTag = tlvByteCount;
+		if (is.markSupported()) {
+			is.mark(Integer.MAX_VALUE);
+		}
+
+		BerLength tagLength = new BerLength();
+		tlvByteCount += tagLength.decode(is);
+		tlvByteCount += berTag.decode(is);
+
+		if (is.markSupported()) {
+			is.reset();
+			byte[] lvPayload = new byte[bytesReadForTag + tagLength.val];
+			int bytesRead = is.read(lvPayload, 0, lvPayload.length);
+			if (bytesRead != lvPayload.length) {
+				throw new IOException("Reached the end of the stream when trying to read " + lvPayload.length + " bytes.");
+			}
+			this.code = lvPayload;
+			is.reset();
+			final int bytesReadForLength = tlvByteCount - bytesReadForTag;
+			com.beanit.asn1bean.ber.internal.Util.readFullyAndDiscard(is, bytesReadForLength);
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 0)) {
+			header = new ProfileHeader();
+			tlvByteCount += header.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
+			genericFileManagement = new PEGenericFileManagement();
+			tlvByteCount += genericFileManagement.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 2)) {
+			pinCodes = new PEPINCodes();
+			tlvByteCount += pinCodes.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 3)) {
+			pukCodes = new PEPUKCodes();
+			tlvByteCount += pukCodes.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 4)) {
+			akaParameter = new PEAKAParameter();
+			tlvByteCount += akaParameter.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 5)) {
+			cdmaParameter = new PECDMAParameter();
+			tlvByteCount += cdmaParameter.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 6)) {
+			securityDomain = new PESecurityDomain();
+			tlvByteCount += securityDomain.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 7)) {
+			rfm = new PERFM();
+			tlvByteCount += rfm.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 8)) {
+			application = new PEApplication();
+			tlvByteCount += application.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 9)) {
+			nonStandard = new PENonStandard();
+			tlvByteCount += nonStandard.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 10)) {
+			end = new PEEnd();
+			tlvByteCount += end.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 11)) {
+			rfu1 = new PEDummy();
+			tlvByteCount += rfu1.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 12)) {
+			rfu2 = new PEDummy();
+			tlvByteCount += rfu2.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 13)) {
+			rfu3 = new PEDummy();
+			tlvByteCount += rfu3.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 14)) {
+			rfu4 = new PEDummy();
+			tlvByteCount += rfu4.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 15)) {
+			rfu5 = new PEDummy();
+			tlvByteCount += rfu5.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 16)) {
+			mf = new PEMF();
+			tlvByteCount += mf.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 17)) {
+			cd = new PECD();
+			tlvByteCount += cd.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 18)) {
+			telecom = new PETELECOM();
+			tlvByteCount += telecom.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 19)) {
+			usim = new PEUSIM();
+			tlvByteCount += usim.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 20)) {
+			optUsim = new PEOPTUSIM();
+			tlvByteCount += optUsim.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 21)) {
+			isim = new PEISIM();
+			tlvByteCount += isim.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 22)) {
+			optIsim = new PEOPTISIM();
+			tlvByteCount += optIsim.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 23)) {
+			phonebook = new PEPHONEBOOK();
+			tlvByteCount += phonebook.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 24)) {
+			gsmAccess = new PEGSMACCESS();
+			tlvByteCount += gsmAccess.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 25)) {
+			csim = new PECSIM();
+			tlvByteCount += csim.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 26)) {
+			optCsim = new PEOPTCSIM();
+			tlvByteCount += optCsim.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 27)) {
+			eap = new PEEAP();
+			tlvByteCount += eap.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 28)) {
+			df5gs = new PEDF5GS();
+			tlvByteCount += df5gs.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 29)) {
+			dfSaip = new PEDFSAIP();
+			tlvByteCount += dfSaip.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (tagWasPassed) {
+			return 0;
+		}
+
+		throw new IOException("Error decoding CHOICE: Tag " + berTag + " matched to no item.");
+	}
+
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
 		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
 		encode(reverseOS);

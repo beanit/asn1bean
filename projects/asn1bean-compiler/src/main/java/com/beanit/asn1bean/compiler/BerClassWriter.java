@@ -13,8 +13,6 @@
  */
 package com.beanit.asn1bean.compiler;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 import com.beanit.asn1bean.ber.BerTag;
 import com.beanit.asn1bean.ber.types.BerObjectIdentifier;
 import com.beanit.asn1bean.compiler.model.AsnAny;
@@ -46,6 +44,7 @@ import com.beanit.asn1bean.compiler.model.AsnUniversalType;
 import com.beanit.asn1bean.compiler.model.AsnValueAssignment;
 import com.beanit.asn1bean.compiler.model.SymbolsFromModule;
 import com.beanit.asn1bean.util.HexString;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -58,6 +57,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class BerClassWriter {
 
@@ -610,7 +611,9 @@ public class BerClassWriter {
 
     writeChoiceEncodeFunction(componentTypes, tag != null);
 
-    writeChoiceDecodeMethod(convertToComponentInfos(componentTypes), tag != null);
+    List<ComponentInfo> componentInfos = convertToComponentInfos(componentTypes);
+    writeChoiceDecodeMethod(componentInfos, tag != null);
+    writeChoiceDecodeAndSaveMethod(componentInfos, tag != null);
 
     writeEncodeAndSaveFunction(tag == null);
 
@@ -840,10 +843,13 @@ public class BerClassWriter {
 
     writeSimpleDecodeFunction("true");
 
+    List<ComponentInfo> componentInfos = convertToComponentInfos(componentTypes);
     if (asnSequenceSet.isSequence) {
-      writeSequenceDecodeMethod(convertToComponentInfos(componentTypes), hasExplicitTag);
+      writeSequenceDecodeMethod(componentInfos, hasExplicitTag);
+      writeSequenceDecodeAndSaveMethod(componentInfos, hasExplicitTag);
     } else {
-      writeSetDecodeFunction(convertToComponentInfos(componentTypes), hasExplicitTag);
+      writeSetDecodeFunction(componentInfos, hasExplicitTag);
+      writeSetDecodeAndSaveFunction(componentInfos, hasExplicitTag);
     }
 
     writeEncodeAndSaveFunction();
@@ -993,10 +999,9 @@ public class BerClassWriter {
 
     writeSimpleDecodeFunction("true");
 
-    writeSequenceOrSetOfDecodeFunction(
-        convertToComponentInfo(componentType, false, referencedTypeName),
-        hasExplicitTag,
-        asnSequenceOf.isSequenceOf);
+    ComponentInfo componentInfo = convertToComponentInfo(componentType, false, referencedTypeName);
+    writeSequenceOrSetOfDecodeFunction(componentInfo, hasExplicitTag, asnSequenceOf.isSequenceOf);
+    writeSequenceOrSetOfDecodeAndSaveFunction(componentInfo, hasExplicitTag, asnSequenceOf.isSequenceOf);
 
     writeEncodeAndSaveFunction();
 
@@ -1435,6 +1440,64 @@ public class BerClassWriter {
     write("}\n");
   }
 
+  private void writeSequenceDecodeAndSaveMethod(List<ComponentInfo> components, boolean hasExplicitTag)
+          throws IOException {
+    write("public int decodeAndSave(InputStream is, boolean withTag) throws IOException {");
+    write("int tlByteCount = 0;");
+    write("int vByteCount = 0;");
+    if (containsUntaggedChoiceOrAny(components)) {
+      write("int numDecodedBytes;");
+    }
+
+    write("BerTag berTag = new BerTag();\n");
+
+    write("if (withTag) {");
+    write("tlByteCount += tag.decodeAndCheck(is);");
+    write("}\n");
+
+    writeMarkStream(false, "tlByteCount");
+
+    if (hasExplicitTag) {
+      write("BerLength explicitTagLength = new BerLength();");
+      write("tlByteCount += explicitTagLength.decode(is);");
+      write("tlByteCount += BerTag.SEQUENCE.decodeAndCheck(is);\n");
+    }
+
+    write("BerLength length = new BerLength();");
+    write("tlByteCount += length.decode(is);");
+    write("int lengthVal = length.val;");
+
+    writeSetLengthValuePayload(true, "tlByteCount", "lengthVal");
+
+    if (allOptionalOrDefault(components)) {
+      write("if (lengthVal == 0) {");
+      write("return tlByteCount;");
+      write("}");
+    }
+    write("vByteCount += berTag.decode(is);\n");
+
+    for (ComponentInfo component : components) {
+      if (component.isDirectChoiceOrAny && (component.tag == null)) {
+        writeSequenceComponentDecodeUntaggedChoiceOrAny(component);
+      } else {
+        writeSequenceComponentDecodeRegular(component);
+        write("");
+      }
+    }
+
+    if (extensibilityImplied) {
+      if (accessExtended) {
+        writeSequenceDecodeMethodAccessibleExtensionEnd(hasExplicitTag);
+      } else {
+        writeSequenceDecodeMethodExtensibleEnd(hasExplicitTag);
+      }
+    } else {
+      writeSequenceDecodeMethodNonExtensibleEnd(hasExplicitTag);
+    }
+
+    write("}\n");
+  }
+
   private void writeSequenceDecodeMethodAccessibleExtensionEnd(boolean hasExplicitTag)
       throws IOException {
     write("if (lengthVal < 0) {");
@@ -1569,6 +1632,70 @@ public class BerClassWriter {
     write("}\n");
   }
 
+  private void writeChoiceDecodeAndSaveMethod(List<ComponentInfo> components, boolean hasExplicitTag)
+          throws IOException {
+
+    if (hasExplicitTag) {
+      write("public int decodeAndSave(InputStream is, boolean withTag) throws IOException {");
+      write("int tlvByteCount = 0;");
+
+      write("BerTag berTag = new BerTag();\n");
+
+      write("if (withTag) {");
+      write("tlvByteCount += tag.decodeAndCheck(is);");
+      write("}\n");
+
+      writeMarkStream(false, "tlvByteCount");
+
+      write("BerLength explicitTagLength = new BerLength();");
+      write("tlvByteCount += explicitTagLength.decode(is);");
+      write("tlvByteCount += berTag.decode(is);\n");
+
+      writeSetLengthValuePayload(false, "tlvByteCount", "explicitTagLength.val");
+    } else {
+      write("public int decodeAndSave(InputStream is, BerTag berTag) throws IOException {\n");
+
+      write("int tlvByteCount = 0;");
+      write("boolean tagWasPassed = (berTag != null);\n");
+
+      write("if (berTag == null) {");
+      write("berTag = new BerTag();");
+      write("tlvByteCount += berTag.decode(is);");
+      write("}\n");
+
+      writeMarkStream(false, "tlvByteCount");
+
+      write("BerLength tagLength = new BerLength();");
+      write("tlvByteCount += tagLength.decode(is);");
+      write("tlvByteCount += berTag.decode(is);\n");
+
+      writeSetLengthValuePayload(false, "tlvByteCount", "tagLength.val");
+    }
+
+    if (containsUntaggedChoiceOrAny(components)) {
+      write("int numDecodedBytes;\n");
+    }
+
+    for (ComponentInfo component : components) {
+      if (component.isDirectChoiceOrAny && (component.tag == null)) {
+        writeChoiceComponentDecodeUntaggedChoiceOrAny(component, hasExplicitTag);
+      } else {
+        writeChoiceComponentDecodeRegular(component, hasExplicitTag);
+      }
+    }
+
+    if (!hasExplicitTag) {
+      write("if (tagWasPassed) {");
+      write("return 0;");
+      write("}\n");
+    }
+
+    write(
+        "throw new IOException(\"Error decoding CHOICE: Tag \" + berTag + \" matched to no item.\");");
+
+    write("}\n");
+  }
+
   private void writeSetDecodeFunction(List<ComponentInfo> components, boolean hasExplicitTag)
       throws IOException {
 
@@ -1636,6 +1763,78 @@ public class BerClassWriter {
     write("}\n");
   }
 
+  private void writeSetDecodeAndSaveFunction(List<ComponentInfo> components, boolean hasExplicitTag)
+          throws IOException {
+
+    write("public int decodeAndSave(InputStream is, boolean withTag) throws IOException {");
+    write("int tlByteCount = 0;");
+    write("int vByteCount = 0;");
+
+    write("BerTag berTag = new BerTag();\n");
+
+    write("if (withTag) {");
+    write("tlByteCount += tag.decodeAndCheck(is);");
+    write("}\n");
+
+    writeMarkStream(false, "tlByteCount");
+
+    if (hasExplicitTag) {
+      write("BerLength explicitTagLength = new BerLength();");
+      write("tlByteCount += explicitTagLength.decode(is);");
+      write("tlByteCount += BerTag.SET.decodeAndCheck(is);\n");
+    }
+
+    write("BerLength length = new BerLength();");
+    write("tlByteCount += length.decode(is);");
+    write("int lengthVal = length.val;\n");
+
+    writeSetLengthValuePayload(false, "tlByteCount", "lengthVal");
+
+    if (allOptionalOrDefault(components)) {
+      write("if (lengthVal == 0) {");
+      write("return tlByteCount;");
+      write("}\n");
+    }
+
+    write("while (vByteCount < lengthVal || lengthVal < 0) {");
+    write("vByteCount += berTag.decode(is);");
+
+    boolean first = true;
+    for (ComponentInfo component : components) {
+      if (component.isDirectChoiceOrAny && (component.tag == null)) {
+        throw new IOException("choice or ANY within set has no explicit tag.");
+      } else {
+        writeSetComponentDecodeRegular(component, first);
+      }
+      first = false;
+    }
+
+    write("else if (lengthVal < 0 && berTag.equals(0, 0, 0)) {");
+    write("vByteCount += BerLength.readEocByte(is);");
+    if (hasExplicitTag) {
+      write("vByteCount += explicitTagLength.readEocIfIndefinite(is);");
+    }
+    write("return tlByteCount + vByteCount;");
+    write("}");
+
+    write("else {");
+    write("throw new IOException(\"Tag does not match any set component: \" + berTag);");
+    write("}");
+
+    write("}");
+
+    write("if (vByteCount != lengthVal) {");
+    write(
+            "throw new IOException(\"Length of set does not match length tag, length tag: \" + lengthVal + \", actual set length: \" + vByteCount);");
+    write("}");
+    if (hasExplicitTag) {
+      write("vByteCount += explicitTagLength.readEocIfIndefinite(is);");
+    }
+
+    write("return tlByteCount + vByteCount;");
+    write("}\n");
+  }
+
   private void writeSequenceOrSetOfDecodeFunction(
       ComponentInfo component, boolean hasExplicitTag, boolean isSequence) throws IOException {
 
@@ -1684,6 +1883,68 @@ public class BerClassWriter {
     write("if (lengthVal >= 0 && vByteCount != lengthVal) {");
     write(
         "throw new IOException(\"Decoded SequenceOf or SetOf has wrong length. Expected \" + lengthVal + \" but has \" + vByteCount);\n");
+    write("}");
+
+    if (hasExplicitTag) {
+      write("vByteCount += explicitTagLength.readEocIfIndefinite(is);");
+    }
+    write("return tlByteCount + vByteCount;");
+    write("}\n");
+  }
+
+  private void writeSequenceOrSetOfDecodeAndSaveFunction(
+          ComponentInfo component, boolean hasExplicitTag, boolean isSequence) throws IOException {
+
+    write("public int decodeAndSave(InputStream is, boolean withTag) throws IOException {");
+    write("int tlByteCount = 0;");
+    write("int vByteCount = 0;");
+    if (containsUntaggedChoiceOrAny(Collections.singletonList(component))) {
+      write("int numDecodedBytes;");
+    }
+
+    write("BerTag berTag = new BerTag();");
+
+    write("if (withTag) {");
+    write("tlByteCount += tag.decodeAndCheck(is);");
+    write("}\n");
+
+    writeMarkStream(false, "tlByteCount");
+
+    if (hasExplicitTag) {
+      write("BerLength explicitTagLength = new BerLength();");
+      write("tlByteCount += explicitTagLength.decode(is);");
+      if (isSequence) {
+        write("tlByteCount += BerTag.SEQUENCE.decodeAndCheck(is);\n");
+      } else {
+        write("tlByteCount += BerTag.SET.decodeAndCheck(is);\n");
+      }
+    }
+
+    write("BerLength length = new BerLength();");
+    write("tlByteCount += length.decode(is);");
+    write("int lengthVal = length.val;\n");
+
+    writeSetLengthValuePayload(false, "tlByteCount", "lengthVal");
+
+    write("while (vByteCount < lengthVal || lengthVal < 0) {");
+    write("vByteCount += berTag.decode(is);\n");
+
+    write("if (lengthVal < 0 && berTag.equals(0, 0, 0)) {");
+    write("vByteCount += BerLength.readEocByte(is);");
+    write("break;");
+    write("}\n");
+
+    if (component.isDirectChoiceOrAny && (component.tag == null)) {
+      writeSequenceOfComponentDecodeUntaggedChoiceOrAny(component);
+    } else {
+      writeSequenceOfComponentDecodeRegular(component);
+    }
+
+    write("}");
+
+    write("if (lengthVal >= 0 && vByteCount != lengthVal) {");
+    write(
+            "throw new IOException(\"Decoded SequenceOf or SetOf has wrong length. Expected \" + lengthVal + \" but has \" + vByteCount);\n");
     write("}");
 
     if (hasExplicitTag) {
@@ -2570,6 +2831,38 @@ public class BerClassWriter {
       write("import " + basePackageName + modulePackage);
     }
     write("");
+  }
+
+  private void writeMarkStream(boolean writeNewLineBefore, String tagLengthValueByteCountExpression) throws IOException {
+    if (writeNewLineBefore) {
+      write("\n");
+    }
+    write("final int bytesReadForTag = " + tagLengthValueByteCountExpression + ";");
+    write("if (is.markSupported()) {");
+    write("is.mark(Integer.MAX_VALUE);");
+    write("}\n");
+  }
+
+  private void writeSetLengthValuePayload(
+          boolean writeNewLineBefore,
+          String tagLengthValueByteCountExpression,
+          String lengthValueExpression
+  )  throws IOException {
+    if (writeNewLineBefore) {
+      write("\n");
+    }
+    write("if (is.markSupported()) {");
+    write("is.reset();");
+    write("byte[] lvPayload = new byte[bytesReadForTag" + " + " + lengthValueExpression + "];");
+    write("int bytesRead = is.read(lvPayload, 0, lvPayload.length);");
+    write("if (bytesRead != lvPayload.length) {");
+    write("throw new IOException(\"Reached the end of the stream when trying to read \" + lvPayload.length + \" bytes.\");");
+    write("}");
+    write("this.code = lvPayload;");
+    write("is.reset();");
+    write("final int bytesReadForLength = " + tagLengthValueByteCountExpression + " - bytesReadForTag;");
+    write("com.beanit.asn1bean.ber.internal.Util.readFullyAndDiscard(is, bytesReadForLength);");
+    write("}\n");
   }
 
   private void write(String line) throws IOException {

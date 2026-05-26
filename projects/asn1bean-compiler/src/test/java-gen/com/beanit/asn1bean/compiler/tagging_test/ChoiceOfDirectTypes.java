@@ -116,6 +116,57 @@ public class ChoiceOfDirectTypes implements BerType, Serializable {
 			throw new IOException("Error decoding CHOICE: Tag " + berTag + " matched to no item.");
 		}
 
+		public int decodeAndSave(InputStream is, BerTag berTag) throws IOException {
+
+			int tlvByteCount = 0;
+			boolean tagWasPassed = (berTag != null);
+
+			if (berTag == null) {
+				berTag = new BerTag();
+				tlvByteCount += berTag.decode(is);
+			}
+
+			final int bytesReadForTag = tlvByteCount;
+			if (is.markSupported()) {
+				is.mark(Integer.MAX_VALUE);
+			}
+
+			BerLength tagLength = new BerLength();
+			tlvByteCount += tagLength.decode(is);
+			tlvByteCount += berTag.decode(is);
+
+			if (is.markSupported()) {
+				is.reset();
+				byte[] lvPayload = new byte[bytesReadForTag + tagLength.val];
+				int bytesRead = is.read(lvPayload, 0, lvPayload.length);
+				if (bytesRead != lvPayload.length) {
+					throw new IOException("Reached the end of the stream when trying to read " + lvPayload.length + " bytes.");
+				}
+				this.code = lvPayload;
+				is.reset();
+				final int bytesReadForLength = tlvByteCount - bytesReadForTag;
+				com.beanit.asn1bean.ber.internal.Util.readFullyAndDiscard(is, bytesReadForLength);
+			}
+
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 3)) {
+				myInteger = new BerInteger();
+				tlvByteCount += myInteger.decode(is, false);
+				return tlvByteCount;
+			}
+
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 4)) {
+				myBoolean = new BerBoolean();
+				tlvByteCount += myBoolean.decode(is, false);
+				return tlvByteCount;
+			}
+
+			if (tagWasPassed) {
+				return 0;
+			}
+
+			throw new IOException("Error decoding CHOICE: Tag " + berTag + " matched to no item.");
+		}
+
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {
 			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
 			encode(reverseOS);
@@ -236,6 +287,57 @@ public class ChoiceOfDirectTypes implements BerType, Serializable {
 			throw new IOException("Error decoding CHOICE: Tag " + berTag + " matched to no item.");
 		}
 
+		public int decodeAndSave(InputStream is, BerTag berTag) throws IOException {
+
+			int tlvByteCount = 0;
+			boolean tagWasPassed = (berTag != null);
+
+			if (berTag == null) {
+				berTag = new BerTag();
+				tlvByteCount += berTag.decode(is);
+			}
+
+			final int bytesReadForTag = tlvByteCount;
+			if (is.markSupported()) {
+				is.mark(Integer.MAX_VALUE);
+			}
+
+			BerLength tagLength = new BerLength();
+			tlvByteCount += tagLength.decode(is);
+			tlvByteCount += berTag.decode(is);
+
+			if (is.markSupported()) {
+				is.reset();
+				byte[] lvPayload = new byte[bytesReadForTag + tagLength.val];
+				int bytesRead = is.read(lvPayload, 0, lvPayload.length);
+				if (bytesRead != lvPayload.length) {
+					throw new IOException("Reached the end of the stream when trying to read " + lvPayload.length + " bytes.");
+				}
+				this.code = lvPayload;
+				is.reset();
+				final int bytesReadForLength = tlvByteCount - bytesReadForTag;
+				com.beanit.asn1bean.ber.internal.Util.readFullyAndDiscard(is, bytesReadForLength);
+			}
+
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 3)) {
+				myInteger = new BerInteger();
+				tlvByteCount += myInteger.decode(is, false);
+				return tlvByteCount;
+			}
+
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 4)) {
+				myBoolean = new BerBoolean();
+				tlvByteCount += myBoolean.decode(is, false);
+				return tlvByteCount;
+			}
+
+			if (tagWasPassed) {
+				return 0;
+			}
+
+			throw new IOException("Error decoding CHOICE: Tag " + berTag + " matched to no item.");
+		}
+
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {
 			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
 			encode(reverseOS);
@@ -335,6 +437,57 @@ public class ChoiceOfDirectTypes implements BerType, Serializable {
 			if (berTag == null) {
 				berTag = new BerTag();
 				tlvByteCount += berTag.decode(is);
+			}
+
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 8)) {
+				myInteger = new BerInteger();
+				tlvByteCount += myInteger.decode(is, false);
+				return tlvByteCount;
+			}
+
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 9)) {
+				myBoolean = new BerBoolean();
+				tlvByteCount += myBoolean.decode(is, false);
+				return tlvByteCount;
+			}
+
+			if (tagWasPassed) {
+				return 0;
+			}
+
+			throw new IOException("Error decoding CHOICE: Tag " + berTag + " matched to no item.");
+		}
+
+		public int decodeAndSave(InputStream is, BerTag berTag) throws IOException {
+
+			int tlvByteCount = 0;
+			boolean tagWasPassed = (berTag != null);
+
+			if (berTag == null) {
+				berTag = new BerTag();
+				tlvByteCount += berTag.decode(is);
+			}
+
+			final int bytesReadForTag = tlvByteCount;
+			if (is.markSupported()) {
+				is.mark(Integer.MAX_VALUE);
+			}
+
+			BerLength tagLength = new BerLength();
+			tlvByteCount += tagLength.decode(is);
+			tlvByteCount += berTag.decode(is);
+
+			if (is.markSupported()) {
+				is.reset();
+				byte[] lvPayload = new byte[bytesReadForTag + tagLength.val];
+				int bytesRead = is.read(lvPayload, 0, lvPayload.length);
+				if (bytesRead != lvPayload.length) {
+					throw new IOException("Reached the end of the stream when trying to read " + lvPayload.length + " bytes.");
+				}
+				this.code = lvPayload;
+				is.reset();
+				final int bytesReadForLength = tlvByteCount - bytesReadForTag;
+				com.beanit.asn1bean.ber.internal.Util.readFullyAndDiscard(is, bytesReadForLength);
 			}
 
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 8)) {
@@ -534,6 +687,104 @@ public class ChoiceOfDirectTypes implements BerType, Serializable {
 		if (berTag == null) {
 			berTag = new BerTag();
 			tlvByteCount += berTag.decode(is);
+		}
+
+		int numDecodedBytes;
+
+		if (berTag.equals(BerInteger.tag)) {
+			untaggedInt = new BerInteger();
+			tlvByteCount += untaggedInt.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
+			BerLength length = new BerLength();
+			tlvByteCount += length.decode(is);
+			explicitlyTaggedInt = new BerInteger();
+			tlvByteCount += explicitlyTaggedInt.decode(is, true);
+			tlvByteCount += length.readEocIfIndefinite(is);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 2)) {
+			implicitlyTaggedInt = new BerInteger();
+			tlvByteCount += implicitlyTaggedInt.decode(is, false);
+			return tlvByteCount;
+		}
+
+		untaggedChoice = new UntaggedChoice();
+		numDecodedBytes = untaggedChoice.decode(is, berTag);
+		if (numDecodedBytes != 0) {
+			return tlvByteCount + numDecodedBytes;
+		}
+		else {
+			untaggedChoice = null;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 5)) {
+			BerLength length = new BerLength();
+			tlvByteCount += length.decode(is);
+			taggedChoice = new TaggedChoice();
+			tlvByteCount += taggedChoice.decode(is, null);
+			tlvByteCount += length.readEocIfIndefinite(is);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 6)) {
+			BerLength length = new BerLength();
+			tlvByteCount += length.decode(is);
+			taggedAny = new BerAny();
+			tlvByteCount += taggedAny.decode(is, null);
+			tlvByteCount += length.readEocIfIndefinite(is);
+			return tlvByteCount;
+		}
+
+		untaggedChoice2 = new UntaggedChoice2();
+		numDecodedBytes = untaggedChoice2.decode(is, berTag);
+		if (numDecodedBytes != 0) {
+			return tlvByteCount + numDecodedBytes;
+		}
+		else {
+			untaggedChoice2 = null;
+		}
+
+		if (tagWasPassed) {
+			return 0;
+		}
+
+		throw new IOException("Error decoding CHOICE: Tag " + berTag + " matched to no item.");
+	}
+
+	public int decodeAndSave(InputStream is, BerTag berTag) throws IOException {
+
+		int tlvByteCount = 0;
+		boolean tagWasPassed = (berTag != null);
+
+		if (berTag == null) {
+			berTag = new BerTag();
+			tlvByteCount += berTag.decode(is);
+		}
+
+		final int bytesReadForTag = tlvByteCount;
+		if (is.markSupported()) {
+			is.mark(Integer.MAX_VALUE);
+		}
+
+		BerLength tagLength = new BerLength();
+		tlvByteCount += tagLength.decode(is);
+		tlvByteCount += berTag.decode(is);
+
+		if (is.markSupported()) {
+			is.reset();
+			byte[] lvPayload = new byte[bytesReadForTag + tagLength.val];
+			int bytesRead = is.read(lvPayload, 0, lvPayload.length);
+			if (bytesRead != lvPayload.length) {
+				throw new IOException("Reached the end of the stream when trying to read " + lvPayload.length + " bytes.");
+			}
+			this.code = lvPayload;
+			is.reset();
+			final int bytesReadForLength = tlvByteCount - bytesReadForTag;
+			com.beanit.asn1bean.ber.internal.Util.readFullyAndDiscard(is, bytesReadForLength);
 		}
 
 		int numDecodedBytes;

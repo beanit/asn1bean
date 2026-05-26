@@ -447,6 +447,161 @@ public class ChoiceOfIndirectTypes implements BerType, Serializable {
 		throw new IOException("Error decoding CHOICE: Tag " + berTag + " matched to no item.");
 	}
 
+	public int decodeAndSave(InputStream is, BerTag berTag) throws IOException {
+
+		int tlvByteCount = 0;
+		boolean tagWasPassed = (berTag != null);
+
+		if (berTag == null) {
+			berTag = new BerTag();
+			tlvByteCount += berTag.decode(is);
+		}
+
+		final int bytesReadForTag = tlvByteCount;
+		if (is.markSupported()) {
+			is.mark(Integer.MAX_VALUE);
+		}
+
+		BerLength tagLength = new BerLength();
+		tlvByteCount += tagLength.decode(is);
+		tlvByteCount += berTag.decode(is);
+
+		if (is.markSupported()) {
+			is.reset();
+			byte[] lvPayload = new byte[bytesReadForTag + tagLength.val];
+			int bytesRead = is.read(lvPayload, 0, lvPayload.length);
+			if (bytesRead != lvPayload.length) {
+				throw new IOException("Reached the end of the stream when trying to read " + lvPayload.length + " bytes.");
+			}
+			this.code = lvPayload;
+			is.reset();
+			final int bytesReadForLength = tlvByteCount - bytesReadForTag;
+			com.beanit.asn1bean.ber.internal.Util.readFullyAndDiscard(is, bytesReadForLength);
+		}
+
+		int numDecodedBytes;
+
+		if (berTag.equals(UntaggedInteger.tag)) {
+			untaggedInt = new UntaggedInteger();
+			tlvByteCount += untaggedInt.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(ExplicitlyTaggedInteger.tag)) {
+			untaggedInt2 = new ExplicitlyTaggedInteger();
+			tlvByteCount += untaggedInt2.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(ImplicitlyTaggedInteger.tag)) {
+			untaggedInt3 = new ImplicitlyTaggedInteger();
+			tlvByteCount += untaggedInt3.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
+			BerLength length = new BerLength();
+			tlvByteCount += length.decode(is);
+			explicitlyTaggedInt = new UntaggedInteger();
+			tlvByteCount += explicitlyTaggedInt.decode(is, true);
+			tlvByteCount += length.readEocIfIndefinite(is);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 11)) {
+			BerLength length = new BerLength();
+			tlvByteCount += length.decode(is);
+			explicitlyTaggedInt2 = new ExplicitlyTaggedInteger();
+			tlvByteCount += explicitlyTaggedInt2.decode(is, true);
+			tlvByteCount += length.readEocIfIndefinite(is);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 21)) {
+			BerLength length = new BerLength();
+			tlvByteCount += length.decode(is);
+			explicitlyTaggedInt3 = new ImplicitlyTaggedInteger();
+			tlvByteCount += explicitlyTaggedInt3.decode(is, true);
+			tlvByteCount += length.readEocIfIndefinite(is);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 2)) {
+			implicitlyTaggedInt = new UntaggedInteger();
+			tlvByteCount += implicitlyTaggedInt.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 12)) {
+			implicitlyTaggedInt2 = new ExplicitlyTaggedInteger();
+			tlvByteCount += implicitlyTaggedInt2.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 23)) {
+			implicitlyTaggedInt3 = new ImplicitlyTaggedInteger();
+			tlvByteCount += implicitlyTaggedInt3.decode(is, false);
+			return tlvByteCount;
+		}
+
+		untaggedChoice = new UntaggedChoice();
+		numDecodedBytes = untaggedChoice.decode(is, berTag);
+		if (numDecodedBytes != 0) {
+			return tlvByteCount + numDecodedBytes;
+		}
+		else {
+			untaggedChoice = null;
+		}
+
+		if (berTag.equals(TaggedChoice.tag)) {
+			untaggedChoice2 = new TaggedChoice();
+			tlvByteCount += untaggedChoice2.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 5)) {
+			BerLength length = new BerLength();
+			tlvByteCount += length.decode(is);
+			taggedChoice = new UntaggedChoice();
+			tlvByteCount += taggedChoice.decode(is, null);
+			tlvByteCount += length.readEocIfIndefinite(is);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 15)) {
+			taggedChoice2 = new TaggedChoice();
+			tlvByteCount += taggedChoice2.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(TaggedAny.tag)) {
+			untaggedAny = new TaggedAny();
+			tlvByteCount += untaggedAny.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 8)) {
+			BerLength length = new BerLength();
+			tlvByteCount += length.decode(is);
+			taggedAny = new UntaggedAny();
+			tlvByteCount += taggedAny.decode(is, null);
+			tlvByteCount += length.readEocIfIndefinite(is);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 18)) {
+			taggedAny2 = new TaggedAny();
+			tlvByteCount += taggedAny2.decode(is, false);
+			return tlvByteCount;
+		}
+
+		if (tagWasPassed) {
+			return 0;
+		}
+
+		throw new IOException("Error decoding CHOICE: Tag " + berTag + " matched to no item.");
+	}
+
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
 		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
 		encode(reverseOS);

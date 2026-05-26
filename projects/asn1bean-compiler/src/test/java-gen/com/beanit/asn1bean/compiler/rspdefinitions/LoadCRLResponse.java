@@ -121,6 +121,53 @@ public class LoadCRLResponse implements BerType, Serializable {
 		throw new IOException("Error decoding CHOICE: Tag " + berTag + " matched to no item.");
 	}
 
+	public int decodeAndSave(InputStream is, boolean withTag) throws IOException {
+		int tlvByteCount = 0;
+		BerTag berTag = new BerTag();
+
+		if (withTag) {
+			tlvByteCount += tag.decodeAndCheck(is);
+		}
+
+		final int bytesReadForTag = tlvByteCount;
+		if (is.markSupported()) {
+			is.mark(Integer.MAX_VALUE);
+		}
+
+		BerLength explicitTagLength = new BerLength();
+		tlvByteCount += explicitTagLength.decode(is);
+		tlvByteCount += berTag.decode(is);
+
+		if (is.markSupported()) {
+			is.reset();
+			byte[] lvPayload = new byte[bytesReadForTag + explicitTagLength.val];
+			int bytesRead = is.read(lvPayload, 0, lvPayload.length);
+			if (bytesRead != lvPayload.length) {
+				throw new IOException("Reached the end of the stream when trying to read " + lvPayload.length + " bytes.");
+			}
+			this.code = lvPayload;
+			is.reset();
+			final int bytesReadForLength = tlvByteCount - bytesReadForTag;
+			com.beanit.asn1bean.ber.internal.Util.readFullyAndDiscard(is, bytesReadForLength);
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 0)) {
+			loadCRLResponseOk = new LoadCRLResponseOk();
+			tlvByteCount += loadCRLResponseOk.decode(is, false);
+			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.PRIMITIVE, 1)) {
+			loadCRLResponseError = new LoadCRLResponseError();
+			tlvByteCount += loadCRLResponseError.decode(is, false);
+			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+			return tlvByteCount;
+		}
+
+		throw new IOException("Error decoding CHOICE: Tag " + berTag + " matched to no item.");
+	}
+
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
 		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
 		encode(reverseOS, false);

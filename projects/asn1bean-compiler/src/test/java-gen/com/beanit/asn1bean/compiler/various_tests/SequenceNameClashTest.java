@@ -110,6 +110,58 @@ public class SequenceNameClashTest implements BerType, Serializable {
 			return tlByteCount + vByteCount;
 		}
 
+		public int decodeAndSave(InputStream is, boolean withTag) throws IOException {
+			int tlByteCount = 0;
+			int vByteCount = 0;
+			BerTag berTag = new BerTag();
+			if (withTag) {
+				tlByteCount += tag.decodeAndCheck(is);
+			}
+
+			final int bytesReadForTag = tlByteCount;
+			if (is.markSupported()) {
+				is.mark(Integer.MAX_VALUE);
+			}
+
+			BerLength length = new BerLength();
+			tlByteCount += length.decode(is);
+			int lengthVal = length.val;
+
+			if (is.markSupported()) {
+				is.reset();
+				byte[] lvPayload = new byte[bytesReadForTag + lengthVal];
+				int bytesRead = is.read(lvPayload, 0, lvPayload.length);
+				if (bytesRead != lvPayload.length) {
+					throw new IOException("Reached the end of the stream when trying to read " + lvPayload.length + " bytes.");
+				}
+				this.code = lvPayload;
+				is.reset();
+				final int bytesReadForLength = tlByteCount - bytesReadForTag;
+				com.beanit.asn1bean.ber.internal.Util.readFullyAndDiscard(is, bytesReadForLength);
+			}
+
+			while (vByteCount < lengthVal || lengthVal < 0) {
+				vByteCount += berTag.decode(is);
+
+				if (lengthVal < 0 && berTag.equals(0, 0, 0)) {
+					vByteCount += BerLength.readEocByte(is);
+					break;
+				}
+
+				if (!berTag.equals(com.beanit.asn1bean.compiler.various_tests.UntaggedInteger.tag)) {
+					throw new IOException("Tag does not match mandatory sequence of/set of component.");
+				}
+				com.beanit.asn1bean.compiler.various_tests.UntaggedInteger element = new com.beanit.asn1bean.compiler.various_tests.UntaggedInteger();
+				vByteCount += element.decode(is, false);
+				seqOf.add(element);
+			}
+			if (lengthVal >= 0 && vByteCount != lengthVal) {
+				throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + lengthVal + " but has " + vByteCount);
+
+			}
+			return tlByteCount + vByteCount;
+		}
+
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {
 			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
 			encode(reverseOS, false);
@@ -246,6 +298,63 @@ public class SequenceNameClashTest implements BerType, Serializable {
 			throw new IOException("Error decoding CHOICE: Tag " + berTag + " matched to no item.");
 		}
 
+		public int decodeAndSave(InputStream is, BerTag berTag) throws IOException {
+
+			int tlvByteCount = 0;
+			boolean tagWasPassed = (berTag != null);
+
+			if (berTag == null) {
+				berTag = new BerTag();
+				tlvByteCount += berTag.decode(is);
+			}
+
+			final int bytesReadForTag = tlvByteCount;
+			if (is.markSupported()) {
+				is.mark(Integer.MAX_VALUE);
+			}
+
+			BerLength tagLength = new BerLength();
+			tlvByteCount += tagLength.decode(is);
+			tlvByteCount += berTag.decode(is);
+
+			if (is.markSupported()) {
+				is.reset();
+				byte[] lvPayload = new byte[bytesReadForTag + tagLength.val];
+				int bytesRead = is.read(lvPayload, 0, lvPayload.length);
+				if (bytesRead != lvPayload.length) {
+					throw new IOException("Reached the end of the stream when trying to read " + lvPayload.length + " bytes.");
+				}
+				this.code = lvPayload;
+				is.reset();
+				final int bytesReadForLength = tlvByteCount - bytesReadForTag;
+				com.beanit.asn1bean.ber.internal.Util.readFullyAndDiscard(is, bytesReadForLength);
+			}
+
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 2)) {
+				BerLength length = new BerLength();
+				tlvByteCount += length.decode(is);
+				myInteger = new com.beanit.asn1bean.compiler.various_tests.UntaggedInteger();
+				tlvByteCount += myInteger.decode(is, true);
+				tlvByteCount += length.readEocIfIndefinite(is);
+				return tlvByteCount;
+			}
+
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 3)) {
+				BerLength length = new BerLength();
+				tlvByteCount += length.decode(is);
+				myBoolean = new BerBoolean();
+				tlvByteCount += myBoolean.decode(is, true);
+				tlvByteCount += length.readEocIfIndefinite(is);
+				return tlvByteCount;
+			}
+
+			if (tagWasPassed) {
+				return 0;
+			}
+
+			throw new IOException("Error decoding CHOICE: Tag " + berTag + " matched to no item.");
+		}
+
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {
 			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
 			encode(reverseOS);
@@ -345,6 +454,63 @@ public class SequenceNameClashTest implements BerType, Serializable {
 				if (berTag == null) {
 					berTag = new BerTag();
 					tlvByteCount += berTag.decode(is);
+				}
+
+				if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 6)) {
+					BerLength length = new BerLength();
+					tlvByteCount += length.decode(is);
+					myInteger = new com.beanit.asn1bean.compiler.various_tests.UntaggedInteger();
+					tlvByteCount += myInteger.decode(is, true);
+					tlvByteCount += length.readEocIfIndefinite(is);
+					return tlvByteCount;
+				}
+
+				if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 7)) {
+					BerLength length = new BerLength();
+					tlvByteCount += length.decode(is);
+					myBoolean = new BerBoolean();
+					tlvByteCount += myBoolean.decode(is, true);
+					tlvByteCount += length.readEocIfIndefinite(is);
+					return tlvByteCount;
+				}
+
+				if (tagWasPassed) {
+					return 0;
+				}
+
+				throw new IOException("Error decoding CHOICE: Tag " + berTag + " matched to no item.");
+			}
+
+			public int decodeAndSave(InputStream is, BerTag berTag) throws IOException {
+
+				int tlvByteCount = 0;
+				boolean tagWasPassed = (berTag != null);
+
+				if (berTag == null) {
+					berTag = new BerTag();
+					tlvByteCount += berTag.decode(is);
+				}
+
+				final int bytesReadForTag = tlvByteCount;
+				if (is.markSupported()) {
+					is.mark(Integer.MAX_VALUE);
+				}
+
+				BerLength tagLength = new BerLength();
+				tlvByteCount += tagLength.decode(is);
+				tlvByteCount += berTag.decode(is);
+
+				if (is.markSupported()) {
+					is.reset();
+					byte[] lvPayload = new byte[bytesReadForTag + tagLength.val];
+					int bytesRead = is.read(lvPayload, 0, lvPayload.length);
+					if (bytesRead != lvPayload.length) {
+						throw new IOException("Reached the end of the stream when trying to read " + lvPayload.length + " bytes.");
+					}
+					this.code = lvPayload;
+					is.reset();
+					final int bytesReadForLength = tlvByteCount - bytesReadForTag;
+					com.beanit.asn1bean.ber.internal.Util.readFullyAndDiscard(is, bytesReadForLength);
 				}
 
 				if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 6)) {
@@ -519,6 +685,77 @@ public class SequenceNameClashTest implements BerType, Serializable {
 
 			}
 
+			public int decodeAndSave(InputStream is, boolean withTag) throws IOException {
+				int tlByteCount = 0;
+				int vByteCount = 0;
+				BerTag berTag = new BerTag();
+
+				if (withTag) {
+					tlByteCount += tag.decodeAndCheck(is);
+				}
+
+				final int bytesReadForTag = tlByteCount;
+				if (is.markSupported()) {
+					is.mark(Integer.MAX_VALUE);
+				}
+
+				BerLength length = new BerLength();
+				tlByteCount += length.decode(is);
+				int lengthVal = length.val;
+				
+
+				if (is.markSupported()) {
+					is.reset();
+					byte[] lvPayload = new byte[bytesReadForTag + lengthVal];
+					int bytesRead = is.read(lvPayload, 0, lvPayload.length);
+					if (bytesRead != lvPayload.length) {
+						throw new IOException("Reached the end of the stream when trying to read " + lvPayload.length + " bytes.");
+					}
+					this.code = lvPayload;
+					is.reset();
+					final int bytesReadForLength = tlByteCount - bytesReadForTag;
+					com.beanit.asn1bean.ber.internal.Util.readFullyAndDiscard(is, bytesReadForLength);
+				}
+
+				vByteCount += berTag.decode(is);
+
+				if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 9)) {
+					vByteCount += length.decode(is);
+					myInteger = new com.beanit.asn1bean.compiler.various_tests.UntaggedInteger();
+					vByteCount += myInteger.decode(is, true);
+					vByteCount += length.readEocIfIndefinite(is);
+					vByteCount += berTag.decode(is);
+				}
+				else {
+					throw new IOException("Tag does not match mandatory sequence component.");
+				}
+				
+				if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 10)) {
+					vByteCount += length.decode(is);
+					myBoolean = new BerBoolean();
+					vByteCount += myBoolean.decode(is, true);
+					vByteCount += length.readEocIfIndefinite(is);
+					if (lengthVal >= 0 && vByteCount == lengthVal) {
+						return tlByteCount + vByteCount;
+					}
+					vByteCount += berTag.decode(is);
+				}
+				else {
+					throw new IOException("Tag does not match mandatory sequence component.");
+				}
+				
+				if (lengthVal < 0) {
+					if (!berTag.equals(0, 0, 0)) {
+						throw new IOException("Decoded sequence has wrong end of contents octets");
+					}
+					vByteCount += BerLength.readEocByte(is);
+					return tlByteCount + vByteCount;
+				}
+
+				throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", bytes decoded: " + vByteCount);
+
+			}
+
 			public void encodeAndSave(int encodingSizeGuess) throws IOException {
 				ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
 				encode(reverseOS, false);
@@ -628,6 +865,58 @@ public class SequenceNameClashTest implements BerType, Serializable {
 				BerLength length = new BerLength();
 				tlByteCount += length.decode(is);
 				int lengthVal = length.val;
+
+				while (vByteCount < lengthVal || lengthVal < 0) {
+					vByteCount += berTag.decode(is);
+
+					if (lengthVal < 0 && berTag.equals(0, 0, 0)) {
+						vByteCount += BerLength.readEocByte(is);
+						break;
+					}
+
+					if (!berTag.equals(com.beanit.asn1bean.compiler.various_tests.UntaggedInteger.tag)) {
+						throw new IOException("Tag does not match mandatory sequence of/set of component.");
+					}
+					com.beanit.asn1bean.compiler.various_tests.UntaggedInteger element = new com.beanit.asn1bean.compiler.various_tests.UntaggedInteger();
+					vByteCount += element.decode(is, false);
+					seqOf.add(element);
+				}
+				if (lengthVal >= 0 && vByteCount != lengthVal) {
+					throw new IOException("Decoded SequenceOf or SetOf has wrong length. Expected " + lengthVal + " but has " + vByteCount);
+
+				}
+				return tlByteCount + vByteCount;
+			}
+
+			public int decodeAndSave(InputStream is, boolean withTag) throws IOException {
+				int tlByteCount = 0;
+				int vByteCount = 0;
+				BerTag berTag = new BerTag();
+				if (withTag) {
+					tlByteCount += tag.decodeAndCheck(is);
+				}
+
+				final int bytesReadForTag = tlByteCount;
+				if (is.markSupported()) {
+					is.mark(Integer.MAX_VALUE);
+				}
+
+				BerLength length = new BerLength();
+				tlByteCount += length.decode(is);
+				int lengthVal = length.val;
+
+				if (is.markSupported()) {
+					is.reset();
+					byte[] lvPayload = new byte[bytesReadForTag + lengthVal];
+					int bytesRead = is.read(lvPayload, 0, lvPayload.length);
+					if (bytesRead != lvPayload.length) {
+						throw new IOException("Reached the end of the stream when trying to read " + lvPayload.length + " bytes.");
+					}
+					this.code = lvPayload;
+					is.reset();
+					final int bytesReadForLength = tlByteCount - bytesReadForTag;
+					com.beanit.asn1bean.ber.internal.Util.readFullyAndDiscard(is, bytesReadForLength);
+				}
 
 				while (vByteCount < lengthVal || lengthVal < 0) {
 					vByteCount += berTag.decode(is);
@@ -779,6 +1068,81 @@ public class SequenceNameClashTest implements BerType, Serializable {
 			if (berTag == null) {
 				berTag = new BerTag();
 				tlvByteCount += berTag.decode(is);
+			}
+
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 4)) {
+				BerLength length = new BerLength();
+				tlvByteCount += length.decode(is);
+				myInteger = new com.beanit.asn1bean.compiler.various_tests.UntaggedInteger();
+				tlvByteCount += myInteger.decode(is, true);
+				tlvByteCount += length.readEocIfIndefinite(is);
+				return tlvByteCount;
+			}
+
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 5)) {
+				BerLength length = new BerLength();
+				tlvByteCount += length.decode(is);
+				myChoice2 = new MyChoice2();
+				tlvByteCount += myChoice2.decode(is, null);
+				tlvByteCount += length.readEocIfIndefinite(is);
+				return tlvByteCount;
+			}
+
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 8)) {
+				BerLength length = new BerLength();
+				tlvByteCount += length.decode(is);
+				mySequence = new MySequence();
+				tlvByteCount += mySequence.decode(is, true);
+				tlvByteCount += length.readEocIfIndefinite(is);
+				return tlvByteCount;
+			}
+
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
+				BerLength length = new BerLength();
+				tlvByteCount += length.decode(is);
+				myseqof = new Myseqof();
+				tlvByteCount += myseqof.decode(is, true);
+				tlvByteCount += length.readEocIfIndefinite(is);
+				return tlvByteCount;
+			}
+
+			if (tagWasPassed) {
+				return 0;
+			}
+
+			throw new IOException("Error decoding CHOICE: Tag " + berTag + " matched to no item.");
+		}
+
+		public int decodeAndSave(InputStream is, BerTag berTag) throws IOException {
+
+			int tlvByteCount = 0;
+			boolean tagWasPassed = (berTag != null);
+
+			if (berTag == null) {
+				berTag = new BerTag();
+				tlvByteCount += berTag.decode(is);
+			}
+
+			final int bytesReadForTag = tlvByteCount;
+			if (is.markSupported()) {
+				is.mark(Integer.MAX_VALUE);
+			}
+
+			BerLength tagLength = new BerLength();
+			tlvByteCount += tagLength.decode(is);
+			tlvByteCount += berTag.decode(is);
+
+			if (is.markSupported()) {
+				is.reset();
+				byte[] lvPayload = new byte[bytesReadForTag + tagLength.val];
+				int bytesRead = is.read(lvPayload, 0, lvPayload.length);
+				if (bytesRead != lvPayload.length) {
+					throw new IOException("Reached the end of the stream when trying to read " + lvPayload.length + " bytes.");
+				}
+				this.code = lvPayload;
+				is.reset();
+				final int bytesReadForLength = tlvByteCount - bytesReadForTag;
+				com.beanit.asn1bean.ber.internal.Util.readFullyAndDiscard(is, bytesReadForLength);
 			}
 
 			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 4)) {
@@ -984,6 +1348,77 @@ public class SequenceNameClashTest implements BerType, Serializable {
 
 		}
 
+		public int decodeAndSave(InputStream is, boolean withTag) throws IOException {
+			int tlByteCount = 0;
+			int vByteCount = 0;
+			BerTag berTag = new BerTag();
+
+			if (withTag) {
+				tlByteCount += tag.decodeAndCheck(is);
+			}
+
+			final int bytesReadForTag = tlByteCount;
+			if (is.markSupported()) {
+				is.mark(Integer.MAX_VALUE);
+			}
+
+			BerLength length = new BerLength();
+			tlByteCount += length.decode(is);
+			int lengthVal = length.val;
+			
+
+			if (is.markSupported()) {
+				is.reset();
+				byte[] lvPayload = new byte[bytesReadForTag + lengthVal];
+				int bytesRead = is.read(lvPayload, 0, lvPayload.length);
+				if (bytesRead != lvPayload.length) {
+					throw new IOException("Reached the end of the stream when trying to read " + lvPayload.length + " bytes.");
+				}
+				this.code = lvPayload;
+				is.reset();
+				final int bytesReadForLength = tlByteCount - bytesReadForTag;
+				com.beanit.asn1bean.ber.internal.Util.readFullyAndDiscard(is, bytesReadForLength);
+			}
+
+			vByteCount += berTag.decode(is);
+
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 9)) {
+				vByteCount += length.decode(is);
+				myInteger = new com.beanit.asn1bean.compiler.various_tests.UntaggedInteger();
+				vByteCount += myInteger.decode(is, true);
+				vByteCount += length.readEocIfIndefinite(is);
+				vByteCount += berTag.decode(is);
+			}
+			else {
+				throw new IOException("Tag does not match mandatory sequence component.");
+			}
+			
+			if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 10)) {
+				vByteCount += length.decode(is);
+				myBoolean = new BerBoolean();
+				vByteCount += myBoolean.decode(is, true);
+				vByteCount += length.readEocIfIndefinite(is);
+				if (lengthVal >= 0 && vByteCount == lengthVal) {
+					return tlByteCount + vByteCount;
+				}
+				vByteCount += berTag.decode(is);
+			}
+			else {
+				throw new IOException("Tag does not match mandatory sequence component.");
+			}
+			
+			if (lengthVal < 0) {
+				if (!berTag.equals(0, 0, 0)) {
+					throw new IOException("Decoded sequence has wrong end of contents octets");
+				}
+				vByteCount += BerLength.readEocByte(is);
+				return tlByteCount + vByteCount;
+			}
+
+			throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", bytes decoded: " + vByteCount);
+
+		}
+
 		public void encodeAndSave(int encodingSizeGuess) throws IOException {
 			ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
 			encode(reverseOS, false);
@@ -1124,6 +1559,101 @@ public class SequenceNameClashTest implements BerType, Serializable {
 		BerLength length = new BerLength();
 		tlByteCount += length.decode(is);
 		int lengthVal = length.val;
+		vByteCount += berTag.decode(is);
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {
+			vByteCount += length.decode(is);
+			myseqof = new Myseqof();
+			vByteCount += myseqof.decode(is, true);
+			vByteCount += length.readEocIfIndefinite(is);
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		untaggedInteger = new UntaggedInteger();
+		numDecodedBytes = untaggedInteger.decode(is, berTag);
+		if (numDecodedBytes != 0) {
+			vByteCount += numDecodedBytes;
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			untaggedInteger = null;
+		}
+		myChoice = new MyChoice();
+		numDecodedBytes = myChoice.decode(is, berTag);
+		if (numDecodedBytes != 0) {
+			vByteCount += numDecodedBytes;
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 8)) {
+			vByteCount += length.decode(is);
+			sequenceNameClashTest = new SequenceNameClashTest_();
+			vByteCount += sequenceNameClashTest.decode(is, true);
+			vByteCount += length.readEocIfIndefinite(is);
+			if (lengthVal >= 0 && vByteCount == lengthVal) {
+				return tlByteCount + vByteCount;
+			}
+			vByteCount += berTag.decode(is);
+		}
+		else {
+			throw new IOException("Tag does not match mandatory sequence component.");
+		}
+		
+		if (lengthVal < 0) {
+			if (!berTag.equals(0, 0, 0)) {
+				throw new IOException("Decoded sequence has wrong end of contents octets");
+			}
+			vByteCount += BerLength.readEocByte(is);
+			vByteCount += explicitTagLength.readEocIfIndefinite(is);
+			return tlByteCount + vByteCount;
+		}
+
+		throw new IOException("Unexpected end of sequence, length tag: " + lengthVal + ", bytes decoded: " + vByteCount);
+
+	}
+
+	public int decodeAndSave(InputStream is, boolean withTag) throws IOException {
+		int tlByteCount = 0;
+		int vByteCount = 0;
+		int numDecodedBytes;
+		BerTag berTag = new BerTag();
+
+		if (withTag) {
+			tlByteCount += tag.decodeAndCheck(is);
+		}
+
+		final int bytesReadForTag = tlByteCount;
+		if (is.markSupported()) {
+			is.mark(Integer.MAX_VALUE);
+		}
+
+		BerLength explicitTagLength = new BerLength();
+		tlByteCount += explicitTagLength.decode(is);
+		tlByteCount += BerTag.SEQUENCE.decodeAndCheck(is);
+
+		BerLength length = new BerLength();
+		tlByteCount += length.decode(is);
+		int lengthVal = length.val;
+		
+
+		if (is.markSupported()) {
+			is.reset();
+			byte[] lvPayload = new byte[bytesReadForTag + lengthVal];
+			int bytesRead = is.read(lvPayload, 0, lvPayload.length);
+			if (bytesRead != lvPayload.length) {
+				throw new IOException("Reached the end of the stream when trying to read " + lvPayload.length + " bytes.");
+			}
+			this.code = lvPayload;
+			is.reset();
+			final int bytesReadForLength = tlByteCount - bytesReadForTag;
+			com.beanit.asn1bean.ber.internal.Util.readFullyAndDiscard(is, bytesReadForLength);
+		}
+
 		vByteCount += berTag.decode(is);
 
 		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 1)) {

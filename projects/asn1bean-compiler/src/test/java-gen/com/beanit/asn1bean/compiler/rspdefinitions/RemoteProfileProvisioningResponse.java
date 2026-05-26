@@ -189,6 +189,74 @@ public class RemoteProfileProvisioningResponse implements BerType, Serializable 
 		throw new IOException("Error decoding CHOICE: Tag " + berTag + " matched to no item.");
 	}
 
+	public int decodeAndSave(InputStream is, boolean withTag) throws IOException {
+		int tlvByteCount = 0;
+		BerTag berTag = new BerTag();
+
+		if (withTag) {
+			tlvByteCount += tag.decodeAndCheck(is);
+		}
+
+		final int bytesReadForTag = tlvByteCount;
+		if (is.markSupported()) {
+			is.mark(Integer.MAX_VALUE);
+		}
+
+		BerLength explicitTagLength = new BerLength();
+		tlvByteCount += explicitTagLength.decode(is);
+		tlvByteCount += berTag.decode(is);
+
+		if (is.markSupported()) {
+			is.reset();
+			byte[] lvPayload = new byte[bytesReadForTag + explicitTagLength.val];
+			int bytesRead = is.read(lvPayload, 0, lvPayload.length);
+			if (bytesRead != lvPayload.length) {
+				throw new IOException("Reached the end of the stream when trying to read " + lvPayload.length + " bytes.");
+			}
+			this.code = lvPayload;
+			is.reset();
+			final int bytesReadForLength = tlvByteCount - bytesReadForTag;
+			com.beanit.asn1bean.ber.internal.Util.readFullyAndDiscard(is, bytesReadForLength);
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 57)) {
+			initiateAuthenticationResponse = new InitiateAuthenticationResponse();
+			tlvByteCount += initiateAuthenticationResponse.decode(is, false);
+			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 59)) {
+			authenticateClientResponseEs9 = new AuthenticateClientResponseEs9();
+			tlvByteCount += authenticateClientResponseEs9.decode(is, false);
+			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 58)) {
+			getBoundProfilePackageResponse = new GetBoundProfilePackageResponse();
+			tlvByteCount += getBoundProfilePackageResponse.decode(is, false);
+			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 65)) {
+			cancelSessionResponseEs9 = new CancelSessionResponseEs9();
+			tlvByteCount += cancelSessionResponseEs9.decode(is, false);
+			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+			return tlvByteCount;
+		}
+
+		if (berTag.equals(BerTag.CONTEXT_CLASS, BerTag.CONSTRUCTED, 64)) {
+			authenticateClientResponseEs11 = new AuthenticateClientResponseEs11();
+			tlvByteCount += authenticateClientResponseEs11.decode(is, false);
+			tlvByteCount += explicitTagLength.readEocIfIndefinite(is);
+			return tlvByteCount;
+		}
+
+		throw new IOException("Error decoding CHOICE: Tag " + berTag + " matched to no item.");
+	}
+
 	public void encodeAndSave(int encodingSizeGuess) throws IOException {
 		ReverseByteArrayOutputStream reverseOS = new ReverseByteArrayOutputStream(encodingSizeGuess);
 		encode(reverseOS, false);
