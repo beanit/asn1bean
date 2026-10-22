@@ -32,6 +32,7 @@ import com.beanit.asn1bean.compiler.model.AsnInformationObjectClass;
 import com.beanit.asn1bean.compiler.model.AsnInteger;
 import com.beanit.asn1bean.compiler.model.AsnModule;
 import com.beanit.asn1bean.compiler.model.AsnModule.TagDefault;
+import com.beanit.asn1bean.compiler.model.AsnNamedNumber;
 import com.beanit.asn1bean.compiler.model.AsnNull;
 import com.beanit.asn1bean.compiler.model.AsnObjectIdentifier;
 import com.beanit.asn1bean.compiler.model.AsnOctetString;
@@ -1013,7 +1014,10 @@ public class BerClassWriter {
 
     write("private static final long serialVersionUID = 1L;\n");
 
-    String[] constructorParameters = getConstructorParameters(getUniversalType(typeDefinition));
+    AsnUniversalType universalType = getUniversalType(typeDefinition);
+    String[] constructorParameters = getConstructorParameters(universalType);
+
+    writeEnumValues(typeName, universalType);
 
     if (tag != null) {
       write(
@@ -1139,6 +1143,34 @@ public class BerClassWriter {
     }
 
     write("}");
+  }
+
+  private void writeEnumValues(String typeName, AsnUniversalType universalType) throws IOException {
+    if (!(universalType instanceof AsnEnum)) {
+      return;
+    }
+
+    AsnEnum asnEnum = (AsnEnum) universalType;
+    for (AsnNamedNumber namedNumber : asnEnum.namedNumberList.namedNumbers) {
+      if (!namedNumber.isSignedNumber) {
+        continue;
+      }
+      String value = namedNumber.signedNumber.num.toString();
+      String constructorArgument =
+          namedNumber.signedNumber.num.bitLength() <= 63
+              ? value + "L"
+              : "new BigInteger(\"" + value + "\")";
+      write(
+          "public static final "
+              + typeName
+              + " "
+              + cleanUpName(namedNumber.name)
+              + " = new "
+              + typeName
+              + "("
+              + constructorArgument
+              + ");");
+    }
   }
 
   private void writeEncodingIfCodeIsNull() throws IOException {

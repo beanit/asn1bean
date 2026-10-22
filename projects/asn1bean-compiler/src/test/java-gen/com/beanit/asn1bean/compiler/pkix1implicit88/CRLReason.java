@@ -30,6 +30,16 @@ public class CRLReason extends BerEnum {
 
 	private static final long serialVersionUID = 1L;
 
+	public static final CRLReason unspecified = new CRLReason(0L);
+	public static final CRLReason keyCompromise = new CRLReason(1L);
+	public static final CRLReason cACompromise = new CRLReason(2L);
+	public static final CRLReason affiliationChanged = new CRLReason(3L);
+	public static final CRLReason superseded = new CRLReason(4L);
+	public static final CRLReason cessationOfOperation = new CRLReason(5L);
+	public static final CRLReason certificateHold = new CRLReason(6L);
+	public static final CRLReason removeFromCRL = new CRLReason(8L);
+	public static final CRLReason privilegeWithdrawn = new CRLReason(9L);
+	public static final CRLReason aACompromise = new CRLReason(10L);
 	public CRLReason() {
 	}
 

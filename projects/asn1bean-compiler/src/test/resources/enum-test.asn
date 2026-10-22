@@ -1,0 +1,10 @@
+ENUM_TEST DEFINITIONS ::=
+BEGIN
+
+DeviceTypeEnum ::= ENUMERATED {
+    otherwise-specified (0),
+    registrationTerminal (1),
+    outsideLongRange (9223372036854775808)
+}
+
+END

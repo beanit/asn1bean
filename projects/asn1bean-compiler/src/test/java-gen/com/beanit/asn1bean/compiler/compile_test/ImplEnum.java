@@ -24,6 +24,8 @@ public class ImplEnum extends BerEnum {
 
 	private static final long serialVersionUID = 1L;
 
+	public static final ImplEnum test1 = new ImplEnum(1L);
+	public static final ImplEnum test2 = new ImplEnum(2L);
 	public static final BerTag tag = new BerTag(BerTag.APPLICATION_CLASS, BerTag.PRIMITIVE, 3);
 
 	private byte[] code = null;
